@@ -135,7 +135,7 @@ class SanityYang(unittest.TestCase):
         runner.invalid_attribute = 'xyz'
 
     @assert_with_error(
-        "Invalid value not connected for 'enum_int_value'..*Expected types: 'ydk.models.ydktest.ydktest_sanity.YdkEnumIntTest' or 'int'",
+        "Invalid value not connected for 'enum_int_value'. Got type: 'YLeaf'. Expected types: 'ydk.models.ydktest.ydktest_sanity.YdkEnumIntTest' or 'int'",
         YModelError)
     def test_union_enum(self):
         runner = ysanity.Runner()

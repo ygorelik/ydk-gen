@@ -26,7 +26,7 @@ from pyang import types
 from pyang.error import EmitError
 from pyang.types import BinaryTypeSpec, BooleanTypeSpec, Decimal64TypeSpec, EmptyTypeSpec, \
     IntTypeSpec, LengthTypeSpec, PatternTypeSpec, RangeTypeSpec, StringTypeSpec, PathTypeSpec, \
-    BitsTypeSpec, IdentityrefTypeSpec, UnionTypeSpec, TypeSpec
+    BitTypeSpec, IdentityrefTypeSpec, UnionTypeSpec, TypeSpec
 
 
 class MetaInfoData:
@@ -337,7 +337,7 @@ def get_meta_info_data(prop, property_type, type_stmt, language, identity_subcla
         if isinstance(type_spec, BinaryTypeSpec):
             meta_info_data.ptype = 'str'
             meta_info_data.doc_link += get_primitive_type_tag('str', language)
-        elif isinstance(type_spec, BitsTypeSpec):
+        elif isinstance(type_spec, BitTypeSpec):
             # This can happen in a Union
             raise EmitError('Illegal Code path')
         elif isinstance(type_spec, BooleanTypeSpec):

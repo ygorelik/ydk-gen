@@ -34,7 +34,6 @@ from .class_inits_printer import ClassInitsPrinter, ClassSetAttrPrinter
 from .enum_printer import EnumPrinter
 
 
-
 class ClassPrinter(FilePrinter):
 
     def __init__(self, ctx, module_namespace_lookup, one_class_per_module, generate_meta, identity_subclasses):
@@ -105,8 +104,6 @@ class ClassPrinter(FilePrinter):
         self.ctx.lvl_dec()
 
     def _print_class_declaration(self, clazz):
-        self.ctx.bline()
-
         parents = '_Entity_'
         if clazz.is_identity():
             if len(clazz.extends) > 0:

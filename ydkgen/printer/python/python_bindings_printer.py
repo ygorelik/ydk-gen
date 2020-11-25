@@ -162,7 +162,7 @@ class PythonBindingsPrinter(LanguageBindingsPrinter):
         extra_args = {'one_class_per_module': self.one_class_per_module,
                       'generate_meta': self.generate_meta,
                       'identity_subclasses': self.identity_subclasses,
-                      'module_namespace_lookup' : self.module_namespace_lookup}
+                      'module_namespace_lookup': self.module_namespace_lookup}
         python_module_file_name = get_python_module_file_name(path, package)
         logger.debug("    Printing python module %s" % python_module_file_name)
         self.print_file(python_module_file_name,

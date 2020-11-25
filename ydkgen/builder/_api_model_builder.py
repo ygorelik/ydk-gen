@@ -82,16 +82,16 @@ class ApiModelBuilder(object):
         bits_type_stmt = self.types_extractor.get_bits_type_stmt(s)
         union_type_stmt = self.types_extractor.get_union_type_stmt(s)
 
-        if enum_type_stmt is not None:
-            enum_class = Enum(self.iskeyword)
+        if enum_type_stmt:
+            enum_class = Enum(self.iskeyword, s)
             enum_class.stmt = enum_type_stmt
-            disambiguate_class_name_from_ancestors_and_siblings(self.language, enum_class, pe)
+            disambiguate_class_name_from_ancestors_and_siblings(enum_class, pe)
             enum_type_stmt.parent.i_enum = enum_class
             enum_type_stmt.i_enum = enum_class
             pe.owned_elements.append(enum_class)
             enum_class.owner = pe
 
-        if bits_type_stmt is not None:
+        if bits_type_stmt:
             bits_class = Bits(self.iskeyword)
             bits_class.stmt = bits_type_stmt
             bits_type_stmt.parent.i_bits = bits_class
@@ -99,7 +99,7 @@ class ApiModelBuilder(object):
             pe.owned_elements.append(bits_class)
             bits_class.owner = pe
 
-        if union_type_stmt is not None:
+        if union_type_stmt:
             # need to process the type stmts under the union
             for contained_type in union_type_stmt.i_type_spec.types:
                 self._add_enums_and_bits(contained_type, pe)
@@ -135,10 +135,12 @@ class ApiModelBuilder(object):
                 # check for identity_ref's
                 identity_ref_type = self.types_extractor.get_identity_ref_type_stmt(element.stmt)
                 if identity_ref_type is not None:
-                    if not hasattr(identity_ref_type.i_type_spec.base.i_identity, 'i_class'):
+                    identity_stmt = identity_ref_type.i_type_spec.idbases[0]
+                    identity_ref_type.i_type_spec.base = identity_stmt
+                    if not hasattr(identity_stmt.i_identity, 'i_class'):
                         raise YdkGenException(
                             'Cross resolution of identity class failed for ' + element.fqn())
-                    element.property_type = identity_ref_type.i_type_spec.base.i_identity.i_class
+                    element.property_type = identity_stmt.i_identity.i_class
                 else:
                     # check for bits
                     bits_ref_type = self.types_extractor.get_bits_type_stmt(element.stmt)
@@ -202,7 +204,7 @@ class ApiModelBuilder(object):
             # we have to create the enum
             enum_class = Enum(self.iskeyword)
             enum_class.stmt = enum_type
-            disambiguate_class_name_from_ancestors_and_siblings(self.language, enum_class, parent_element)
+            disambiguate_class_name_from_ancestors_and_siblings(enum_class, parent_element)
             parent_element.owned_elements.append(enum_class)
             enum_class.owner = parent_element
             prop.property_type = enum_class
@@ -225,7 +227,7 @@ class ApiModelBuilder(object):
                     if contained_enum_type is not None and contained_enum_type == contained_type:
                         enum_class = Enum(self.iskeyword)
                         enum_class.stmt = contained_enum_type
-                        disambiguate_class_name_from_ancestors_and_siblings(self.language, enum_class, parent_element)
+                        disambiguate_class_name_from_ancestors_and_siblings(enum_class, parent_element)
                         parent_element.owned_elements.append(enum_class)
                         enum_class.owner = parent_element
                         contained_enum_type.i_enum = enum_class
@@ -454,10 +456,9 @@ def name_matches_ancestor(name, parent_element):
     return name_matches_ancestor(name, parent_element.owner)
 
 
-def disambiguate_class_name_from_ancestors_and_siblings(language, clazz, parent_element):
+def disambiguate_class_name_from_ancestors_and_siblings(clazz, parent_element):
     if name_matches_ancestor(clazz.name, parent_element):
         clazz.name = clazz.name + '_'
     for e in parent_element.owned_elements:
         if e.name == clazz.name:
             clazz.name = clazz.name + '_'
-

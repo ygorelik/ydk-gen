@@ -118,12 +118,12 @@ class NamespacePrinter(FilePrinter):
                 if self.one_class_per_module:
                     pkg_name = identity_clazz.get_package().name
                     self.ctx.writeln(
-                        "'%s:%s':('%s.%s', '%s')," % (get_module_name(identity_clazz.stmt), identity_clazz.stmt.arg,
-                                                      identity_clazz.get_py_mod_name(), pkg_name, identity_clazz.qn()))
+                        "'%s:%s': ('%s.%s', '%s')," % (get_module_name(identity_clazz.stmt), identity_clazz.stmt.arg,
+                                                       identity_clazz.get_py_mod_name(), pkg_name, identity_clazz.qn()))
                 else:
                     self.ctx.writeln(
-                        "'%s:%s':('%s', '%s')," % (get_module_name(identity_clazz.stmt), identity_clazz.stmt.arg,
-                                                   identity_clazz.get_py_mod_name(), identity_clazz.qn()))
+                        "'%s:%s': ('%s', '%s')," % (get_module_name(identity_clazz.stmt), identity_clazz.stmt.arg,
+                                                    identity_clazz.get_py_mod_name(), identity_clazz.qn()))
         self.ctx.lvl_dec()
         self.ctx.writeln('}')
         self.ctx.bline()

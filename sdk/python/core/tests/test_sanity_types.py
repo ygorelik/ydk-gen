@@ -30,7 +30,7 @@ from ydk.types import Empty, Decimal64, Bits
 try:
     from ydk.models.ydktest.ydktest_sanity import Runner, CascadingTypes, SubTest, ChildIdentity, ChildChildIdentity, Native
     from ydk.models.ydktest.ydktest_sanity_types import YdktestType
-    from ydk.models.ydktest.ydktest_sanity import YdkEnumTest, YdkEnumIntTest, CompInstType, CompInstType_
+    from ydk.models.ydktest.ydktest_sanity import YdkEnumTest, YdkEnumIntTest, CompInstType, CompNicInstType
 except ImportError:
     from ydk.models.ydktest.ydktest_sanity.runner.runner import Runner
     from ydk.models.ydktest.ydktest_sanity.native.native import Native
@@ -38,7 +38,7 @@ except ImportError:
     from ydk.models.ydktest.ydktest_sanity.sub_test.sub_test import SubTest
     from ydk.models.ydktest.ydktest_sanity.ydktest_sanity import ChildIdentity, ChildChildIdentity
     from ydk.models.ydktest.ydktest_sanity_types.ydktest_sanity_types import YdktestType
-    from ydk.models.ydktest.ydktest_sanity.ydktest_sanity import YdkEnumTest, YdkEnumIntTest, CompInstType, CompInstType_
+    from ydk.models.ydktest.ydktest_sanity.ydktest_sanity import YdkEnumTest, YdkEnumIntTest, CompInstType, CompNicInstType
 
 from test_utils import ParametrizedTestCase
 from test_utils import get_device_info
@@ -530,17 +530,11 @@ class SanityTest(unittest.TestCase):
         self.assertEqual(runner2, runner1)
         self.assertEqual(runner.ytypes.built_in_t.bool_value, runner1.ytypes.built_in_t.bool_value)
 
-    # def test_binary(self):
-    #     pass
-
-    # def test_binary_invalid(self):
-    #     pass
-
     def test_cascading_types(self):
-        self._cascading_types_helper(CompInstType.unknown, CompInstType_.unknown)
-        self._cascading_types_helper(CompInstType.phys, CompInstType_.phys)
-        self._cascading_types_helper(CompInstType.virt, CompInstType_.virt)
-        self._cascading_types_helper(CompInstType.hv, CompInstType_.hv)
+        self._cascading_types_helper(CompInstType.unknown, CompNicInstType.unknown)
+        self._cascading_types_helper(CompInstType.phys, CompNicInstType.phys)
+        self._cascading_types_helper(CompInstType.virt, CompNicInstType.virt)
+        self._cascading_types_helper(CompInstType.hv, CompNicInstType.hv)
 
     def _cascading_types_helper(self, enum1, enum2):
         ctypes = CascadingTypes()

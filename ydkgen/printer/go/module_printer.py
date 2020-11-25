@@ -90,12 +90,15 @@ class ModulePrinter(FilePrinter):
     def _print_init(self, package):
         self.ctx.writeln('func init() {')
         self.ctx.lvl_inc()
-        self.ctx.writeln('ydk.YLogDebug(fmt.Sprintf("Registering top level entities for package {}"))'.format(package.name))
+        self.ctx.writeln('ydk.YLogDebug(fmt.Sprintf("Registering top level entities for package {}"))'.
+                         format(package.name))
         for e in package.owned_elements:
             ns = package.stmt.search_one('namespace')
             if ns is not None and isinstance(e, Class) and not e.is_identity():
-                self.ctx.writeln('ydk.RegisterEntity("{{{} {}}}", reflect.TypeOf({}{{}}))'.format(ns.arg, e.stmt.arg, e.go_name()))
-                self.ctx.writeln('ydk.RegisterEntity("{}:{}", reflect.TypeOf({}{{}}))'.format(package.stmt.arg, e.stmt.arg, e.go_name()))
+                self.ctx.writeln('ydk.RegisterEntity("{{{} {}}}", reflect.TypeOf({}{{}}))'.
+                                 format(ns.arg, e.stmt.arg, e.go_name()))
+                self.ctx.writeln('ydk.RegisterEntity("{}:{}", reflect.TypeOf({}{{}}))'.
+                                 format(package.stmt.arg, e.stmt.arg, e.go_name()))
         self.ctx.lvl_dec()
         self.ctx.writeln('}')
         self.ctx.bline()

@@ -778,7 +778,7 @@ class Enum(DataType):
 
     """ Represents an enumeration. """
 
-    def __init__(self, iskeyword):
+    def __init__(self, iskeyword, typedef_stmt=None):
         if sys.version_info > (3,):
             super().__init__()
         else:
@@ -786,6 +786,10 @@ class Enum(DataType):
         self._stmt = None
         self.literals = []
         self.iskeyword = iskeyword
+        while typedef_stmt and typedef_stmt.keyword != 'typedef' and typedef_stmt.parent:
+            typedef_stmt = typedef_stmt.parent
+        self.typedef_stmt = typedef_stmt
+        self.goName = None
 
     def get_package(self):
         """ Returns the Package that this enum is found in. """
@@ -806,7 +810,10 @@ class Enum(DataType):
         while stmt.parent is not None and not stmt.keyword in ('leaf', 'leaf-list', 'typedef'):
             stmt = stmt.parent
 
-        name = escape_name(stmt.unclashed_arg if hasattr(stmt, 'unclashed_arg') else stmt.arg)
+        name = stmt.arg
+        if self.typedef_stmt:
+            name = self.typedef_stmt.arg
+        name = escape_name(stmt.unclashed_arg if hasattr(stmt, 'unclashed_arg') else name)
         name = camel_case(name)
         if self.iskeyword(name):
             name = '%s%s' % ('Y', name)
@@ -829,7 +836,10 @@ class Enum(DataType):
         while leaf_or_typedef.parent is not None and not leaf_or_typedef.keyword in ('leaf', 'leaf-list', 'typedef'):
             leaf_or_typedef = leaf_or_typedef.parent
 
-        name = camel_case(escape_name(leaf_or_typedef.arg))
+        name = leaf_or_typedef.arg
+        if self.typedef_stmt:
+            name = self.typedef_stmt.arg
+        name = camel_case(escape_name(name))
         if self.iskeyword(name) or self.iskeyword(name.lower()):
             name = '%s_' % name
 
@@ -838,15 +848,17 @@ class Enum(DataType):
 
         self.name = name
 
-        desc = stmt.search_one('description')
-        if desc is not None:
+        desc = None
+        if self.typedef_stmt:
+            desc = self.typedef_stmt.search_one('description')
+            if desc is None:
+                desc = stmt.search_one('description')
+                if desc is None:
+                    leaf_or_typedef.search_one('description')
+        if desc:
             self.comment = desc.arg
         else:
-            desc = leaf_or_typedef.search_one('description')
-            if desc is not None:
-                self.comment = desc.arg
-            else:
-                self.comment = ""
+            self.comment = ""
 
         for enum_stmt in stmt.search('enum'):
             literal = EnumLiteral(self.iskeyword)

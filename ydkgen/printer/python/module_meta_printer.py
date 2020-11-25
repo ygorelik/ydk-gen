@@ -18,7 +18,6 @@
  module_printer.py
 
  YANG model driven API, python emitter.
-
 """
 
 from ydkgen.api_model import Class, Enum
@@ -36,18 +35,18 @@ class ModuleMetaPrinter(FilePrinter):
         self.identity_subclasses = identity_subclasses
 
     def print_header(self, packages):
-        self.ctx.str("""
-'''
+        self.ctx.str('''
+"""
 This is auto-generated file,
 which includes metadata for module %s
-'''
+"""
 
 from ydk._core._dm_meta_info import _MetaInfoClassMember, _MetaInfoClass, _MetaInfoEnum
 from ydk._core._dm_meta_info import ATTRIBUTE, REFERENCE_LIST, REFERENCE_LEAFLIST, REFERENCE_BITS, REFERENCE_UNION
 from ydk._core._dm_meta_info import REFERENCE_CLASS, REFERENCE_IDENTITY_CLASS, REFERENCE_ENUM_CLASS, ANYXML_CLASS
 from ydk._core._importer import _yang_ns
 
-""" % packages.name)
+''' % packages.name)
 
     def print_body(self, packages):
         self.ctx.writeln('_meta_table = {')
