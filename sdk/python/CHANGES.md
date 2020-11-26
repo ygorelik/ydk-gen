@@ -6,6 +6,7 @@
 #### Resolved GitHub issues
   * python bundle generator must escape 'async' as variable name ([#980](https://github.com/CiscoDevNet/ydk-gen/issues/980))
   * YDK fails instantiate some of the generated bundle classes ([#983](https://github.com/CiscoDevNet/ydk-gen/issues/983))
+  * Python 3 TypeError while initializing CRUDService class ([#1032](https://github.com/CiscoDevNet/ydk-gen/issues/1032))
 
 #### Bundle improvements
   * Updated cisco-ios-xe bundle to support Cisco IOS XE 16.9.3 due to bug in Python generated code

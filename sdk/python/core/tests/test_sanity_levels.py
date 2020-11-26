@@ -92,7 +92,6 @@ class SanityYang(unittest.TestCase):
 
         self.assertEqual(r_2, None)
 
-
     def test_one_aug_level_pos(self):
         # READ
         r_1 = Runner()

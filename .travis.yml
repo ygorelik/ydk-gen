@@ -15,13 +15,15 @@ matrix:
 #     go: 1.13
 #   - env: DOCKER=true OS_TYPE=centos OS_VERSION=centos7 PYTHON_VERSION=3.6
 #   - env: DOCKER=true OS_TYPE=centos OS_VERSION=centos7 PYTHON_VERSION=3.6 GNMI=true
-#   - env: DOCKER=true OS_TYPE=centos OS_VERSION=centos8 PYTHON_VERSION=3.6
-#   - env: DOCKER=true OS_TYPE=centos OS_VERSION=centos8 PYTHON_VERSION=3.6 GNMI=true
+   - env: DOCKER=true OS_TYPE=centos OS_VERSION=centos8 PYTHON_VERSION=3.6
+   - env: DOCKER=true OS_TYPE=centos OS_VERSION=centos8 PYTHON_VERSION=3.6 GNMI=true
 #   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=xenial  PYTHON_VERSION=3.5
 #   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=xenial  PYTHON_VERSION=3.5 GNMI=true
-#   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=3
-#   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=3 GNMI=true
-   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=focal  PYTHON_VERSION=3
+#   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=2.7
+#   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=2.7 GNMI=true
+   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=3
+   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=3 GNMI=true
+#   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=focal  PYTHON_VERSION=3
 #   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=focal  PYTHON_VERSION=3 GNMI=true
   allow_failures:
    - os: osx

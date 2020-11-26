@@ -25,7 +25,7 @@ from ydk_gnmi_.services import gNMIService as _gNMIService
 from ydk_gnmi_.services import gNMISubscription
 
 
-class gNMIService(_gNMIService):
+class gNMIService(object):
     """ Python wrapper for gNMIService
     """
     def __init__(self):

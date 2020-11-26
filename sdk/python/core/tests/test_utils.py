@@ -40,8 +40,11 @@ def assert_with_error(pattern, ErrorClass):
             try:
                 func(self)
             except ErrorClass as error:
-                res = re.match(pattern, error.message.strip())
-                self.assertEqual(res is not None, True)
+                if hasattr(error, 'message'):
+                    res = re.match(pattern, error.message.strip())
+                elif hasattr(error, 'args'):
+                    res = pattern in error.args[0]
+                self.assertTrue(res)
         return helper
     return assert_with_pattern
 
