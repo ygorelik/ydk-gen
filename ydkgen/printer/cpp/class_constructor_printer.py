@@ -113,7 +113,7 @@ class ClassConstructorPrinter(object):
             while index < len(leafs):
                 prop = leafs[index]
                 if prop.stmt.i_module.arg != clazz.stmt.i_module.arg:
-                    leaf_name = prop.stmt.i_module.arg + ': ' + prop.stmt.arg
+                    leaf_name = prop.stmt.i_module.arg + ':' + prop.stmt.arg
                 else:
                     leaf_name = prop.stmt.arg
                 self.ctx.writeln('%s{YType::%s, "%s"}%s' % (prop.name,

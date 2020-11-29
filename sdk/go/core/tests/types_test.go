@@ -323,13 +323,13 @@ func (suite *SanityTypesTestSuite) TestIdentityFromOtherModule() {
 }
 
 func (suite *SanityTypesTestSuite) TestCascadingTypes() {
-	cascadingTypesHelper(suite, ysanity.CompInstType_unknown, ysanity.CompInstType__unknown)
-	cascadingTypesHelper(suite, ysanity.CompInstType_phys, ysanity.CompInstType__phys)
-	cascadingTypesHelper(suite, ysanity.CompInstType_virt, ysanity.CompInstType__virt)
-	cascadingTypesHelper(suite, ysanity.CompInstType_hv, ysanity.CompInstType__hv)
+	cascadingTypesHelper(suite, ysanity.CompInstType_unknown, ysanity.CompNicInstType_unknown)
+	cascadingTypesHelper(suite, ysanity.CompInstType_phys, ysanity.CompNicInstType_phys)
+	cascadingTypesHelper(suite, ysanity.CompInstType_virt, ysanity.CompNicInstType_virt)
+	cascadingTypesHelper(suite, ysanity.CompInstType_hv, ysanity.CompNicInstType_hv)
 }
 
-func cascadingTypesHelper(suite *SanityTypesTestSuite, enum1 ysanity.CompInstType, enum2 ysanity.CompInstType_){
+func cascadingTypesHelper(suite *SanityTypesTestSuite, enum1 ysanity.CompInstType, enum2 ysanity.CompNicInstType){
 	ctypes := ysanity.CascadingTypes{}
 	ctypes.CompInstType = enum1
 	ctypes.CompNicInstType = enum2

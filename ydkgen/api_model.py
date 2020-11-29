@@ -789,7 +789,6 @@ class Enum(DataType):
         while typedef_stmt and typedef_stmt.keyword != 'typedef' and typedef_stmt.parent:
             typedef_stmt = typedef_stmt.parent
         self.typedef_stmt = typedef_stmt
-        self.goName = None
 
     def get_package(self):
         """ Returns the Package that this enum is found in. """
