@@ -20,7 +20,7 @@
 # All rights reserved under Apache License, Version 2.0.
 # ------------------------------------------------------------------
 #
-# Script for running ydk CI on travis-ci.org
+# Script for running YDK unit tests on travis-ci.com
 #
 # ------------------------------------------------------------------
 
@@ -763,7 +763,7 @@ function py_sanity_common_cache {
     print_msg "Running py_sanity_common_cache"
 
     reset_yang_repository
-  if [[ ${os_type} != "Darwin" && $confd_version < 7.3 ]]; then
+  if [[ ${os_type} != "Darwin" && $confd_version < "7.3" ]]; then
     # GitHub issue #909
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
     run_test sdk/python/core/tests/test_sanity_deviation.py --common-cache
@@ -801,10 +801,13 @@ function run_py_backward_compatibility {
     cd $YDKGEN_HOME
     CURRENT_GIT_REV=$(git rev-parse HEAD)
     git checkout 454ffc06ec79995832538642638e03259e622b53
+    ${PIP_BIN} install -U pyang==1.6
     run_test generate.py --bundle profiles/test/ydktest-cpp.json
     init_confd_ydktest
     py_sanity_run_limited_tests
     git checkout ${CURRENT_GIT_REV}
+    ${PIP_BIN} uninstall -y pyang
+    ${PIP_BIN} install -r requirements.txt
 }
 
 #-------------------------------------
@@ -977,7 +980,7 @@ install_py_core
 run_python_bundle_tests
 #run_python_oc_nis_tests
 run_py_metadata_test
-if [[ $confd_version < 7.3 ]]; then
+if [[ $confd_version < "7.3" ]]; then
   run_py_backward_compatibility
 fi
 # test_gen_tests

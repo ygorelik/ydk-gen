@@ -67,9 +67,6 @@ class SanityTest(unittest.TestCase):
         runner = Runner()
         self.crud.delete(self.ncc, runner)
 
-        ctypes = CascadingTypes()
-        self.crud.delete(self.ncc, ctypes)
-
     def test_int8(self):
         # Create Runner
         runner = Runner()
@@ -548,6 +545,9 @@ class SanityTest(unittest.TestCase):
 
         # Compare runners
         self.assertEqual(ctypes, ctypesRead)
+
+        ctypes = CascadingTypes()
+        self.crud.delete(self.ncc, ctypes)
 
     def test_capital_letters(self):
         native = Native()
