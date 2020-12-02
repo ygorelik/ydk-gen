@@ -1,0 +1,36 @@
+module ydktest-sanity-yang11 {
+
+  yang-version 1.1;
+
+  /*** NAMESPACE / PREFIX DEFINITION ***/
+
+  namespace "http://cisco.com/ns/yang/ydktest-yang11";
+
+  prefix "yang11";
+
+  organization "YDK Solutions";
+
+  contact
+    "Yan Gorelik";
+
+  description
+    "This module contains a collection of YANG-11 definitions
+     for sanity package.
+
+     Copyright (c) 2020 by Yan Gorelik of YDK Solutions.
+     All rights reserved.";
+
+  revision "2020-11-30" {
+    description
+      "Initial revision of sanity module to test YANG-11 types.";
+  }
+
+  container backward-incompatible {
+    description Backward_incompatible_string;
+    leaf test-node {
+       type string;
+       description test_leaf;
+    }
+  }
+
+}
