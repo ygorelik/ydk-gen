@@ -26,6 +26,7 @@ set(bundle_tests_src
         test_sanity_codec.cpp
         test_sanity_levels.cpp
         test_sanity_types.cpp
+        test_sanity_yang11.cpp
         test_json_codec.cpp
         test_xml_subtree.cpp
         testsanitynctest.cpp
