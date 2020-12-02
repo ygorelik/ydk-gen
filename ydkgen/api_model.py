@@ -281,6 +281,7 @@ class Package(NamedElement):
         self._augments_other = False
         self.identity_subclasses = {}
         self.iskeyword = iskeyword
+        self.version = '1'
 
     def qn(self):
         """ Return the qualified name """
@@ -297,6 +298,7 @@ class Package(NamedElement):
     @property
     def augments_other(self):
         return self._augments_other
+
     @augments_other.setter
     def augments_other(self, augments_other):
         self._augments_other = augments_other
@@ -350,6 +352,8 @@ class Package(NamedElement):
         desc = stmt.search_one('description')
         if desc is not None:
             self.comment = desc.arg
+        if hasattr(stmt, 'i_version'):
+            self.version = stmt.i_version
 
     def imported_types(self):
         """
