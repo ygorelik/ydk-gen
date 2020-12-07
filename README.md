@@ -96,9 +96,9 @@ This gives the developer an ability to customize scope of their bundle based on 
 
 # Backward compatibility
 
-The YDK-0.8.5 core is backward compatible with all previously generated model bundles starting from release of YDK-0.7.3.
-However the YDK-0.8.5 generates different code and model API comparing to YDK-0.8.4.
-The YDK-0.8.5 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
+The YDK-0.8.6 core is backward compatible with all previously generated model bundles starting from release of YDK-0.7.3.
+However the YDK-0.8.6 generates different code and model API comparing to YDK-0.8.4.
+The YDK-0.8.6 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
 
 **NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
 
@@ -147,7 +147,7 @@ If user has different location, the PYTHON_VENV environment variable should be s
 Here is simple example of core YDK installation for Python programming language:
 
 ```
-git clone https://github.com/ygorelik/ydk-gen.git -b 0.8.5
+git clone https://github.com/ygorelik/ydk-gen.git
 cd ydk-gen
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
@@ -194,7 +194,7 @@ in order to install third party software dependencies.
 
 ```
 # Clone ydk-gen from GitHub
-git clone https://github.com/ygorelik/ydk-gen.git -b 0.8.5
+git clone https://github.com/ygorelik/ydk-gen.git
 cd ydk-gen
 
 # Define optional environment variables and install dependencies
@@ -318,7 +318,7 @@ A sample bundle profile file is described below. The file is in a JSON format. S
 {
     "name":"cisco-ios-xr",
     "version": "6.5.3",
-    "core_version": "0.8.5",
+    "core_version": "0.8.6",
     "Author": "Cisco",
     "Copyright": "Cisco",
     "Description": "Cisco IOS-XR Native Models From Git",
@@ -397,7 +397,7 @@ Check Python packages installed:
 pip list | grep ydk
 ...
 
-ydk (0.8.5)
+ydk (0.8.6)
 ydk-models-<name-of-bundle> (0.5.1)
 ...
 ```
@@ -613,5 +613,5 @@ Join the [YDK community](https://communities.cisco.com/community/developer/ydk) 
 
 #### Release Notes
 
-The current YDK release version is 0.8.5. The version of the latest YDK-Gen master branch is 0.8.5.
-YDK-Gen is licensed under the Apache 2.0 License.
+The current YDK release version is 0.8.6. The version of the latest ydk-gen master branch is 0.8.5.
+The ydk-gen is licensed under the Apache 2.0 License.

@@ -48,7 +48,7 @@ iana-if-type.yang:
 	cp ../../../../../../yang/ietf/iana-if-type.yang iana-if-type.yang
 
 ietf-interfaces.yang:
-	cp ../../models/ietf-interfaces\@2014-05-08.yang ietf-interfaces.yang
+	cp ../../models/ietf-interfaces\@2018-02-20.yang ietf-interfaces.yang
 
 openconfig-bgp-common-multiprotocol.yang:
 	cp ../../models/openconfig-bgp-common-multiprotocol.yang openconfig-bgp-common-multiprotocol.yang

@@ -79,7 +79,7 @@ class MetaSanityTest(unittest.TestCase):
         ifc = ydktest_sanity.ConditionalInterface()
         ifc_meta = ifc._meta_info()
         self.assertTrue(ifc_meta.has_must)
-        self.assertTrue(ifc_meta.has_when)
+        self.assertFalse(ifc_meta.has_when)
         self.assertTrue(ifc_meta.is_config)
         self.assertFalse(ifc_meta.is_mandatory)
         self.assertFalse(ifc_meta.is_presence)
