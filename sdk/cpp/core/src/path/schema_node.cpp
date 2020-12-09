@@ -1,4 +1,4 @@
-/// YANG Development Kit
+// YANG Development Kit
 // Copyright 2016 Cisco Systems. All rights reserved
 //
 ////////////////////////////////////////////////////////////////
@@ -18,7 +18,11 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
+// -------------------------------------------------------------
+// This file has been modified by Yan Gorelik, YDK Solutions.
+// All modifications in original under CiscoDevNet domain
+// introduced since October 2019 are copyrighted.
+// All rights reserved under Apache License, Version 2.0.
 //////////////////////////////////////////////////////////////////
 
 
@@ -213,14 +217,14 @@ ydk::path::SchemaNodeImpl::get_statement() const
         s.keyword = "container";
         break;
     case LYS_CHOICE:
-    s.keyword = "choice";
-    break;
+        s.keyword = "choice";
+        break;
     case LYS_LEAF:
-    s.keyword = "leaf";
-    break;
+        s.keyword = "leaf";
+        break;
     case LYS_LEAFLIST:
-    s.keyword = "leaf-list";
-    break;
+        s.keyword = "leaf-list";
+        break;
     case LYS_LIST:
         if(m_node->nodetype & LYS_LEAFLIST)
         {
@@ -265,6 +269,8 @@ ydk::path::SchemaNodeImpl::get_statement() const
         s.keyword = "extension";
         break;
     case LYS_ANYDATA:
+        s.keyword = "anydata";
+        break;
     case LYS_UNKNOWN:
         break;
     }

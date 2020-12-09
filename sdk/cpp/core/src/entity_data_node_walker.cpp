@@ -1,7 +1,3 @@
-//
-// @file types.hpp
-// @brief Header for ydk entity
-//
 // YANG Development Kit
 // Copyright 2016 Cisco Systems. All rights reserved
 //
@@ -22,7 +18,11 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
+// -------------------------------------------------------------
+// This file has been modified by Yan Gorelik, YDK Solutions.
+// All modifications in original under CiscoDevNet domain
+// introduced since October 2019 are copyrighted.
+// All rights reserved under Apache License, Version 2.0.
 //////////////////////////////////////////////////////////////////
 
 #include <assert.h>
@@ -268,8 +268,9 @@ void get_entity_from_data_node(path::DataNode * node, shared_ptr<Entity> entity)
 
 static bool data_node_is_leaf(path::DataNode & data_node)
 {
-    return (data_node.get_schema_node().get_statement().keyword == "leaf"
-            || data_node.get_schema_node().get_statement().keyword == "leaf-list");
+    auto keyword = data_node.get_schema_node().get_statement().keyword;
+	return (keyword == "leaf" || keyword == "leaf-list"
+            || keyword == "anyxml" || keyword == "anydata");
 }
 
 static bool data_node_is_list(path::DataNode & data_node)

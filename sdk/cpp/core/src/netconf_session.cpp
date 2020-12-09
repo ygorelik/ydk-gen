@@ -1,4 +1,4 @@
-/// YANG Development Kit
+// YANG Development Kit
 // Copyright 2016 Cisco Systems. All rights reserved
 //
 ////////////////////////////////////////////////////////////////
@@ -757,7 +757,7 @@ static path::SchemaNode* get_schema_for_operation(path::RootSchemaNode & root_sc
 
 static void check_rpc_reply_for_error(const string& reply)
 {
-    if(reply.find("<rpc-error") != string::npos)
+    if (reply.find("</rpc-error>") != string::npos)
     {
         YLOG_ERROR("RPC error occurred:\n{}", reply);
         auto msg = extract_rpc_error(reply);
