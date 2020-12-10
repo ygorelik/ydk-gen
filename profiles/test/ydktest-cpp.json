@@ -8,6 +8,7 @@
     "models": {
     "file": [
             "sdk/cpp/core/tests/models/ietf-interfaces@2018-02-20.yang",
+            "sdk/cpp/core/tests/models/ietf-netconf-monitoring@2010-10-04.yang",
             "sdk/cpp/core/tests/models/main@2015-11-17.yang",
             "sdk/cpp/core/tests/models/main-aug1@2015-11-17.yang",
             "sdk/cpp/core/tests/models/openconfig-bgp-common-multiprotocol.yang",

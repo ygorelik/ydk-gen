@@ -1022,8 +1022,9 @@ func getEntityFromDataNode(node C.DataNode, entity types.Entity) {
 }
 
 func dataNodeIsLeaf(dataNode C.DataNode) bool {
-	return C.GoString(C.DataNodeGetKeyword(dataNode)) == "leaf" ||
-		C.GoString(C.DataNodeGetKeyword(dataNode)) == "leaf-list"
+	keyword := C.GoString(C.DataNodeGetKeyword(dataNode))
+	return keyword == "leaf" || keyword == "leaf-list" ||
+		   keyword == "anyxml" || keyword == "anydata"
 }
 
 func dataNodeIsList(dataNode C.DataNode) bool {

@@ -13,24 +13,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
 
-"""test_sanity_rpc.py
-sanity test for netconf
+"""
+test_sanity_rpc.py
+sanity test for Executor Service on netconf
 """
 from __future__ import absolute_import
 
 import sys
 import unittest
 
-from ydk.errors import YError, YServiceError
-from ydk.models.ydktest import ydktest_sanity as ysanity
-from ydk.models.ydktest import ietf_netconf, openconfig_bgp
+from ydk.errors import YError
 from ydk.providers import NetconfServiceProvider, CodecServiceProvider
-from ydk.services import ExecutorService, CodecService
+from ydk.services import ExecutorService, CodecService, CRUDService
 from ydk.types import Empty, EncodingFormat
 
-from test_utils import ParametrizedTestCase
-from test_utils import get_device_info
+from ydk.models.ydktest import ydktest_sanity as ysanity
+from ydk.models.ydktest import ietf_netconf, ietf_netconf_monitoring, openconfig_bgp
+
+from test_utils import ParametrizedTestCase, get_device_info
 
 
 class SanityTest(unittest.TestCase):
@@ -54,7 +60,6 @@ class SanityTest(unittest.TestCase):
             self.on_demand,
             self.common_cache,
             self.timeout)
-        from ydk.services import CRUDService
         crud = CRUDService()
         runner = ysanity.Runner()
         crud.delete(self.ncc, runner)
@@ -68,7 +73,6 @@ class SanityTest(unittest.TestCase):
             pass
         del self.ncc
 
-    @unittest.skip('Issues in confd')
     def test_close_session_rpc(self):
         rpc = ietf_netconf.CloseSession()
 
@@ -168,7 +172,7 @@ class SanityTest(unittest.TestCase):
         unlock_rpc = ietf_netconf.Unlock()
         unlock_rpc.input.target.running = Empty()
         try:
-            reply = self.es.execute_rpc(self.ncc, unlock_rpc)
+            self.es.execute_rpc(self.ncc, unlock_rpc)
         except Exception as e:
             self.assertIsInstance(e, YError)
 
@@ -203,6 +207,17 @@ class SanityTest(unittest.TestCase):
         get_rpc.input.filter = '<bgp xmlns="http://openconfig.net/yang/bgp"/>'
         self.es.execute_rpc(self.ncc, get_rpc, openconfig_bgp.Bgp())
 
+    def test_es_get_schema_rpc(self):
+        rpc_entity = ietf_netconf_monitoring.GetSchema()
+        rpc_entity.input.identifier = "main"
+        return_output_entity = ietf_netconf_monitoring.GetSchema.Output()
+        reply = self.es.execute_rpc(self.ncc, rpc_entity, return_output_entity)
+        self.assertIsNotNone(reply)
+
+        module = reply.data
+        self.assertTrue("module main {" == module[0:13])
+
+
 if __name__ == '__main__':
     device, non_demand, common_cache, timeout = get_device_info()
 
@@ -215,4 +230,3 @@ if __name__ == '__main__':
         timeout=timeout))
     ret = not unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful()
     sys.exit(ret)
-

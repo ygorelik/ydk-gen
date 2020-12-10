@@ -1,5 +1,6 @@
 /*  ----------------------------------------------------------------
- Copyright 2016 Cisco Systems
+ YDK - YANG Development Kit
+ Copyright 2016 Cisco Systems, All rights reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -12,6 +13,11 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
  ------------------------------------------------------------------*/
 
 #include <string.h>
@@ -22,10 +28,12 @@
 #include <ydk/codec_service.hpp>
 #include <ydk/netconf_provider.hpp>
 #include <ydk/executor_service.hpp>
+#include <ydk/types.hpp>
+
 #include <ydk_ydktest/ydktest_sanity.hpp>
 #include <ydk_ydktest/ietf_netconf.hpp>
+#include <ydk_ydktest/ietf_netconf_monitoring.hpp>
 #include <ydk_ydktest/openconfig_bgp.hpp>
-#include <ydk/types.hpp>
 
 #include "config.hpp"
 #include "catch.hpp"
@@ -363,4 +371,20 @@ TEST_CASE("es_validate_rpc_2")
     reply = es.execute_rpc(provider, discard_rpc);
     result = reply == nullptr;
     REQUIRE(result);
+}
+
+TEST_CASE("es_get_schema_rpc")
+{
+    NetconfServiceProvider provider{"127.0.0.1", "admin", "admin", 12022};
+    ExecutorService es{};
+
+    auto rpc_entity = ietf_netconf_monitoring::GetSchema{};
+    rpc_entity.input->identifier = "main";
+    auto return_output_entity = make_shared<ietf_netconf_monitoring::GetSchema::Output>();
+    auto reply = es.execute_rpc(provider, rpc_entity, return_output_entity);
+    REQUIRE(reply);
+
+    auto get_schema_rpc_output = dynamic_cast<ietf_netconf_monitoring::GetSchema::Output*>(return_output_entity.get());
+    string module = get_schema_rpc_output->data.get();
+    REQUIRE(module.compare(0, 13, "module main {") == 0);
 }

@@ -535,7 +535,7 @@ func HasData(entity Entity) bool {
 	return false
 }
 
-func getLeafValue(value interface{}) LeafData {
+func GetLeafValue(value interface{}) LeafData {
 	var leafData LeafData
 	switch value.(type) {
 	case yfilter.YFilter:
@@ -579,7 +579,7 @@ func GetEntityPath(entity Entity) EntityPath {
 			continue
 		}
 		if field.Kind() != reflect.Slice {
-			leafData = getLeafValue(leaf.Value)
+			leafData = GetLeafValue(leaf.Value)
             //fmt.Printf("Adding leaf: name: %s, data: %v\n", name, leafData)
 			entityPath.ValuePaths = append(
 				entityPath.ValuePaths,
@@ -588,7 +588,7 @@ func GetEntityPath(entity Entity) EntityPath {
 		    // leaf-list
 		    sliceInt := leaf.Value.([]interface{})
 			for i := range sliceInt {
-				leafData = getLeafValue(sliceInt[i])
+				leafData = GetLeafValue(sliceInt[i])
 				path := name
 				if len(leafData.Value) > 0 {
 				    path = fmt.Sprintf("%s[.=\"%v\"]", name, leafData.Value)
