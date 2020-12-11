@@ -122,11 +122,6 @@ function reset_yang_repository {
       mkdir -p $HOME/.ydk/127.0.0.1
     fi
     rm -f $HOME/.ydk/127.0.0.1/*
-
-    # Correct issue with confd 7.3
-    if [[ $confd_version > 7.2 ]]; then
-      cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
-    fi
 }
 
 function init_confd_ydktest {

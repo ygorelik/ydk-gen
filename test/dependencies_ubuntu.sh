@@ -171,7 +171,7 @@ function check_install_go {
 
 function check_install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $ubuntu_release < 20 ]]; then
+    if [[ $ubuntu_release < 16 ]]; then
       print_msg "Installing confd-basic-6.2"
       run_cmd wget https://github.com/CiscoDevNet/ydk-gen/files/562538/confd-basic-6.2.linux.x86_64.zip &> /dev/null
       unzip confd-basic-6.2.linux.x86_64.zip

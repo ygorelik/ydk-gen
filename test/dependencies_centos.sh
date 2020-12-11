@@ -144,7 +144,7 @@ function check_install_libssh {
 
 function install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $centos_version > 7 ]]; then
+    if [[ $centos_version > 6 ]]; then
       print_msg "Installing confd basic 7.3"
       unzip $curr_dir/3d_party/linux/confd-basic-7.3.linux.x86_64.zip
       cd confd-basic-7.3.linux.x86_64
