@@ -34,7 +34,7 @@ function print_msg {
     echo -e "${MSG_COLOR}*** $(date): gnmi_tests.sh | $@ ${NOCOLOR}"
 }
 
-function run_exec_test {
+function run_cmd {
     $@
     local status=$?
     if [ $status -ne 0 ]; then
@@ -105,10 +105,16 @@ function check_python_installation {
     fi
   fi
 
-  if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* && ${PYTHON_VERSION} == "3"* ]]; then
-    print_msg "Creating Python3 virtual environment in $YDKGEN_HOME/venv"
-    run_exec_test ${PYTHON_BIN} -m venv $YDKGEN_HOME/venv
-    run_exec_test source $YDKGEN_HOME/venv/bin/activate
+  if [[ $(uname) == "Linux" && ${PYTHON_VERSION} == "3"* ]]; then
+    if [[ -z ${PYTHON_VENV} ]]; then
+      PYTHON_VENV=${HOME}/venv
+      print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
+    fi
+    if [[ ! -d ${PYTHON_VENV} ]]; then
+      print_msg "Creating Python3 virtual environment in ${PYTHON_VENV}"
+      run_cmd python3 -m venv ${PYTHON_VENV}
+    fi
+    run_cmd source ${PYTHON_VENV}/bin/activate
   fi
 
   print_msg "Checking installation of ${PYTHON_BIN}"
@@ -191,11 +197,11 @@ function install_cpp_core {
 
     if [[ $run_with_coverage ]] ; then
       print_msg "Compiling with coverage"
-      run_exec_test ${CMAKE_BIN} -DCOVERAGE=True ..
+      run_cmd ${CMAKE_BIN} -DCOVERAGE=True ..
     else
-      run_exec_test ${CMAKE_BIN} ..
+      run_cmd ${CMAKE_BIN} ..
     fi
-    run_exec_test make &> /dev/null
+    run_cmd make &> /dev/null
     sudo make install
 }
 
@@ -222,7 +228,7 @@ function install_cpp_ydktest_bundle {
     cd $YDKGEN_HOME
     run_test generate.py --bundle profiles/test/ydktest-cpp.json --cpp
     cd gen-api/cpp/ydktest-bundle/build
-    run_exec_test make &> /dev/null
+    run_cmd make &> /dev/null
     sudo make install
     cd -
 }
@@ -233,11 +239,11 @@ function build_gnmi_cpp_core_library {
     mkdir -p build
     cd build
     if [[ $run_with_coverage ]] ; then
-      run_exec_test ${CMAKE_BIN} -DCOVERAGE=True ..
+      run_cmd ${CMAKE_BIN} -DCOVERAGE=True ..
     else
-      run_exec_test ${CMAKE_BIN} ..
+      run_cmd ${CMAKE_BIN} ..
     fi
-    run_exec_test make &> /dev/null
+    run_cmd make &> /dev/null
     sudo make install
     cd $YDKGEN_HOME
 }
@@ -248,14 +254,14 @@ function build_and_run_cpp_gnmi_tests {
     mkdir -p build
     cd build
     if [[ $run_with_coverage ]] ; then
-      run_exec_test ${CMAKE_BIN} -DCOVERAGE=True ..
+      run_cmd ${CMAKE_BIN} -DCOVERAGE=True ..
     else
-      run_exec_test ${CMAKE_BIN} ..
+      run_cmd ${CMAKE_BIN} ..
     fi
-    run_exec_test make &> /dev/null
+    run_cmd make &> /dev/null
 
     cd $YDKGEN_HOME/sdk/cpp/gnmi/tests/build
-    run_exec_test ./ydk_gnmi_test -d yes
+    run_cmd ./ydk_gnmi_test -d yes
 
     collect_cpp_coverage
 }
@@ -290,8 +296,8 @@ function run_cpp_gnmi_memcheck_tests {
     cd $YDKGEN_HOME/sdk/cpp/gnmi/samples
     mkdir -p build
     cd build
-    run_exec_test ${CMAKE_BIN} ..
-    run_exec_test make &> /dev/null
+    run_cmd ${CMAKE_BIN} ..
+    run_cmd make &> /dev/null
 
     print_msg "Running gnmi sample tests with memcheck"
     valgrind --leak-check=summary ./bgp_gnmi_subscribe ssh://admin:admin@127.0.0.1:50051
@@ -303,8 +309,8 @@ function start_gnmi_server {
     if [ ! -x ./build/gnmi_server ]; then
         print_msg "Building YDK gNMI server"
         mkdir -p build && cd build
-        run_exec_test ${CMAKE_BIN} ..
-        run_exec_test make &> /dev/null
+        run_cmd ${CMAKE_BIN} ..
+        run_cmd make &> /dev/null
     fi
 
     print_msg "Starting YDK gNMI server"
@@ -352,7 +358,7 @@ function run_go_gnmi_tests {
     print_msg "Running Go gNMI tests"
 
     cd $YDKGEN_HOME/sdk/go/gnmi/tests
-    run_exec_test go test
+    run_cmd go test
 
     run_go_gnmi_samples
 
@@ -365,8 +371,8 @@ function run_go_gnmi_samples {
     print_msg "Running Go gNMI samples"
 
     cd $YDKGEN_HOME/sdk/go/gnmi/samples
-    run_exec_test go run service_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
-    run_exec_test go run session_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
+    run_cmd go run service_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
+    run_cmd go run session_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
 }
 
 
@@ -419,7 +425,7 @@ function build_python_gnmi_package {
 
     cd $YDKGEN_HOME
     run_test generate.py --service profiles/services/gnmi-0.4.0.json
-    run_exec_test ${PIP_BIN} install --no-deps gen-api/python/ydk-service-gnmi/dist/ydk*.tar.gz
+    run_cmd ${PIP_BIN} install --no-deps gen-api/python/ydk-service-gnmi/dist/ydk*.tar.gz
 
     print_msg "Verifying Python gNMI package installation"
     ${PYTHON_BIN} -c "from ydk.gnmi.path import gNMISession"

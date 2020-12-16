@@ -37,7 +37,8 @@ TEST_CASE( "codec_encode"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
-    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
+    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
+    REQUIRE(repo!=NULL);
     ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
     REQUIRE(provider!=NULL);
 
@@ -62,7 +63,8 @@ TEST_CASE( "codec_decode"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
-    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
+    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
+    REQUIRE(repo!=NULL);
     ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
     REQUIRE(provider!=NULL);
 
@@ -86,10 +88,9 @@ TEST_CASE( "codec_decode"  )
 TEST_CASE( "provider_withpath"  )
 {
     YDKStatePtr state = YDKStateCreate();
-    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
-    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
-
+    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
     REQUIRE(repo!=NULL);
+    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
     REQUIRE(provider!=NULL);
 
     NetconfServiceProviderFree(provider);
@@ -101,9 +102,8 @@ TEST_CASE( "provider"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Repository repo = RepositoryInit();
-    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
-
     REQUIRE(repo!=NULL);
+    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
     REQUIRE(provider!=NULL);
 
     NetconfServiceProviderFree(provider);
@@ -116,8 +116,8 @@ TEST_CASE( "rpc" )
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
 
-    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
-
+    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
+    REQUIRE(repo!=NULL);
     ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
     REQUIRE(provider!=NULL);
 

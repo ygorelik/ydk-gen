@@ -61,6 +61,7 @@ function install_grpc {
     git submodule update --init
     # Correcting source code, which fails in focal with gcc-7.5.0
     cp $curr_dir/3d_party/grpc/log_linux.cc src/core/lib/gpr/
+    cp $curr_dir/3d_party/grpc/Makefile .
     cd $curr_dir
   fi
   if [[ ! -x /usr/local/lib/libgrpc.a ]]; then
@@ -68,17 +69,9 @@ function install_grpc {
     cd $HOME/grpc
     make > /dev/null
     local status=$?
-    if [[ $status -ne 0 && ${os_info} == *"fedora"* ]]; then
-      make clean
-      print_msg "Installing grpc with clang"
-      sudo yum install clang -y
-      cp $curr_dir/3d_party/grpc/Makefile .
-      make > /dev/null
-      local status=$?
-      if [ $status -ne 0 ]; then
-         print_msg "Failed to compile grpc code; exiting"
-         exit $status
-      fi
+    if [ $status -ne 0 ]; then
+       print_msg "Failed to compile grpc code; exiting"
+       exit $status
     fi
     sudo make install
     sudo ldconfig

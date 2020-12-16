@@ -42,8 +42,8 @@ else
 BUILDDIR_ABSOLUTE = $(abspath $(BUILDDIR))
 endif
 
-#HAS_GCC = $(shell which gcc > /dev/null 2> /dev/null && echo true || echo false)
-#HAS_CC = $(shell which cc > /dev/null 2> /dev/null && echo true || echo false)
+HAS_GCC = $(shell which gcc > /dev/null 2> /dev/null && echo true || echo false)
+HAS_CC = $(shell which cc > /dev/null 2> /dev/null && echo true || echo false)
 HAS_CLANG = $(shell which clang > /dev/null 2> /dev/null && echo true || echo false)
 
 ifeq ($(HAS_CC),true)
@@ -334,7 +334,7 @@ CXXFLAGS += -std=c++11
 ifeq ($(SYSTEM),Darwin)
 CXXFLAGS += -stdlib=libc++
 endif
-CPPFLAGS += -g -Wall -Wextra -Werror -Wno-long-long -Wno-unused-parameter -DOSATOMIC_USE_INLINED=1 -Wno-deprecated-declarations
+CPPFLAGS += -g -Wall -Wextra -Werror -Wno-ignored-qualifiers -Wno-stringop-truncation -Wno-long-long -Wno-unused-parameter -DOSATOMIC_USE_INLINED=1 -Wno-deprecated-declarations
 COREFLAGS += -fno-rtti -fno-exceptions
 LDFLAGS += -g
 

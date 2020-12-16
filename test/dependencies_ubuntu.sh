@@ -112,6 +112,9 @@ function check_install_gcc {
     sudo ln -fs /usr/bin/gcc-7 /usr/bin/gcc
     gcc_version=$(echo $(gcc --version) | awk '{ print $3 }' | cut -d '-' -f 1)
     print_msg "Installed gcc/g++ version is $gcc_version"
+  else
+    sudo ln -fs /usr/bin/g++ /usr/bin/c++
+    sudo ln -fs /usr/bin/gcc /usr/bin/cc
   fi
 }
 

@@ -40,7 +40,7 @@ all:  openconfig-platform.deviation\
 
 openconfig-platform.deviation : cisco-xr-openconfig-platform-deviations.yang \
  		openconfig-platform.yang openconfig-platform-transceiver.yang openconfig-transport-types.yang openconfig-platform-types.yang\
-                openconfig-extensions.yang openconfig-interfaces.yang openconfig-terminal-device.yang openconfig-if-ethernet.yang
+        openconfig-extensions.yang openconfig-interfaces.yang openconfig-terminal-device.yang openconfig-if-ethernet.yang
 	$(CONFDC) $(FXS_WERR) $(EXTRA_LINK_FLAGS) -o $(basename $@).fxs -c $(basename $@).yang \
 		--deviation $(word 1, $^)
 
