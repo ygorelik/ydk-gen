@@ -32,7 +32,7 @@ all:  openconfig-platform.deviation\
 	openconfig-platform-types.fxs openconfig-platform-transceiver.fxs oc-pattern.fxs main.fxs main-aug1.fxs iana-if-type.fxs\
 	openconfig-transport-types.fxs ietf-aug-base-1.fxs ietf-aug-base-2.fxs openconfig-terminal-device.fxs  openconfig-if-ethernet.fxs\
 	ydktest-aug-ietf-1.fxs ydktest-aug-ietf-2.fxs ydktest-aug-ietf-4.fxs ydktest-aug-ietf-5.fxs ydktest-sanity-action.fxs\
-	ydktest-sanity-yang11.fxs\
+	ydktest-sanity-yang11.fxs openconfig-bgp-operational.fxs \
 		$(CDB_DIR) ssh-keydir
 	@echo "Copying YDK customized aaa_init.xml to $(CDB_DIR)"
 	cp ydk_aaa_init.xml $(CDB_DIR)/aaa_init.xml
@@ -61,6 +61,9 @@ openconfig-bgp-global.yang:
 
 openconfig-bgp-neighbor.yang:
 	cp ../../models/openconfig-bgp-neighbor.yang openconfig-bgp-neighbor.yang
+
+openconfig-bgp-operational.yang:
+	cp ../../models/openconfig-bgp-operational.yang openconfig-bgp-operational.yang
 
 openconfig-bgp-peer-group.yang:
 	cp ../../models/openconfig-bgp-peer-group.yang openconfig-bgp-peer-group.yang
