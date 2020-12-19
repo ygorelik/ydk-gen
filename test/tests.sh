@@ -165,7 +165,7 @@ function check_python_installation {
     fi
   fi
 
-  if [[ $(uname) == "Linux" && ${PYTHON_VERSION} == "3"* ]]; then
+  if [[ ! $run_with_coverage ]]; then
     if [[ -z ${PYTHON_VENV} ]]; then
       PYTHON_VENV=${HOME}/venv
       print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
@@ -511,8 +511,8 @@ function run_go_sanity_tests {
 function run_python_bundle_tests {
     print_msg "Running python bundle tests"
     py_sanity_ydktest
-    if [[ ${os_type} != "Darwin" && $confd_version < 7.3 ]]; then
-        # GitHub issue #909
+    if [[ ${os_type} != "Darwin" ]]; then
+        # GitHub issue #890
         py_sanity_deviation
     fi
     py_sanity_augmentation
@@ -647,72 +647,51 @@ function py_sanity_ydktest_test_tcp {
 }
 
 #--------------------------
-# Python deviation bundle
+# Python deviation tests
 #--------------------------
 
 function py_sanity_deviation {
     reset_yang_repository
-    py_sanity_deviation_ydktest_gen
+    init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
+
     py_sanity_deviation_ydktest_test
 
-    py_sanity_deviation_bgp_gen
     py_sanity_deviation_bgp_test
     reset_yang_repository
 }
 
-function py_sanity_deviation_ydktest_gen {
-    print_msg "Running py_sanity_deviation_ydktest_gen"
-
-    run_test generate.py --bundle profiles/test/ydktest-cpp.json --python -i
-}
-
 function py_sanity_deviation_ydktest_test {
     print_msg "Running py_sanity_deviation_ydktest_test"
-
-    init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
+    cd $YDKGEN_HOME
+    run_test generate.py --bundle profiles/test/ydktest-cpp.json --python -i
     run_test sdk/python/core/tests/test_sanity_deviation.py
-#    run_test sdk/python/core/tests/test_sanity_deviation.py --non-demand
-}
-
-function py_sanity_deviation_bgp_gen {
-    print_msg "Running py_sanity_deviation_bgp_gen"
-
-    run_test generate.py --bundle profiles/test/deviation.json --verbose -i
 }
 
 function py_sanity_deviation_bgp_test {
     print_msg "Running py_sanity_deviation_bgp_test"
-
+    cd $YDKGEN_HOME
+    run_test generate.py --bundle profiles/test/deviation.json --verbose -i
     run_test sdk/python/core/tests/test_sanity_deviation_bgp.py
-#    run_test sdk/python/core/tests/test_sanity_deviation_bgp.py --non-demand
 }
 
 #--------------------------
-# Python augmentation bundle
+# Python augmentation tests
 #--------------------------
 function py_sanity_augmentation {
     print_msg "Running py_sanity_augmentation"
 
     reset_yang_repository
-    py_sanity_augmentation_gen
+    init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/augmentation
     py_sanity_augmentation_test
     reset_yang_repository
-}
-
-function py_sanity_augmentation_gen {
-    print_msg "Running py_sanity_augmentation_gen"
-
-    cd $YDKGEN_HOME
-    run_test generate.py --bundle profiles/test/ydktest-augmentation.json -i
 }
 
 function py_sanity_augmentation_test {
     print_msg "Running py_sanity_augmentation_test"
 
-    init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/augmentation
-
+    cd $YDKGEN_HOME
+    run_test generate.py --bundle profiles/test/ydktest-augmentation.json -i
     run_test sdk/python/core/tests/test_sanity_augmentation.py
-#    run_test sdk/python/core/tests/test_sanity_augmentation.py --non-demand
     run_test sdk/python/core/tests/test_on_demand.py
 }
 
@@ -720,8 +699,8 @@ function py_sanity_common_cache {
     print_msg "Running py_sanity_common_cache"
 
     reset_yang_repository
-    if [[ ${os_type} != "Darwin" && $confd_version < 7.3 ]]; then
-        # GitHub issue #909
+    if [[ ${os_type} != "Darwin" ]]; then
+        # GitHub issue #890
         init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
         run_test sdk/python/core/tests/test_sanity_deviation.py --common-cache
     fi
@@ -916,20 +895,21 @@ print_msg "Using confd-basic-$confd_version for running unit tests"
 ######################################
 # Install and run C++ core tests
 ######################################
-#install_test_cpp_core
-#run_cpp_bundle_tests
+install_test_cpp_core
+run_cpp_bundle_tests
 
 ######################################
 # Install and run Go tests
 ######################################
-#if [[ ${os_info} != *"focal"* ]]; then
+if [[ ${os_info} != *"focal"* ]]; then
   # TODO: issue running go tests on ubuntu:focal
   # execution unexpectedly stalls.
   # The tests are passing well on platform and docker
+  # GitHub issue #1028
   init_go_env
   install_go_core
   run_go_bundle_tests
-#fi
+fi
 
 ######################################
 # Install and run Python tests

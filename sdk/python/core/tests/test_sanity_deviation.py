@@ -19,7 +19,6 @@ from __future__ import absolute_import
 import sys
 import unittest
 
-import ydk.types as ytypes
 from ydk.services import CRUDService
 from ydk.models.ydktest import ydktest_sanity as ysanity
 from ydk.providers import NetconfServiceProvider
@@ -56,7 +55,6 @@ class SanityTest(unittest.TestCase):
         runner.ytypes.built_in_t._python_type_validation_enabled = False
         runner.ytypes.built_in_t.number8 = 126
         self.crud.create(self.ncc, runner)
-
 
         runner_read = ysanity.Runner()
         runner_read = self.crud.read(self.ncc, runner_read)
@@ -188,7 +186,7 @@ class SanityTest(unittest.TestCase):
         runner = ysanity.Runner()
         runner.ytypes.built_in_t._python_type_validation_enabled = False
         runner.ytypes.built_in_t.llstring.extend([str(i) for i in range(8)])
-        self.assertRaises(YModelError, self.crud.create, self.ncc, runner)
+        self.assertRaises(YError, self.crud.create, self.ncc, runner)
 
     def test_not_supported_leaf(self):
         # not supported leaf
@@ -214,7 +212,7 @@ class SanityTest(unittest.TestCase):
         self.assertRaises(YModelError, self.crud.create, self.ncc, runner)
 
     @unittest.skip('no exception raised during validation')
-    def test_leaflist_max_elements(self):
+    def test_leaf_list_max_elements(self):
         """This sanity test only tests deviation for max-elements. If min-elements is set
         to value larger than 0, this constraint will be required in all test cases, and will
         fail all other test cases.

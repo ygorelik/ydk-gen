@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 #  ----------------------------------------------------------------
 # Copyright 2016 Cisco Systems
 #
@@ -14,14 +13,15 @@ from __future__ import absolute_import
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+from __future__ import absolute_import
+
 import sys
 import unittest
 
-import ydk.types as ytypes
 from ydk.services import CRUDService
 from ydk.providers import NetconfServiceProvider
-from ydk.types import Empty, Decimal64
-from ydk.errors import YError, YModelError
+
+from ydk.errors import YModelError
 from ydk.models.deviation import openconfig_bgp, openconfig_bgp_types
 from ydk.models.deviation.openconfig_routing_policy import DefaultPolicyType
 

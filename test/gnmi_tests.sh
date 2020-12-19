@@ -105,7 +105,7 @@ function check_python_installation {
     fi
   fi
 
-  if [[ $(uname) == "Linux" && ${PYTHON_VERSION} == "3"* ]]; then
+  if [[ ! $run_with_coverage ]]; then
     if [[ -z ${PYTHON_VENV} ]]; then
       PYTHON_VENV=${HOME}/venv
       print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
