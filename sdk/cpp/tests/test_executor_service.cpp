@@ -56,16 +56,9 @@ TEST_CASE("es_close_session_rpc")
     REQUIRE(result);
 
     ietf_netconf::CloseSession rpc{};
-    ietf_netconf::CloseSession rpc2{};
 
     std::shared_ptr<Entity> reply = es.execute_rpc(provider, rpc);
-    result = reply == nullptr;
-    REQUIRE(result);
-
-    CHECK_THROWS_AS(
-        es.execute_rpc(provider, rpc2),
-        YClientError
-    );
+    REQUIRE(reply == nullptr);
 }
 
 // persist-id is broken?
