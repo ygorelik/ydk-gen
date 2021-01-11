@@ -1,6 +1,7 @@
 ### Post 0.8.5
 
 #### Resolved GitHub issues
+  * Version numbers in bundle resolver to comply with PEP 440 ([#1007](https://github.com/CiscoDevNet/ydk-gen/issues/1007))
   * The Executor Service fails to return module content to user ([#1035](https://github.com/CiscoDevNet/ydk-gen/issues/1035))
   * Docker base image python error ([#1036](https://github.com/CiscoDevNet/ydk-gen/issues/1036))
 

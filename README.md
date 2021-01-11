@@ -194,7 +194,7 @@ in order to install third party software dependencies.
 
 ```
 # Clone ydk-gen from GitHub
-git clone https://github.com/ygorelik/ydk-gen.git -b 0.8.5
+git clone https://github.com/ygorelik/ydk-gen.git
 cd ydk-gen
 
 # Define optional environment variables and install dependencies
@@ -312,16 +312,18 @@ The first step in using ydk-gen is either using one of the already built [bundle
 
 Construct a bundle profile file, such as [```ietf_0_1_1.json```](profiles/bundles/ietf_0_1_1.json) and specify its dependencies.
 
-A sample bundle profile file is described below. The file is in a JSON format. Specify the `"name"` of your bundle, the `"version"` of the bundle and the `"core_version"`, which refers to [the version](https://github.com/CiscoDevNet/ydk-gen/releases) of the ydk core package you want to use with this bundle. The `"name"` of the bundle here is especially important as this will form part of the installation path of the bundle.
+A sample bundle profile file is described below. The file is in a JSON format. The profile must define the `"name"`, `"version"` and `"description"` of the bundle, and then the `"core_version"`, which refers to [the version](https://github.com/CiscoDevNet/ydk-gen/releases) of the ydk core package that you want to use with this bundle.
+The `"name"` of the bundle will form part of the installation path of the bundle.
+All other attributes, like `"author"` and `"copyright"`, are optional and will not affect the bundle generation. 
 
 ```
 {
     "name":"cisco-ios-xr",
     "version": "6.5.3",
     "core_version": "0.8.5",
-    "Author": "Cisco",
-    "Copyright": "Cisco",
-    "Description": "Cisco IOS-XR Native Models From Git",
+    "author": "Cisco",
+    "copyright": "Cisco",
+    "description": "Cisco IOS-XR Native Models From Git",
 ```
 
 The `"models"` section of the profile describes sources of YANG models. It could contain combination of elements:
