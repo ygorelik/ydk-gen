@@ -366,7 +366,7 @@ include(ExternalProject)
 ExternalProject_Add(project_libnetconf
     PREFIX "${CMAKE_CURRENT_BINARY_DIR}/project_libnetconf"
     URL "https://github.com/ygorelik/libnetconf/archive/master.zip"
-    CONFIGURE_COMMAND ./configure
+    CONFIGURE_COMMAND ./configure --enable-debug
     BUILD_COMMAND "make"
     INSTALL_DIR "${libnetconf_location}"
     INSTALL_COMMAND mkdir -p ${libnetconf_headers_location}/libnetconf && cp ${libnetconf_headers} ${libnetconf_headers_location}/libnetconf
