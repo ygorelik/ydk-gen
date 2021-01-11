@@ -628,7 +628,7 @@ function py_sanity_ydktest_test_netconf_ssh {
     run_test sdk/python/core/tests/test_sanity_types.py
     run_test sdk/python/core/tests/test_non_top_operations.py
     run_test sdk/python/core/tests/test_entity_diff.py
-#    run_test_no_coverage sdk/python/core/tests/test_sanity_executor_rpc.py
+    run_test_no_coverage sdk/python/core/tests/test_sanity_executor_rpc.py
   if [[ ${os_type} != "Darwin" ]] ; then
     print_msg "Running py_sanity_ydktest_test_netconf_ssh with no on-demand"
     run_test sdk/python/core/tests/test_netconf_operations.py --non-demand
