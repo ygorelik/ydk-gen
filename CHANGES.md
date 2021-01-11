@@ -4,6 +4,7 @@
   * Develop utility function to clone Entity instance ([#967](https://github.com/CiscoDevNet/ydk-gen/issues/967))
   * Go CodecService fails to encode leaf-list data ([#968](https://github.com/CiscoDevNet/ydk-gen/issues/968))
   * Developed script install_ydk, which allows to install YDK from source in one CLI command
+  * Version numbers in bundle resolver to comply with PEP 440 ([#1007](https://github.com/CiscoDevNet/ydk-gen/issues/1007))
   * Added support for CentOS/RHEL-8 and Ubuntu-20.04 (focal) ([#1019](https://github.com/CiscoDevNet/ydk-gen/issues/1019))
 
 #### Resolved GitHub issues
