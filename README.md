@@ -147,7 +147,7 @@ If user has different location, the PYTHON_VENV environment variable should be s
 Here is simple example of core YDK installation for Python programming language:
 
 ```
-git clone https://github.com/ygorelik/ydk-gen.git -b 0.8.5
+git clone https://github.com/ygorelik/ydk-gen.git
 cd ydk-gen
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
@@ -615,5 +615,5 @@ Join the [YDK community](https://communities.cisco.com/community/developer/ydk) 
 
 #### Release Notes
 
-The current YDK release version is 0.8.5. The version of the latest YDK-Gen master branch is 0.8.5.
+The current YDK release version is 0.8.5. The version of the latest YDK-Gen master branch is 0.8.5.post1.
 YDK-Gen is licensed under the Apache 2.0 License.
