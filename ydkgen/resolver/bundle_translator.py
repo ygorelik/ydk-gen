@@ -144,8 +144,8 @@ def get_file_attrs(files, root, remote=None):
 
 def get_dir_attrs(dirs, root, remote=None):
     for d in dirs:
-        for (_, _, files) in walk(os.path.join(root, d.lstrip('/'))):
-            for res in get_file_attrs((os.path.join(d, f) for f in files),
+        for (dd, _, files) in walk(os.path.join(root, d.lstrip('/'))):
+            for res in get_file_attrs((os.path.join(dd, f) for f in files),
                                       root,
                                       remote):
                 yield res
