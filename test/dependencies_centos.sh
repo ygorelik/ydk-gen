@@ -87,7 +87,7 @@ function install_dependencies {
     run_cmd sudo yum install epel-release -y > /dev/null
 #    run_cmd sudo yum install https://centos7.iuscommunity.org/ius-release.rpm -y > /dev/null
     run_cmd sudo yum install which libxml2-devel libxslt-devel libssh-devel libtool gcc-c++ pcre-devel -y > /dev/null
-    run_cmd sudo yum install cmake3 wget curl-devel unzip make java mlocate -y > /dev/null
+    run_cmd sudo yum install cmake3 wget curl-devel unzip make java mlocate flex bison -y > /dev/null
     run_cmd sudo yum install python3-devel -y > /dev/null
     sudo yum install valgrind -y > /dev/null
     sudo yum install rpm-build redhat-lsb redhat-lsb-core -y > /dev/null
