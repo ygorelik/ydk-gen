@@ -9,7 +9,8 @@
 .idea*
 .coverage*
 htmlcov
-coverage.xml
+coverage.*
+libydk*
 *.pyc
 *~
 *.swp
