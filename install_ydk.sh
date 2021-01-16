@@ -96,9 +96,6 @@ function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
   pip install -r requirements.txt
-  if [[ ${ydk_lang} == "py" || ${ydk_lang} == "all" ]]; then
-    pip install pybind11
-  fi
 }
 
 function init_go_env {
@@ -385,4 +382,3 @@ install_ydk_go
 
 deactivate
 cd ${curr_dir}
-

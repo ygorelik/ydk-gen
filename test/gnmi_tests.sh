@@ -140,7 +140,7 @@ function check_python_installation {
 function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
-  ${PIP_BIN} install -r requirements.txt pybind11==2.2.2
+  ${PIP_BIN} install -r requirements.txt
   if [[ $run_with_coverage ]] ; then
     ${PIP_BIN} install coverage
   fi
