@@ -45,7 +45,8 @@ function init_go_env {
     print_msg "CC: ${CC}"
     print_msg "CXX: ${CXX}"
 
-    if [ ! -d $GOPATH/src/github.com/stretchr/testify]; then
+    if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
+      print_msg "Installing 'testify' package"
       run_cmd go get github.com/stretchr/testify
       cd $GOPATH/src/github.com/stretchr/testify
       git checkout tags/v1.6.1
@@ -124,7 +125,7 @@ function install_go_gnmi {
     print_msg "Installing Go gNMI package"
     cd $YDKGEN_HOME
 
-    run_test ./generate.py --service profiles/services/gnmi-0.4.0.json --go -i
+    run_cmd python ./generate.py --service profiles/services/gnmi-0.4.0.json --go -i
 }
 
 function run_go_gnmi_tests {
@@ -133,7 +134,10 @@ function run_go_gnmi_tests {
     print_msg "Running Go gNMI tests"
 
     cd $YDKGEN_HOME/sdk/go/gnmi/tests
-    run_cmd go test
+    #run_cmd go test
+    run_cmd go test -run GnmiServiceProviderTestSuite
+    run_cmd go test -run TestGnmiServiceTestSuite
+    run_cmd go test -run TestGnmiSessionTestSuite
 
     run_go_gnmi_samples
 

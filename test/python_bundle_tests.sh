@@ -17,6 +17,14 @@ function run_test {
     return $status
 }
 
+function reset_yang_repository {
+    if [[ ! -d $HOME/.ydk/127.0.0.1 ]]; then
+      mkdir -p $HOME/.ydk
+      mkdir -p $HOME/.ydk/127.0.0.1
+    fi
+    rm -f $HOME/.ydk/127.0.0.1/*
+}
+
 ########################## EXECUTION STARTS HERE #############################
 #
 
@@ -36,6 +44,7 @@ script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 $script_dir/init_test_env.sh
 
 source ${HOME}/venv/bin/activate
+reset_yang_repository
 
 run_test test_ydk_types.py
 run_test test_netconf_operations.py

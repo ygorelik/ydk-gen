@@ -98,7 +98,8 @@ stop_confd
 
 if [ -d ${HOME}/.ydk ]; then
     print_msg "Deleting YDK cache in ${HOME}/.ydk"
-    rm -rf ${HOME}/.ydk/*
+    rm -rf ${HOME}/.ydk/127.0.0.1/*
+    rm -rf ${HOME}/.ydk/localhost/*
 fi
 
 cd $curr_dir
