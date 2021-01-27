@@ -62,7 +62,7 @@ function install_libssh {
 
 function install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $os_version < "10.00" ]]
+    if [[ $os_version < "10.14" ]]
       print_msg "Installing confd-basic-6.2"
       wget https://github.com/CiscoDevNet/ydk-gen/files/562559/confd-basic-6.2.darwin.x86_64.zip &> /dev/null
       unzip confd-basic-6.2.darwin.x86_64.zip

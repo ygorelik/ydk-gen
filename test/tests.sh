@@ -118,19 +118,21 @@ function init_confd {
     run_cmd make all > /dev/null
     run_cmd make start
     cd -
-}
 
-function reset_yang_repository {
     if [[ ! -d $HOME/.ydk/127.0.0.1 ]]; then
       mkdir -p $HOME/.ydk
       mkdir -p $HOME/.ydk/127.0.0.1
     fi
     rm -f $HOME/.ydk/127.0.0.1/*
+
+    # Correct issue with confd 7.3
+    if [[ $confd_version > 7.2 ]]; then
+      cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
+    fi
 }
 
 function init_confd_ydktest {
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/ydktest
-    reset_yang_repository
 }
 
 function init_rest_server {
@@ -648,13 +650,11 @@ function py_sanity_ydktest_test_tcp {
 #--------------------------
 
 function py_sanity_deviation {
-    reset_yang_repository
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
 
     py_sanity_deviation_ydktest_test
 
     py_sanity_deviation_bgp_test
-    reset_yang_repository
 }
 
 function py_sanity_deviation_ydktest_test {
@@ -677,14 +677,6 @@ function py_sanity_deviation_bgp_test {
 # Python augmentation tests
 #--------------------------
 function py_sanity_augmentation {
-    print_msg "Running py_sanity_augmentation"
-
-    reset_yang_repository
-    py_sanity_augmentation_test
-    reset_yang_repository
-}
-
-function py_sanity_augmentation_test {
     print_msg "Running py_sanity_augmentation_test"
 
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/augmentation
@@ -697,7 +689,6 @@ function py_sanity_augmentation_test {
 function py_sanity_common_cache {
     print_msg "Running py_sanity_common_cache"
 
-    reset_yang_repository
     if [[ ${os_type} != "Darwin" && $confd_version < 7.3 ]]; then
         # GitHub issue #909
         init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
@@ -709,7 +700,6 @@ function py_sanity_common_cache {
     init_confd_ydktest
     run_test sdk/python/core/tests/test_sanity_levels.py --common-cache
     run_test sdk/python/core/tests/test_sanity_types.py --common-cache
-    reset_yang_repository
 }
 
 function py_sanity_run_limited_tests {
@@ -728,6 +718,7 @@ function py_sanity_one_class_per_module {
     print_msg "Running ONE CLASS PER MODULE TESTS"
     cd $YDKGEN_HOME
     run_test generate.py --bundle profiles/test/ydktest-cpp.json -o
+    init_confd_ydktest
     py_sanity_run_limited_tests
 }
 
