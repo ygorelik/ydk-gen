@@ -1,17 +1,34 @@
 #!/bin/bash
-#  ----------------------------------------------------------------
+#  -----------------------------------------------------------------------------
+# Copyright 2020 Yan Gorelik, YDK Solutions
 #
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
+#
+# Bash script to install YDK-GO packages and run unit tests
+#
+# ------------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date): run_go_tests.sh: $1${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date): run_go_tests.sh: $*${NOCOLOR}"
 }
 
 function run_cmd {
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Command '$@' FAILED with status=$status"
+        print_msg "Command '$*' FAILED with status=$status"
         exit $status
     fi
     return $status
@@ -154,6 +171,17 @@ function run_go_gnmi_samples {
     run_cmd go run session_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
 }
 
+function reset_yang_repository {
+    if [[ ! -d $HOME/.ydk/127.0.0.1 ]]; then
+      mkdir -p $HOME/.ydk
+      mkdir -p $HOME/.ydk/127.0.0.1
+    fi
+    rm -f $HOME/.ydk/127.0.0.1/*
+
+    # Correct issue with confd 7.3
+    cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
+}
+
 ########################## EXECUTION STARTS HERE #############################
 
 # Terminal colors
@@ -187,11 +215,18 @@ curr_dir="$(pwd)"
 script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 
 cd $YDKGEN_HOME
-source ${HOME}/venv/bin/activate
+
+if [[ -z ${PYTHON_VENV} ]]; then
+    export PYTHON_VENV=${HOME}/venv
+    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
+fi
+source $PYTHON_VENV/bin/activate
 
 init_go_env
 install_go_core
 install_go_bundle
+
+reset_yang_repository
 
 run_go_bundle_tests
 

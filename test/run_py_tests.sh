@@ -1,17 +1,34 @@
 #!/bin/bash
-#  ----------------------------------------------------------------
+#  -----------------------------------------------------------------------
+# Copyright 2020 Yan Gorelik, YDK Solutions
 #
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------
+#
+# Bash script to install YDK-PY packages and run unit tests
+#
+# ------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): run_py_test.sh: $@ ${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): run_py_test.sh: $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Command '$@' FAILED with status=$status"
+        print_msg "Command '$*' FAILED with status=$status"
         exit $status
     fi
     return $status
@@ -40,8 +57,8 @@ function init_confd {
     run_cmd make start
     cd - > /dev/null
 
-    print_msg "Clearing cache directories"
-    rm -rf ~/.ydk/*
+    print_msg "Clearing cache YANG repository"
+    rm -rf ~/.ydk/127.0.0.1/*
 }
 
 function init_confd_ydktest {
@@ -76,12 +93,12 @@ function stop_rest_server {
 }
 
 function run_test {
-    print_msg "Executing: $@"
-    ${PYTHON_BIN} $@
+    print_msg "Executing: $*"
+    ${PYTHON_BIN} $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Command '${PYTHON_BIN} $@' FAILED with status=$status"
+        print_msg "Command '${PYTHON_BIN} $*' FAILED with status=$status"
         exit $status
     fi
     return $status
@@ -99,14 +116,18 @@ function init_test_env {
 # ------------------------------------------------------------------
 
 function init_python_env {
-  if [[ ! -d ${HOME}/venv ]]; then
-    print_msg "Creating Python3 virtual environment in ${HOME}/venv"
-    run_cmd python3 -m venv ${HOME}/venv
-    run_cmd source ${HOME}/venv/bin/activate
+  if [[ -z ${PYTHON_VENV} ]]; then
+    export PYTHON_VENV=${HOME}/venv
+    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
+  fi
+  if [[ ! -d ${PYTHON_VENV} ]]; then
+    print_msg "Creating Python3 virtual environment in ${PYTHON_VENV}"
+    run_cmd python3 -m venv ${PYTHON_VENV}
+    run_cmd source ${PYTHON_VENV}/bin/activate
     pip install -r requirements.txt
-    pip install pybind11
+    pip install $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
   else
-    run_cmd source ${HOME}/venv/bin/activate
+    run_cmd source ${PYTHON_VENV}/bin/activate
   fi
 
   PYTHON_BIN=python
@@ -133,7 +154,7 @@ function init_python_env {
 }
 
 function pip_check_install {
-    sudo -H ${PIP_BIN} install $@ -U
+    sudo -H ${PIP_BIN} install $* -U
 }
 
 function install_py_core {
@@ -236,13 +257,11 @@ function py_sanity_ydktest_test_tcp {
 function py_sanity_deviation {
     print_msg "Running py_sanity_deviation"
 
-    rm -rf $HOME/.ydk/127.0.0.1/*
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
 
     py_sanity_deviation_ydktest_test
 
     py_sanity_deviation_bgp_test
-    rm -rf $HOME/.ydk/127.0.0.1/*
 }
 
 function py_sanity_deviation_ydktest_test {
@@ -264,14 +283,6 @@ function py_sanity_deviation_bgp_test {
 #--------------------------
 
 function py_sanity_augmentation {
-    print_msg "Running py_sanity_augmentation"
-
-    rm -rf $HOME/.ydk/127.0.0.1/*
-    py_sanity_augmentation_test
-    rm -rf $HOME/.ydk/127.0.0.1/*
-}
-
-function py_sanity_augmentation_test {
     print_msg "Running py_sanity_augmentation_test"
     cd $YDKGEN_HOME
     run_test generate.py --bundle profiles/test/ydktest-augmentation.json -i
@@ -285,7 +296,6 @@ function py_sanity_augmentation_test {
 function py_sanity_common_cache {
     print_msg "Running py_sanity_common_cache"
 
-    rm -rf $HOME/.ydk/*
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
     run_test sdk/python/core/tests/test_sanity_deviation.py --common-cache
 
@@ -295,15 +305,14 @@ function py_sanity_common_cache {
     init_confd_ydktest
     run_test sdk/python/core/tests/test_sanity_levels.py --common-cache
     run_test sdk/python/core/tests/test_sanity_types.py --common-cache
-    rm -rf $HOME/.ydk/127.0.0.1/*
 }
 
 function py_sanity_one_class_per_module {
     print_msg "Running Running one class per module tests"
     cd $YDKGEN_HOME
     run_test generate.py --bundle profiles/test/ydktest.json -oi
-#    pip_check_install gen-api/python/ydktest-bundle/dist/ydk*.tar.gz
 
+    init_confd_ydktest
     run_test sdk/python/core/tests/test_sanity_levels.py
     run_test sdk/python/core/tests/test_sanity_types.py
 

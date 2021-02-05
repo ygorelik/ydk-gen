@@ -14,6 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
 #
 # Script for running YDK gNMI tests on travis-ci.org
 #
@@ -31,27 +36,27 @@ MSG_COLOR=$YELLOW
 ######################################################################
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date): gnmi_tests.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date): gnmi_tests.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
 }
 
 function run_test_no_coverage {
-    print_msg "Executing: ${PYTHON_BIN} $@"
-    ${PYTHON_BIN} $@
+    print_msg "Executing: ${PYTHON_BIN} $*"
+    ${PYTHON_BIN} $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '${PYTHON_BIN} $@' with status=$status"
+        print_msg "Exiting '${PYTHON_BIN} $*' with status=$status"
         exit $status
     fi
     return $status
@@ -59,28 +64,28 @@ function run_test_no_coverage {
 
 function run_test {
     if [[ $(command -v coverage) && $run_with_coverage ]]; then
-        print_msg "Executing with coverage: $@"
-        coverage run --omit=/usr/* --branch --parallel-mode $@ > /dev/null
+        print_msg "Executing with coverage: $*"
+        coverage run --omit=/usr/* --branch --parallel-mode $* > /dev/null
         local status=$?
         print_msg "Returned status is ${status}"
         if [ $status -ne 0 ]; then
             MSG_COLOR=$RED
-            print_msg "Exiting 'coverage run $@' with status=$status"
+            print_msg "Exiting 'coverage run $*' with status=$status"
             exit $status
         fi
         return $status
     fi
-    run_test_no_coverage $@
+    run_test_no_coverage $*
     local status=$?
     return $status
 }
 
 function pip_check_install {
     if [[ $(uname) == "Linux" ]] && [[ ${os_info} == *"fedora"* && ${PYTHON_VERSION} == "2"* ]] ; then
-        print_msg "Custom pip install of $@ for CentOS"
-        ${PIP_BIN} install --install-option="--install-purelib=/usr/lib64/python${PYTHON_VERSION}/site-packages" --no-deps $@
+        print_msg "Custom pip install of $* for CentOS"
+        ${PIP_BIN} install --install-option="--install-purelib=/usr/lib64/python${PYTHON_VERSION}/site-packages" --no-deps $*
     else
-        ${PIP_BIN} install --no-deps $@
+        ${PIP_BIN} install --no-deps $*
     fi
 }
 
@@ -141,6 +146,7 @@ function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
   ${PIP_BIN} install -r requirements.txt
+  ${PIP_BIN} install $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
   if [[ $run_with_coverage ]] ; then
     ${PIP_BIN} install coverage
   fi
@@ -175,10 +181,12 @@ function init_go_env {
     go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
     print_msg "Current Go version is $go_version"
 
-    go get github.com/stretchr/testify
-    cd $GOPATH/src/github.com/stretchr/testify
-    git checkout tags/v1.6.1
-    cd -
+    if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
+        go get github.com/stretchr/testify
+        cd $GOPATH/src/github.com/stretchr/testify
+        git checkout tags/v1.6.1
+        cd -
+    fi
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"

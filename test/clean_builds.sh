@@ -1,8 +1,26 @@
 #!/bin/bash
-#  ----------------------------------------------------------------
+#  -----------------------------------------------------------------------
+# Copyright 2020 Yan Gorelik, YDK Solutions
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------
+#
+# Bash script to delete all YDK built and installed components
+#
+# ------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): clean_builds.sh: $1${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): clean_builds.sh: $*${NOCOLOR}"
 }
 
 # Terminal colors
@@ -38,3 +56,25 @@ rm -f coverage.txt coverage.info
 rm -rf $YDKGEN_HOME/gen-api/* $YDKGEN_HOME/gen-api/.cache
 
 rm -rf $YDKGEN_HOME/sdk/python/core/dist
+
+print_msg "Deleting go packages..."
+if [ -z $GOPATH ]; then
+    GOPATH="${HOME}/go"
+fi
+rm -rf $GOPATH/src/github.com/CiscoDevNet/ydk-go
+
+print_msg "Deleting python packages..."
+if [[ -z ${PYTHON_VENV} ]]; then
+    export PYTHON_VENV=${HOME}/venv
+    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
+fi
+source $PYTHON_VENV/bin/activate
+pip uninstall -y ydk
+pip uninstall -y ydk-models-ydktest
+pip uninstall -y ydk-models-augmentation
+pip uninstall -y ydk-models-deviation
+pip uninstall -y ydk-service-gnmi
+
+print_msg "Deleting C++ packages..."
+sudo rm -rf /usr/local/lib/libydk* /usr/local/lib/libyang
+sudo rm -rf /usr/local/include/ydk /usr/local/include/libyang /usr/local/include/libnetconf

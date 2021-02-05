@@ -26,11 +26,40 @@ module ydktest-sanity-yang11 {
   }
 
   container backward-incompatible {
-    description Backward_incompatible_string;
+    description "Backward incompatible container description";
     leaf test-node {
        type string;
-       description test_leaf;
+       description "Test leaf description";
     }
   }
 
+  container empty-type {
+     list filter {
+       key "name enabled";
+       leaf name {
+         type string;
+       }
+       leaf enabled {
+         // TBD. Need to test 'type empty'
+         type boolean;
+       }
+       leaf prop {
+         type string;
+       }
+
+       leaf outbound-filter {
+         type union {
+           // Not implemented properly in pyang
+           type leafref {
+             path "/empty-type/filter/name";
+           }
+           type enumeration {
+             enum default-filter;
+             enum primary-filter;
+           }
+           type empty;
+         }
+       }
+     }
+   }
 }

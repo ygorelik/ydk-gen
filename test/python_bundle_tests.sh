@@ -1,11 +1,30 @@
 #!/bin/bash
+#  -----------------------------------------------------------------------
+# Copyright 2020 Yan Gorelik, YDK Solutions
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------
+#
+# Bash script to run basic YDK tests for Python
+#
+# ------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): python_bundle_tests.sh: $1${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): python_bundle_tests.sh: $*${NOCOLOR}"
 }
 
 function run_test {
-    test=$@
+    test=$*
     print_msg "Running test $test"
     python $YDKGEN_HOME/sdk/python/core/tests/$test
     local status=$?
@@ -43,7 +62,12 @@ fi
 script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 $script_dir/init_test_env.sh
 
-source ${HOME}/venv/bin/activate
+if [[ -z ${PYTHON_VENV} ]]; then
+    export PYTHON_VENV=${HOME}/venv
+    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
+fi
+source $PYTHON_VENV/bin/activate
+
 reset_yang_repository
 
 run_test test_ydk_types.py

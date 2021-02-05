@@ -1,0 +1,14 @@
+{
+    "name": "ydktest-yang11",
+    "version": "0.1.0.dev1",
+    "core_version":"0.8.6.dev1",
+    "author": "Yan Gorelik",
+    "copyright": "YDK Solutions",
+    "description": "YDK Test Profile for YANG-1.1",
+    "models": {
+        "file": [
+            "sdk/cpp/core/tests/models/ydktest-sanity-yang11.yang",
+            "sdk/cpp/core/tests/models/ydktest-sanity-action.yang"
+        ]
+    }
+}

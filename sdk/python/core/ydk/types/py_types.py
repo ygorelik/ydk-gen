@@ -330,7 +330,10 @@ class Entity(_Entity):
             for attr_name in self.ylist_key_names:
                 leaf = _get_leaf_object(self._leafs[attr_name])
                 if leaf is not None:
-                    attr_str = format(self.__dict__[attr_name])
+                    key = self.__dict__[attr_name]
+                    attr_str = '' if isinstance(key, Empty) else format(key)
+                    if isinstance(self.__dict__[attr_name], bool):
+                        attr_str = 'true' if attr_str == 'True' else 'false'
                     if "'" in attr_str:
                         path += '[{}="{}"]'.format(leaf.name, attr_str)
                     else:

@@ -205,6 +205,7 @@ function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
   ${PIP_BIN} install -r requirements.txt
+  ${PIP_BIN} install $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
   if [[ $run_with_coverage ]] ; then
     ${PIP_BIN} install coverage
   fi
@@ -239,10 +240,12 @@ function init_go_env {
     go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
     print_msg "Current Go version is $go_version"
 
-    go get github.com/stretchr/testify
-    cd $GOPATH/src/github.com/stretchr/testify
-    git checkout tags/v1.6.1
-    cd -
+    if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
+        go get github.com/stretchr/testify
+        cd $GOPATH/src/github.com/stretchr/testify
+        git checkout tags/v1.6.1
+        cd -
+    fi
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
@@ -747,8 +750,7 @@ function run_py_backward_compatibility {
     init_confd_ydktest
     py_sanity_run_limited_tests
     git checkout ${CURRENT_GIT_REV}
-    ${PIP_BIN} uninstall -y pyang
-    ${PIP_BIN} install -r requirements.txt
+    ${PIP_BIN} install -U $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
 }
 
 #-------------------------------------
