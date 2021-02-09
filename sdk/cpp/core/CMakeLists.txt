@@ -296,13 +296,12 @@ set(libyang_location ${CMAKE_CURRENT_BINARY_DIR}/project_libyang/src/project_lib
 set(libyang_build_location ${CMAKE_CURRENT_BINARY_DIR}/project_libyang/src/project_libyang-build)
 
 set(libyang_headers
-    ${libyang_location}/src/common.h
     ${libyang_location}/src/context.h
     ${libyang_location}/src/dict.h
-    ${libyang_location}/src/dict_private.h
+    ${libyang_location}/src/hash_table.h
     ${libyang_location}/src/extensions.h
-    ${libyang_build_location}/src/extensions_config.h
     ${libyang_build_location}/src/libyang.h
+    ${libyang_build_location}/src/common.h
     ${libyang_location}/src/parser.h
     ${libyang_location}/src/parser_yang.h
     ${libyang_location}/src/parser_yang_bis.h
@@ -321,19 +320,23 @@ set(libyang_headers
 set(yang_objs
     common.c.o
     context.c.o
-    dict.c.o
-    extensions.c.o
+    hash_table.c.o
+#    extensions.c.o
     log.c.o
     parser.c.o
     parser_json.c.o
+    parser_lyb.c.o
     parser_xml.c.o
     parser_yang.c.o
     parser_yang_bis.c.o
     parser_yang_lex.c.o
     parser_yin.c.o
+    plugins.c.o
     printer.c.o
     printer_info.c.o
     printer_json.c.o
+    printer_json_schema.c.o
+    printer_lyb.c.o
     printer_tree.c.o
     printer_xml.c.o
     printer_yang.c.o
@@ -406,7 +409,7 @@ set(libyang_include_location include/libyang)
 set(libyang_headers_location ${CMAKE_CURRENT_BINARY_DIR}/project_libyang/headers)
 ExternalProject_Add(project_libyang
     PREFIX "${CMAKE_CURRENT_BINARY_DIR}/project_libyang"
-    URL "https://github.com/ygorelik/libyang/archive/master.zip"
+    URL "https://github.com/ygorelik/libyang/archive/yang11.zip"
     CMAKE_ARGS -DSTATIC=true -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_LIBDIR=lib
     INSTALL_DIR "${libyang_location}"
     INSTALL_COMMAND mkdir -p ${libyang_headers_location}/libyang && cp ${libyang_headers} ${libyang_headers_location}/libyang
@@ -472,6 +475,7 @@ set(libyang_extension_lib
 	${libyang_build_location}/src/extensions/libyang_ext_test${CMAKE_SHARED_LIBRARY_SUFFIX}
 	${libyang_build_location}/src/extensions/metadata${CMAKE_SHARED_LIBRARY_SUFFIX}
 	${libyang_build_location}/src/extensions/nacm${CMAKE_SHARED_LIBRARY_SUFFIX}
+	${libyang_build_location}/src/extensions/yangdata${CMAKE_SHARED_LIBRARY_SUFFIX}
 )
 
 install(TARGETS ydk DESTINATION ${LIB_INSTALL_DIR})
