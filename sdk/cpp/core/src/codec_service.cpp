@@ -71,7 +71,7 @@ CodecService::encode(CodecServiceProvider & provider, Entity & entity, bool pret
         dn = dn->get_parent();
     path::Codec core_codec_service{};
     std::string result = core_codec_service.encode(*dn, provider.m_encoding, pretty);
-    YLOG_INFO("Performing encode operation, resulting in {}", result);
+    YLOG_INFO("Performed encode operation resulted in:\n{}", result);
     return result;
 }
 

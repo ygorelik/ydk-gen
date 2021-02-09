@@ -19,43 +19,117 @@
 //#include <sstream>
 //#include <string.h>
 
-#include "ydk/netconf_provider.hpp"
-#include "ydk/crud_service.hpp"
-#include "ydk_ydktest/ydktest_sanity_yang11.hpp"
+#include <ydk/codec_provider.hpp>
+#include <ydk/codec_service.hpp>
+
+#include "ydk_ydktest_yang11/ydktest_sanity_yang11.hpp"
 
 #include "config.hpp"
 #include "catch.hpp"
 
 using namespace ydk;
-using namespace ydktest;
+using namespace ydktest_yang11;
 using namespace std;
 
 TEST_CASE("test_yang11_container")
 {
+    //ydk::path::Repository repo{TEST_HOME};
+    CodecServiceProvider codec_provider{EncodingFormat::XML};
+    CodecService codec_service{};
+
+    auto container = ydktest_sanity_yang11::BackwardIncompatible();
+    container.test_node = "Testing node";
+
+    string xml = codec_service.encode(codec_provider, container, true);
+    string expected = R"(<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <test-node>Testing node</test-node>
+</backward-incompatible>
+)";
+    REQUIRE(expected == xml);
+}
+
+TEST_CASE("test_type_empty_in_union")
+{
     ydk::path::Repository repo{TEST_HOME};
-    NetconfServiceProvider provider{repo, "127.0.0.1", "admin", "admin", 12022};
-    CrudService crud{};
+    CodecServiceProvider codec_provider{repo, EncodingFormat::XML};
+    CodecService codec_service{};
 
-    // DELETE
-    auto container = make_unique<ydktest_sanity_yang11::BackwardIncompatible>();
-    bool reply = crud.delete_(provider, *container);
-    REQUIRE(reply);
+    auto container = ydktest_sanity_yang11::EmptyType();
+    auto list_elem = make_shared<ydktest_sanity_yang11::EmptyType::Filter>();
+    list_elem->name = "filter-name";
+    list_elem->enabled = true;
+    list_elem->prop = "one";
+    list_elem->outbound_filter = Empty();
+    container.filter.append(list_elem);
 
-    // CREATE
-    container->test_node = "Testing node";
-    reply = crud.create(provider, *container);
-    REQUIRE(reply);
+    string xml = codec_service.encode(codec_provider, container, true);
+    string expected = R"(<empty-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <filter>
+    <name>filter-name</name>
+    <enabled>true</enabled>
+    <prop>one</prop>
+    <outbound-filter/>
+  </filter>
+</empty-type>
+)";
+    REQUIRE(expected == xml);
 
-    // READ and TEST
-    auto filter = ydktest_sanity_yang11::BackwardIncompatible();
-    auto read_entity = crud.read(provider, filter);
-    REQUIRE(read_entity != nullptr);
+    auto entity = codec_service.decode(codec_provider, xml, make_shared<ydktest_sanity_yang11::EmptyType>());
+    CHECK(container == *entity);
+}
 
-    auto container_read = dynamic_cast<ydktest_sanity_yang11::BackwardIncompatible*>(read_entity.get());
-    REQUIRE(container_read->test_node.value == "Testing node");
+TEST_CASE("test_type_empty_in_union_json")
+{
+    CodecServiceProvider codec_provider{EncodingFormat::JSON};
+    CodecService codec_service{};
 
-    // DELETE
-    container = make_unique<ydktest_sanity_yang11::BackwardIncompatible>();
-    reply = crud.delete_(provider, *container);
-    REQUIRE(reply);
+    auto container = ydktest_sanity_yang11::EmptyType();
+    auto list_elem = make_shared<ydktest_sanity_yang11::EmptyType::Filter>();
+    list_elem->name = "filter-name";
+    list_elem->enabled = true;
+    list_elem->prop = "one";
+    list_elem->outbound_filter = Empty();
+    container.filter.append(list_elem);
+
+    string json = codec_service.encode(codec_provider, container, true);
+    string expected = R"({
+  "ydktest-sanity-yang11:empty-type": {
+    "filter": [
+      {
+        "name": "filter-name",
+        "enabled": true,
+        "prop": "one",
+        "outbound-filter": ""
+      }
+    ]
+  }
+}
+)";
+    REQUIRE(expected == json);
+}
+
+TEST_CASE("test_type_leafref_in_union")
+{
+    CodecServiceProvider codec_provider{EncodingFormat::XML};
+    CodecService codec_service{};
+
+    auto container = ydktest_sanity_yang11::EmptyType();
+    auto list_elem = make_shared<ydktest_sanity_yang11::EmptyType::Filter>();
+    list_elem->name = "filter-name";
+    list_elem->enabled = true;
+    list_elem->prop = "one";
+    list_elem->outbound_filter = "filter-name";
+    container.filter.append(list_elem);
+
+    string xml = codec_service.encode(codec_provider, container, true);
+    string expected = R"(<empty-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <filter>
+    <name>filter-name</name>
+    <enabled>true</enabled>
+    <prop>one</prop>
+    <outbound-filter>filter-name</outbound-filter>
+  </filter>
+</empty-type>
+)";
+    REQUIRE(expected == xml);
 }
