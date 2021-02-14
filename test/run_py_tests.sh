@@ -451,19 +451,11 @@ function init_script_env {
     print_msg "Running OS type: $os_type"
     print_msg "OS info: $os_info"
 
-    SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE}) && pwd)
-    print_msg "Script directory is set to $SCRIPT_DIR"
-
     CMAKE_BIN=cmake
     which cmake3
     status=$?
     if [[ ${status} == 0 ]] ; then
         CMAKE_BIN=cmake3
-    fi
-
-    if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-        export YDKGEN_HOME=$(pwd)
-        print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
     fi
 
     if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
@@ -477,6 +469,13 @@ function init_script_env {
 
 ########################## EXECUTION STARTS HERE #############################
 #
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
+
+if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+fi
+
 init_script_env
 init_python_env
 
@@ -490,6 +489,6 @@ run_py_metadata_test
 
 build_and_run_python_gnmi_tests
 
-$SCRIPT_DIR/clean_test_env.sh
+$script_dir/clean_test_env.sh
 
 cd $curr_dir

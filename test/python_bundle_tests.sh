@@ -54,12 +54,12 @@ NOCOLOR='\033[0m'
 YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
-if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    export YDKGEN_HOME=$(pwd)
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
-fi
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
 
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
+if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+fi
 $script_dir/init_test_env.sh
 
 if [[ -z ${PYTHON_VENV} ]]; then

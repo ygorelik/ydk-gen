@@ -100,9 +100,11 @@ MSG_COLOR=$YELLOW
 os_type=$(uname)
 print_msg "Running OS type: $os_type"
 
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
+
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    YDKGEN_HOME=$(pwd)
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
 curr_dir="$(pwd)"

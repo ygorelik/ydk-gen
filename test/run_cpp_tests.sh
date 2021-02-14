@@ -231,9 +231,11 @@ fi
 print_msg "Running OS type: $os_type"
 print_msg "OS info: $os_info"
 
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
+
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    export YDKGEN_HOME=$(pwd)
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
 CMAKE_BIN=cmake
@@ -250,7 +252,6 @@ if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
 fi
 
 curr_dir=$(pwd)
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 
 cd $YDKGEN_HOME
 
