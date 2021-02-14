@@ -94,9 +94,13 @@ function install_dependencies {
     sudo yum install python3-venv -y
     centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
     print_msg "Running Centos/RHEL version $centos_version"
+    if [[ $centos_version == 8 ]]; then
+      sudo yum install dnf-plugins-core -y
+      sudo yum config-manager --set-enabled powertools
+    fi
+    sudo yum install doxygen -y
     if [[ $centos_version < 8 ]]; then
       # TODO: to be resolved for Centos-8
-      sudo yum install doxygen -y
       sudo yum install lcov -y
     fi
 }
