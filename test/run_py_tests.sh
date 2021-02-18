@@ -3,15 +3,15 @@
 #
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): run_py_test.sh: $@ ${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): run_py_test.sh: $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Command '$@' FAILED with status=$status"
+        print_msg "Command '$*' FAILED with status=$status"
         exit $status
     fi
     return $status
@@ -89,12 +89,12 @@ function stop_rest_server {
 }
 
 function run_test {
-    print_msg "Executing: $@"
-    ${PYTHON_BIN} $@
+    print_msg "Executing: $*"
+    ${PYTHON_BIN} $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Command '${PYTHON_BIN} $@' FAILED with status=$status"
+        print_msg "Command '${PYTHON_BIN} $*' FAILED with status=$status"
         exit $status
     fi
     return $status
@@ -149,7 +149,7 @@ function init_python_env {
 }
 
 function pip_check_install {
-    sudo -H ${PIP_BIN} install $@ -U
+    sudo -H ${PIP_BIN} install $* -U
 }
 
 function install_py_core {
@@ -446,9 +446,6 @@ function init_script_env {
     print_msg "Running OS type: $os_type"
     print_msg "OS info: $os_info"
 
-    SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE}) && pwd)
-    print_msg "Script directory is set to $SCRIPT_DIR"
-
     CMAKE_BIN=cmake
     which cmake3
     status=$?
@@ -456,8 +453,9 @@ function init_script_env {
         CMAKE_BIN=cmake3
     fi
 
+    script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
     if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-        export YDKGEN_HOME=$(pwd)
+        export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
         print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
     fi
 
@@ -485,6 +483,6 @@ run_py_metadata_test
 
 build_and_run_python_gnmi_tests
 
-$SCRIPT_DIR/clean_test_env.sh
+$script_dir/clean_test_env.sh
 
 cd $curr_dir

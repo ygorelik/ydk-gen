@@ -1,11 +1,11 @@
 #!/bin/bash
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): python_bundle_tests.sh: $1${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): python_bundle_tests.sh: $* ${NOCOLOR}"
 }
 
 function run_test {
-    test=$@
+    test=$*
     print_msg "Running test $test"
     python $YDKGEN_HOME/sdk/python/core/tests/$test
     local status=$?
@@ -41,12 +41,12 @@ NOCOLOR='\033[0m'
 YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
+script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    export YDKGEN_HOME=$(pwd)
+    export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
     print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 $script_dir/init_test_env.sh
 
 if [[ -z ${PYTHON_VENV} ]]; then

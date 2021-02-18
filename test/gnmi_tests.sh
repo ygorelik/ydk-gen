@@ -31,27 +31,27 @@ MSG_COLOR=$YELLOW
 ######################################################################
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date): gnmi_tests.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date): gnmi_tests.sh | $* ${NOCOLOR}"
 }
 
 function run_exec_test {
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
 }
 
 function run_test_no_coverage {
-    print_msg "Executing: ${PYTHON_BIN} $@"
-    ${PYTHON_BIN} $@
+    print_msg "Executing: ${PYTHON_BIN} $*"
+    ${PYTHON_BIN} $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '${PYTHON_BIN} $@' with status=$status"
+        print_msg "Exiting '${PYTHON_BIN} $*' with status=$status"
         exit $status
     fi
     return $status
@@ -59,28 +59,28 @@ function run_test_no_coverage {
 
 function run_test {
     if [[ $(command -v coverage) && $run_with_coverage ]]; then
-        print_msg "Executing with coverage: $@"
-        coverage run --omit=/usr/* --branch --parallel-mode $@ > /dev/null
+        print_msg "Executing with coverage: $*"
+        coverage run --omit=/usr/* --branch --parallel-mode $* > /dev/null
         local status=$?
         print_msg "Returned status is ${status}"
         if [ $status -ne 0 ]; then
             MSG_COLOR=$RED
-            print_msg "Exiting 'coverage run $@' with status=$status"
+            print_msg "Exiting 'coverage run $*' with status=$status"
             exit $status
         fi
         return $status
     fi
-    run_test_no_coverage $@
+    run_test_no_coverage $*
     local status=$?
     return $status
 }
 
 function pip_check_install {
     if [[ $(uname) == "Linux" ]] && [[ ${os_info} == *"fedora"* && ${PYTHON_VERSION} == "2"* ]] ; then
-        print_msg "Custom pip install of $@ for CentOS"
-        ${PIP_BIN} install --install-option="--install-purelib=/usr/lib64/python${PYTHON_VERSION}/site-packages" --no-deps $@
+        print_msg "Custom pip install of $* for CentOS"
+        ${PIP_BIN} install --install-option="--install-purelib=/usr/lib64/python${PYTHON_VERSION}/site-packages" --no-deps $*
     else
-        ${PIP_BIN} install --no-deps $@
+        ${PIP_BIN} install --no-deps $*
     fi
 }
 

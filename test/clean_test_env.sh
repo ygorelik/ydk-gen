@@ -3,15 +3,15 @@
 #
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): clean_test_env.sh: $1${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): clean_test_env.sh: $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Command '$@' FAILED with status=$status"
+        print_msg "Command '$*' FAILED with status=$status"
         exit $status
     fi
     return $status
@@ -83,8 +83,9 @@ MSG_COLOR=$YELLOW
 os_type=$(uname)
 print_msg "Running OS type: $os_type"
 
+script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    YDKGEN_HOME=$(pwd)
+    export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
     print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
@@ -98,8 +99,9 @@ stop_confd
 
 if [ -d ${HOME}/.ydk ]; then
     print_msg "Deleting YDK cache in ${HOME}/.ydk"
-    rm -rf ${HOME}/.ydk/127.0.0.1/*
-    rm -rf ${HOME}/.ydk/localhost/*
+    rm -rf ${HOME}/.ydk/127.0.0.1
+    rm -rf ${HOME}/.ydk/localhost
+    rm -rf ${HOME}/.ydk/common_cache
 fi
 
 cd $curr_dir

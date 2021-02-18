@@ -3,15 +3,15 @@
 #
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): init_test_env.sh: $1${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): init_test_env.sh: $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Command '$@' FAILED with status=$status"
+        print_msg "Command '$*' FAILED with status=$status"
         exit $status
     fi
     return $status
@@ -63,8 +63,9 @@ NOCOLOR='\033[0m'
 YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
+script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    YDKGEN_HOME=$(pwd)
+    export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
     print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 

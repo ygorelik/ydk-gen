@@ -3,16 +3,16 @@
 #
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date): run_cpp_test.sh: $1${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date): run_cpp_test.sh: $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    #echo $@
-    $@
+    #echo $*
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
@@ -215,10 +215,12 @@ fi
 print_msg "Running OS type: $os_type"
 print_msg "OS info: $os_info"
 
+script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    export YDKGEN_HOME=$(pwd)
+    export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
     print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
+
 
 CMAKE_BIN=cmake
 which cmake3
