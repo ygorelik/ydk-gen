@@ -1,7 +1,7 @@
-/// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// YANG Development Kit
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -18,13 +18,15 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
-//////////////////////////////////////////////////////////////////
-
+// --------------------------------------------------------------
+// This file has been modified by Yan Gorelik, YDK Solutions.
+// All modifications in original under CiscoDevNet domain
+// introduced since October 2019 are copyrighted.
+// All rights reserved under Apache License, Version 2.0.
+// --------------------------------------------------------------
 
 #include "path_private.hpp"
 #include "../logger.hpp"
-
 
 /////////////////////////////////////////////////////////////////////////
 /// Rpc
@@ -45,7 +47,7 @@ ydk::path::RpcImpl::RpcImpl(SchemaNodeImpl& sn, struct ly_ctx* ctx, const std::s
 
     if(!dnode){
         YLOG_ERROR("Cannot find RPC with path {}", sn.get_path());
-        throw(YModelError{"Invalid RPC"});
+        throw(YModelError("Invalid RPC for path: " + sn.get_path()));
     }
 
     data_node = std::make_unique<DataNodeImpl>(nullptr, dnode, m_priv_repo);
@@ -82,12 +84,12 @@ static bool is_output(lys_node* node)
 
 bool ydk::path::RpcImpl::has_output_node() const
 {
-    char* path = lys_path( data_node->m_node->schema);
+    char* path = lys_path( data_node->m_node->schema, LYS_PATH_FIRST_PREFIX);
     std::string node_path {path};
     free(path);
     std::string search_path = node_path + "//*";	// Patterns includes only descendants of the node
 
-    ly_verb(LY_LLSILENT); //turn off libyang logging at the beginning
+    ly_verb(LY_LLERR); //turn off libyang logging at the beginning
     ly_set* result_set = lys_find_path(data_node->m_node->schema->module, data_node->m_node->schema, search_path.c_str());
     ly_verb(LY_LLVRB); // enable libyang logging after find has completed
 

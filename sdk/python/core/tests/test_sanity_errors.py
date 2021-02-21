@@ -30,9 +30,9 @@ from test_utils import get_device_info
 
 
 test_int64_invalid_pattern = """"""
-test_uint8_invalid_pattern = """Invalid value "-1" in "u_number8" element. Path: /ydktest-sanity:runner/ytypes/built-in-t/u_number8"""
-test_uint16_invalid_pattern = """Invalid value "not an uint" in "u_number16" element. Path: /ydktest-sanity:runner/ytypes/built-in-t/u_number16"""
-test_uint32_invalid_pattern = """Invalid value "4294967296" in "u_number32" element. Path: /ydktest-sanity:runner/ytypes/built-in-t/u_number32"""
+test_uint8_invalid_pattern = """Invalid value "-1" in "u_number8" element. Path: '/ydktest-sanity:u_number8'"""
+test_uint16_invalid_pattern = """Invalid value "not an uint" in "u_number16" element. Path: '/ydktest-sanity:u_number16'"""
+test_uint32_invalid_pattern = """Invalid value "4294967296" in "u_number32" element. Path: '/ydktest-sanity:u_number32'"""
 test_uint64_invalid_pattern = """"""
 test_ylist_assignment_pattern = ''.join(["Attempt to assign value of '\[<ydk.models.ydktest.ydktest_sanity.[a-zA-Z\.]*Ldata object at [0-9a-z]+>, ",
                                          "<ydk.models.ydktest.ydktest_sanity.[a-zA-Z\.]*Ldata object at [0-9a-z]+>, ",

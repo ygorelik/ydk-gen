@@ -1,6 +1,7 @@
 /*  ----------------------------------------------------------------
- Copyright 2017 Cisco Systems
-
+ YDK - YANG Development Kit
+ Copyright 2017-2019 Cisco Systems
+ -------------------------------------------------------------------
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
@@ -12,7 +13,13 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-------------------------------------------------------------------*/
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
+ -----------------------------------------------------------------*/
+
 #include <libyang/libyang.h>
 
 #include "spdlog/spdlog.h"
@@ -32,11 +39,12 @@ static logging_callback ydk_logging_critical_function = nullptr;
 void libyang_log_callback(LY_LOG_LEVEL level, const char *msg, const char *path)
 {
     std::ostringstream error_message{};
-    error_message <<msg;
+    error_message << msg;
     if(path)
     {
-        error_message << " " << "Path: '" << path<<"'";
+        error_message << " " << "Path: '" << path << "'";
     }
+    std::string err_msg = error_message.str();
     switch(level)
     {
         case LY_LLERR:
@@ -45,16 +53,15 @@ void libyang_log_callback(LY_LOG_LEVEL level, const char *msg, const char *path)
                     || error_message.str().find("Unexpected character")!= std::string::npos
                     || error_message.str().find("does not satisfy the constraint")!= std::string::npos)
             {
-                YLOG_ERROR("Data is invalid according to the yang model. Libyang error: {}", error_message.str());
-                throw(YModelError{});
+                YLOG_ERROR("Data is invalid according to the yang model. Libyang error: {}", err_msg);
+                throw(YModelError(err_msg));
             }
-            YLOG_ERROR("Data is invalid according to the yang model. Libyang error: {}", error_message.str());
+            YLOG_ERROR("Ignored Libyang error: {}", err_msg);
             break;
-        case LY_LLSILENT:
         case LY_LLWRN:
         case LY_LLVRB:
         case LY_LLDBG:
-            YLOG_DEBUG("[libyang] {}", error_message.str());
+            YLOG_DEBUG("[libyang] {}", err_msg);
             break;
     }
 }

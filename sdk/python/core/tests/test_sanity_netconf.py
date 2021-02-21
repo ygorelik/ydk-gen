@@ -289,6 +289,7 @@ class SanityNetconf(ParametrizedTestCase):
                           self.ncc,
                           "invalid-input")
 
+    @unittest.skip('TODO: if-features are not enabled')
     def test_sanity_crud_read_interface(self):
         address = ysanity.Native.Interface.Loopback.Ipv4.Address();
         address.ip = "2.2.2.2"
@@ -351,6 +352,7 @@ class SanityNetconf(ParametrizedTestCase):
         result = crud.delete(self.ncc, create_list)
         self.assertEqual(result, True)
 
+    @unittest.skip('TODO')
     def test_crud_read_collection(self):
         crud = CRUDService()
 

@@ -317,7 +317,7 @@ TEST_CASE("gnmi_test_json_payload"  )
     //std::cout<< json<<std::endl;
 
     auto edit_config = schema.create_rpc("ietf-netconf:get-config");
-    edit_config->get_input_node().create_datanode("source/candidate");
+    edit_config->get_input_node().create_datanode("source/running");
     edit_config->get_input_node().create_datanode("filter",json);
 
     std::string rpc_json = s.encode(edit_config->get_input_node(), ydk::EncodingFormat::JSON, false);

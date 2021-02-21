@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------
  YDK - YANG Development Kit
- Copyright 2016 Cisco Systems, All rights reserved.
-
+ Copyright 2016-2019 Cisco Systems, All rights reserved.
+ -------------------------------------------------------------------
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
@@ -533,12 +533,13 @@ TEST_CASE("get_schema_decode")
     ydk::path::Codec s{};
 
     auto rpc = schema.create_rpc("ietf-netconf-monitoring:get-schema");
-    rpc->get_input_node().create_datanode("identifier", "ydktest-sanity-action");
+    rpc->get_input_node().create_datanode("identifier", "main");
 
-    auto o = (*rpc)(session);
+    auto reply = (*rpc)(session);
+    REQUIRE(reply);
 
-    auto xml = s.encode(*o, ydk::EncodingFormat::XML, true);
-    cout<<xml<<endl;
+    auto xml = s.encode(*reply, ydk::EncodingFormat::XML, true);
+    // cout<<xml<<endl;
 }
 /* TODO
 TEST_CASE("oc_optic")
@@ -762,7 +763,7 @@ TEST_CASE( "rpc_get_schema_no_decode" )
     ydk::path::RootSchemaNode& schema = session.get_root_schema();
 
     auto rpc = schema.create_rpc("ietf-netconf-monitoring:get-schema");
-    rpc->get_input_node().create_datanode("identifier", "ydktest-sanity-action");
+    rpc->get_input_node().create_datanode("identifier", "main");
 
     auto reply = session.execute_netconf_operation(*rpc);
     REQUIRE(!reply.empty());

@@ -1,7 +1,7 @@
-/// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// YANG Development Kit
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -23,7 +23,7 @@
 // All modifications in original under CiscoDevNet domain
 // introduced since October 2019 are copyrighted.
 // All rights reserved under Apache License, Version 2.0.
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 
 #include "path_private.hpp"
 
@@ -145,7 +145,13 @@ ydk::path::DataNodeImpl::create_datanode(const std::string& path, const std::str
         }
     }
     populate_new_schemas_from_path(path);
-    populate_new_schemas_from_path(v);
+
+    // Do not populate new schemas from URL value
+    if ( !(v.length() > strlen("http://") && v.substr(0, strlen("http://")) == "http://") &&
+         !(v.length() > strlen("https://") && v.substr(0, strlen("https://")) == "https://") )
+    {
+        populate_new_schemas_from_path(v);
+    }
 
     return create_helper(path, v);
 }

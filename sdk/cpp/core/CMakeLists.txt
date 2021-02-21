@@ -312,6 +312,7 @@ set(libyang_headers
     ${libyang_location}/src/tree_internal.h
     ${libyang_location}/src/tree_schema.h
     ${libyang_location}/src/validation.h
+    ${libyang_location}/src/user_types.h
     ${libyang_location}/src/xml.h
     ${libyang_location}/src/xml_internal.h
     ${libyang_location}/src/xpath.h
@@ -321,7 +322,6 @@ set(yang_objs
     common.c.o
     context.c.o
     hash_table.c.o
-#    extensions.c.o
     log.c.o
     parser.c.o
     parser_json.c.o
@@ -440,6 +440,18 @@ foreach(yang_obj IN LISTS yang_objs)
     list(APPEND libyang_inc_objs ${libyang_objs}/${yang_obj})
 endforeach(yang_obj)
 
+set(libyang_extensions metadata nacm yangdata user_inet_types user_yang_types)
+
+foreach(ext IN LISTS libyang_extensions)
+    add_custom_command(
+        OUTPUT ${libyang_objs}/${ext}.c.o
+        COMMAND ar -x ${libyang_build_location}/lib${ext}.a ${ext}.c.o
+        MAIN_DEPENDENCY ${libyang_objs}
+        WORKING_DIRECTORY ${libyang_objs}
+    )
+    list(APPEND libyang_inc_objs ${libyang_objs}/${ext}.c.o)
+endforeach(ext)
+
 include_directories(
     ${LIBYANG_INCLUDE_DIRS}
     ${LIBSSH_INCLUDE_DIRS}
@@ -471,12 +483,6 @@ target_link_libraries(ydk
 
 set_property(TARGET ydk PROPERTY CXX_STANDARD 11)
 set_property(TARGET ydk PROPERTY CXX_STANDARD_REQUIRED ON)
-set(libyang_extension_lib
-	${libyang_build_location}/src/extensions/libyang_ext_test${CMAKE_SHARED_LIBRARY_SUFFIX}
-	${libyang_build_location}/src/extensions/metadata${CMAKE_SHARED_LIBRARY_SUFFIX}
-	${libyang_build_location}/src/extensions/nacm${CMAKE_SHARED_LIBRARY_SUFFIX}
-	${libyang_build_location}/src/extensions/yangdata${CMAKE_SHARED_LIBRARY_SUFFIX}
-)
 
 install(TARGETS ydk DESTINATION ${LIB_INSTALL_DIR})
 install(FILES ${libydk_install_headers} DESTINATION ${INCLUDE_INSTALL_DIR})
@@ -485,7 +491,6 @@ install(FILES ${SPDLOG_DETAILS_HEADERS} DESTINATION ${spdlog_details_include_loc
 install(FILES ${SPDLOG_FMT_HEADERS} DESTINATION ${spdlog_fmt_include_location})
 install(FILES ${SPDLOG_FMT_BUNDLED_HEADERS} DESTINATION ${spdlog_fmt_bundled_include_location})
 install(FILES ${SPDLOG_SINKS_HEADERS} DESTINATION ${spdlog_sinks_include_location})
-install(FILES ${libyang_extension_lib} DESTINATION ${LIBYANG_EXT_PLUGINS_DIR})
 
 # generate doxygen documentation for ydk_core API
 find_package(Doxygen)
