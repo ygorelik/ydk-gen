@@ -1,7 +1,8 @@
 #!/bin/bash
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
-#
+# YDK = YANG Development Kit
+# Copyright 2016-2019 Cisco Systems
+# ------------------------------------------------------------------
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -279,7 +280,7 @@ function install_cpp_core {
       run_exec_test ${CMAKE_BIN} ..
     fi
     print_msg "Compiling C++ core library"
-    run_cmd make &> /dev/null
+    run_cmd make # &> /dev/null
     sudo make install
 }
 
@@ -391,6 +392,7 @@ function generate_install_specified_cpp_bundle {
 function cpp_sanity_ydktest_gen_install {
     print_msg "Generating and installing C++ ydktest bundle"
     generate_install_specified_cpp_bundle profiles/test/ydktest-cpp.json ydktest-bundle
+    generate_install_specified_cpp_bundle profiles/test/ydktest-yang11.json ydktest_yang11-bundle
 
 #    print_msg "Generating and installing C++ ydktest-oc-nis bundle"
 #    generate_install_specified_cpp_bundle profiles/test/ydktest-oc-nis.json ydktest_oc_nis-bundle
@@ -473,6 +475,7 @@ function run_go_bundle_tests {
     print_msg "Generating/installing go sanity bundle tests"
     cd $YDKGEN_HOME
     run_test generate.py -i --bundle profiles/test/ydktest-cpp.json --go
+    run_test generate.py -i --bundle profiles/test/ydktest-yang11.json --go
 
     run_go_tests
 }
@@ -535,7 +538,7 @@ function py_sanity_ydktest {
     print_msg "Generating, installing and testing python ydktest bundle"
 
     py_sanity_ydktest_gen
-    if [[ $run_with_coverage ]]
+    if [[ $run_with_coverage && ${PYTHON_VERSION} == "2"* ]]
     then
         py_sanity_ydktest_test
         py_sanity_ydktest_install
@@ -567,7 +570,6 @@ function py_sanity_ydktest_install {
 function py_sanity_ydktest_test {
     print_msg "Running py_sanity_ydktest_test with coverage"
     cd $YDKGEN_HOME
-
     cp -r gen-api/python/ydktest-bundle/ydk/models sdk/python/core/ydk/
 
     print_msg "Uninstall ydk py core from pip for testing with coverage"
@@ -658,13 +660,11 @@ function py_sanity_ydktest_test_tcp {
 #--------------------------
 
 function py_sanity_deviation {
-    reset_yang_repository
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
 
     py_sanity_deviation_ydktest_test
 
     py_sanity_deviation_bgp_test
-    reset_yang_repository
 }
 
 function py_sanity_deviation_ydktest_test {
@@ -685,14 +685,6 @@ function py_sanity_deviation_bgp_test {
 # Python augmentation tests
 #--------------------------
 function py_sanity_augmentation {
-    print_msg "Running py_sanity_augmentation"
-
-    reset_yang_repository
-    py_sanity_augmentation_test
-    reset_yang_repository
-}
-
-function py_sanity_augmentation_test {
     print_msg "Running py_sanity_augmentation_test"
 
     cd $YDKGEN_HOME
@@ -705,7 +697,6 @@ function py_sanity_augmentation_test {
 function py_sanity_common_cache {
     print_msg "Running py_sanity_common_cache"
 
-    reset_yang_repository
     if [[ ${os_type} != "Darwin" ]]; then
         # GitHub issue #890
         init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
@@ -717,7 +708,6 @@ function py_sanity_common_cache {
     init_confd_ydktest
     run_test sdk/python/core/tests/test_sanity_levels.py --common-cache
     run_test sdk/python/core/tests/test_sanity_types.py --common-cache
-    reset_yang_repository
 }
 
 function py_sanity_run_limited_tests {
@@ -736,6 +726,7 @@ function py_sanity_one_class_per_module {
     print_msg "Running ONE CLASS PER MODULE TESTS"
     cd $YDKGEN_HOME
     run_test generate.py --bundle profiles/test/ydktest-cpp.json -o
+    init_confd_ydktest
     py_sanity_run_limited_tests
 }
 
