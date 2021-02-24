@@ -122,7 +122,7 @@ function run_go_samples {
 function init_gnmi_server {
     print_msg "Starting YDK gNMI server"
     mkdir -p $YDKGEN_HOME/test/gnmi_server/build && cd $YDKGEN_HOME/test/gnmi_server/build
-    cmake .. && make clean && make
+    $CMAKE_BIN .. && make clean && make
     ./gnmi_server &
     local status=$?
     if [ $status -ne 0 ]; then
@@ -211,6 +211,14 @@ if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64:/usr/lib64
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
     centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+fi
+
+which cmake3
+status=$?
+if [[ ${status} == 0 ]] ; then
+    CMAKE_BIN=cmake3
+else
+    CMAKE_BIN=cmake
 fi
 
 curr_dir="$(pwd)"

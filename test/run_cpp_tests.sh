@@ -96,8 +96,7 @@ function cpp_sanity_ydktest_gen_install {
     sudo rm -rf $YDKGEN_HOME/gen-api/.cache
 
     generate_install_specified_cpp_bundle profiles/test/ydktest-cpp.json ydktest-bundle
-
-#    generate_install_specified_cpp_bundle profiles/test/ydktest-cpp-new.json ydktest_new-bundle
+    generate_install_specified_cpp_bundle profiles/test/ydktest-yang11.json ydktest_yang11-bundle
 }
 
 function cpp_sanity_ydktest_test {
@@ -154,7 +153,7 @@ function cpp_test_gen {
 function init_gnmi_server {
     print_msg "Starting YDK gNMI server"
     mkdir -p $YDKGEN_HOME/test/gnmi_server/build && cd $YDKGEN_HOME/test/gnmi_server/build
-    cmake .. && make clean && make
+    ${CMAKE_BIN} .. && make clean && make
     ./gnmi_server &
     local status=$?
     if [ $status -ne 0 ]; then
@@ -175,7 +174,7 @@ function build_gnmi_core_library {
     cd $YDKGEN_HOME/sdk/cpp/gnmi
     mkdir -p build
     cd build
-    cmake .. && make clean && make
+    ${CMAKE_BIN} .. && make clean && make
     sudo make install
     cd $YDKGEN_HOME
 }
@@ -185,7 +184,7 @@ function build_and_run_tests {
     cd $YDKGEN_HOME/sdk/cpp/gnmi/tests
     mkdir -p build
     cd build
-    cmake .. && make clean && make
+    ${CMAKE_BIN} .. && make clean && make
 
     init_gnmi_server
     ./ydk_gnmi_test
@@ -202,7 +201,7 @@ function run_cpp_gnmi_memcheck_tests {
     cd $YDKGEN_HOME/sdk/cpp/gnmi/samples
     mkdir -p build
     cd build
-    cmake .. && make clean && make
+    ${CMAKE_BIN} .. && make clean && make
 
     init_gnmi_server
     print_msg "Running gnmi sample tests with memcheck"
@@ -238,11 +237,12 @@ if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
   print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
-CMAKE_BIN=cmake
 which cmake3
 status=$?
 if [[ ${status} == 0 ]] ; then
     CMAKE_BIN=cmake3
+else
+    CMAKE_BIN=cmake
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
