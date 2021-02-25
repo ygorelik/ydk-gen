@@ -319,6 +319,7 @@ set(libyang_headers
 )
 
 set(yang_objs
+    compat.c.o
     common.c.o
     context.c.o
     hash_table.c.o
