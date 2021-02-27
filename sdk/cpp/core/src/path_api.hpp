@@ -318,7 +318,6 @@ struct YCoreError : public ydk::YError
     YCoreError();
 
     YCoreError(const std::string& msg);
-
 };
 
 
@@ -417,6 +416,7 @@ struct YCodecError : public YCoreError
     Error err;
 
     YCodecError(YCodecError::Error merror);
+    YCodecError(YCodecError::Error merror, const std::string& msg);
 };
 
 ///

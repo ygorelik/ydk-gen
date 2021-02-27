@@ -23,7 +23,7 @@ package test
 
 import (
 // 	"fmt"
-	ysanity "github.com/CiscoDevNet/ydk-go/ydk/models/ydktest/sanity_yang11"
+	ysanity "github.com/CiscoDevNet/ydk-go/ydk/models/ydktest_yang11/ydktest_sanity_yang11"
 	"github.com/CiscoDevNet/ydk-go/ydk"
 	"github.com/CiscoDevNet/ydk-go/ydk/providers"
 	"github.com/CiscoDevNet/ydk-go/ydk/services"

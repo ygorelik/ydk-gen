@@ -20,10 +20,11 @@
 # ------------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date): run_go_tests.sh: $*${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date): run_go_tests.sh: $* ${NOCOLOR}"
 }
 
 function run_cmd {
+    print_msg "Running $*"
     $*
     local status=$?
     if [ $status -ne 0 ]; then
@@ -80,14 +81,13 @@ function install_go_core {
 
     mkdir -p $GOPATH/src/github.com/CiscoDevNet/ydk-go/ydk
     cp -r sdk/go/core/ydk/* $GOPATH/src/github.com/CiscoDevNet/ydk-go/ydk/
-
-    run_cmd ./generate.py --bundle profiles/test/ydktest-cpp.json --go -i
 }
 
 function install_go_bundle {
-    print_msg "Generating/installing go bundle tests"
+    print_msg "Generating/installing go bundles"
     cd $YDKGEN_HOME
     run_cmd ./generate.py --bundle profiles/test/ydktest-cpp.json --go -i
+    run_cmd ./generate.py --bundle profiles/test/ydktest-yang11.json --go -i
 }
 
 function run_go_bundle_tests {

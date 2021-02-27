@@ -220,7 +220,7 @@ static struct lyd_node* create_lyd_node_for_rpc(ydk::path::RootSchemaNodeImpl & 
     {
         ly_ctx *ctx = rpc->schema->module->ctx;
         ydk::YLOG_ERROR( "Parsing failed with message {}", ly_errmsg(ctx));
-        throw(ydk::path::YCodecError{ydk::path::YCodecError::Error::XML_INVAL});
+        throw(ydk::path::YCodecError{ydk::path::YCodecError::Error::XML_INVAL, ly_errmsg(ctx)});
     }
     return rpc;
 }
@@ -312,7 +312,7 @@ ydk::path::Codec::decode(RootSchemaNode & root_schema, const std::string& buffer
     {
         YLOG_ERROR( "Decoding failed with message: {}", ly_errmsg(rs_impl.m_ctx));
         auto error_code = (format==ydk::EncodingFormat::JSON) ? YCodecError::Error::JSON_INVAL : YCodecError::Error::XML_INVAL;
-        throw(YCodecError{error_code});
+        throw(YCodecError{error_code, ly_errmsg(rs_impl.m_ctx)});
     }
     return perform_decode(rs_impl, root);
 }
@@ -332,7 +332,7 @@ ydk::path::Codec::decode_rpc_output(RootSchemaNode & root_schema, const std::str
     if( root == nullptr || ly_errno )
     {
         YLOG_ERROR( "Decoding failed with message: {}", ly_errmsg(rs_impl.m_ctx));
-        throw(YCodecError{YCodecError::Error::XML_INVAL});
+        throw(YCodecError{YCodecError::Error::XML_INVAL, ly_errmsg(rs_impl.m_ctx)});
     }
     auto dn = perform_decode(rs_impl, root);
     if (rpc) lyd_free(rpc);
@@ -356,7 +356,7 @@ ydk::path::Codec::decode_json_output(RootSchemaNode & root_schema, const std::ve
         struct lyd_node *dnode = lyd_parse_mem(rs_impl.m_ctx, buffer.c_str(), LYD_JSON, LYD_OPT_TRUSTED | LYD_OPT_GET);
         if (dnode == nullptr || ly_errno) {
             YLOG_ERROR( "Decoding failed with message: {}", ly_errmsg(rs_impl.m_ctx));
-            throw(YCodecError{YCodecError::Error::JSON_INVAL});
+            throw(YCodecError{YCodecError::Error::JSON_INVAL, ly_errmsg(rs_impl.m_ctx)});
         }
 
         // Attach first node to the root

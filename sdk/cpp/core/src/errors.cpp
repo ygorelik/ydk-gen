@@ -137,7 +137,12 @@ ydk::path::YPathError::YPathError(ydk::path::YPathError::Error error_code) : ydk
 /////////////////////////////////////////////////////////////////////////
 /// YCodecError
 /////////////////////////////////////////////////////////////////////////
-ydk::path::YCodecError::YCodecError(YCodecError::Error ec) : YCoreError("YCodecError: "), err{ec}
+ydk::path::YCodecError::YCodecError(YCodecError::Error ec) : YCoreError("YCodecError"), err{ec}
+{
+
+}
+
+ydk::path::YCodecError::YCodecError(YCodecError::Error ec, const std::string& msg) : YCoreError(msg), err{ec}
 {
 
 }

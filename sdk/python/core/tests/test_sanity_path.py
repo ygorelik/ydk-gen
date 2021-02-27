@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,13 +51,11 @@ class SanityTest(unittest.TestCase):
     def _delete_runner(self):
         runner = self.root_schema.create_datanode("ydktest-sanity:runner")
         xml = self.codec.encode(runner, EncodingFormat.XML)
-        create_rpc = self.root_schema.create_rpc("ydk:delete")
-        create_rpc.get_input_node().create_datanode("entity", xml)
-        # RuntimeError: YCoreError: YCodecError:Schema node not found.. Path: input/config if invoked
-        create_rpc(self.nc_session)
+        delete_rpc = self.root_schema.create_rpc("ydk:delete")
+        delete_rpc.get_input_node().create_datanode("entity", xml)
+        delete_rpc(self.nc_session)
 
     def tearDown(self):
-        # RuntimeError: YCoreError: YCodecError:Schema node not found.. Path: input/config if invoked
         self._delete_runner()
 
     def test_leafs(self):
