@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------
 # YDK - YANG Development Kit
 #
-# Copyright 2020 Yan Gorelik, YDK Solutions.
+# Copyright 2020-2021 Yan Gorelik, YDK Solutions.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,28 +15,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------------
-import os
+
 import sys
 import unittest
 import logging
 
-from ydk.providers import NetconfServiceProvider
-from ydk.services import CRUDService
-from ydk.path import NetconfSession, Codec, Repository
-from ydk.types import EncodingFormat, Empty
+from ydk.types import Empty
+from ydk.path import Repository
 from ydk.providers import CodecServiceProvider
 from ydk.services import CodecService
-from ydk.errors import YServiceError
+from ydk.entity_utils import XmlSubtreeCodec
 
 from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BackwardIncompatible, EmptyType
-
-
-# try:
-#     from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BackwardIncompatible
-#     from ydk.models.ydktest_yang11.ydktest_sanity_action import Data
-# except ImportError:
-#     # from ydk.models.ydktest_yang11.ydktest_sanity_yang11.backward_incompatible.backward_incompatible import BackwardIncompatible
-#     from ydk.models.ydktest_yang11.ydktest_sanity_action.data.data import Data
+import ydk.models.ydktest_yang11 as yang11
 
 from test_utils import ParametrizedTestCase
 from test_utils import get_device_info, enable_logging
@@ -46,29 +37,10 @@ class SanityYang11Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # model_path = os.path.dirname(os.path.abspath(__file__)) + '/../../../cpp/core/tests/models'
-        # repo = Repository(model_path)
-        # cls.ncs = NetconfSession(repo,
-        #                          cls.hostname,
-        #                          cls.username,
-        #                          cls.password,
-        #                          cls.port,
-        #                          cls.protocol,
-        #                          cls.on_demand,
-        #                          cls.timeout)
-        # cls.crud = CRUDService()
-        # cls.root_schema = cls.ncs.get_root_schema()
-        # cls.codec = Codec()
         cls.codec_service = CodecService()
         cls.codec_provider = CodecServiceProvider(type='xml')
-        enable_logging(logging.DEBUG)
-
-    def setUp(self):
-        pass
-
-    # def tearDown(self):
-    #     container = BackwardIncompatible()
-    #     self.crud.delete(self.ncc, container)
+        cls.json_codec_provider = CodecServiceProvider(type='json')
+        enable_logging(logging.ERROR)
 
     # def test_container(self):
     #     # Create container
@@ -102,19 +74,59 @@ class SanityYang11Test(unittest.TestCase):
 #         except Exception as e:
 #             self.assertTrue(isinstance(e, RuntimeError))
 
-    def test_union(self):
+    def test_type_empty_key(self):
         top = EmptyType()
         list_elem = EmptyType.Filter()
         list_elem.name = 'filter-name'
-        list_elem.enabled = True
+        list_elem.enabled = Empty()
         list_elem.prop = '1'
-        list_elem.outbound_filter = 'filter-name'
+        list_elem.outbound_filter = Empty()
         top.filter.append(list_elem)
 
         payload = self.codec_service.encode(self.codec_provider, top)
         self.assertIsNotNone(payload)
         self.assertIsNot('', payload)
-        print(payload)
+
+        entity = self.codec_service.decode(self.codec_provider, payload)
+        self.assertEqual(top, entity)
+
+        self.assertEqual(top.filter.keys(), ['filter-name'])
+        self.assertEqual(list_elem, top.filter['filter-name'])
+
+    def test_type_empty_key_xml_codec(self):
+        top = EmptyType()
+        elem1, elem2 = EmptyType.Filter(), EmptyType.Filter()
+        elem1.name, elem2.name = 'abc', 'xyz'
+        elem1.enabled, elem2.enabled = Empty(), Empty()
+        elem1.prop, elem2.prop = 'one', 'two'
+        top.filter.extend([elem1, elem2])
+
+        self.assertEqual(top.filter.keys(), ['abc', 'xyz'])
+        self.assertEqual(elem2, top.filter['xyz'])
+
+        repo = Repository(yang11.__path__[0] + '/_yang')
+        root_schema = repo.create_root_schema([])
+        xml_codec = XmlSubtreeCodec()
+
+        payload = xml_codec.encode(top, root_schema)
+        self.assertIsNotNone(payload)
+        self.assertIsNot('', payload)
+        self.assertEqual(payload, """<empty-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <filter>
+    <name>abc</name>
+    <enabled/>
+    <prop>one</prop>
+  </filter>
+  <filter>
+    <name>xyz</name>
+    <enabled/>
+    <prop>two</prop>
+  </filter>
+</empty-type>""")
+
+        # TODO: decode fails for type Empty
+        # entity = xml_codec.decode(payload, EmptyType())
+        # self.assertEqual(top, entity)
 
 
 if __name__ == '__main__':

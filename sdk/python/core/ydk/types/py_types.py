@@ -1,5 +1,6 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# YDK - YANG Development Kit
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -761,6 +762,8 @@ class YList(EntityCollection):
                     if attr is None:
                         key_list = []
                         break
+                    if isinstance(attr, Empty) or not str(attr):
+                        continue  # Skip empty key
                     key_list.append(attr)
         if len(key_list) == 0:
             self.counter += 1

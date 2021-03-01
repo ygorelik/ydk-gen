@@ -40,8 +40,7 @@ module ydktest-sanity-yang11 {
          type string;
        }
        leaf enabled {
-         // TBD. Need to test 'type empty'
-         type boolean;
+         type empty;
        }
        leaf prop {
          type string;
@@ -61,5 +60,5 @@ module ydktest-sanity-yang11 {
          }
        }
      }
-   }
+  }
 }

@@ -546,7 +546,7 @@ def get_primitive_type_tag(typ, language):
         ('go', 'str'): 'string',
         ('go', 'bool'): 'bool',
         ('go', 'Decimal64'): ':go:struct:`Decimal64<Ydk_Decimal64>`',
-        ('go', 'Empty'): ':go:struct:`Empty<Ydk_Empty>`',
+        ('go', 'Empty'): ':go:struct:`Empty`',
         ('go', 'Enum'): ':go:struct:`Enum<Ydk_Enum>`',
         ('go', 'Identity'): ':go:struct:`Identity<Ydk_Identity>`',
     }

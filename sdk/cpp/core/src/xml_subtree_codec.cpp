@@ -1,6 +1,6 @@
 /*  ----------------------------------------------------------------
  YDK - YANG Development Kit
- Copyright 2016 Cisco Systems. All rights reserved.
+ Copyright 2016-2019 Cisco Systems. All rights reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -247,7 +247,7 @@ static string resolve_leaf_value_namespace(const string & content, const string 
 
 static void check_and_set_content(Entity & entity, const string & leaf_name, xmlNodePtr parent_xml_node, xmlChar * content, xmlDocPtr doc)
 {
-    if(leaf_name.size()>0 && !isonlywhitespace(content))
+    if (entity.has_leaf_or_child_of_name(leaf_name))  // && !isonlywhitespace(content))
     {
         xmlNsPtr * nsList = xmlGetNsList(doc, parent_xml_node);
         string name_space;

@@ -22,56 +22,64 @@
 package test
 
 import (
-// 	"fmt"
+	"fmt"
 	ysanity "github.com/CiscoDevNet/ydk-go/ydk/models/ydktest_yang11/ydktest_sanity_yang11"
 	"github.com/CiscoDevNet/ydk-go/ydk"
 	"github.com/CiscoDevNet/ydk-go/ydk/providers"
 	"github.com/CiscoDevNet/ydk-go/ydk/services"
 	"github.com/CiscoDevNet/ydk-go/ydk/types"
+	encoding "github.com/CiscoDevNet/ydk-go/ydk/types/encoding_format"
+	"github.com/CiscoDevNet/ydk-go/ydk/types/ylist"
 	"github.com/stretchr/testify/suite"
-// 	"strconv"
 	"testing"
 )
 
 type SanityYang11TestSuite struct {
 	suite.Suite
-	Provider providers.NetconfServiceProvider
-	CRUD     services.CrudService
+	Provider providers.CodecServiceProvider
+	Codec services.CodecService
 }
 
 func (suite *SanityYang11TestSuite) SetupSuite() {
-	suite.CRUD = services.CrudService{}
-	suite.Provider = providers.NetconfServiceProvider{
-		Address:  "127.0.0.1",
-		Username: "admin",
-		Password: "admin",
-		Port:     12022}
-	suite.Provider.Connect()
+	suite.Codec = services.CodecService{}
+	suite.Provider = providers.CodecServiceProvider{Encoding: encoding.XML}
 }
 
-// func (suite *SanityYang11TestSuite) BeforeTest(suiteName, testName string) {
-// 	suite.CRUD.Delete(&suite.Provider, &ysanity.Runner{})
-// 	fmt.Printf("%v: %v ...\n", suiteName, testName)
+// func (suite *SanityYang11TestSuite) TestContainer() {
+// 	container := ysanity.BackwardIncompatible{}
+// 	container.TestNode = "Testing node"
+// 	suite.CRUD.Create(&suite.Provider, &container)
+//
+// 	entityRead := suite.CRUD.Read(&suite.Provider, &ysanity.BackwardIncompatible{})
+// 	suite.True(types.EntityEqual(entityRead, &container))
+//
+// 	suite.CRUD.Delete(&suite.Provider, &ysanity.BackwardIncompatible{})
 // }
 
-func (suite *SanityYang11TestSuite) TearDownSuite() {
-	suite.Provider.Disconnect()
-}
+func (suite *SanityYang11TestSuite) TestTypeEmpty() {
+        top := ysanity.EmptyType{}
+        list_elem := ysanity.EmptyType_Filter{}
+        list_elem.Name = "filter-name"
+        list_elem.Enabled = types.Empty{}
+        list_elem.Prop = "one"
+        list_elem.OutboundFilter = types.Empty{}
+        top.Filter = append(top.Filter, &list_elem)
 
-func (suite *SanityYang11TestSuite) TestContainer() {
-	container := ysanity.BackwardIncompatible{}
-	container.TestNode = "Testing node"
-	suite.CRUD.Create(&suite.Provider, &container)
+        payload := suite.Codec.Encode(&suite.Provider, &top)
+        suite.False(payload == "")
 
-	entityRead := suite.CRUD.Read(&suite.Provider, &ysanity.BackwardIncompatible{})
-	suite.True(types.EntityEqual(entityRead, &container))
+        entity := suite.Codec.Decode(&suite.Provider, payload)
+        suite.True(types.EntityEqual(&top, entity))
 
-	suite.CRUD.Delete(&suite.Provider, &ysanity.BackwardIncompatible{})
+        suite.Equal("[filter-name]", fmt.Sprintf("%v", ylist.Keys(top.Filter)))
+        _, ldata := ylist.Get(top.Filter, "filter-name")
+		suite.NotNil(ldata)
+        suite.True(types.EntityEqual(&list_elem, ldata))
 }
 
 func TestSanityYang11TestSuite(t *testing.T) {
 	if testing.Verbose() {
-		ydk.EnableLogging(ydk.Info)
+		ydk.EnableLogging(ydk.Debug)
 	}
 	suite.Run(t, new(SanityYang11TestSuite))
 }
