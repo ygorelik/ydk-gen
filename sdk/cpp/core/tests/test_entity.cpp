@@ -1,29 +1,24 @@
-//
-// @file types.hpp
-// @brief Header for ydk entity
-//
-// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
-//
-////////////////////////////////////////////////////////////////
-// Licensed to the Apache Software Foundation (ASF) under one
-// or more contributor license agreements.  See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  The ASF licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
-//
-//   http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
-// under the License.
-//
-//////////////////////////////////////////////////////////////////
+/*  ----------------------------------------------------------------
+ YDK - YANG Development Kit
+ Copyright 2016-2019 Cisco Systems. All rights reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
+ ------------------------------------------------------------------*/
 
 #include "../src/types.hpp"
 #include "../src/entity_util.hpp"
@@ -40,6 +35,9 @@ class TestEntity:public Entity
         : name{YType::str, "name"}, enabled{YType::boolean, "enabled"}, bits_field{YType::bits, "bits-field"}, child(make_shared<TestEntity::Child>())
     {
         yang_name = "test"; yang_parent_name = "";
+        leaf_list.push_back(&name);
+        leaf_list.push_back(&enabled);
+        leaf_list.push_back(&bits_field);
     }
 
     ~TestEntity()
@@ -123,6 +121,7 @@ class TestEntity:public Entity
           : child_val{YType::int32, "child-val"}
           {
             yang_name = "child"; yang_parent_name = "test";
+            leaf_list.push_back(&child_val);
           }
 
         bool has_data() const
@@ -198,6 +197,7 @@ class TestEntity:public Entity
               : child_key{YType::str, "child-key"}
               {
                 yang_name = "multi-child"; yang_parent_name = "child";
+                leaf_list.push_back(&child_key);
               }
 
             bool has_data() const
@@ -281,6 +281,22 @@ TEST_CASE("test_create")
 
     REQUIRE(test.has_data() == true);
     REQUIRE(get_entity_path(test, nullptr) == expected);
+}
+
+TEST_CASE("test_leaf_list")
+{
+    TestEntity test{};
+
+    YLeaf* leaf_ptr = nullptr;
+    for (auto leaf : test.leaf_list)
+    {
+        if (leaf->name == "name") {
+            leaf_ptr = leaf;
+            break;
+        }
+    }
+    REQUIRE(leaf_ptr != nullptr);
+    CHECK(leaf_ptr->type == YType::str);
 }
 
 TEST_CASE("test_unequal")

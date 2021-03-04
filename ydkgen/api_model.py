@@ -719,6 +719,7 @@ class Property(NamedElement):
         self.is_many = False
         self.id = False
         self._property_type = None
+        self.union_types = []
         self.max_elements = None
         self.min_elements = None
         self.iskeyword = iskeyword

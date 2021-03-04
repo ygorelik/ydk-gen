@@ -1,32 +1,28 @@
-//
-// @file value.hpp
-// @brief The main ydk public header.
-//
-// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
-//
-////////////////////////////////////////////////////////////////
-// Licensed to the Apache Software Foundation (ASF) under one
-// or more contributor license agreements.  See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  The ASF licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
-//
-//   http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
-// under the License.
-//
-//////////////////////////////////////////////////////////////////
+/*  ----------------------------------------------------------------
+ YDK - YANG Development Kit
+ Copyright 2016-2019 Cisco Systems. All rights reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
+ ------------------------------------------------------------------*/
 
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 
 #include "path_api.hpp"
 #include "errors.hpp"
@@ -56,18 +52,20 @@ std::string to_str(YType t)
         TOSTRING(enumeration);
         TOSTRING(bits);
         TOSTRING(decimal64);
+        TOSTRING(multiple);
     }
     return "";
 #undef TOSTRING
 }
 
-YLeaf::YLeaf(YType type, std::string name):
+YLeaf::YLeaf(YType type, std::string name, const std::vector<ydk::YType> & types):
         is_set(false),
         yfilter(YFilter::not_set),
         name(name),
         value(""),
         enum_value(0),
-        type(type)
+        type(type),
+        union_types{types}
 {
 }
 
@@ -78,9 +76,9 @@ YLeaf::YLeaf(const YLeaf& val):
     value{val.value},
     enum_value{val.enum_value},
     type{val.type},
-    bits_value{val.bits_value}
+    bits_value{val.bits_value},
+    union_types{val.union_types}
 {
-
 }
 
 
@@ -91,7 +89,8 @@ YLeaf::YLeaf(YLeaf&& val):
     value{std::move(val.value)},
     enum_value{std::move(val.enum_value)},
     type{val.type},
-    bits_value{val.bits_value}
+    bits_value{val.bits_value},
+    union_types{val.union_types}
 {
 }
 
@@ -102,7 +101,8 @@ YLeaf::~YLeaf()
 
 const std::string  YLeaf::get() const
 {
-    if(type == YType::bits)
+    if (type == YType::bits ||
+        (type == YType::multiple && std::find(union_types.begin(), union_types.end(), YType::bits) != union_types.end()))
     {
         return get_bits_string();
     }
@@ -303,7 +303,8 @@ void YLeaf::set(Decimal64 val)
 void YLeaf::store_value(std::string && val)
 {
     is_set=true;
-    if(type == YType::boolean)
+    if (type == YType::boolean ||
+        (type == YType::multiple && std::find(union_types.begin(), union_types.end(), YType::boolean) != union_types.end()))
     {
         value = get_bool_string(val);
     }

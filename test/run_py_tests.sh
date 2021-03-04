@@ -205,8 +205,7 @@ function py_sanity_ydktest_gen {
     cd $YDKGEN_HOME
 
     run_cmd ./generate.py --python --bundle profiles/test/ydktest-cpp.json -i
-
-#    cp -r gen-api/python/ydktest-bundle/ydk/models sdk/python/core/ydk
+    run_cmd ./generate.py --python --bundle profiles/test/ydktest-yang11.json -i
 }
 
 function py_sanity_ydktest_test {
@@ -215,6 +214,7 @@ function py_sanity_ydktest_test {
 
     cd $YDKGEN_HOME
     run_test sdk/python/core/tests/test_sanity_codec.py
+    run_test sdk/python/core/tests/test_sanity_yang11.py
 
     py_sanity_ydktest_test_netconf_ssh
 

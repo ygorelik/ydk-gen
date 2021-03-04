@@ -185,3 +185,17 @@ TEST_CASE("test_deci64")
     test_value = Decimal64("1.2");
     REQUIRE(test_value.get()=="1.2");
 }
+
+TEST_CASE("test_union")
+{
+    YLeaf test_leaf{YType::multiple, "union_leaf", {YType::boolean, YType::empty, YType::int16}};
+
+    test_leaf = true;
+    CHECK(test_leaf.get() == "true");
+
+    test_leaf = Empty();
+    CHECK(test_leaf.get() == "");
+
+    test_leaf = 4;
+    CHECK(test_leaf.get() == "4");
+}

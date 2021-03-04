@@ -71,6 +71,8 @@ source $PYTHON_VENV/bin/activate
 reset_yang_repository
 
 run_test test_ydk_types.py
+run_test test_sanity_codec.py
+run_test test_sanity_yang11.py
 run_test test_netconf_operations.py
 run_test test_opendaylight.py
 run_test test_restconf_provider.py

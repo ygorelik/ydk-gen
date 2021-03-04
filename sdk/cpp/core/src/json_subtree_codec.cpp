@@ -20,7 +20,7 @@
  All rights reserved under Apache License, Version 2.0.
  ------------------------------------------------------------------*/
 
-#include <algorithm>    // std::all_of
+#include <algorithm>    // std::all_of, find
 #include <ctype.h>  	// std::isdigit
 
 #include "entity_util.hpp"
@@ -330,12 +330,32 @@ static void check_and_set_content(Entity & entity, const string & leaf_name, jso
     entity.set_value(leaf_name, content, name_space, name_space_prefix);
 }
 
+static bool is_leaf_type_empty(Entity & entity, const string & leaf_name)
+{
+    for (auto leaf : entity.leaf_list)
+    {
+        if (leaf->name == leaf_name &&
+        	(leaf->type == YType::empty ||
+        	 (leaf->type == YType::multiple &&
+        	  std::find(leaf->union_types.begin(), leaf->union_types.end(), YType::empty) != leaf->union_types.end())))
+        {
+            YLOG_DEBUG("JsonCodec: Creating leaf '{}' with empty value", leaf_name);
+            leaf->set(Empty());
+            return true;
+        }
+    }
+    return false;
+}
+
 static void check_and_set_leaf(Entity & entity, Entity * parent, const string & node_name, json & json_node)
 {
     if (json_node.is_null())
     {
-        YLOG_DEBUG("JsonCodec: Creating leaf '{}' with no value in entity '{}'", node_name, entity.yang_name);
-        entity.set_filter(node_name, YFilter::read);
+        if (!is_leaf_type_empty(entity, node_name))
+        {
+    	    YLOG_DEBUG("JsonCodec: Creating leaf '{}' with no value and setting YFilter::read", node_name);
+            entity.set_filter(node_name, YFilter::read);
+        }
     }
     else if (json_node.is_primitive())
     {
