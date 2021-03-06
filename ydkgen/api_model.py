@@ -1,5 +1,6 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# YDK - YANG Development Kit
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
 
 """
   api_model.py
@@ -23,7 +29,8 @@
 from __future__ import absolute_import
 
 import sys
-from pyang.types import UnionTypeSpec
+from pyang.statements import TypeStatement
+from pyang.types import UnionTypeSpec, PathTypeSpec
 
 
 class Element(object):
@@ -467,7 +474,7 @@ class Class(NamedElement):
             prop_types = [p.property_type]
             if isinstance(p.property_type, UnionTypeSpec):
                 for child_type_stmt in p.property_type.types:
-                    prop_types.extend(self._get_union_types(child_type_stmt, p))
+                    prop_types.extend(_get_union_types(child_type_stmt))
             for prop_type in prop_types:
                 if isinstance(prop_type, Class) or isinstance(prop_type, Enum) or isinstance(prop_type, Bits):
                     if prop_type.get_package() != package:
@@ -476,18 +483,9 @@ class Class(NamedElement):
         # do this for nested classes too
         for nested_class in [clazz for clazz in self.owned_elements if isinstance(clazz, Class)]:
             imported_types.extend(
-                [c for c in nested_class.imported_types() if not c in imported_types])
+                [c for c in nested_class.imported_types() if c not in imported_types])
 
         return imported_types
-
-    def _get_union_types(self, type_stmt, p):
-        from .builder import TypesExtractor
-        prop_type = TypesExtractor().get_property_type(type_stmt)
-        prop_types = [prop_type]
-        if isinstance(prop_type, UnionTypeSpec):
-            for child_type_stmt in prop_type.types:
-                prop_types.extend(self._get_union_types(child_type_stmt, p))
-        return prop_types
 
     def get_dependent_siblings(self):
         ''' This will return all types that are referenced by this Class
@@ -678,7 +676,7 @@ class Bits(DataType):
         # the name of the enumeration is derived either from the typedef
         # or the leaf under which it is defined
         leaf_or_typedef = stmt
-        while leaf_or_typedef.parent is not None and not leaf_or_typedef.keyword in ('leaf', 'leaf-list', 'typedef'):
+        while leaf_or_typedef.parent is not None and leaf_or_typedef.keyword not in ('leaf', 'leaf-list', 'typedef'):
             leaf_or_typedef = leaf_or_typedef.parent
 
         name = '%s' % camel_case(leaf_or_typedef.arg)
@@ -770,6 +768,21 @@ class Property(NamedElement):
 
         if self._stmt.keyword in ['leaf', 'leaf-list']:
             type_stmt = self._stmt.search_one('type')
+
+            # Build union_types list
+            if isinstance(type_stmt.i_type_spec, UnionTypeSpec) and not self.union_types:
+                prop_type_specs = []
+                for child_type_stmt in type_stmt.i_type_spec.types:
+                    prop_type_specs.extend(_get_union_types(child_type_stmt))
+                for type_spec in prop_type_specs:
+                    while isinstance(type_spec, PathTypeSpec):
+                        if not hasattr(type_spec, 'i_target_node'):
+                            break  # error in pyang
+                        target_type_stmt = type_spec.i_target_node.search_one('type')
+                        type_spec = target_type_stmt.i_type_spec
+                    if type_spec not in self.union_types:
+                        self.union_types.append(type_spec)
+
             return type_stmt.i_type_spec
         else:
             return None
@@ -811,7 +824,7 @@ class Enum(DataType):
         if hasattr(self, 'goName'):
             return self.goName
 
-        while stmt.parent is not None and not stmt.keyword in ('leaf', 'leaf-list', 'typedef'):
+        while stmt.parent is not None and stmt.keyword not in ['leaf', 'leaf-list', 'typedef']:
             stmt = stmt.parent
 
         name = stmt.arg
@@ -837,7 +850,7 @@ class Enum(DataType):
         # the name of the numeration is derived either from the typedef
         # or the leaf under which it is defined
         leaf_or_typedef = stmt
-        while leaf_or_typedef.parent is not None and not leaf_or_typedef.keyword in ('leaf', 'leaf-list', 'typedef'):
+        while leaf_or_typedef.parent is not None and leaf_or_typedef.keyword not in ('leaf', 'leaf-list', 'typedef'):
             leaf_or_typedef = leaf_or_typedef.parent
 
         name = leaf_or_typedef.arg
@@ -991,7 +1004,7 @@ def camel_case(input_text):
     result = ''.join([_capitalize(word) for word in input_text.split('-')])
     result = ''.join([_capitalize(word) for word in result.split('_')])
     if input_text.startswith('_'):
-        result = '_'+result;
+        result = '_'+result
     return result
 
 
@@ -1026,3 +1039,17 @@ def escape_name(name):
     name = name.replace(';', '__SEMICOLON__')
 
     return name
+
+
+def _get_union_types(type_stmt):
+    from .builder import TypesExtractor
+    prop_type = TypesExtractor().get_property_type(type_stmt)
+    if isinstance(prop_type, TypeStatement):
+        prop_type = prop_type.i_type_spec
+    prop_type_specs = []
+    if isinstance(prop_type, UnionTypeSpec):
+        for child_type_stmt in prop_type.types:
+            prop_type_specs.extend(_get_union_types(child_type_stmt))
+    else:
+        prop_type_specs.append(prop_type)
+    return prop_type_specs

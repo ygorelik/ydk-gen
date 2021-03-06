@@ -34,31 +34,34 @@ module ydktest-sanity-yang11 {
   }
 
   container empty-type {
-     list filter {
-       key "name enabled";
-       leaf name {
-         type string;
-       }
-       leaf enabled {
-         type empty;
-       }
-       leaf prop {
-         type string;
-       }
+    list filter {
+      key "name enabled";
+      leaf name {
+        type string;
+      }
+      leaf enabled {
+        type empty;
+      }
+      leaf prop {
+        type string;
+      }
 
-       leaf outbound-filter {
-         type union {
-           // Not implemented properly in pyang
-           type leafref {
-             path "/empty-type/filter/name";
-           }
-           type enumeration {
-             enum default-filter;
-             enum primary-filter;
-           }
-           type empty;
-         }
-       }
-     }
+      leaf outbound-filter {
+        type union {
+          type leafref {
+            path "/empty-type/filter/name";
+          }
+          type enumeration {
+            enum default-filter;
+            enum primary-filter;
+          }
+          type bits {
+              bit enable;
+              bit disable;
+          }
+          type empty;
+        }
+      }
+    }
   }
 }

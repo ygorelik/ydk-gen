@@ -1,5 +1,6 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# YDK - YANG Development Kit
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -124,13 +125,21 @@ class ClassConstructorPrinter(object):
                     leaf_name = prop.stmt.i_module.arg + ':' + prop.stmt.arg
                 else:
                     leaf_name = prop.stmt.arg
-                if isinstance(prop.property_type, UnionTypeSpec):
-
-                    types = ['YType::%s' % get_type_name(t) for t in prop.union_types]
-                    self.ctx.writeln('%s{YType::multiple, "%s", {%s}%s' %
-                                     (prop.name, leaf_name,
-                                      ', '.join(types),
-                                      (',' if index != len(leafs) - 1 else '')))
+                if isinstance(prop.property_type, UnionTypeSpec) and prop.stmt.keyword != 'leaf-list':
+                    type_strs = []
+                    for utype in prop.union_types:
+                        type_str = get_type_name(utype)
+                        if type_str not in type_strs:
+                            type_strs.append(type_str)
+                    if len(type_strs) == 1:
+                        self.ctx.writeln('%s{YType::%s, "%s"}%s' % (prop.name,
+                                                                    type_strs[0], leaf_name,
+                                                                    (',' if index != len(leafs) - 1 else '')))
+                    else:
+                        ytypes = ', '.join(['YType::%s' % t for t in type_strs])
+                        self.ctx.writeln('%s{YType::multiple, "%s", {%s}}%s' %
+                                         (prop.name, leaf_name, ytypes,
+                                          (',' if index != len(leafs) - 1 else '')))
                 else:
                     self.ctx.writeln('%s{YType::%s, "%s"}%s' % (prop.name,
                                      get_type_name(prop.property_type), leaf_name, (',' if index != len(leafs) - 1 else '')))
