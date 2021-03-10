@@ -37,12 +37,14 @@ import (
 type SanityYang11TestSuite struct {
 	suite.Suite
 	Provider providers.CodecServiceProvider
+	JsonProvider providers.CodecServiceProvider
 	Codec services.CodecService
 }
 
 func (suite *SanityYang11TestSuite) SetupSuite() {
 	suite.Codec = services.CodecService{}
 	suite.Provider = providers.CodecServiceProvider{Encoding: encoding.XML}
+	suite.JsonProvider = providers.CodecServiceProvider{Encoding: encoding.JSON}
 }
 
 // func (suite *SanityYang11TestSuite) TestContainer() {
@@ -69,6 +71,27 @@ func (suite *SanityYang11TestSuite) TestTypeEmpty() {
         suite.False(payload == "")
 
         entity := suite.Codec.Decode(&suite.Provider, payload)
+        suite.True(types.EntityEqual(&top, entity))
+
+        suite.Equal("[filter-name]", fmt.Sprintf("%v", ylist.Keys(top.Filter)))
+        _, ldata := ylist.Get(top.Filter, "filter-name")
+		suite.NotNil(ldata)
+        suite.True(types.EntityEqual(&list_elem, ldata))
+}
+
+func (suite *SanityYang11TestSuite) TestTypeEmptyJson() {
+        top := ysanity.EmptyType{}
+        list_elem := ysanity.EmptyType_Filter{}
+        list_elem.Name = "filter-name"
+        list_elem.Enabled = types.Empty{}
+        list_elem.Prop = "one"
+        list_elem.OutboundFilter = types.Empty{}
+        top.Filter = append(top.Filter, &list_elem)
+
+        payload := suite.Codec.Encode(&suite.JsonProvider, &top)
+        suite.False(payload == "")
+
+        entity := suite.Codec.Decode(&suite.JsonProvider, payload)
         suite.True(types.EntityEqual(&top, entity))
 
         suite.Equal("[filter-name]", fmt.Sprintf("%v", ylist.Keys(top.Filter)))
