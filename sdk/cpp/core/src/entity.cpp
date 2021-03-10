@@ -270,7 +270,7 @@ Entity::get_ylist_key() const
 }
 
 bool
-Entity::is_leaf_type_empty(const string & leaf_name)
+Entity::is_leaf_type_empty(const string & leaf_name) const
 {
     for (auto leaf : leaf_list)
     {

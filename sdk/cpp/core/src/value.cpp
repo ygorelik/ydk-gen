@@ -51,8 +51,8 @@ std::string to_str(YType t)
         TOSTRING(boolean);
         TOSTRING(enumeration);
         TOSTRING(bits);
-        TOSTRING(decimal64);
         TOSTRING(multiple);
+        TOSTRING(decimal64);
     }
     return "";
 #undef TOSTRING

@@ -24,7 +24,7 @@ from ydk.types import Empty
 from ydk.path import Repository
 from ydk.providers import CodecServiceProvider
 from ydk.services import CodecService
-from ydk.entity_utils import XmlSubtreeCodec
+from ydk.entity_utils import XmlSubtreeCodec, JsonSubtreeCodec
 
 from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BackwardIncompatible, EmptyType
 import ydk.models.ydktest_yang11 as yang11
@@ -99,6 +99,8 @@ class SanityYang11Test(unittest.TestCase):
         elem1.name, elem2.name = 'abc', 'xyz'
         elem1.enabled, elem2.enabled = Empty(), Empty()
         elem1.prop, elem2.prop = 'one', 'two'
+        # elem1.outbound_filter, elem2.outbound_filter = 'abc', 'xyz'
+        elem1.outbound_filter, elem2.outbound_filter = Empty(), Empty()
         top.filter.extend([elem1, elem2])
 
         self.assertEqual(top.filter.keys(), ['abc', 'xyz'])
@@ -111,22 +113,29 @@ class SanityYang11Test(unittest.TestCase):
         payload = xml_codec.encode(top, root_schema)
         self.assertIsNotNone(payload)
         self.assertIsNot('', payload)
-        self.assertEqual(payload, """<empty-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">
-  <filter>
-    <name>abc</name>
-    <enabled/>
-    <prop>one</prop>
-  </filter>
-  <filter>
-    <name>xyz</name>
-    <enabled/>
-    <prop>two</prop>
-  </filter>
-</empty-type>""")
 
-        # TODO: decode fails for type Empty
-        # entity = xml_codec.decode(payload, EmptyType())
-        # self.assertEqual(top, entity)
+        entity = xml_codec.decode(payload, EmptyType())
+        self.assertEqual(top, entity)
+
+    def test_type_empty_key_json_codec(self):
+        top = EmptyType()
+        elem1, elem2 = EmptyType.Filter(), EmptyType.Filter()
+        elem1.name, elem2.name = 'abc', 'xyz'
+        elem1.enabled, elem2.enabled = Empty(), Empty()
+        elem1.prop, elem2.prop = 'one', 'two'
+        elem1.outbound_filter, elem2.outbound_filter = Empty(), Empty()
+        top.filter.extend([elem1, elem2])
+
+        repo = Repository(yang11.__path__[0] + '/_yang')
+        root_schema = repo.create_root_schema([])
+        json_codec = JsonSubtreeCodec()
+
+        payload = json_codec.encode(top, root_schema, True)
+        self.assertIsNotNone(payload)
+        self.assertIsNot('', payload)
+
+        entity = json_codec.decode(payload, EmptyType())
+        self.assertEqual(top, entity)
 
 
 if __name__ == '__main__':

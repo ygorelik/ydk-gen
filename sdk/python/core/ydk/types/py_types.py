@@ -324,6 +324,19 @@ class Entity(_Entity):
                                (leaf[0], leaf_value, leaf[1].yfilter, leaf[1].is_set))
         return leaf_name_data
 
+    def is_leaf_type_empty(self, leaf_name):
+        for name in self._leafs:
+            leaf_tuple = self._leafs[name]
+            leaf = leaf_tuple[0]
+            if leaf.name == leaf_name:
+                break
+        if leaf.type == YType.empty:
+            return True
+        elif leaf.type == YType.multiple:
+            if 'Empty' in leaf_tuple[1]:
+                return True
+        return False
+
     def get_segment_path(self):
         path = self._segment_path()
         if ("[" in path) and hasattr(self, 'ylist_key_names') and len(self.ylist_key_names) > 0:

@@ -60,7 +60,6 @@ if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
   YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
   print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
-$script_dir/init_test_env.sh
 
 if [[ -z ${PYTHON_VENV} ]]; then
     export PYTHON_VENV=${HOME}/venv
@@ -69,6 +68,14 @@ fi
 source $PYTHON_VENV/bin/activate
 
 reset_yang_repository
+
+print_msg "Installing test bundles"
+cd $YDKGEN_HOME
+python generate.py --python --bundle profiles/test/ydktest-cpp.json -i
+python generate.py --python --bundle profiles/test/ydktest-yang11.json -i
+cd -
+
+$script_dir/init_test_env.sh
 
 run_test test_ydk_types.py
 run_test test_sanity_codec.py
@@ -88,5 +95,7 @@ run_test test_sanity_service_errors.py
 run_test test_sanity_type_mismatch_errors.py
 run_test test_sanity_types.py
 run_test test_non_top_operations.py
+
+run_test test_sanity_yang11.py
 
 $script_dir/clean_test_env.sh

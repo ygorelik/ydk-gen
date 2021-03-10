@@ -1,5 +1,5 @@
 /*  ----------------------------------------------------------------
- Copyright 2016 Cisco Systems
+ Copyright 2016-2019 Cisco Systems
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -12,7 +12,13 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+ ------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
  ------------------------------------------------------------------*/
+
 #include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
@@ -147,6 +153,15 @@ public:
             LeafDataList,
             ydk::Entity,
             get_name_leaf_data
+        );
+    }
+
+    bool is_leaf_type_empty(const string & leaf_name) const override {
+        PYBIND11_OVERLOAD_PURE(
+            bool,
+            ydk::Entity,
+            is_leaf_type_empty,
+            leaf_name
         );
     }
 
@@ -529,7 +544,8 @@ PYBIND11_MODULE(ydk_, ydk)
         .value("boolean", ydk::YType::boolean)
         .value("enumeration", ydk::YType::enumeration)
         .value("bits", ydk::YType::bits)
-        .value("decimal64", ydk::YType::decimal64);
+        .value("decimal64", ydk::YType::decimal64)
+        .value("multiple", ydk::YType::multiple);
 
     enum_<ydk::path::ModelCachingOption>(types, "ModelCachingOption")
         .value("common", ydk::path::ModelCachingOption::COMMON)
@@ -653,7 +669,8 @@ PYBIND11_MODULE(ydk_, ydk)
         .def_readwrite("name", &ydk::Enum::YLeaf::name);
 
     class_<ydk::YLeaf>(types, "YLeaf")
-        .def(init<ydk::YType, string>(), arg("leaf_type"), arg("name"))
+        .def(init<ydk::YType, string, const std::vector<ydk::YType>&>(),
+                  arg("leaf_type"), arg("name"), arg("union_types")=pybind11::list())
         .def("get", &ydk::YLeaf::get, return_value_policy::reference)
         .def("get_name_leafdata", &ydk::YLeaf::get_name_leafdata, return_value_policy::reference)
         .def(self == self, return_value_policy::reference)
