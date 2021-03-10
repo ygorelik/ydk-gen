@@ -158,6 +158,7 @@ class Entity {
     std::string get_ylist_key() const;
 
     std::vector<ydk::YLeaf*> leaf_list{};
+    bool is_leaf_type_empty(const std::string & leaf_name);
 };
 
 class Bits {

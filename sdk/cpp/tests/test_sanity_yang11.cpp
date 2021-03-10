@@ -18,6 +18,7 @@
 #include <ydk/codec_provider.hpp>
 #include <ydk/codec_service.hpp>
 #include <ydk/xml_subtree_codec.hpp>
+#include <ydk/json_subtree_codec.hpp>
 #include <ydk/common_utilities.hpp>
 
 #include "ydk_ydktest_yang11/ydktest_sanity_yang11.hpp"
@@ -78,7 +79,6 @@ TEST_CASE("test_type_empty_in_union")
 
 TEST_CASE("test_type_empty_key_xml_codec")
 {
-    // Test XML_Codec
     XmlSubtreeCodec xml_codec{};
     vector<path::Capability> caps {
         {"ydktest-sanity-yang11", ""}
@@ -100,7 +100,44 @@ TEST_CASE("test_type_empty_key_xml_codec")
     auto entity = xml_codec.decode(payload, make_shared<ydktest_sanity_yang11::EmptyType>());
     CHECK(container == *entity);
 }
-/* TODO: Failing printer_json in libyang; need debugging
+
+TEST_CASE("test_type_empty_key_json_codec")
+{
+    JsonSubtreeCodec json_codec{};
+    vector<path::Capability> caps {
+        {"ydktest-sanity-yang11", ""}
+    };
+    ydk::path::Repository repo{TEST_HOME};
+    auto root = repo.create_root_schema(caps);
+
+    auto list_elem = make_shared<ydktest_sanity_yang11::EmptyType::Filter>();
+    list_elem->name = "filter-name";
+    list_elem->enabled = Empty();
+    list_elem->prop = "one";
+    list_elem->outbound_filter = Empty();
+    auto container = ydktest_sanity_yang11::EmptyType();
+    container.filter.append(list_elem);
+
+    string payload = json_codec.encode(container, *root);
+    string json_expected = R"({
+  "ydktest-sanity-yang11:empty-type": {
+    "filter": [
+      {
+        "enabled": null,
+        "name": "filter-name",
+        "outbound-filter": null,
+        "prop": "one"
+      }
+    ]
+  }
+})";
+
+    CHECK(json_expected == payload);
+
+    auto entity = json_codec.decode(payload, make_shared<ydktest_sanity_yang11::EmptyType>());
+    CHECK(container == *entity);
+}
+
 TEST_CASE("test_type_empty_in_union_json")
 {
     CodecServiceProvider codec_provider{EncodingFormat::JSON};
@@ -115,25 +152,25 @@ TEST_CASE("test_type_empty_in_union_json")
     container.filter.append(list_elem);
 
     string json = codec_service.encode(codec_provider, container, true);
-    string expected = R"({
+    string json_expected = R"({
   "ydktest-sanity-yang11:empty-type": {
     "filter": [
       {
         "name": "filter-name",
-        "enabled": "",
+        "enabled": null,
         "prop": "one",
-        "outbound-filter": ""
+        "outbound-filter": null
       }
     ]
   }
 }
 )";
-    CHECK(expected == json);
+    CHECK(json_expected == json);
 
-    auto entity = codec_service.decode(codec_provider, expected, make_shared<ydktest_sanity_yang11::EmptyType>());
+    auto entity = codec_service.decode(codec_provider, json_expected, make_shared<ydktest_sanity_yang11::EmptyType>());
     CHECK(container == *entity);
 }
-*/
+
 TEST_CASE("test_type_leafref_in_union")
 {
     CodecServiceProvider codec_provider{EncodingFormat::XML};

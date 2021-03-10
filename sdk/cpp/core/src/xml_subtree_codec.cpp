@@ -206,32 +206,20 @@ std::shared_ptr<Entity> XmlSubtreeCodec::decode(const std::string & payload, std
     return entity;
 }
 
-static bool is_leaf_type_empty(Entity & entity, const string & leaf_name)
-{
-    for (auto leaf : entity.leaf_list)
-    {
-        if (leaf->name == leaf_name &&
-        	(leaf->type == YType::empty ||
-        	 (leaf->type == YType::multiple &&
-        	  std::find(leaf->union_types.begin(), leaf->union_types.end(), YType::empty) != leaf->union_types.end())))
-        {
-            YLOG_DEBUG("XMLCodec: Creating leaf '{}' with empty value", leaf_name);
-            leaf->set(Empty());
-            return true;
-        }
-    }
-    return false;
-}
-
 static void check_and_set_leaf(Entity & entity, Entity * parent, xmlNodePtr xml_node, xmlDocPtr doc)
 {
     string current_node_name{to_string(xml_node->name)};
     if (xml_node->children == NULL)
     {
-        if (!is_leaf_type_empty(entity, current_node_name))
+        if (!entity.is_leaf_type_empty(current_node_name))
         {
-    	    YLOG_DEBUG("XMLCodec: Creating leaf '{}' with no value", current_node_name);
+            YLOG_DEBUG("XMLCodec: Creating leaf '{}' with no value", current_node_name);
             entity.set_filter(current_node_name, YFilter::read);
+        }
+        else
+        {
+            YLOG_DEBUG("XMLCodec: Creating leaf '{}' with empty value", current_node_name);
+            entity.set_value(current_node_name, "");
         }
     }
     else

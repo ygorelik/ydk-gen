@@ -309,6 +309,9 @@ static void check_and_set_content(Entity & entity, const string & leaf_name, jso
     if (content.front() == '"' && content.back() == '"')
         content = content.substr(1, content.length()-2);
     content = trim(content);
+    if (content == "null") {
+        content = "";
+    }
     if (!entity.has_leaf_or_child_of_name(leaf_name))  // || content.empty())
         return;
 
@@ -330,31 +333,19 @@ static void check_and_set_content(Entity & entity, const string & leaf_name, jso
     entity.set_value(leaf_name, content, name_space, name_space_prefix);
 }
 
-static bool is_leaf_type_empty(Entity & entity, const string & leaf_name)
-{
-    for (auto leaf : entity.leaf_list)
-    {
-        if (leaf->name == leaf_name &&
-        	(leaf->type == YType::empty ||
-        	 (leaf->type == YType::multiple &&
-        	  std::find(leaf->union_types.begin(), leaf->union_types.end(), YType::empty) != leaf->union_types.end())))
-        {
-            YLOG_DEBUG("JsonCodec: Creating leaf '{}' with empty value", leaf_name);
-            leaf->set(Empty());
-            return true;
-        }
-    }
-    return false;
-}
-
 static void check_and_set_leaf(Entity & entity, Entity * parent, const string & node_name, json & json_node)
 {
     if (json_node.is_null())
     {
-        if (!is_leaf_type_empty(entity, node_name))
+        if (!entity.is_leaf_type_empty(node_name))
         {
-    	    YLOG_DEBUG("JsonCodec: Creating leaf '{}' with no value and setting YFilter::read", node_name);
+            YLOG_DEBUG("JsonCodec: Creating leaf '{}' with no value and setting YFilter::read", node_name);
             entity.set_filter(node_name, YFilter::read);
+        }
+        else
+        {
+            YLOG_DEBUG("JsonCodec: Creating leaf '{}' with empty value", node_name);
+            entity.set_value(node_name, "");
         }
     }
     else if (json_node.is_primitive())

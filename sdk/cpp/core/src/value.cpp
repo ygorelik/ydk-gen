@@ -102,7 +102,8 @@ YLeaf::~YLeaf()
 const std::string  YLeaf::get() const
 {
     if (type == YType::bits ||
-        (type == YType::multiple && std::find(union_types.begin(), union_types.end(), YType::bits) != union_types.end()))
+        (type == YType::multiple && !bits_value.get_bitmap().empty() &&
+         std::find(union_types.begin(), union_types.end(), YType::bits) != union_types.end()))
     {
         return get_bits_string();
     }
