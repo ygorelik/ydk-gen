@@ -103,7 +103,7 @@ def get_device_info():
 def datanode_to_str(dn, indent = ''):
     try:
         s = dn.get_schema_node().get_statement()
-        if s.keyword == "leaf" or s.keyword == "leaf-list" or s.keyword == "anyxml":
+        if s.keyword in ["leaf", "leaf-list", "anyxml", "anydata"]:
             out = indent + "<" + s.arg + ">" + dn.get_value() + "</" + s.arg + ">\n"
         else:
             out = indent + "<" + s.arg + ">\n"

@@ -24,7 +24,7 @@ from pyang import statements
 
 from ._types_extractor import TypesExtractor
 from ydkgen.common import YdkGenException
-from ydkgen.api_model import AnyXml, Enum, Class, Bits, Package, Property, Deviation, snake_case
+from ydkgen.api_model import AnyXml, AnyData, Enum, Class, Bits, Package, Property, Deviation, snake_case
 
 
 class ApiModelBuilder(object):
@@ -200,6 +200,10 @@ class ApiModelBuilder(object):
             # parent_element.owned_elements.append(anyxml)
             # anyxml.owner = parent_element
             prop.property_type = anyxml
+        elif stmt.keyword == 'anydata':
+            anydata = AnyData()
+            anydata.stmt = stmt
+            prop.property_type = anydata
         elif enum_type is not None and enum_type == stmt.search_one('type'):
             # we have to create the enum
             enum_class = Enum(self.iskeyword)
@@ -323,14 +327,14 @@ class ApiModelBuilder(object):
                     for e in parent_element.owned_elements:
                         if isinstance(e, Property):
                             s = snake_case(e.stmt.arg)
-                            stmt_arg = (prop.stmt.unclashed_arg if hasattr(prop.stmt, 'unclashed_arg') else prop.stmt.arg)
+                            stmt_arg = prop.stmt.unclashed_arg if hasattr(prop.stmt, 'unclashed_arg') else prop.stmt.arg
                             if snake_case(stmt_arg) == s:
                                 prop.name = prop.name + '_'
 
                     parent_element.owned_elements.append(prop)
                     prop.owner = parent_element
 
-        elif stmt.keyword == 'leaf' or stmt.keyword == 'leaf-list' or stmt.keyword == 'anyxml':
+        elif stmt.keyword in ['leaf', 'leaf-list', 'anyxml', 'anydata']:
             self._add_leaf_leaflist_prop(stmt, parent_element)
 
         if hasattr(stmt, 'i_deviation'):

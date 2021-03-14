@@ -235,7 +235,7 @@ class DocPrinter(object):
             leafs = []
             children = []
             for prop in props:
-                if prop.stmt.keyword in ('leaf', 'anyxml', 'leaf-list'):
+                if prop.stmt.keyword in ('leaf', 'anyxml', 'anydata', 'leaf-list'):
                     if prop.is_key():
                         keys.append(prop)
                     else:

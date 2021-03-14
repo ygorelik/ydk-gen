@@ -68,7 +68,8 @@ ydk::path::DataNodeImpl::DataNodeImpl(DataNode* parent, lyd_node* node, const st
     //add the children
     if(m_node && m_node->child && !(m_node->schema->nodetype == LYS_LEAF ||
                           m_node->schema->nodetype == LYS_LEAFLIST ||
-                          m_node->schema->nodetype == LYS_ANYXML))
+                          m_node->schema->nodetype == LYS_ANYXML ||
+                          m_node->schema->nodetype == LYS_ANYDATA))
     {
         lyd_node *iter = nullptr;
         LY_TREE_FOR(m_node->child, iter) {
@@ -310,15 +311,15 @@ ydk::path::DataNodeImpl::set_value(const std::string& value)
             throw(YInvalidArgumentError{"Invalid value"});
         }
     }
-    else if (s_node->nodetype == LYS_ANYXML)
+    else if (s_node->nodetype == LYS_ANYXML || s_node->nodetype == LYS_ANYDATA)
     {
         lyd_node_anydata* anyxml = reinterpret_cast<lyd_node_anydata *>(m_node);
         anyxml->value.str = value.c_str();
     }
     else
     {
-        YLOG_ERROR("Trying to set value {} for a non leaf non anyxml node.", value);
-        throw(YInvalidArgumentError{"Cannot set value for this Data Node"});
+        YLOG_ERROR("Trying to set value '{}' for a non leaf, anyxml, anydata node.", value);
+        throw(YInvalidArgumentError{"Cannot set value for Data Node"});
     }
 }
 
@@ -330,7 +331,7 @@ ydk::path::DataNodeImpl::get_value() const
     if (s_node->nodetype == LYS_LEAF || s_node->nodetype == LYS_LEAFLIST) {
         lyd_node_leaf_list* leaf= reinterpret_cast<lyd_node_leaf_list *>(m_node);
         return leaf->value_str;
-    } else if (s_node->nodetype == LYS_ANYXML ){
+    } else if (s_node->nodetype == LYS_ANYXML || s_node->nodetype == LYS_ANYDATA) {
         lyd_node_anydata* anyxml = reinterpret_cast<lyd_node_anydata *>(m_node);
         return anyxml->value.str;
     }
@@ -385,9 +386,12 @@ ydk::path::DataNodeImpl::get_children() const
     std::vector<std::shared_ptr<DataNode>> ret{};
     //the ordering should be determined by the lyd_node
     lyd_node *iter;
-    if(m_node && m_node->child && !(m_node->schema->nodetype == LYS_LEAF ||
-                          m_node->schema->nodetype == LYS_LEAFLIST ||
-                          m_node->schema->nodetype == LYS_ANYXML))
+    if (m_node && m_node->child &&
+        !(m_node->schema->nodetype == LYS_LEAF ||
+          m_node->schema->nodetype == LYS_LEAFLIST ||
+          m_node->schema->nodetype == LYS_ANYXML ||
+          m_node->schema->nodetype == LYS_ANYDATA
+          ))
     {
         LY_TREE_FOR(m_node->child, iter){
             auto p = child_map.find(iter);

@@ -633,6 +633,36 @@ class AnyXml(NamedElement):
         return get_properties(self.owned_elements)
 
 
+class AnyData(NamedElement):
+
+    """
+        Represents an anydata element.
+    """
+
+    def __init__(self):
+        if sys.version_info > (3,):
+            super().__init__()
+        else:
+            super(AnyData, self).__init__()
+        self._stmt = None
+
+    @property
+    def stmt(self):
+        """ Returns the `pyang.statements.Statement` instance associated with this AnyData instance."""
+        return self._stmt
+
+    @stmt.setter
+    def stmt(self, stmt):
+        self.name = 'string'
+        self._stmt = stmt
+        desc = stmt.search_one('description')
+        if desc is not None:
+            self.comment = desc.arg
+
+    def properties(self):
+        return get_properties(self.owned_elements)
+
+
 class Bits(DataType):
 
     """

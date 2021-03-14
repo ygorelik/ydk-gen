@@ -32,6 +32,7 @@ import (
 	"github.com/CiscoDevNet/ydk-go/ydk/types/ylist"
 	"github.com/stretchr/testify/suite"
 	"testing"
+	"strings"
 )
 
 type SanityYang11TestSuite struct {
@@ -98,6 +99,12 @@ func (suite *SanityYang11TestSuite) TestTypeEmptyJson() {
         _, ldata := ylist.Get(top.Filter, "filter-name")
 		suite.NotNil(ldata)
         suite.True(types.EntityEqual(&list_elem, ldata))
+}
+
+func (suite *SanityYang11TestSuite) TestTypeAnydata() {
+        top := ysanity.AnydataType{}
+        payload := suite.Codec.Encode(&suite.Provider, &top)
+        suite.Equal(strings.TrimSpace(payload), `<anydata-type xmlns="http://cisco.com/ns/yang/ydktest-yang11"/>`)
 }
 
 func TestSanityYang11TestSuite(t *testing.T) {

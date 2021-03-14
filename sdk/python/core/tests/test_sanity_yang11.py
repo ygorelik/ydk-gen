@@ -26,7 +26,7 @@ from ydk.providers import CodecServiceProvider
 from ydk.services import CodecService
 from ydk.entity_utils import XmlSubtreeCodec, JsonSubtreeCodec
 
-from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BackwardIncompatible, EmptyType
+from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BackwardIncompatible, EmptyType, AnydataType
 import ydk.models.ydktest_yang11 as yang11
 
 from test_utils import ParametrizedTestCase
@@ -136,6 +136,34 @@ class SanityYang11Test(unittest.TestCase):
 
         entity = json_codec.decode(payload, EmptyType())
         self.assertEqual(top, entity)
+
+    def test_anydata(self):
+        top = AnydataType()
+        payload = self.codec_service.encode(self.codec_provider, top, False)
+        self.assertEqual('''<anydata-type xmlns="http://cisco.com/ns/yang/ydktest-yang11"/>''', payload)
+
+        payload = '''<anydata-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <logged-notification>
+    <time>2014-07-29T13:43:12Z</time>
+    <data>
+      <?xml version="1.0"?>
+      <notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+        <eventTime>2014-07-29T13:43:01Z</eventTime>
+        <event xmlns="urn:example:event">
+          <event-class>fault</event-class>
+          <reporting-entity>
+            <card>Ethernet0</card>
+          </reporting-entity>
+          <severity>major</severity>
+        </event>
+      </notification>
+    </data>
+  </logged-notification>
+</anydata-type>
+'''
+        # TODO: Failing decode the above payload
+        # result = self.codec_service.decode(self.codec_provider, payload)
+        # self.assertIsNotNone(result)
 
 
 if __name__ == '__main__':

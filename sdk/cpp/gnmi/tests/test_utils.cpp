@@ -39,7 +39,7 @@ std::string print_tree(ydk::path::DataNode* dn, const std::string& indent)
   ostringstream buffer;
   try {
     ydk::path::Statement s = dn->get_schema_node().get_statement();
-    if(s.keyword == "leaf" || s.keyword == "leaf-list" || s.keyword == "anyxml") {
+    if(s.keyword == "leaf" || s.keyword == "leaf-list" || s.keyword == "anyxml" || s.keyword == "anydata") {
         auto val = dn->get_value();
         buffer << indent << "<" << s.arg << ">" << val << "</" << s.arg << ">" << std::endl;
     } else {

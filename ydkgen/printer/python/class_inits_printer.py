@@ -38,7 +38,7 @@ from .class_get_entity_path_printer import GetAbsolutePathPrinter, GetSegmentPat
 def get_leafs(clazz):
     leafs = []
     for child in clazz.owned_elements:
-        if child.stmt.keyword in ('leaf', 'anyxml'):
+        if child.stmt.keyword in ('leaf', 'anyxml', 'anydata'):
             leafs.append(child)
     return leafs
 
@@ -280,7 +280,7 @@ class ClassSetAttrPrinter(object):
 
 
 def get_ptypes(prop, property_type, type_stmt, one_class_per_module, identity_subclasses):
-    if prop.stmt.keyword == 'anyxml':
+    if prop.stmt.keyword == 'anyxml' or prop.stmt.keyword == 'anydata':
         return ["'str'"]
 
     ptypes = []

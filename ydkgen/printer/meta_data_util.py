@@ -315,6 +315,11 @@ def get_meta_info_data(prop, property_type, type_stmt, language, identity_subcla
             meta_info_data.doc_link = 'anyxml'
             meta_info_data.ptype = 'object'
             return meta_info_data
+        elif prop.stmt.keyword == 'anydata':
+            meta_info_data.mtype = 'ANYDATA_CLASS'
+            meta_info_data.doc_link = 'anydata'
+            meta_info_data.ptype = 'object'
+            return meta_info_data
         else:
             meta_info_data.mtype = 'ATTRIBUTE'
             meta_info_data.doc_link = ''

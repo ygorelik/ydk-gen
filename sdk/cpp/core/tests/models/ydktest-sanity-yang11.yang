@@ -8,6 +8,10 @@ module ydktest-sanity-yang11 {
 
   prefix "yang11";
 
+  import ietf-yang-types {
+    prefix yang;
+  }
+
   organization "YDK Solutions";
 
   contact
@@ -26,7 +30,7 @@ module ydktest-sanity-yang11 {
   }
 
   container backward-incompatible {
-    description "Backward incompatible container description";
+    description Backward_incompatible_container_description;
     leaf test-node {
        type string;
        description "Test leaf description";
@@ -47,6 +51,7 @@ module ydktest-sanity-yang11 {
       }
 
       leaf outbound-filter {
+        description "Model to test use of empty and lifref types in union";
         type union {
           type leafref {
             path "/empty-type/filter/name";
@@ -61,6 +66,20 @@ module ydktest-sanity-yang11 {
           }
           type empty;
         }
+      }
+    }
+  }
+
+  container anydata-type {
+    description "Model to test anydata node";
+    config false;
+    list logged-notification {
+      key time;
+      leaf time {
+        type yang:date-and-time;
+      }
+      anydata data {
+        description "Notification in XML format";
       }
     }
   }

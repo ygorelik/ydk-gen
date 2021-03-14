@@ -8,7 +8,8 @@
     "models": {
         "file": [
             "sdk/cpp/core/tests/models/ydktest-sanity-yang11.yang",
-            "sdk/cpp/core/tests/models/ydktest-sanity-action.yang"
+            "sdk/cpp/core/tests/models/ydktest-sanity-action.yang",
+            "sdk/cpp/core/tests/models/ietf-yang-types.yang"
         ]
     }
 }

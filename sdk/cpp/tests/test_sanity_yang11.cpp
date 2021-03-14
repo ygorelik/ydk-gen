@@ -221,7 +221,7 @@ TEST_CASE("test_type_empty_key")
     auto elem2 = make_shared<ydktest_sanity_yang11::EmptyType::Filter>();
     elem1->name = "abc"; elem2->name = "xyz";
     elem1->enabled = Empty(); elem2->enabled = Empty();
-    elem1->prop = "one";  elem2->prop = "two";
+    elem1->prop = "one"; elem2->prop = "two";
 
     auto container = ydktest_sanity_yang11::EmptyType();
     container.filter.extend({elem1, elem2});
@@ -262,7 +262,7 @@ TEST_CASE("test_type_empty_key2")
     auto elem1 = make_shared<ydktest_sanity_yang11::EmptyType::Filter>();
     auto elem2 = make_shared<ydktest_sanity_yang11::EmptyType::Filter>();
     elem1->name = "abc"; elem2->name = "xyz";
-    elem1->prop = "one";  elem2->prop = "two";
+    elem1->prop = "one"; elem2->prop = "two";
 
     auto container = ydktest_sanity_yang11::EmptyType();
     container.filter.extend({elem1, elem2});
@@ -300,4 +300,36 @@ TEST_CASE("test_type_empty_key2")
 
     auto keys = empty_type->filter.keys();
     CHECK("\"abc\", \"xyz\"" == vector_to_string(keys));
+}
+
+TEST_CASE("test_type_anydata")
+{
+    CodecServiceProvider codec_provider{EncodingFormat::XML};
+    CodecService codec_service{};
+
+    auto top = ydktest_sanity_yang11::AnydataType();
+    auto payload = codec_service.encode(codec_provider, top, false);
+    CHECK("<anydata-type xmlns=\"http://cisco.com/ns/yang/ydktest-yang11\"/>" == payload);
+
+    payload = R"(<anydata-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <logged-notification>
+    <time>2014-07-29T13:43:12Z</time>
+    <data>
+      <notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+        <eventTime>2014-07-29T13:43:01Z</eventTime>
+        <event xmlns="urn:example:event">
+          <event-class>fault</event-class>
+          <reporting-entity>
+            <card>Ethernet0</card>
+          </reporting-entity>
+          <severity>major</severity>
+        </event>
+      </notification>
+    </data>
+  </logged-notification>
+</anydata-type>
+)";
+    // TODO: Failing decode above payload - the content of anydata node is not retained
+    auto entity = codec_service.decode(codec_provider, payload, make_shared<ydktest_sanity_yang11::AnydataType>());
+    CHECK(entity != nullptr);
 }

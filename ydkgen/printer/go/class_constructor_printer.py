@@ -94,7 +94,7 @@ class ClassConstructorPrinter(FunctionPrinter):
         for prop in self.clazz.properties():
             if not prop.is_many:
                 self._print_child_inits_unique(prop)
-            elif prop.stmt.keyword != 'anyxml':
+            elif prop.stmt.keyword not in ['anyxml', 'anydata']:
                 self._print_child_inits_many(prop)
 
     def _print_child_inits_unique(self, prop):
@@ -180,7 +180,7 @@ class ClassConstructorPrinter(FunctionPrinter):
             meta_info_data.doc_link = get_type_name(property_type)
             if prop.stmt.keyword == 'leaf-list':
                 meta_info_data.doc_link = 'slice of %s' % get_type_name(property_type)
-            elif prop.stmt.keyword == 'anyxml':
+            elif prop.stmt.keyword in ['anyxml', 'anydata']:
                 return meta_info_data
 
             type_spec = type_stmt.i_type_spec
