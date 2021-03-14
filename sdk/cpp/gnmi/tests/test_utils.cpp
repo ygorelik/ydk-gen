@@ -1,7 +1,7 @@
-/// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// YANG Development Kit
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -18,8 +18,12 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
-//////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
+// This file has been modified by Yan Gorelik, YDK Solutions.
+// All modifications in original under CiscoDevNet domain
+// introduced since October 2019 are copyrighted.
+// All rights reserved under Apache License, Version 2.0.
+// -------------------------------------------------------------
 
 #include <ydk/gnmi_service.hpp>
 #include <ydk/entity_data_node_walker.hpp>
