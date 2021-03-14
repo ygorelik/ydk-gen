@@ -105,7 +105,7 @@ def handle_import_error(logger, level):
 
 def check_argument(func):
     def helper(self, provider, entity, *args, **kwargs):
-        _, pname, ename = inspect.getargspec(func).args[:3]
+        _, pname, ename = inspect.getfullargspec(func).args[:3]
         if provider is None or entity is None:
             err_msg = "'{0}' and '{1}' cannot be None".format(pname, ename)
             raise _YServiceError(error_msg=err_msg)

@@ -107,6 +107,40 @@ func (suite *SanityYang11TestSuite) TestTypeAnydata() {
         suite.Equal(strings.TrimSpace(payload), `<anydata-type xmlns="http://cisco.com/ns/yang/ydktest-yang11"/>`)
 }
 
+func (suite *SanityYang11TestSuite) TestDuplicateInLeaflist_XML() {
+        payload := `
+<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <non-unique>abc</non-unique>
+  <non-unique>abc</non-unique>
+  <non-unique>abc</non-unique>
+</backward-incompatible>
+`
+        entity := suite.Codec.Decode(&suite.Provider, payload)
+        suite.NotNil(entity)
+        bi := entity.(*ysanity.BackwardIncompatible)
+        suite.Equal(len(bi.NonUnique), 3)
+        suite.Equal(bi.NonUnique[2].(string), "abc")
+}
+
+func (suite *SanityYang11TestSuite) TestDuplicateInLeaflist_JSON() {
+        payload := `
+{
+  "ydktest-sanity-yang11:backward-incompatible": {
+    "non-unique": [
+      "abc",
+      "abc",
+      "abc"
+     ]
+  }
+}
+`
+        entity := suite.Codec.Decode(&suite.JsonProvider, payload)
+        suite.NotNil(entity)
+        bi := entity.(*ysanity.BackwardIncompatible)
+        suite.Equal(len(bi.NonUnique), 3)
+        suite.Equal(bi.NonUnique[2].(string), "abc")
+}
+
 func TestSanityYang11TestSuite(t *testing.T) {
 	if testing.Verbose() {
 		ydk.EnableLogging(ydk.Debug)

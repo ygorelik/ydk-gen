@@ -35,6 +35,11 @@ module ydktest-sanity-yang11 {
        type string;
        description "Test leaf description";
     }
+    leaf-list non-unique {
+       config false;
+       type string;
+       description "Test duplicate values in state leaf-list";
+    }
   }
 
   container empty-type {

@@ -42,19 +42,6 @@ class SanityYang11Test(unittest.TestCase):
         cls.json_codec_provider = CodecServiceProvider(type='json')
         enable_logging(logging.ERROR)
 
-    # def test_container(self):
-    #     # Create container
-    #     container = BackwardIncompatible()
-    #     container.test_node = 'Testing node'
-    #     self.crud.create(self.ncc, container)
-    #
-    #     # Read container
-    #     container_read = self.crud.read(self.ncc, BackwardIncompatible())
-    #     self.assertIsNotNone(container_read)
-    #
-    #     # Compare containers
-    #     self.assertEqual(container, container_read)
-
 #     def test_anyxml_action(self):
 #         expected = '''<data xmlns="http://cisco.com/ns/yang/ydktest-action">
 #   <action-node>
@@ -164,6 +151,45 @@ class SanityYang11Test(unittest.TestCase):
         # TODO: Failing decode the above payload
         # result = self.codec_service.decode(self.codec_provider, payload)
         # self.assertIsNotNone(result)
+
+    def test_duplicate_values_in_leaflist_xml(self):
+        payload = '''<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <non-unique>abc</non-unique>
+  <non-unique>abc</non-unique>
+  <non-unique>abc</non-unique>
+</backward-incompatible>
+'''
+        entity = self.codec_service.decode(self.codec_provider, payload)
+        self.assertIsNotNone(entity)
+        self.assertEqual(len(entity.non_unique), 3)
+        self.assertEqual(entity.non_unique[2], 'abc')
+
+        xml_codec = XmlSubtreeCodec()
+
+        entity2 = xml_codec.decode(payload, BackwardIncompatible())
+        self.assertEqual(entity, entity2)
+
+    def test_duplicate_values_in_leaflist_json(self):
+        payload = '''
+{
+  "ydktest-sanity-yang11:backward-incompatible": {
+    "non-unique": [
+      "abc",
+      "abc",
+      "abc"
+     ]
+  }
+}
+'''
+        entity = self.codec_service.decode(self.json_codec_provider, payload)
+        self.assertIsNotNone(entity)
+        self.assertEqual(len(entity.non_unique), 3)
+        self.assertEqual(entity.non_unique[2], 'abc')
+
+        json_codec = JsonSubtreeCodec()
+
+        entity2 = json_codec.decode(payload, BackwardIncompatible())
+        self.assertEqual(entity, entity2)
 
 
 if __name__ == '__main__':
