@@ -18,7 +18,7 @@
 
 Print capabilities for bundle package.
 """
-import sys
+
 from ydkgen.printer.file_printer import FilePrinter
 from ydkgen.api_model import get_property_name, Class
 from ydkgen.common import get_module_name
@@ -26,10 +26,7 @@ from ydkgen.common import get_module_name
 
 class NamespacePrinter(FilePrinter):
     def __init__(self, ctx, one_class_per_module):
-        if sys.version_info > (3,):
-            super().__init__(ctx)
-        else:
-            super(NamespacePrinter, self).__init__(ctx)
+        super().__init__(ctx)
         self.bundle_name = ''
         self.packages = None
         self.one_class_per_module = one_class_per_module

@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
+
 import logging
 import pkgutil
 import importlib
@@ -108,74 +114,73 @@ class CodecServiceProvider(object):
         self.logger.log(_TRACE_LEVEL_NUM, "Initializing root schema for {}".format(name))
         # TODO: turn on and off libyang logging
         capabilities = []
-        lookup_tables = self._get_bundle_capability_lookup_table(bundle_name)
+        lookup_tables = _get_bundle_capability_lookup_table(bundle_name)
         self._root_schema_table[name] = repo.create_root_schema(lookup_tables, capabilities)
 
-    def _get_bundle_yang_ns(self, bundle_name):
-        """Search installed local ydk-models python packages, and return _yang_ns
 
-        Args:
-            bundle_name (str): bundle name.
+def _get_bundle_yang_ns(bundle_name):
+    """Search installed local ydk-models python packages, and return _yang_ns
 
-        Returns:
-            mod_yang_ns (module): bundle's _yang_ns module.
-        """
-        mod_yang_ns = None
-        for (_, name, ispkg) in pkgutil.iter_modules(models.__path__):
-            if ispkg and name == bundle_name:
-                try:
-                    mod_yang_ns = importlib.import_module('ydk.models.{}._yang_ns'.format(name))
-                    break
-                except ImportError:
-                    continue
+    Args:
+        bundle_name (str): bundle name.
 
-        return mod_yang_ns
+    Returns:
+        mod_yang_ns (module): bundle's _yang_ns module.
+    """
+    mod_yang_ns = None
+    for (_, name, ispkg) in pkgutil.iter_modules(models.__path__):
+        if ispkg and name == bundle_name:
+            try:
+                mod_yang_ns = importlib.import_module('ydk.models.{}._yang_ns'.format(name))
+                break
+            except ImportError:
+                continue
+    return mod_yang_ns
 
-    def _get_bundle_capability_lookup_table(self, bundle_name):
-        """Search installed local ydk-models python packages, and return corresponding
-        capability lookup tables.
 
-        Args:
-            bundle_name (str): bundle name.
+def _get_bundle_capability_lookup_table(bundle_name):
+    """Search installed local ydk-models python packages, and return corresponding
+    capability lookup tables.
 
-        Returns:
-            lookup_tables(list of dict(str, ydk.types.Capability)): Capability lookup tables
-        """
-        name_namespace_lookup = {}
+    Args:
+        bundle_name (str): bundle name.
 
-        mod_yang_ns = self._get_bundle_yang_ns(bundle_name)
-        if mod_yang_ns is not None:
-            capability_map = mod_yang_ns.__dict__['CAPABILITIES']
-            namespace_map = mod_yang_ns.__dict__['NAMESPACE_LOOKUP']
-            for d in (capability_map, namespace_map):
-                name_namespace_lookup.update(d)
+    Returns:
+        lookup_tables(list of dict(str, ydk.types.Capability)): Capability lookup tables
+    """
+    name_namespace_lookup = {}
 
-            for name in capability_map:
-                cap = _Capability(name, capability_map[name])
-                name_namespace_lookup[name] = cap
-                # submodule
-                if name in namespace_map:
-                    name_namespace_lookup[namespace_map[name]] = cap
+    mod_yang_ns = _get_bundle_yang_ns(bundle_name)
+    if mod_yang_ns is not None:
+        capability_map = mod_yang_ns.__dict__['CAPABILITIES']
+        namespace_map = mod_yang_ns.__dict__['NAMESPACE_LOOKUP']
+        for d in (capability_map, namespace_map):
+            name_namespace_lookup.update(d)
 
-        return name_namespace_lookup
+        for name in capability_map:
+            cap = _Capability(name, capability_map[name])
+            name_namespace_lookup[name] = cap
+            # submodule
+            if name in namespace_map:
+                name_namespace_lookup[namespace_map[name]] = cap
+    return name_namespace_lookup
 
-    def _get_bundle_capabilities(self, bundle_name):
-        """Search installed local ydk-models python packages, and return corresponding
-        capabilities.
 
-        Args:
-            bundle_name (str): bundle name.
+def _get_bundle_capabilities(bundle_name):
+    """Search installed local ydk-models python packages, and return corresponding
+    capabilities.
 
-        Returns:
-            capabilities (list): List of ydk.path.Capability available for this bundle.
-        """
-        capabilities = []
-        capability_map = {}
+    Args:
+        bundle_name (str): bundle name.
 
-        mod_yang_ns = self._get_bundle_yang_ns(bundle_name)
-        if mod_yang_ns is not None:
-            capability_map = mod_yang_ns.__dict__['CAPABILITIES']
-            for name in capability_map:
-                capabilities.append(_Capability(name, capability_map[name]))
+    Returns:
+        capabilities (list): List of ydk.path.Capability available for this bundle.
+    """
 
-        return capabilities
+    capabilities = []
+    mod_yang_ns = _get_bundle_yang_ns(bundle_name)
+    if mod_yang_ns is not None:
+        capability_map = mod_yang_ns.__dict__['CAPABILITIES']
+        for name in capability_map:
+            capabilities.append(_Capability(name, capability_map[name]))
+    return capabilities

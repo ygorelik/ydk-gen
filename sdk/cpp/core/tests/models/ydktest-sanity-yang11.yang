@@ -29,12 +29,34 @@ module ydktest-sanity-yang11 {
       "Initial revision of sanity module to test YANG-11 types.";
   }
 
+
+  identity public-key {
+    description
+      "Base identity used to identify public key crypto algorithms.";
+  }
+  identity private-key {
+    description
+      "Base identity used to identify private key crypto algorithms.";
+  }
+
+  identity ssl-key {
+     description
+          "Derived identity to identify private and public SSL keys.";
+     base public-key;
+     base private-key;
+  }
+
   container backward-incompatible {
     description Backward_incompatible_container_description;
-    leaf test-node {
-       type string;
-       description "Test leaf description";
+
+    leaf key {
+      description
+          "Model to test identities derived from multiple bases";
+      type identityref {
+        base ssl-key;
+      }
     }
+
     leaf-list non-unique {
        config false;
        type string;

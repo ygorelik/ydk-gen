@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2018 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ class ClassPrinter(FilePrinter):
             else:
                 parents = 'Identity'
 
-        self.ctx.writeln("class %s(%s):" % (clazz.name, parents))
+        self.ctx.writeln('class %s(%s):' % (clazz.name, parents))
 
     def _print_class_docstring(self, clazz):
         ClassDocstringPrinter(self.ctx).print_output(clazz)

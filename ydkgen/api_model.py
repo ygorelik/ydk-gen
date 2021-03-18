@@ -28,7 +28,6 @@
 """
 from __future__ import absolute_import
 
-import sys
 from pyang.statements import TypeStatement
 from pyang.types import UnionTypeSpec, PathTypeSpec
 
@@ -144,10 +143,7 @@ class NamedElement(Element):
 
     def __init__(self):
         """ The name of the named element """
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(NamedElement, self).__init__()
+        super().__init__()
         self.name = None
 
     def get_py_mod_name(self):
@@ -277,10 +273,7 @@ class Package(NamedElement):
     """
 
     def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Package, self).__init__()
+        super().__init__()
         self._stmt = None
         self._sub_name = ''
         self._bundle_name = ''
@@ -388,10 +381,7 @@ class DataType(NamedElement):
     """
 
     def __init__(self):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(DataType, self).__init__()
+        super().__init__()
 
 
 class Class(NamedElement):
@@ -401,10 +391,7 @@ class Class(NamedElement):
     """
 
     def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Class, self).__init__()
+        super().__init__()
         self._stmt = None
         self._extends = []
         self._module = None
@@ -610,10 +597,7 @@ class AnyXml(NamedElement):
     """
 
     def __init__(self):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(AnyXml, self).__init__()
+        super().__init__()
         self._stmt = None
 
     @property
@@ -640,10 +624,7 @@ class AnyData(NamedElement):
     """
 
     def __init__(self):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(AnyData, self).__init__()
+        super().__init__()
         self._stmt = None
 
     @property
@@ -670,10 +651,7 @@ class Bits(DataType):
     """
 
     def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Bits, self).__init__()
+        super().__init__()
         self._stmt = None
         self._dictionary = None
         self._pos_map = None
@@ -736,10 +714,7 @@ class Property(NamedElement):
     """
 
     def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Property, self).__init__()
+        super().__init__()
         self._stmt = None
         self.is_static = False
         self.featuring_classifiers = []
@@ -827,10 +802,7 @@ class Enum(DataType):
     """ Represents an enumeration. """
 
     def __init__(self, iskeyword, typedef_stmt=None):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Enum, self).__init__()
+        super().__init__()
         self._stmt = None
         self.literals = []
         self.iskeyword = iskeyword
@@ -918,10 +890,7 @@ class EnumLiteral(NamedElement):
     """ Represents an enumeration literal. """
 
     def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(EnumLiteral, self).__init__()
+        super().__init__()
         self._stmt = None
         self.value = None
         self.iskeyword = iskeyword

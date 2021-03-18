@@ -137,11 +137,6 @@ _json_runner_payload = """{
 }
 """
 
-_xml_oc_pattern_payload = '''<oc-A xmlns="http://cisco.com/ns/yang/oc-pattern">
-  <a>Hello</a>
-</oc-A>
-'''
-
 _json_oc_pattern_payload = '''{
   "oc-pattern:oc-A": [
     {
@@ -267,7 +262,12 @@ class SanityYang(unittest.TestCase):
         obj_a = OcA()
         obj_a.a = 'Hello'
 
-        entity = self.codec.decode(self.provider, _xml_oc_pattern_payload)
+        xml_oc_pattern_payload = '''<oc-A xmlns="http://cisco.com/ns/yang/oc-pattern">
+          <a>Hello</a>
+        </oc-A>
+        '''
+
+        entity = self.codec.decode(self.provider, xml_oc_pattern_payload)
 
         self.assertEqual(obj_a.a, entity.a)
 

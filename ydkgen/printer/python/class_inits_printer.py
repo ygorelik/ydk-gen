@@ -97,19 +97,9 @@ class ClassInitsPrinter(object):
 
     def _print_class_inits_body(self, clazz, leafs, children):
         if clazz.is_identity():
-            self.ctx.writeln('if sys.version_info > (3,):')
-            self.ctx.writeln('    super().__init__(ns, pref, tag)')
-            self.ctx.writeln('else:')
-            line = '    super(%s, self).__init__(ns, pref, tag)' % clazz.name
-            self.ctx.writeln(line)
+            self.ctx.writeln('super().__init__(ns, pref, tag)')
         else:
-            self.ctx.writeln('if sys.version_info > (3,):')
-            self.ctx.writeln('    super().__init__()')
-            self.ctx.writeln('else:')
-            if self.one_class_per_module:
-                self.ctx.writeln('    super(%s, self).__init__()' % clazz.name)
-            else:
-                self.ctx.writeln('    super(%s, self).__init__()' % clazz.qn())
+            self.ctx.writeln('super().__init__()')
             if clazz.owner is not None and isinstance(clazz.owner, Package):
                 self.ctx.writeln('self._top_entity = None')
             self.ctx.bline()

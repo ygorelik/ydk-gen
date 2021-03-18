@@ -20,7 +20,7 @@ module_printer.py
  prints Go classes
 
 """
-import sys
+
 from ydkgen.api_model import Class, Enum, Bits
 from .class_printer import ClassPrinter
 from .class_identity_printer import IdentityPrinter
@@ -32,10 +32,7 @@ from ydkgen.printer.file_printer import FilePrinter
 class ModulePrinter(FilePrinter):
 
     def __init__(self, ctx, bundle_name, identity_subclasses):
-        if sys.version_info > (3,):
-            super().__init__(ctx)
-        else:
-            super(ModulePrinter, self).__init__(ctx)
+        super().__init__(ctx)
         self.bundle_name = bundle_name
         self.identity_subclasses = identity_subclasses
         self.class_printer = ClassPrinter(ctx, bundle_name, identity_subclasses)

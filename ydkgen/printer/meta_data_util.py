@@ -176,7 +176,7 @@ def get_enum_class_docstring(enumz, language):
             literals_description.append(".. data:: %s = %s\n" % (enum_literal.name, enum_literal.value))
         if enum_literal.comment is not None:
             for line in enum_literal.comment.split("\n"):
-                literals_description.append("\t%s\n\n" % line)
+                literals_description.append("    %s\n\n" % line)
 
     return ''.join([convert_to_reStructuredText(enumz_description)] + ['\n\n'] + literals_description)
 

@@ -33,11 +33,6 @@ from functools import reduce
 
 import importlib
 import logging
-import sys
-
-if sys.version_info > (3,):
-    long = int
-    unicode = str
 
 from ydk_ import is_set
 from ydk.ext.types import Bits
@@ -62,20 +57,14 @@ class YLeafList(_YLeafList):
     functionalities.
     """
     def __init__(self, ytype, leaf_name):
-        if sys.version_info > (3,):
-            super().__init__(ytype, leaf_name)
-        else:
-            super(YLeafList, self).__init__(ytype, leaf_name)
+        super().__init__(ytype, leaf_name)
         self.ytype = ytype
         self.leaf_name = leaf_name
 
     def append(self, item):
         if isinstance(item, _YLeaf):
             item = item.get()
-        if sys.version_info > (3,):
-            super().append(item)
-        else:
-            super(YLeafList, self).append(item)
+        super().append(item)
 
     def extend(self, items):
         for item in items:
@@ -85,10 +74,7 @@ class YLeafList(_YLeafList):
         if not isinstance(other, YLeafList):
             raise YModelError("Invalid value '{}' assigned to YLeafList '{}'".format(other, self.leaf_name))
         else:
-            if sys.version_info > (3,):
-                super().clear()
-            else:
-                super(YLeafList, self).clear()
+            super().clear()
             for item in other:
                 self.append(item)
 
@@ -100,10 +86,7 @@ class YLeafList(_YLeafList):
             ret.extend(values)
         else:
             arg = len(self) + arg if arg < 0 else arg
-            if sys.version_info > (3,):
-                ret = super().__getitem__(arg)
-            else:
-                ret = super(YLeafList, self).__getitem__(arg)
+            ret = super().__getitem__(arg)
         return ret
 
     def __str__(self):
@@ -115,10 +98,7 @@ class Entity(_Entity):
     """ Entity wrapper class overrides some of the ydk::Entity methods.
     """
     def __init__(self):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Entity, self).__init__()
+        super().__init__()
         self._is_frozen = False
         self.parent = None
         self.ylist_key = None
@@ -135,20 +115,12 @@ class Entity(_Entity):
     def __eq__(self, other):
         if not isinstance(other, Entity):
             return False
-        if sys.version_info > (3,):
-            ret = super().__eq__(other)
-        else:
-            ret = super(Entity, self).__eq__(other)
-        return ret
+        return super().__eq__(other)
 
     def __ne__(self, other):
         if not isinstance(other, Entity):
             return True
-        if sys.version_info > (3,):
-            ret = super().__ne__(other)
-        else:
-            ret = super(Entity, self).__ne__(other)
-        return ret
+        return super().__ne__(other)
 
     def children(self):
         return self.get_children()
@@ -431,10 +403,7 @@ class Entity(_Entity):
                     if hasattr(value, "parent") and name != "parent":
                         if not value.is_top_level_class:
                             value.parent = self
-                if sys.version_info > (3,):
-                    super().__setattr__(name, value)
-                else:
-                    super(Entity, self).__setattr__(name, value)
+                super().__setattr__(name, value)
 
     def _assign_yleaf(self, name, value, v):
         if isinstance(self.__dict__[name], Bits):
@@ -749,10 +718,7 @@ class YList(EntityCollection):
         The keys then could be used to get entities from the YList.
     """
     def __init__(self, parent):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(YList, self).__init__()
+        super().__init__()
         self.parent = parent
         self.counter = 1000000
         self._cache_dict = OrderedDict()
@@ -761,10 +727,7 @@ class YList(EntityCollection):
         if name == 'yfilter' and isinstance(value, YFilter):
             for e in self:
                 e.yfilter = value
-        if sys.version_info > (3,):
-            super().__setattr__(name, value)
-        else:
-            super(YList, self).__setattr__(name, value)
+        super().__setattr__(name, value)
 
     def _key(self, entity):
         key_list = []
@@ -825,11 +788,7 @@ class YList(EntityCollection):
 
     def pop(self, item=None):
         self._flush_cache()
-        if sys.version_info > (3,):
-            ret = super().pop(item)
-        else:
-            ret = super(YList, self).pop(item)
-        return ret
+        return super().pop(item)
 
     def __getitem__(self, item):
         entity = None
@@ -989,9 +948,9 @@ def _decode_enum_value_object(typ, value):
 def _validate_other_type_value_object(typ, value):
     if typ == 'Empty':
         return isinstance(value, Empty)
-    if typ == 'str' and (isinstance(value, bytes) or isinstance(value, unicode)):
+    if typ == 'str' and (isinstance(value, bytes) or isinstance(value, str)):
         return True
-    if typ == 'int' and (isinstance(value, int) or isinstance(value, long)):
+    if typ == 'int' and isinstance(value, int):
         return True
     typ = eval(typ)
     return isinstance(value, typ)

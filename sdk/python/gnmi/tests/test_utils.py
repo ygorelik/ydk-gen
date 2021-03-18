@@ -33,10 +33,7 @@ from argparse import ArgumentParser
 from ydk.entity_utils import get_data_node_from_entity
 from ydk.errors import YCoreError
 
-if sys.version_info > (3,):
-    from urllib.parse import urlparse
-else:
-    from urlparse import urlparse
+from urllib.parse import urlparse
 
 
 class EmptyTest(unittest.TestCase):
@@ -108,10 +105,7 @@ class ParametrizedTestCase(unittest.TestCase):
         inherit from this class.
     """
     def __init__(self, method_name='runTest'):
-        if sys.version_info > (3,):
-            super().__init__(method_name)
-        else:
-            super(ParametrizedTestCase, self).__init__(method_name)
+        super().__init__(method_name)
 
     @staticmethod
     def parametrize(testcase_klass, device):

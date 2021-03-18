@@ -96,9 +96,8 @@ This gives the developer an ability to customize scope of their bundle based on 
 
 # Backward compatibility
 
-The YDK-0.8.6 core is backward compatible with all previously generated model bundles starting from release of YDK-0.7.3.
-However the YDK-0.8.6 generates different code and model API comparing to YDK-0.8.4.
-The YDK-0.8.6 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
+Although YDK-0.9.0 API is mostly the same as in previous YDK releases, it generates different code and model API comparing to YDK-0.8.5.
+The YDK-0.9.0 generated code is not compatible with YDK-0.8.5 and earlier bundle packages due to changes Entity and YLeaf class objects.
 
 **NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
 
@@ -320,7 +319,7 @@ All other attributes, like `"author"` and `"copyright"`, are optional and will n
 {
     "name":"cisco-ios-xr",
     "version": "6.5.3",
-    "core_version": "0.8.6",
+    "core_version": "0.9.0",
     "author": "Cisco",
     "copyright": "Cisco",
     "description": "Cisco IOS-XR Native Models From Git",
@@ -399,7 +398,7 @@ Check Python packages installed:
 pip list | grep ydk
 ...
 
-ydk (0.8.6)
+ydk (0.9.0.1)
 ydk-models-<name-of-bundle> (0.5.1)
 ...
 ```
@@ -615,5 +614,5 @@ Join the [YDK community](https://communities.cisco.com/community/developer/ydk) 
 
 #### Release Notes
 
-The current YDK release version is 0.8.6. The version of the latest ydk-gen master branch is 0.8.5.
+The current YDK release version is 0.9.0. The version of the latest ydk-gen master branch is 0.9.0.
 The ydk-gen is licensed under the Apache 2.0 License.

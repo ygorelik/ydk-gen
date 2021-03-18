@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  YANG model driven API, python emitter.
 
 """
-import sys
+
 from ydkgen.api_model import Class, Enum, Package
 from ydkgen.common import convert_to_reStructuredText
 
@@ -37,10 +37,7 @@ from ydkgen.printer.file_printer import FilePrinter
 class ModulePrinter(FilePrinter):
 
     def __init__(self, ctx, extra_args):
-        if sys.version_info > (3,):
-            super().__init__(ctx)
-        else:
-            super(ModulePrinter, self).__init__(ctx)
+        super().__init__(ctx)
         self.one_class_per_module = extra_args.get('one_class_per_module', False)
         self.identity_subclasses = extra_args.get('identity_subclasses', {})
         self.module_namespace_lookup = extra_args.get('module_namespace_lookup', {})
@@ -79,7 +76,6 @@ class ModulePrinter(FilePrinter):
         self.ctx.writeln('"""')
 
     def _print_static_imports(self):
-        self.ctx.writeln("import sys")
         self.ctx.writeln("from collections import OrderedDict")
         self.ctx.bline()
         self.ctx.writeln("from ydk.types import Entity as _Entity_")
@@ -109,7 +105,6 @@ class ModulePrinter(FilePrinter):
             self.ctx.writeln(imported_stmt)
 
         self.ctx.bline()
-        # self.ctx.bline()
 
     def _print_module_enums(self, package):
         enumz = []

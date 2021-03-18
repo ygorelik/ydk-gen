@@ -25,7 +25,7 @@ source_printer.py
  prints Go class constructor
 
 """
-import sys
+
 from functools import reduce
 from ydkgen.api_model import Bits, Class, DataType, Enum
 from pyang.types import PathTypeSpec, UnionTypeSpec
@@ -36,10 +36,7 @@ from ydkgen.common import is_list_element
 
 class ClassConstructorPrinter(FunctionPrinter):
     def __init__(self, ctx, clazz, leafs, identity_subclasses):
-        if sys.version_info > (3,):
-            super().__init__(ctx, clazz, leafs)
-        else:
-            super(ClassConstructorPrinter, self).__init__(ctx, clazz, leafs)
+        super().__init__(ctx, clazz, leafs)
         self.identity_subclasses = identity_subclasses
 
     def print_function_header(self):
