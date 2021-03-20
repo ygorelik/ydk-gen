@@ -27,6 +27,8 @@ from ydk.services import CodecService
 from ydk.entity_utils import XmlSubtreeCodec, JsonSubtreeCodec
 
 from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BackwardIncompatible, EmptyType, AnydataType
+from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import PrivateKey, PublicKey, SslKey
+
 import ydk.models.ydktest_yang11 as yang11
 
 from test_utils import ParametrizedTestCase
@@ -190,6 +192,15 @@ class SanityYang11Test(unittest.TestCase):
 
         entity2 = json_codec.decode(payload, BackwardIncompatible())
         self.assertEqual(entity, entity2)
+
+    @unittest.skip('TODO: Failing with error: Identity "ssl-key" has no derived identities, identityref with this base can never be instatiated.')
+    def test_derived_identity_type(self):
+        top = BackwardIncompatible()
+        top.key = SslKey()
+
+        xml = self.codec_service.encode(self.codec_provider, top)
+        self.assertIsNotNone(xml)
+        print(xml)
 
 
 if __name__ == '__main__':

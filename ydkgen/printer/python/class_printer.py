@@ -44,9 +44,10 @@ class ClassPrinter(FilePrinter):
         self.generate_meta = generate_meta
 
     def print_body(self, unsorted_classes):
-        ''' This arranges the classes at the same level
+        """ This arranges the classes at the same level
             so that super references are printed before
-            the subclassess'''
+            the subclassess
+        """
         sorted_classes = sort_classes_at_same_level(unsorted_classes)
 
         for clazz in sorted_classes:
@@ -65,7 +66,7 @@ class ClassPrinter(FilePrinter):
     def _print_class_body(self, clazz):
         leafs = []
         children = []
-        self._get_class_members(clazz, leafs, children)
+        _get_class_members(clazz, leafs, children)
         self._print_class_inits(clazz, leafs, children)
         self._print_class_setattr(clazz, leafs)
         self._print_child_enums(clazz)
@@ -107,7 +108,7 @@ class ClassPrinter(FilePrinter):
         parents = '_Entity_'
         if clazz.is_identity():
             if len(clazz.extends) > 0:
-                parents = ' ,'.join([sup.qn() for sup in clazz.extends])
+                parents = ', '.join([sup.qn() for sup in clazz.extends])
             else:
                 parents = 'Identity'
 
@@ -127,14 +128,6 @@ class ClassPrinter(FilePrinter):
             self.ctx.writeln("_revision = '%s'" % revision_stmt.arg)
         self.ctx.bline()
 
-    def _get_class_members(self, clazz, leafs, children):
-        for prop in clazz.properties():
-            ptype = prop.property_type
-            if isinstance(prop.property_type, Class) and not prop.property_type.is_identity():
-                children.append(prop)
-            elif ptype is not None:
-                leafs.append(prop)
-
     def _print_class_inits(self, clazz, leafs, children):
         ClassInitsPrinter(self.ctx, self.module_namespace_lookup, self.one_class_per_module,
                           self.identity_subclasses).print_output(clazz, leafs, children)
@@ -151,8 +144,17 @@ class ClassPrinter(FilePrinter):
             self.ctx.bline()
             self.ctx.lvl_dec()
 
-    def _print_bits(self, bits):
-        BitsPrinter(self.ctx).print_bits(bits)
+    # def _print_bits(self, bits):
+    #     BitsPrinter(self.ctx).print_bits(bits)
 
     def _print_enum(self, enum_class):
         EnumPrinter(self.ctx).print_enum(enum_class, self.generate_meta)
+
+
+def _get_class_members(clazz, leafs, children):
+    for prop in clazz.properties():
+        ptype = prop.property_type
+        if isinstance(prop.property_type, Class) and not prop.property_type.is_identity():
+            children.append(prop)
+        elif ptype is not None:
+            leafs.append(prop)

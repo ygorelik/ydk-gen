@@ -402,11 +402,12 @@ class Class(NamedElement):
         """ Returns the immediate super classes of this class. """
         if self.is_identity():
             base = []
-            base_stmt = self.stmt.search_one('base')
-            if base_stmt is not None and hasattr(base_stmt, 'i_identity'):
-                base_identity = base_stmt.i_identity
-                if hasattr(base_identity, 'i_class'):
-                    base.append(base_identity.i_class)
+            base_stmts = self.stmt.search('base')
+            for base_stmt in base_stmts:
+                if hasattr(base_stmt, 'i_identity'):
+                    base_identity = base_stmt.i_identity
+                    if hasattr(base_identity, 'i_class'):
+                        base.append(base_identity.i_class)
             return base
         else:
             return self._extends
