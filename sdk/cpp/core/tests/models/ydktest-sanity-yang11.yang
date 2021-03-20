@@ -53,7 +53,8 @@ module ydktest-sanity-yang11 {
       description
           "Model to test identities derived from multiple bases";
       type identityref {
-        base ssl-key;
+        base private-key;
+        base public-key;
       }
     }
 

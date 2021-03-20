@@ -193,14 +193,16 @@ class SanityYang11Test(unittest.TestCase):
         entity2 = json_codec.decode(payload, BackwardIncompatible())
         self.assertEqual(entity, entity2)
 
-    @unittest.skip('TODO: Failing with error: Identity "ssl-key" has no derived identities, identityref with this base can never be instatiated.')
     def test_derived_identity_type(self):
         top = BackwardIncompatible()
         top.key = SslKey()
 
-        xml = self.codec_service.encode(self.codec_provider, top)
+        xml = self.codec_service.encode(self.codec_provider, top, False)
         self.assertIsNotNone(xml)
-        print(xml)
+        self.assertEqual('''<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11"><key>ssl-key</key></backward-incompatible>''', xml)
+
+        entity = self.codec_service.decode(self.codec_provider, xml)
+        self.assertEqual(top, entity)
 
 
 if __name__ == '__main__':
