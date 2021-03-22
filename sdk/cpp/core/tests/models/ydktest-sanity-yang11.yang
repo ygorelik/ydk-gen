@@ -63,6 +63,16 @@ module ydktest-sanity-yang11 {
        type string;
        description "Test duplicate values in state leaf-list";
     }
+
+    leaf invert {
+      description "Model to test pattern modifier";
+      type string {
+        length "0..4";
+        pattern "[0-9a-fA-F]*" {
+          modifier invert-match;
+        }
+      }
+    }
   }
 
   container empty-type {

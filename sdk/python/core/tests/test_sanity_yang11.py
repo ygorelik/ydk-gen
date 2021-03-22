@@ -25,6 +25,7 @@ from ydk.path import Repository
 from ydk.providers import CodecServiceProvider
 from ydk.services import CodecService
 from ydk.entity_utils import XmlSubtreeCodec, JsonSubtreeCodec
+from ydk.errors import YModelError
 
 from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BackwardIncompatible, EmptyType, AnydataType
 from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import PrivateKey, PublicKey, SslKey
@@ -203,6 +204,16 @@ class SanityYang11Test(unittest.TestCase):
 
         entity = self.codec_service.decode(self.codec_provider, xml)
         self.assertEqual(top, entity)
+
+    def test_pattern_modifier(self):
+        top = BackwardIncompatible()
+        top.invert = '++++'  # inverted of pattern "[0-9a-fA-F]*"
+        xml = self.codec_service.encode(self.codec_provider, top, False)
+        self.assertEqual('''<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11"><invert>++++</invert></backward-incompatible>''', xml)
+
+        top.invert = '1234'
+        with self.assertRaises(YModelError):
+            self.codec_service.encode(self.codec_provider, top)
 
 
 if __name__ == '__main__':

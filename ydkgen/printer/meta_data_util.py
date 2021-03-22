@@ -187,6 +187,8 @@ def get_property_restriction(meta_info_data):
     if len(meta_info_data.pattern) > 0:
         prop_restriction = '**pattern:** {0}'.format(
             convert_to_reStructuredText(meta_info_data.pattern[0]))
+        if 'invert-match' in meta_info_data.pattern:
+            prop_restriction += ' invert match'
     else:
         if len(meta_info_data.prange) > 0:
             restriction = convert_to_reStructuredText(
@@ -436,6 +438,9 @@ def add_pattern_docstring(meta_info_data, target_type_stmt):
     pattern = target_type_stmt.search_one('pattern')
     if pattern is not None:
         meta_info_data.pattern.append(pattern.arg.encode('ascii'))
+        modifier = pattern.search_one('modifier')
+        if modifier:
+            meta_info_data.pattern.append('invert-match')
 
 
 def _get_identity_docstring(identity_subclasses, property_type, language):
