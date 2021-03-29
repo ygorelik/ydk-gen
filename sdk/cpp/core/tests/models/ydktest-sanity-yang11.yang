@@ -73,6 +73,16 @@ module ydktest-sanity-yang11 {
         }
       }
     }
+
+    choice interface-type {
+      description
+        'As a shorthand, the "case" statement can be omitted if the branch
+         contains a single "anydata", "anyxml", "choice", "container", "leaf",
+         "list", or "leaf-list" statement.';
+      leaf ethernet {
+        type empty;
+      }
+    }
   }
 
   container empty-type {

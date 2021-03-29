@@ -215,6 +215,15 @@ class SanityYang11Test(unittest.TestCase):
         with self.assertRaises(YModelError):
             self.codec_service.encode(self.codec_provider, top)
 
+    def test_choice_shortcut(self):
+        top = BackwardIncompatible()
+        top.ethernet = Empty()
+        xml = self.codec_service.encode(self.codec_provider, top, False)
+        self.assertEqual('''<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11"><ethernet/></backward-incompatible>''', xml)
+
+        entity = self.codec_service.decode(self.codec_provider, xml)
+        self.assertEqual(top, entity)
+
 
 if __name__ == '__main__':
     device, non_demand, common_cache, timeout = get_device_info()
