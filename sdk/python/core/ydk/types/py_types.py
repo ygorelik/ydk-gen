@@ -842,6 +842,8 @@ def _get_decoded_value_object(leaf_tuple, entity, value):
             value_object = _decode_identity_value_object(entity, value)
         elif _is_enum(typ):
             value_object = _decode_enum_value_object(typ, value)
+        elif _is_bits(typ, value):
+            value_object = _decode_bits_value_object(typ, value)
         else:
             value_object = _decode_other_type_value_object(typ, value)
         if value_object is not None:
@@ -862,6 +864,8 @@ def _validate_value(leaf_tuple, name, value, logger):
         elif _is_enum(typ):
             if _validate_enum_value_object(typ, value):
                 return
+        elif _is_bits(typ, value):
+            return
         else:
             if _validate_other_type_value_object(typ, value):
                 return
@@ -891,6 +895,12 @@ def _is_identity(typ):
 
 def _is_enum(typ):
     return isinstance(typ, tuple) and len(typ) == 3
+
+
+def _is_bits(typ, value):
+    return typ == 'Bits'\
+           and ((isinstance(value, Bits) and len(value.get_bitmap()) > 0)
+                or isinstance(value, str))
 
 
 def _validate_identity_value_object(typ, value):
@@ -943,6 +953,17 @@ def _decode_enum_value_object(typ, value):
         if isinstance(v, _Enum.YLeaf) and value == v.name:
             return v
     return None
+
+
+def _decode_bits_value_object(typ, value):
+    if not _is_bits(typ, value):
+        return None
+    if isinstance(value, Bits):
+        v = value
+    else:
+        v = Bits()
+        v[value] = True
+    return v
 
 
 def _validate_other_type_value_object(typ, value):

@@ -46,6 +46,34 @@ module ydktest-sanity-yang11 {
      base private-key;
   }
 
+  typedef base-colors {
+     type enumeration {
+         enum white {
+           value 1;
+         }
+         enum yellow {
+           value 2;
+         }
+         enum red {
+           value 3;
+         }
+     }
+  }
+
+  typedef mybits-type {
+    type bits {
+      bit disable-nagle {
+        position 0;
+      }
+      bit auto-sense-speed {
+        position 1;
+      }
+      bit ten-mb-only {
+        position 2;
+      }
+    }
+  }
+
   container backward-incompatible {
     description Backward_incompatible_container_description;
 
@@ -81,6 +109,22 @@ module ydktest-sanity-yang11 {
          "list", or "leaf-list" statement.';
       leaf ethernet {
         type empty;
+      }
+    }
+
+    leaf my-color {
+      description "Allow enumerations to be subtyped.";
+      type base-colors {
+        enum white;
+        enum red;
+      }
+    }
+
+    leaf-list my_bits {
+      description "Allow bits type to be subtyped.";
+      type mybits-type {
+        bit disable-nagle;
+        bit auto-sense-speed;
       }
     }
   }

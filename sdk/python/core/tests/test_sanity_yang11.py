@@ -20,7 +20,7 @@ import sys
 import unittest
 import logging
 
-from ydk.types import Empty
+from ydk.types import Empty, Bits
 from ydk.path import Repository
 from ydk.providers import CodecServiceProvider
 from ydk.services import CodecService
@@ -29,6 +29,7 @@ from ydk.errors import YModelError
 
 from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BackwardIncompatible, EmptyType, AnydataType
 from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import PrivateKey, PublicKey, SslKey
+from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BaseColors
 
 import ydk.models.ydktest_yang11 as yang11
 
@@ -220,6 +221,44 @@ class SanityYang11Test(unittest.TestCase):
         top.ethernet = Empty()
         xml = self.codec_service.encode(self.codec_provider, top, False)
         self.assertEqual('''<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11"><ethernet/></backward-incompatible>''', xml)
+
+        entity = self.codec_service.decode(self.codec_provider, xml)
+        self.assertEqual(top, entity)
+
+    def test_enum_subtyping(self):
+        top = BackwardIncompatible()
+        top.my_color = BaseColors.yellow    # value 'yellow' is not included to enum subtype, so expecting error
+        with self.assertRaises(YModelError):
+            self.codec_service.encode(self.codec_provider, top)
+
+        top.my_color = BaseColors.white
+        xml = self.codec_service.encode(self.codec_provider, top, False)
+        self.assertEqual('''<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11"><my-color>white</my-color></backward-incompatible>''', xml)
+
+        entity = self.codec_service.decode(self.codec_provider, xml)
+        self.assertEqual(top, entity)
+
+    def test_bits_subtyping(self):
+        top = BackwardIncompatible()
+        bit = Bits()
+        bit['ten-mb-only'] = True    # bit value 'ten-mb-only' is not included to bits subtype, so expecting error
+        top.my_bits.append(bit)
+        with self.assertRaises(YModelError):
+            self.codec_service.encode(self.codec_provider, top)
+
+        bit_0, bit_1 = Bits(), Bits()
+        bit_0['disable-nagle'] = True
+        bit_1['auto-sense-speed'] = True
+        top.my_bits.clear()
+        top.my_bits.extend([bit_0, bit_1])
+
+        xml = self.codec_service.encode(self.codec_provider, top)
+        expected = '''<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <my_bits>disable-nagle</my_bits>
+  <my_bits>auto-sense-speed</my_bits>
+</backward-incompatible>
+'''
+        self.assertEqual(expected, xml)
 
         entity = self.codec_service.decode(self.codec_provider, xml)
         self.assertEqual(top, entity)
