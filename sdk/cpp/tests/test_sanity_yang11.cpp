@@ -30,20 +30,58 @@ using namespace ydk;
 using namespace ydktest_yang11;
 using namespace std;
 
-TEST_CASE("test_yang11_container")
+TEST_CASE("test_bits_subtyping")
 {
     CodecServiceProvider codec_provider{EncodingFormat::XML};
     CodecService codec_service{};
 
-    auto container = ydktest_sanity_yang11::BackwardIncompatible();
-    container.test_node = "Testing node";
+    auto top = ydktest_sanity_yang11::BackwardIncompatible();
+    Bits bit_0{};
+    bit_0["disable-nagle"] = true;
+    Bits bit_1{};
+    bit_1["auto-sense-speed"] = true;
+    top.my_bits.append(bit_0);
+    top.my_bits.append(bit_1);
 
-    string xml = codec_service.encode(codec_provider, container, true);
+    string xml = codec_service.encode(codec_provider, top, true);
     string expected = R"(<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11">
-  <test-node>Testing node</test-node>
+  <my_bits>disable-nagle</my_bits>
+  <my_bits>auto-sense-speed</my_bits>
 </backward-incompatible>
 )";
     CHECK(expected == xml);
+
+    auto entity = codec_service.decode(codec_provider, xml, make_shared<ydktest_sanity_yang11::BackwardIncompatible>());
+    CHECK(top == *entity);
+}
+
+TEST_CASE("test_bits_subtyping_xml_codec")
+{
+    XmlSubtreeCodec xml_codec{};
+    vector<path::Capability> caps {
+        {"ydktest-sanity-yang11", ""}
+    };
+    ydk::path::Repository repo{TEST_HOME};
+    auto root = repo.create_root_schema(caps);
+
+    auto top = ydktest_sanity_yang11::BackwardIncompatible();
+    Bits bit_0{};
+    bit_0["disable-nagle"] = true;
+    Bits bit_1{};
+    bit_1["auto-sense-speed"] = true;
+    top.my_bits.append(bit_0);
+    top.my_bits.append(bit_1);
+
+    string expected = R"(<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <my_bits>disable-nagle</my_bits>
+  <my_bits>auto-sense-speed</my_bits>
+</backward-incompatible>)";
+
+    string payload = xml_codec.encode(top, *root);
+    CHECK(expected == payload);
+
+    auto entity = xml_codec.decode(payload, make_shared<ydktest_sanity_yang11::BackwardIncompatible>());
+    CHECK(top == *entity);
 }
 
 static string xml_empty_key_expected = R"(<empty-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">

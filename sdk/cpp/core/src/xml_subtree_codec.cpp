@@ -137,11 +137,20 @@ static void populate_xml_node(Entity & entity, const path::SchemaNode & parent_s
     walk_children(entity, *schema, child);
 }
 
-static const xmlChar* get_content_from_leafdata(LeafData & leaf_data)
+static const xmlChar* get_content_from_leafdata(string leaf_name, LeafData & leaf_data)
 {
     const xmlChar* content = NULL;
     if(leaf_data.is_set)
     {
+        string leaf_type = "leaf";
+        auto pos = leaf_name.find("[.=\"");
+        if (pos != string::npos) {
+            leaf_data.value = leaf_name.substr(pos+4, leaf_name.length()-pos-6);
+            leaf_name = leaf_name.substr(0, pos);
+            leaf_type = "leaf-list";
+        }
+        YLOG_DEBUG("XmlCodec: Creating {} node '{}' with value: '{}'",
+                   leaf_type, leaf_name, leaf_data.value);
         content = to_xmlchar(leaf_data.value);
     }
     else if(is_set(leaf_data.yfilter))
@@ -176,7 +185,7 @@ static void populate_xml_node_contents(const path::SchemaNode & parent_schema, E
         YLOG_DEBUG("XMLCodec: Creating child {} of {} with value: '{}', is_set: {}", name_value.first, parent_schema.get_path(),
                 leaf_data.value, leaf_data.is_set);
 
-        const xmlChar* content = get_content_from_leafdata(leaf_data);
+        const xmlChar* content = get_content_from_leafdata(name_value.first, leaf_data);
         if(leaf_to_be_created(leaf_data))
         {
             xmlNodePtr child = create_and_populate_xml_node(parent_schema, *schema, leaf_data.yfilter, xml_node, content);

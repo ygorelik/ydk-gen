@@ -264,6 +264,33 @@ class SanityYang11Test(unittest.TestCase):
         self.assertEqual(top, entity)
 
 
+    def test_bits_subtyping_json_codec(self):
+        top = BackwardIncompatible()
+        bit_0, bit_1 = Bits(), Bits()
+        bit_0['disable-nagle'] = True
+        bit_1['auto-sense-speed'] = True
+        top.my_bits.clear()
+        top.my_bits.extend([bit_0, bit_1])
+
+        expected = '''{
+  "ydktest-sanity-yang11:backward-incompatible": {
+    "my_bits": [
+      "disable-nagle",
+      "auto-sense-speed"
+    ]
+  }
+}'''
+        repo = Repository(yang11.__path__[0] + '/_yang')
+        root_schema = repo.create_root_schema([])
+        json_codec = JsonSubtreeCodec()
+
+        payload = json_codec.encode(top, root_schema, True)
+        self.assertEqual(expected, payload)
+
+        entity = json_codec.decode(payload, BackwardIncompatible())
+        self.assertEqual(top, entity)
+
+
 if __name__ == '__main__':
     device, non_demand, common_cache, timeout = get_device_info()
 
