@@ -20,15 +20,15 @@ import sys
 import unittest
 import logging
 
-from ydk.types import Empty, Bits
-from ydk.path import Repository
+from ydk.types import Empty, Bits, EncodingFormat
+from ydk.path import Repository, Codec
 from ydk.providers import CodecServiceProvider
 from ydk.services import CodecService
 from ydk.entity_utils import XmlSubtreeCodec, JsonSubtreeCodec
 from ydk.errors import YModelError
 
 from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BackwardIncompatible, EmptyType, AnydataType
-from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import PrivateKey, PublicKey, SslKey
+from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import SslKey
 from ydk.models.ydktest_yang11.ydktest_sanity_yang11 import BaseColors
 
 import ydk.models.ydktest_yang11 as yang11
@@ -46,24 +46,22 @@ class SanityYang11Test(unittest.TestCase):
         cls.json_codec_provider = CodecServiceProvider(type='json')
         enable_logging(logging.ERROR)
 
-#     def test_anyxml_action(self):
-#         expected = '''<data xmlns="http://cisco.com/ns/yang/ydktest-action">
-#   <action-node>
-#     <test>xyz</test>
-#   </action-node>
-# </data>
-# '''
-#         rpc = self.root_schema.create_datanode("ydktest-sanity-action:data", "")
-#         a = rpc.create_action("action-node")
-#         a.create_datanode("test", "xyz")
-#
-#         xml = self.codec.encode(rpc, EncodingFormat.XML)
-#         self.assertEqual(xml, expected)
-#
-#         try:
-#             rpc(self.ncs)
-#         except Exception as e:
-#             self.assertTrue(isinstance(e, RuntimeError))
+    def test_anyxml_action(self):
+        expected = '''<data xmlns="http://cisco.com/ns/yang/ydktest-action">
+  <action-node>
+    <test>xyz</test>
+  </action-node>
+</data>
+'''
+        repo = Repository(yang11.__path__[0] + '/_yang')
+        root_schema = repo.create_root_schema([])
+        rpc = root_schema.create_datanode("ydktest-sanity-action:data", "")
+        a = rpc.create_action("action-node")
+        a.create_datanode("test", "xyz")
+
+        codec = Codec()
+        xml = codec.encode(rpc, EncodingFormat.XML)
+        self.assertEqual(expected, xml)
 
     def test_type_empty_key(self):
         top = EmptyType()
@@ -262,7 +260,6 @@ class SanityYang11Test(unittest.TestCase):
 
         entity = self.codec_service.decode(self.codec_provider, xml)
         self.assertEqual(top, entity)
-
 
     def test_bits_subtyping_json_codec(self):
         top = BackwardIncompatible()
