@@ -1,3 +1,17 @@
+### Post 0.8.5 (0.8.5.2) changes
+
+#### Resolved GitHub issues
+  * Version numbers in bundle resolver to comply with PEP 440 ([#1007](https://github.com/CiscoDevNet/ydk-gen/issues/1007))
+  * The Executor Service fails to return module content to user ([#1035](https://github.com/CiscoDevNet/ydk-gen/issues/1035))
+  * Docker base image python error ([#1036](https://github.com/CiscoDevNet/ydk-gen/issues/1036))
+  * XmlSubtreeCodec fails encode leaf-list data ([#1045](https://github.com/CiscoDevNet/ydk-gen/issues/1045))
+
+#### Other resolved issues and enhancements
+  * Fixed few minor bugs in C++ code
+  * Added installation of flex and bison for CentOS platform
+  * Added scripts for local unit testing of YDK release
+  
+
 ### 2020-09-30 version 0.8.5
 
 #### New features and enhancements
