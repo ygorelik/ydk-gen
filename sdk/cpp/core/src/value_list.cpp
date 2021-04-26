@@ -51,6 +51,8 @@ string to_string(YType t)
         TOSTRING(enumeration);
         TOSTRING(bits);
         TOSTRING(decimal64);
+        TOSTRING(anydata);
+        case YType::union_: return "union";
     }
     return "";
 }
@@ -254,10 +256,11 @@ std::vector<std::pair<std::string, LeafData> > YLeafList::get_name_leafdata() co
     std::vector<std::pair<std::string, LeafData> > name_values;
     for (auto value : values)
     {
+        auto leaf_name_data = value.get_name_leafdata();
         name_values.push_back(
                             {
-                                (value.get_name_leafdata().first+"[.=\""+value.get()+"\"]"),
-                                {"", yfilter, value.is_set, value.value_namespace, value.value_namespace_prefix}
+                                (leaf_name_data.first+"[.=\""+value.get()+"\"]"),
+                                {"", leaf_name_data.second.type, yfilter, value.is_set, value.value_namespace, value.value_namespace_prefix}
                             }
                             );
     }

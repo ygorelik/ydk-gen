@@ -51,8 +51,9 @@ std::string to_str(YType t)
         TOSTRING(boolean);
         TOSTRING(enumeration);
         TOSTRING(bits);
-        TOSTRING(multiple);
         TOSTRING(decimal64);
+        case YType::anydata: return "anydata";
+        case YType::union_: return "union";
     }
     return "";
 #undef TOSTRING
@@ -102,7 +103,7 @@ YLeaf::~YLeaf()
 const std::string  YLeaf::get() const
 {
     if (type == YType::bits ||
-        (type == YType::multiple && !bits_value.get_bitmap().empty() &&
+        (type == YType::union_ && !bits_value.get_bitmap().empty() &&
          std::find(union_types.begin(), union_types.end(), YType::bits) != union_types.end()))
     {
         return get_bits_string();
@@ -112,13 +113,15 @@ const std::string  YLeaf::get() const
 
 std::pair<std::string, LeafData> YLeaf::get_name_leafdata() const
 {
-    return {name, {get(), yfilter, is_set, value_namespace, value_namespace_prefix }};
+    auto leaf_type = (type == YType::union_) ? value_type : type;
+	return {name, { get(), leaf_type, yfilter, is_set, value_namespace, value_namespace_prefix }};
 }
 
 void YLeaf::operator = (uint8 val)
 {
     std::ostringstream value_buffer;
 
+    value_type = (type == YType::union_) ? YType::uint8 : type;
     value_buffer << val;
     store_value(value_buffer.str());
 }
@@ -127,6 +130,7 @@ void YLeaf::operator = (uint32 val)
 {
     std::ostringstream value_buffer;
 
+    value_type = (type == YType::union_) ? YType::uint32 : type;
     value_buffer << val;
     store_value(value_buffer.str());
 }
@@ -135,6 +139,7 @@ void YLeaf::operator = (uint64 val)
 {
     std::ostringstream value_buffer;
 
+    value_type = (type == YType::union_) ? YType::uint64 : type;
     value_buffer << val;
     store_value(value_buffer.str());
 }
@@ -143,6 +148,7 @@ void YLeaf::operator = (long val)
 {
     std::ostringstream value_buffer;
 
+    value_type = (type == YType::union_) ? YType::int64 : type;
     value_buffer << val;
     store_value(value_buffer.str());
 }
@@ -151,6 +157,7 @@ void YLeaf::operator = (int8 val)
 {
     std::ostringstream value_buffer;
 
+    value_type = (type == YType::union_) ? YType::int8 : type;
     value_buffer << val;
     store_value(value_buffer.str());
 }
@@ -159,6 +166,7 @@ void YLeaf::operator = (int32 val)
 {
     std::ostringstream value_buffer;
 
+    value_type = (type == YType::union_) ? YType::int32 : type;
     value_buffer << val;
     store_value(value_buffer.str());
 }
@@ -170,6 +178,7 @@ void YLeaf::operator = (Enum::YLeaf val)
     value_buffer << val.name;
     store_value(value_buffer.str());
     enum_value = val.value;
+    value_type = YType::enumeration;
 }
 
 void YLeaf::operator = (Bits val)
@@ -179,12 +188,14 @@ void YLeaf::operator = (Bits val)
     bits_value = val;
     value_buffer << get_bits_string();
     store_value(value_buffer.str());
+    value_type = YType::bits;
 }
 
 void YLeaf::operator = (int64 val)
 {
     std::ostringstream value_buffer;
 
+    value_type = (type == YType::union_) ? YType::int64 : type;
     value_buffer << val;
     store_value(value_buffer.str());
 }
@@ -195,6 +206,7 @@ void YLeaf::operator = (double val)
 
     value_buffer << val;
     store_value(value_buffer.str());
+    value_type = YType::decimal64;
 }
 
 void YLeaf::operator = (Empty val)
@@ -203,6 +215,7 @@ void YLeaf::operator = (Empty val)
     if(purposely_unused_if_condition_to_avoid_compiler_warning){}
 
     store_value(""); // store empty string
+    value_type = YType::empty;
 }
 
 void YLeaf::operator = (Identity val)
@@ -213,12 +226,14 @@ void YLeaf::operator = (Identity val)
     store_value(value_buffer.str());
     value_namespace = val.name_space;
     value_namespace_prefix = val.namespace_prefix;
+    value_type = YType::identityref;
 }
 
 void YLeaf::operator = (std::string val)
 {
     std::ostringstream value_buffer;
 
+    value_type = YType::str;
     value_buffer << val;
     store_value(value_buffer.str());
 }
@@ -229,6 +244,7 @@ void YLeaf::operator = (Decimal64 val)
 
     value_buffer << val.value;
     store_value(value_buffer.str());
+    value_type = YType::decimal64;
 }
 
 void YLeaf::set(uint8 val)
@@ -305,9 +321,13 @@ void YLeaf::store_value(std::string && val)
 {
     is_set=true;
     if (type == YType::boolean ||
-        (type == YType::multiple && std::find(union_types.begin(), union_types.end(), YType::boolean) != union_types.end()))
+        (type == YType::union_ && std::find(union_types.begin(), union_types.end(), YType::boolean) != union_types.end()))
     {
         value = get_bool_string(val);
+        if (value == "true" || value == "false")
+        {
+            value_type = YType::boolean;
+        }
     }
     else
     {

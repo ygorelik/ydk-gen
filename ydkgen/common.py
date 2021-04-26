@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,6 +58,7 @@ yang_int_ranges = {
 }
 
 yang_base_types = {
+    'anydata',
     'binary',
     'bits',
     'boolean',
@@ -142,7 +143,7 @@ def iscppkeyword(word):
                     'break', 'case', 'catch', 'float', 'long', 'return',
                     'explicit', 'class', 'if', 'try', 'while', 'and', 'or',
                     'const', 'continue', 'double', 'else', 'value', 'namespace',
-                    'operation', 'volatile', 'register', 'short', 'extern',
+                    'operation', 'volatile', 'register', 'short', 'extern', 'union',
                     'mutable', 'unsigned', 'struct', 'switch', 'void', 'typedef', 'typename',
                     'typeid', 'using', 'char', 'goto', 'not', 'clock', 'major', 'minor', 'INFINITY')
 

@@ -156,12 +156,13 @@ public:
         );
     }
 
-    bool is_leaf_type_empty(const string & leaf_name) const override {
+bool check_leaf_type(const string & leaf_name, ydk::YType leaf_type) const override {
         PYBIND11_OVERLOAD_PURE(
             bool,
             ydk::Entity,
-            is_leaf_type_empty,
-            leaf_name
+			check_leaf_type,
+            leaf_name,
+			leaf_type
         );
     }
 
@@ -545,7 +546,8 @@ PYBIND11_MODULE(ydk_, ydk)
         .value("enumeration", ydk::YType::enumeration)
         .value("bits", ydk::YType::bits)
         .value("decimal64", ydk::YType::decimal64)
-        .value("multiple", ydk::YType::multiple);
+        .value("anydata", ydk::YType::anydata)
+        .value("union", ydk::YType::union_);
 
     enum_<ydk::path::ModelCachingOption>(types, "ModelCachingOption")
         .value("common", ydk::path::ModelCachingOption::COMMON)
@@ -564,8 +566,9 @@ PYBIND11_MODULE(ydk_, ydk)
                          });
 
     class_<ydk::LeafData>(types, "LeafData")
-        .def(init<const string &, ydk::YFilter, bool, const string &, const string &>())
+        .def(init<const string &, ydk::YType, ydk::YFilter, bool, const string &, const string &>())
         .def_readonly("value", &ydk::LeafData::value, return_value_policy::reference)
+        .def_readonly("type", &ydk::LeafData::type, return_value_policy::reference)
         .def_readonly("yfilter", &ydk::LeafData::yfilter, return_value_policy::reference)
         .def_readonly("is_set", &ydk::LeafData::is_set, return_value_policy::reference)
         .def_readonly("name_space", &ydk::LeafData::name_space, return_value_policy::reference)
@@ -700,6 +703,7 @@ PYBIND11_MODULE(ydk_, ydk)
         .def_readonly("is_set", &ydk::YLeaf::is_set, return_value_policy::reference)
         .def_readonly("name", &ydk::YLeaf::name, return_value_policy::reference)
         .def_readonly("type", &ydk::YLeaf::type, return_value_policy::reference)
+        .def_readwrite("value_type", &ydk::YLeaf::value_type, return_value_policy::reference)
         .def_readwrite("yfilter", &ydk::YLeaf::yfilter)
         .def_readwrite("value_namespace", &ydk::YLeaf::value_namespace)
         .def_readwrite("value_namespace_prefix", &ydk::YLeaf::value_namespace_prefix);

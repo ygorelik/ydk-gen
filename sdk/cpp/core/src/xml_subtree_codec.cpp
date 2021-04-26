@@ -30,6 +30,7 @@
 #include "logger.hpp"
 #include "xml_util.hpp"
 #include "xml_subtree_codec.hpp"
+#include "common_utilities.hpp"
 
 using namespace std;
 
@@ -220,7 +221,7 @@ static void check_and_set_leaf(Entity & entity, Entity * parent, xmlNodePtr xml_
     string current_node_name{to_string(xml_node->name)};
     if (xml_node->children == NULL)
     {
-        if (!entity.is_leaf_type_empty(current_node_name))
+        if (!entity.check_leaf_type(current_node_name, YType::empty))
         {
             YLOG_DEBUG("XMLCodec: Creating leaf '{}' with no value", current_node_name);
             entity.set_filter(current_node_name, YFilter::read);
@@ -231,8 +232,27 @@ static void check_and_set_leaf(Entity & entity, Entity * parent, xmlNodePtr xml_
             entity.set_value(current_node_name, "");
         }
     }
-    else
+    else if (entity.check_leaf_type(current_node_name, YType::anydata))
     {
+        xmlBufferPtr buffer = xmlBufferCreate();
+        if (xmlNodeDump(buffer, doc, xml_node, 0, 0) < 0)
+        {
+            YLOG_ERROR("XMLCodec: Failed create anydata leaf '{}'", current_node_name);
+        }
+        else {
+            string value = to_string(buffer->content);
+            auto start_pos = value.find(">");
+            auto end_pos = value.rfind("</");
+            if (start_pos != string::npos && end_pos != string::npos)
+            {
+                value = trim(value.substr(start_pos+1, end_pos-start_pos-1));
+            }
+            YLOG_DEBUG("XMLCodec: Creating anydata leaf '{}' with value:\n{}", current_node_name, value);
+            entity.set_value(current_node_name, value);
+        }
+        xmlFree(buffer);
+    }
+    else {
         decode_xml(doc, xml_node->children, entity, parent, current_node_name);
     }
 }

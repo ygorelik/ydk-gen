@@ -270,14 +270,14 @@ Entity::get_ylist_key() const
 }
 
 bool
-Entity::is_leaf_type_empty(const string & leaf_name) const
+Entity::check_leaf_type(const string & leaf_name, YType leaf_type) const
 {
     for (auto leaf : leaf_list)
     {
         if (leaf->name == leaf_name &&
-            (leaf->type == YType::empty ||
-             (leaf->type == YType::multiple &&
-              std::find(leaf->union_types.begin(), leaf->union_types.end(), YType::empty) != leaf->union_types.end())))
+            (leaf->type == leaf_type ||
+             (leaf->type == YType::union_ &&
+              std::find(leaf->union_types.begin(), leaf->union_types.end(), leaf_type) != leaf->union_types.end())))
         {
             return true;
         }

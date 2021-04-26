@@ -188,14 +188,33 @@ TEST_CASE("test_deci64")
 
 TEST_CASE("test_union")
 {
-    YLeaf test_leaf{YType::multiple, "union_leaf", {YType::boolean, YType::empty, YType::int16}};
+    YLeaf test_leaf{YType::union_, "union_leaf", {YType::boolean, YType::empty, YType::int16}};
 
     test_leaf = true;
     CHECK(test_leaf.get() == "true");
+    auto name_leaf_data = test_leaf.get_name_leafdata();
+    CHECK(name_leaf_data.second.type == YType::boolean);
 
     test_leaf = Empty();
     CHECK(test_leaf.get() == "");
+    name_leaf_data = test_leaf.get_name_leafdata();
+    CHECK(name_leaf_data.second.type == YType::empty);
 
     test_leaf = 4;
     CHECK(test_leaf.get() == "4");
+    name_leaf_data = test_leaf.get_name_leafdata();
+    CHECK(name_leaf_data.second.type == YType::int32);
+}
+
+TEST_CASE("test_anydata")
+{
+	std::string data = R"(<anydata-type xmlns="http://cisco.com/ns/yang/ydktest-yang11"/>)";
+	YLeaf test_leaf{YType::anydata, "data"};
+
+	test_leaf = data;
+	CHECK(test_leaf.get() == data);
+
+	auto name_leaf_data = test_leaf.get_name_leafdata();
+	CHECK(name_leaf_data.second.type == YType::anydata);
+	CHECK(name_leaf_data.second.value == data);
 }

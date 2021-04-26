@@ -66,10 +66,30 @@ class YLeaf;
 class YLeafList;
 class YList;
 
+enum class YType {
+    uint8,
+    uint16,
+    uint32,
+    uint64,
+    int8,
+    int16,
+    int32,
+    int64,
+    empty,
+    identityref,
+    str,
+    boolean,
+    enumeration,
+    bits,
+    decimal64,
+    anydata,
+    union_
+};
+
 class LeafData
 {
   public:
-    LeafData(const std::string & value, YFilter yfilter, bool is_set, const std::string & name_space, const std::string & name_space_prefix);
+    LeafData(const std::string & value, YType type, YFilter yfilter, bool is_set, const std::string & name_space, const std::string & name_space_prefix);
     ~LeafData();
 
     bool operator == (LeafData & other) const;
@@ -78,6 +98,7 @@ class LeafData
 
   public:
     std::string value;
+    YType type;
     std::string name_space;
     std::string name_space_prefix;
     YFilter yfilter;
@@ -158,7 +179,7 @@ class Entity {
     std::string get_ylist_key() const;
 
     std::vector<ydk::YLeaf*> leaf_list{};
-    virtual bool is_leaf_type_empty(const std::string & leaf_name) const;
+    virtual bool check_leaf_type(const std::string & leaf_name, YType leaf_type) const;
 };
 
 class Bits {
@@ -228,25 +249,6 @@ class Enum {
     }
 };
 
-enum class YType {
-    uint8,
-    uint16,
-    uint32,
-    uint64,
-    int8,
-    int16,
-    int32,
-    int64,
-    empty,
-    identityref,
-    str,
-    boolean,
-    enumeration,
-    bits,
-    decimal64,
-	multiple
-};
-
 class YLeaf
 {
   public:
@@ -314,6 +316,7 @@ class YLeaf
     std::string value;
     int enum_value;
     YType type;
+    YType value_type;
     Bits bits_value;
     std::vector<ydk::YType> union_types;
 };

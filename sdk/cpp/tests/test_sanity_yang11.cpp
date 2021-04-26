@@ -340,6 +340,48 @@ TEST_CASE("test_type_empty_key2")
     CHECK("\"abc\", \"xyz\"" == vector_to_string(keys));
 }
 
+static string xml_anydata = R"(<anydata-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <logged-notification>
+	<time>2014-07-29T13:43:12Z</time>
+	<data>
+	  <notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+		<eventTime>2014-07-29T13:43:01Z</eventTime>
+		<event xmlns="urn:example:event">
+		  <event-class>fault</event-class>
+		  <reporting-entity>
+			<card>Ethernet0</card>
+		  </reporting-entity>
+		  <severity>major</severity>
+		</event>
+	  </notification>
+	</data>
+  </logged-notification>
+</anydata-type>
+)";
+
+static string json_anydata = R"({
+  "ydktest-sanity-yang11:anydata-type": {
+    "logged-notification": [
+      {
+        "time": "2014-07-29T13:43:12Z",
+        "data": {
+          "event-class": "fault",
+          "severity": "major",
+          "message": "Error in Ethernet0 card"
+        }
+      },
+      {
+        "time": "2014-07-29T13:44:00Z",
+        "data": {
+          "event-class": "fault",
+          "severity": "major",
+          "message": "Error in Ethernet0 card"
+        }
+      }
+    ]
+  }
+})";
+
 TEST_CASE("test_type_anydata")
 {
     CodecServiceProvider codec_provider{EncodingFormat::XML};
@@ -349,25 +391,45 @@ TEST_CASE("test_type_anydata")
     auto payload = codec_service.encode(codec_provider, top, false);
     CHECK("<anydata-type xmlns=\"http://cisco.com/ns/yang/ydktest-yang11\"/>" == payload);
 
-    payload = R"(<anydata-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">
-  <logged-notification>
-    <time>2014-07-29T13:43:12Z</time>
-    <data>
-      <notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
-        <eventTime>2014-07-29T13:43:01Z</eventTime>
-        <event xmlns="urn:example:event">
-          <event-class>fault</event-class>
-          <reporting-entity>
-            <card>Ethernet0</card>
-          </reporting-entity>
-          <severity>major</severity>
-        </event>
-      </notification>
-    </data>
-  </logged-notification>
-</anydata-type>
-)";
     // TODO: Failing decode above payload - the content of anydata node is not retained
-    auto entity = codec_service.decode(codec_provider, payload, make_shared<ydktest_sanity_yang11::AnydataType>());
+    auto entity = codec_service.decode(codec_provider, xml_anydata, make_shared<ydktest_sanity_yang11::AnydataType>());
     CHECK(entity != nullptr);
+}
+
+TEST_CASE("test_type_anydata_xml_codec")
+{
+    XmlSubtreeCodec xml_codec{};
+
+    auto entity = xml_codec.decode(xml_anydata, make_shared<ydktest_sanity_yang11::AnydataType>());
+    CHECK(entity != nullptr);
+
+    auto top = dynamic_cast<ydktest_sanity_yang11::AnydataType*>(entity.get());
+    auto notif_entity = top->logged_notification[0];
+    auto notification = dynamic_cast<ydktest_sanity_yang11::AnydataType::LoggedNotification*>(notif_entity.get());
+    string expected = R"(<notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+		<eventTime>2014-07-29T13:43:01Z</eventTime>
+		<event xmlns="urn:example:event">
+		  <event-class>fault</event-class>
+		  <reporting-entity>
+			<card>Ethernet0</card>
+		  </reporting-entity>
+		  <severity>major</severity>
+		</event>
+	  </notification>)";
+    CHECK(expected == notification->data.get());
+}
+
+TEST_CASE("test_type_anydata_json_codec")
+{
+    JsonSubtreeCodec json_codec{};
+
+    auto entity = json_codec.decode(json_anydata, make_shared<ydktest_sanity_yang11::AnydataType>());
+    CHECK(entity != nullptr);
+
+    auto top = dynamic_cast<ydktest_sanity_yang11::AnydataType*>(entity.get());
+    auto notif_entity = top->logged_notification["2014-07-29T13:44:00Z"];
+    CHECK(notif_entity != nullptr);
+    auto notification = dynamic_cast<ydktest_sanity_yang11::AnydataType::LoggedNotification*>(notif_entity.get());
+    string expected = R"({"event-class":"fault","message":"Error in Ethernet0 card","severity":"major"})";
+    CHECK(expected == notification->data.get());
 }

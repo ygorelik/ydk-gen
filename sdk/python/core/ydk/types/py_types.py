@@ -296,16 +296,16 @@ class Entity(_Entity):
                                (leaf[0], leaf_value, leaf[1].yfilter, leaf[1].is_set))
         return leaf_name_data
 
-    def is_leaf_type_empty(self, leaf_name):
+    def check_leaf_type(self, leaf_name, leaf_type):
         for name in self._leafs:
             leaf_tuple = self._leafs[name]
             leaf = leaf_tuple[0]
             if leaf.name == leaf_name:
                 break
-        if leaf.type == YType.empty:
+        if leaf.type == leaf_type:
             return True
-        elif leaf.type == YType.multiple:
-            if 'Empty' in leaf_tuple[1]:
+        elif leaf.type == YType.union:
+            if leaf_type in leaf_tuple[1]:  # TODO!!!
                 return True
         return False
 

@@ -221,7 +221,7 @@ def _get_type_name(prop_type):
     elif prop_type.name == 'decimal64':
         return 'str'
     elif prop_type.name == 'union':
-        return 'multiple'
+        return 'union'
     elif prop_type.name == 'binary':
         return 'str'
     elif prop_type.name == 'instance-identifier':

@@ -26,7 +26,7 @@ source_printer.py
  prints C++ classes
 
 """
-from ydkgen.api_model import Bits, Class, DataType, Enum
+from ydkgen.api_model import Bits, Class, DataType, Enum, AnyData, AnyXml
 from ydkgen.common import get_module_name, has_list_ancestor, is_top_level_class
 
 from pyang.types import UnionTypeSpec
@@ -34,7 +34,10 @@ from pyang.types import UnionTypeSpec
 
 def get_type_name(prop_type):
     if prop_type.name == 'string':
-        return 'str'
+        if isinstance(prop_type, AnyData) or isinstance(prop_type, AnyXml):
+            return 'anydata'
+        else:
+            return 'str'
     elif prop_type.name == 'leafref':
         return 'str'
     elif prop_type.name == 'decimal64':
@@ -97,7 +100,7 @@ class ClassConstructorPrinter(object):
                                 ('true' if has_list_ancestor(clazz) else 'false'),
                                 ('is_presence_container = true;' if clazz.stmt.search_one('presence') is not None else '')))
             for prop in leafs:
-                if prop.stmt.keyword == 'leaf':
+                if prop.stmt.keyword == 'leaf' or prop.stmt.keyword == 'anydata' or prop.stmt.keyword == 'anyxml':
                     if prop.stmt.i_module.arg != clazz.stmt.i_module.arg:
                         leaf_name = prop.stmt.i_module.arg + ':' + prop.stmt.arg
                     else:
@@ -137,7 +140,7 @@ class ClassConstructorPrinter(object):
                                                                     (',' if index != len(leafs) - 1 else '')))
                     else:
                         ytypes = ', '.join(['YType::%s' % t for t in type_strs])
-                        self.ctx.writeln('%s{YType::multiple, "%s", {%s}}%s' %
+                        self.ctx.writeln('%s{YType::union_, "%s", {%s}}%s' %
                                          (prop.name, leaf_name, ytypes,
                                           (',' if index != len(leafs) - 1 else '')))
                 else:

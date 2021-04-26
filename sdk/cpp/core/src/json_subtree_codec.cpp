@@ -337,7 +337,7 @@ static void check_and_set_leaf(Entity & entity, Entity * parent, const string & 
 {
     if (json_node.is_null())
     {
-        if (!entity.is_leaf_type_empty(node_name))
+        if (!entity.check_leaf_type(node_name, YType::empty))
         {
             YLOG_DEBUG("JsonCodec: Creating leaf '{}' with no value and setting YFilter::read", node_name);
             entity.set_filter(node_name, YFilter::read);
@@ -351,6 +351,12 @@ static void check_and_set_leaf(Entity & entity, Entity * parent, const string & 
     else if (json_node.is_primitive())
     {
     	check_and_set_content(entity, node_name, json_node);
+    }
+    else if (entity.check_leaf_type(node_name, YType::anydata))
+    {
+        string value = json(json_node).dump();
+        YLOG_DEBUG("JsonCodec: Creating anydata leaf '{}' with value:\n{}", node_name, value);
+        entity.set_value(node_name, value);
     }
     else {
         decode_json(json_node, entity, parent);
