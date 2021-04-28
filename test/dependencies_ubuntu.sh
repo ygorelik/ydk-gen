@@ -67,15 +67,16 @@ function install_dependencies {
         run_cmd sudo apt-get install libtool -y > /dev/null
     fi
     if [[ $codename == "focal" ]]; then
-        sudo apt-get install -y mlocate git
+        sudo apt-get install -y mlocate git > /dev/null
         if [[ ! -h /usr/local/lib/libnettle.so.6 ]]; then
           cd /usr/local/lib/
           sudo ln -s $curr_dir/3d_party/linux/ubuntu/lib/libnettle.so.6.4
           sudo ln -s libnettle.so.6.4 libnettle.so.6
+          cd -
         fi
     else
-        run_cmd sudo apt-get install -y locate git
-        run_cmd sudo apt-get install -y curl libcurl4-openssl-dev
+        run_cmd sudo apt-get install -y locate git > /dev/null
+        run_cmd sudo apt-get install -y curl libcurl4-openssl-dev > /dev/null
     fi
     run_cmd sudo apt-get install -y bison doxygen flex unzip wget cmake gdebi-core lcov > /dev/null
     run_cmd sudo apt-get install -y libcmocka0 libpcre3-dev libpcre++-dev > /dev/null
@@ -121,13 +122,15 @@ function check_install_gcc {
 function check_install_curl {
   if [[ ! -x /usr/local/bin/curl ]]; then
     print_msg "Installing curl from source"
-    git clone https://github.com/curl/curl.git
+    git clone https://github.com/curl/curl.git -b curl-7_61_1
     cd curl
     ./buildconf
-    ./configure --enable-versioned-symbols > /dev/null
+    ./configure --enable-versioned-symbols --with-openssl > /dev/null
     make > /dev/null
     sudo make install
     cd -
+    sudo rm -f /usr/lib/x86_64-linux-gnu/libcurl.so
+    sudo ln -sf /usr/local/lib/libcurl.so.4 /usr/lib/x86_64-linux-gnu/libcurl.so
     rm -rf curl
     print_msg "Installed curl version: $(curl --version | sed 1q | awk '{print$2}')"
   fi
@@ -163,7 +166,7 @@ function check_install_go {
   fi
   if (( $minor < 9 )); then
     print_msg "Installing Golang version 1.13.1 in /usr/local/go"
-    run_cmd sudo wget https://storage.googleapis.com/golang/go1.13.1.linux-amd64.tar.gz
+    run_cmd wget https://storage.googleapis.com/golang/go1.13.1.linux-amd64.tar.gz
     sudo tar -zxf  go1.13.1.linux-amd64.tar.gz -C /usr/local/
     rm -f go1.13.1.linux-amd64.tar.gz
     cd /usr/local/bin
