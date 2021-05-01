@@ -1,7 +1,7 @@
 <!---
 # *************************************************************
 #  YDK-YANG Development Kit
-#  Copyright 2016 Cisco Systems. All rights reserved
+#  Copyright 2016-2019 Cisco Systems. All rights reserved
 # *************************************************************
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -98,14 +98,14 @@ This gives the developer an ability to customize scope of their bundle based on 
 
 The YDK-0.8.5 core is backward compatible with all previously generated model bundles starting from release of YDK-0.7.3.
 However the YDK-0.8.5 generates different code and model API comparing to YDK-0.8.4.
-The YDK-0.8.5 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
+The YDK-0.8.5 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling of YList objects.
 
 **NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
 
 # Docker
 
 A [docker image](https://docs.docker.com/engine/reference/run/) is automatically built with the latest ydk-gen commit.
-This docker can be used to run ydk-gen without installing anything natively on your machine.
+This docker can be used to run ydk-gen without installing anything natively on your platform.
 
 To use the docker image, [install docker](https://docs.docker.com/install/) on your system and run the below command.
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
@@ -116,19 +116,24 @@ docker run -it ydksolutions/ydk-gen
 
 # System requirements
 
-The YDK is currently supported on the following platforms:
+The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
  - Linux CentOS/RHEL versions 7 and 8
  - MacOS up to 10.14.6 (Mojave)
 
+On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
+check [this](https://www.windowscentral.com/install-windows-subsystem-linux-windows-10) for virtual machine installation procedure.
+The YDK has been tested in such environment on Ubuntu Bionic (18.04 LTS) and Focal (20.04 LTS) images obtained
+from Microsoft Store.
+
 On supported platforms the YDK can be installed using [installation script](#installation-script).
 On other platforms the YDK should be installed manually [from source](#building-from-source).
-For both the methods the user must install `git` package prior to  the installation procedure.
+For both the methods the user must install `git` package prior to the installation procedure.
 
-All YDK core components are built using C and C++ compilers, which are default for the supported platform.
-Corresponding libraries and header files are installed in default locations,
-which are `/usr/local/lib`, `/usr/local/bin` and `/usr/local/include`.
-Therefore the user must have sudo access in order to install YDK core components to these locations.
+All YDK core components are based on C and C++ code. These components compiled using default compilers for the supported platform.
+Corresponding binaries, libraries, and header files are installed in default locations,
+which are `/usr/local/bin` ,`/usr/local/lib`, and `/usr/local/include`.
+The user must have sudo access in order to install YDK core components to these locations.
 
 # Core Installation
 
@@ -189,8 +194,10 @@ If user environment is different from the default one (different Python installa
 
 ## Building from Source
 
-If user platform is supported one, it is recommended to use `ydk-gen` script `install_ydk.sh`, 
-in order to install third party software dependencies.
+### Installing third party dependencies
+
+If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script. 
+The script will also install Python virtual environment in default or specified location.
 
 ```
 # Clone ydk-gen from GitHub
@@ -201,7 +208,21 @@ cd ydk-gen
 export YDKGEN_HOME=`pwd`  
 export PYTHON_VENV=$HOME/ydk_venv
 ./install_ydk.sh   # also builds Python virtual environment
+```
 
+For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
+ 
+### Environment variables
+
+In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
+In this case the header location must be specified explicitly (in below commands the default location is shown)::
+
+  export C_INCLUDE_PATH=/usr/local/include
+  export CPLUS_INCLUDE_PATH=/usr/local/include
+
+### Installing core components
+
+```
 # Activate Python virtual environment
 source $PYTHON_VENV/bin/activate
 
@@ -238,7 +259,6 @@ As a workaround, the YDK based application runtime environment must include sett
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$YDKGEN_HOME/grpc/libs/opt:$YDKGEN_HOME/protobuf-3.5.0/src/.libs:/usr/local/lib64
 ```
-
 
 # Generate YDK components
 
@@ -308,7 +328,7 @@ cd ydk-gen/gen-api/cpp/ydk-service-gnmi/build
 
 ## Build model bundle profile
 
-The first step in using ydk-gen is either using one of the already built [bundle profiles](https://github.com/CiscoDevNet/ydk-gen/tree/master/profiles/bundles) or constructing your own bundle profile, consisting of the YANG models you are interested to include into the bundle:
+The first step in using ydk-gen is either using one of the already built [bundle profiles](https://github.com/ygorelik/ydk-gen/tree/master/profiles/bundles) or constructing your own bundle profile, consisting of the YANG models you are interested to include into the bundle:
 
 Construct a bundle profile file, such as [```ietf_0_1_1.json```](profiles/bundles/ietf_0_1_1.json) and specify its dependencies.
 
@@ -397,8 +417,6 @@ Check Python packages installed:
 
 ```
 pip list | grep ydk
-...
-
 ydk (0.8.5)
 ydk-models-<name-of-bundle> (0.5.1)
 ...

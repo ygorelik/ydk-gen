@@ -1,4 +1,4 @@
-### Post 0.8.5 (0.8.5.2) changes
+### 2021-04-30 version 0.8.5.2
 
 #### Resolved GitHub issues
   * Version numbers in bundle resolver to comply with PEP 440 ([#1007](https://github.com/CiscoDevNet/ydk-gen/issues/1007))
@@ -10,6 +10,7 @@
   * Fixed few minor bugs in C++ code
   * Added installation of flex and bison for CentOS platform
   * Added scripts for local unit testing of YDK release
+  * Tested YDK on Windows 10 using Windows Subsystem for Linux and Ubuntu Bionic (18.04 LTS) and Focal (20.04 LTS) virtual machines.
   
 
 ### 2020-09-30 version 0.8.5

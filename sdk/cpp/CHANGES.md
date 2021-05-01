@@ -1,4 +1,4 @@
-### Post 0.8.5 (0.8.5.2) changes
+### 2021-04-30 version 0.8.5.2
 
 #### Resolved GitHub issues
   * Version numbers in bundle resolver to comply with PEP 440 ([#1007](https://github.com/CiscoDevNet/ydk-gen/issues/1007))
