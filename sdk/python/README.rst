@@ -42,7 +42,7 @@ YANG Development Kit (Python)
 Overview
 ========
 
-The YANG Development Kit (YDK) is a Software Development Kit that provides API's that are modeled in YANG.
+The YANG Development Kit (YDK) is a software development tool, which provides API for building applications based on YANG models.
 The main goal of YDK is to reduce the learning curve of YANG data models by expressing the model semantics in an API and abstracting protocol/encoding details.
 YDK is composed of a core package that defines services and providers, plus one or more module bundles that are based on YANG models.
 
@@ -76,6 +76,7 @@ System Requirements
 ===================
 
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
+
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
  - Linux CentOS/RHEL versions 7 and 8
  - MacOS up to 10.14.6 (Mojave)
@@ -122,8 +123,8 @@ Here is simple example of core YDK installation for Python programming language:
 
 
 The script also allows to install individual components like dependencies, core, and service packages
- for specified programming language or for all supported languages.
- Full set of script capabilities could be viewed like this::
+for specified programming language or for all supported languages.
+Full set of script capabilities could be viewed like this::
 
     ./install_ydk.sh --help
     usage: install_ydk [-l [cpp, py, go]] [-s gnmi] [-h] [-n]
@@ -151,7 +152,7 @@ The script also allows to install individual components like dependencies, core,
 
 
 If user environment is different from the default one (different Python installation or different
- location of libraries) then building from source method should be used.
+location of libraries) then building from source method should be used.
 
 Building from source
 --------------------
@@ -185,7 +186,7 @@ In this case the header location must be specified explicitly (in below commands
 Installing core components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: sh
+::
 
     # Activate Python virtual environment
     source $PYTHON_VENV/bin/activate
@@ -204,7 +205,7 @@ Adding gNMI Service
 -------------------
 
 In order to enable YDK support for gNMI protocol, which is optional, the user need install third party software
- and YDK gNMI service package.
+and YDK gNMI service package.
 
 gNMI Service installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -222,7 +223,8 @@ There is an open issue with gRPC on Centos/RHEL, which requires an extra step be
 See this issue on `GRPC GitHub <https://github.com/grpc/grpc/issues/10942#issuecomment-312565041>`_ for details.
 As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable::
 
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/grpc/libs/opt:~/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+    PROTO=$HOME  # Default location defined during installation
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
 
 
 Using Python virtual environment
@@ -317,17 +319,15 @@ To install the `cisco-ios-xr` bundle, execute::
 Documentation and Support
 =========================
 
-**NOTE.** Currently online documentation is available only for YDK-Py release 0.8.3.
-
 Available resources:
 
-- Read the `API documentation <http://ydk.cisco.com/py/docs>`_ for details on how to use the API and specific models
-- Samples can be found under the `samples directory <https://github.com/CiscoDevNet/ydk-py/tree/master/core/samples>`_
-- Hundreds of additional samples can be found in the `YDK-PY samples repository <https://github.com/CiscoDevNet/ydk-py-samples>`_
-- Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with other users and with the makers of YDK
-- Additional YDK information can be found at `ydk.io <http://ydk.io>`_
+- Read the `API documentation <http://ydk.cisco.com/py/docs>`_ (release 0.8.3) for details on how to use the API and specific models
+- Check `GitHub Pages <https://ygorelik.github.io/ydk-gen>`_ for the latest YDK release documentation
+- Find some app samples in the `samples directory <https://github.com/CiscoDevNet/ydk-py/tree/master/core/samples>`_
+- Find hundreds of additional samples in the `YDK-PY samples repository <https://github.com/CiscoDevNet/ydk-py-samples>`_
+- Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with YDK users and developers
 
 Release Notes
 =============
 
-The current YDK release version is 0.8.5. The `ydk-py` GitHub repository is not maintained for this release.
+The current YDK release version for Python is 0.8.5.post2. The `ydk-py` GitHub repository is not maintained for this release.
