@@ -151,7 +151,7 @@ def get_dir_attrs(dirs, root, remote=None):
                 yield res
 
 
-def get_git_attrs(repos):
+def get_git_attrs(repos, root, remote=None):
     for g in repos:
         url, tmp_dir = g['url'], tempfile.mkdtemp(suffix='.yang')
         logger.debug(('Bundle Translator: Cloning from %s --> %s'

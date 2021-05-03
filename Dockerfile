@@ -25,3 +25,5 @@ RUN python3 generate.py -i --core --go
 RUN python3 generate.py -i --service profiles/services/gnmi-0.4.0.json --go
 
 RUN ln -s /usr/bin/python3 /usr/bin/python
+
+RUN rm -rf sdk/cpp/core/src

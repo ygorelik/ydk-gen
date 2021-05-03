@@ -1,6 +1,6 @@
 /*  ----------------------------------------------------------------
  YDK - YANG Development Kit
- Copyright 2016 Cisco Systems. All rights reserved.
+ Copyright 2016-2019 Cisco Systems. All rights reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -413,4 +413,60 @@ TEST_CASE( "xml_codec_on_user_bundle" )
   </neighbors>
 </bgp>)";
     REQUIRE(expected == xml_bgp_config);
+}
+
+TEST_CASE( "xml_codec_decode_leaflist" )
+{
+    auto repo = path::Repository{TEST_HOME};
+    std::vector<path::Capability> empty_caps;
+    auto root = repo.create_root_schema(empty_caps);
+    XmlSubtreeCodec xml_codec{};
+
+    auto runner = ydktest_sanity::Runner();
+    runner.ytypes->built_in_t->llstring.append("abc");
+    runner.ytypes->built_in_t->llstring.append("klm");
+    runner.ytypes->built_in_t->llstring.append("xyz");
+
+    auto xml = xml_codec.encode(runner, *root);
+    CHECK(xml == R"(<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <ytypes>
+    <built-in-t>
+      <llstring>abc</llstring>
+      <llstring>klm</llstring>
+      <llstring>xyz</llstring>
+    </built-in-t>
+  </ytypes>
+</runner>)");
+
+    auto top_entity = make_shared<ydktest_sanity::Runner>();
+    auto entity = xml_codec.decode(xml, top_entity);
+    auto runner_d = dynamic_cast<ydktest_sanity::Runner*>(entity.get());
+    CHECK(*runner_d == runner);
+}
+
+TEST_CASE("xml_codec_empty")
+{
+    auto repo = path::Repository{TEST_HOME};
+    std::vector<path::Capability> empty_caps;
+    auto root = repo.create_root_schema(empty_caps);
+    XmlSubtreeCodec xml_codec{};
+
+    // Encode
+    auto runner = ydktest_sanity::Runner();
+    runner.ytypes->built_in_t->emptee = Empty();
+    auto xml = xml_codec.encode(runner, *root);
+    string payload = R"(<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <ytypes>
+    <built-in-t>
+      <emptee/>
+    </built-in-t>
+  </ytypes>
+</runner>)";
+    CHECK(payload == xml);
+
+    // Decode
+    auto top_entity = make_shared<ydktest_sanity::Runner>();
+    auto entity = xml_codec.decode(payload, top_entity);
+    auto runner_d = dynamic_cast<ydktest_sanity::Runner*>(entity.get());
+    CHECK(*runner_d == runner);
 }

@@ -23,7 +23,6 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <unordered_map>
-#include <algorithm>
 
 #include "entity_util.hpp"
 #include "entity_lookup.hpp"
@@ -285,7 +284,7 @@ static string resolve_leaf_value_namespace(const string & content, const string 
 
 static void check_and_set_content(Entity & entity, const string & leaf_name, xmlNodePtr parent_xml_node, xmlChar * content, xmlDocPtr doc)
 {
-    if (entity.has_leaf_or_child_of_name(leaf_name))  // && !isonlywhitespace(content))
+    if (entity.has_leaf_or_child_of_name(leaf_name))
     {
         xmlNsPtr * nsList = xmlGetNsList(doc, parent_xml_node);
         string name_space;

@@ -1,7 +1,7 @@
 ..
   # *************************************************************
   #  YDK-YANG Development Kit
-  #  Copyright 2016 Cisco Systems. All rights reserved
+  #  Copyright 2016-2019 Cisco Systems. All rights reserved
   # *************************************************************
   # Licensed to the Apache Software Foundation (ASF) under one
   # or more contributor license agreements.  See the NOTICE file
@@ -42,7 +42,7 @@ YANG Development Kit (Python)
 Overview
 ========
 
-The YANG Development Kit (YDK) is a Software Development Kit that provides API's that are modeled in YANG.
+The YANG Development Kit (YDK) is a software development tool, which provides API for building applications based on YANG models.
 The main goal of YDK is to reduce the learning curve of YANG data models by expressing the model semantics in an API and abstracting protocol/encoding details.
 YDK is composed of a core package that defines services and providers, plus one or more module bundles that are based on YANG models.
 
@@ -60,16 +60,16 @@ Docker
 ======
 
 Currently the `docker image <https://docs.docker.com/engine/reference/run/>`_ for ydk-py is not been generated.
-Please use `ydk-gen <https://github.com/ygorelik/ydk-gen/tree/0.8.5#docker>`_ docker image, which has complete environment for ydk-py based development.
+Please use docker image below, which has complete environment for ydk-py based development.
 
-..
-  A `docker image <https://docs.docker.com/engine/reference/run/>`_ is automatically built with the latest ydk-py commit to the GitHub.
-  The docker image is used to run ydk-py without installing anything natively on your machine.
+A `docker image <https://docs.docker.com/engine/reference/run/>`_ is automatically built with the latest ydk-gen commit
+to the git repository.
+The docker image is used to run YDK based apps without installing anything natively on your machine.
 
-  To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
-  See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
+To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
+See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-    docker run -it ydkdev/ydk-py
+    docker run -it ydksolutions/ydk:0.9.0.1
 
 
 System Requirements
@@ -416,4 +416,4 @@ Documentation and Support
 Release Notes
 =============
 
-The current YDK release version is 0.8.5. YDK-Py is licensed under the Apache 2.0 License.
+The current YDK release version is 0.9.0.1. YDK is licensed under the Apache 2.0 License.
