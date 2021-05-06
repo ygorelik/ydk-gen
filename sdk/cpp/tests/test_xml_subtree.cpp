@@ -367,6 +367,38 @@ TEST_CASE("xml_codec_augment_presence")
     REQUIRE(xmlX == xml_runner);
 }
 
+TEST_CASE("xml_codec_augment_subtree")
+{
+    ydk::path::Repository repo{TEST_HOME};
+    ydk::path::NetconfSession session{repo, "127.0.0.1", "admin", "admin", 12022};
+    XmlSubtreeCodec xml_codec{};
+
+    auto passive = make_unique<ydktest_sanity::Runner::Passive>();
+    passive->name = "xyz";
+
+    auto ifc = make_shared<ydktest_sanity::Runner::Passive::Interfac>();
+    ifc->test = "abc";
+    passive->interfac.append(ifc);
+
+    passive->testc->xyz = make_shared<ydktest_sanity::Runner::Passive::Testc::Xyz>();
+    passive->testc->xyz->parent = passive.get();
+    passive->testc->xyz->xyz = 25;
+
+    auto xml = xml_codec.encode(*passive, session.get_root_schema());
+    string expected = R"(<passive xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <name>xyz</name>
+  <interfac>
+    <test>abc</test>
+  </interfac>
+  <testc xmlns="http://cisco.com/ns/yang/ydktest-sanity-augm">
+    <xyz>
+      <xyz>25</xyz>
+    </xyz>
+  </testc>
+</passive>)";
+    CHECK(expected == xml);
+}
+
 static void config_bgp(openconfig_bgp::Bgp & bgp)
 {
     bgp.global->config->as = 65172;

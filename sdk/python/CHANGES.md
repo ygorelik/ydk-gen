@@ -5,6 +5,7 @@
   * The Executor Service fails to return module content to user ([#1035](https://github.com/CiscoDevNet/ydk-gen/issues/1035))
   * Docker base image python error ([#1036](https://github.com/CiscoDevNet/ydk-gen/issues/1036))
   * XmlSubtreeCodec fails encode leaf-list data ([#1045](https://github.com/CiscoDevNet/ydk-gen/issues/1045))
+  * C++ CodecService fails to encode non-top level entity to XML subtree ([#1049](https://github.com/CiscoDevNet/ydk-gen/issues/1049))
 
 #### Other resolved issues and enhancements
   * Fixed few minor bugs in C++ code

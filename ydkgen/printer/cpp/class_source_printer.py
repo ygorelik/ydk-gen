@@ -56,6 +56,9 @@ class ClassSourcePrinter(object):
     def _print_class_method_definitions(self, clazz, leafs, children):
         if clazz.is_identity():
             return
+        self._print_bundle_name_function(clazz)
+        self._print_yang_models_function(clazz)
+        self._print_capabilities_lookup_function(clazz)
         self._print_class_has_data(clazz, leafs, children)
         self._print_class_has_operation(clazz, leafs, children)
         self._print_class_get_absolute_path(clazz)
@@ -70,9 +73,6 @@ class ClassSourcePrinter(object):
     def _print_top_level_entity_functions(self, clazz, leafs):
         if clazz.owner is not None and isinstance(clazz.owner, Package):
             self._print_clone_ptr_function(clazz)
-            self._print_yang_models_function(clazz)
-            self._print_bundle_name_function(clazz)
-            self._print_capabilities_lookup_function(clazz)
             self._print_namespace_identity_lookup_function(clazz)
 
     def _print_clone_ptr_function(self, clazz):
@@ -97,7 +97,7 @@ class ClassSourcePrinter(object):
         self.ctx.writeln('std::string %s::get_bundle_name() const' % clazz.qualified_cpp_name())
         self.ctx.writeln('{')
         self.ctx.lvl_inc()
-        self.ctx.writeln('return "%s";' % snake_case(self.bundle_name))
+        self.ctx.writeln('return ydk_%s_bundle_name;' % snake_case(self.bundle_name))
         self.ctx.lvl_dec()
         self.ctx.writeln('}')
         self.ctx.bline()
