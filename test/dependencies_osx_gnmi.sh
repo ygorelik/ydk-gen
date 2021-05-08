@@ -1,6 +1,6 @@
 #!/bin/bash
 #  ----------------------------------------------------------------
-# Copyright 2018 Cisco Systems
+# Copyright 2018-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 # ------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date) *** dependencies_osx_gnmi.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date) *** dependencies_osx_gnmi.sh | $* ${NOCOLOR}"
 }
 
 function install_protobuf {

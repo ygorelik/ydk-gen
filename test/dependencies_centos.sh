@@ -1,6 +1,6 @@
 #!/bin/bash
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,17 +27,17 @@
 # ------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date) *** dependencies_centos.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date) *** dependencies_centos.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    local cmd=$@
+    local cmd=$*
     print_msg "Running: $cmd"
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
@@ -149,7 +149,7 @@ function check_install_libssh {
 
 function install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $centos_version > 6 ]]; then
+    if [[ $centos_version -gt 6 ]]; then
       print_msg "Installing confd basic 7.3"
       unzip $curr_dir/3d_party/linux/confd-basic-7.3.linux.x86_64.zip
       cd confd-basic-7.3.linux.x86_64

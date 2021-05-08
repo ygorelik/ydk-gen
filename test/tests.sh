@@ -36,11 +36,11 @@ MSG_COLOR=$YELLOW
 ######################################################################
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date): tests.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date): tests.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -51,8 +51,8 @@ function run_cmd {
 }
 
 function run_exec_test {
-    print_msg "Executing: $@"
-    $@
+    print_msg "Executing: $*"
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -63,8 +63,8 @@ function run_exec_test {
 }
 
 function run_test_no_coverage {
-    print_msg "Executing: ${PYTHON_BIN} $@"
-    ${PYTHON_BIN} $@
+    print_msg "Executing: ${PYTHON_BIN} $*"
+    ${PYTHON_BIN} $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -76,17 +76,17 @@ function run_test_no_coverage {
 
 function run_test {
     if [[ $(command -v coverage) && $run_with_coverage ]]; then
-        print_msg "Executing with coverage: $@"
-        coverage run --omit=/usr/* --branch --parallel-mode $@
+        print_msg "Executing with coverage: $*"
+        coverage run --omit=/usr/* --branch --parallel-mode $*
         local status=$?
         if [ $status -ne 0 ]; then
             MSG_COLOR=$RED
-            print_msg "Exiting 'coverage run $@' with status=$status"
+            print_msg "Exiting 'coverage run $*' with status=$status"
             exit $status
         fi
         return $status
     fi
-    run_test_no_coverage $@
+    run_test_no_coverage $*
     local status=$?
     return $status
 }
@@ -94,10 +94,10 @@ function run_test {
 function pip_check_install {
     if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* && ${PYTHON_VERSION} == "2"* ]]
     then
-        print_msg "Custom pip install of $@ for CentOS"
-        ${PIP_BIN} install --install-option="--install-purelib=/usr/lib64/python${PYTHON_VERSION}/site-packages" --no-deps -U $@
+        print_msg "Custom pip install of $* for CentOS"
+        ${PIP_BIN} install --install-option="--install-purelib=/usr/lib64/python${PYTHON_VERSION}/site-packages" --no-deps -U $*
     else
-        ${PIP_BIN} install --no-deps -U $@
+        ${PIP_BIN} install --no-deps -U $*
     fi
 }
 
@@ -730,44 +730,9 @@ function py_sanity_one_class_per_module {
     py_sanity_run_limited_tests
 }
 
-function run_py_backward_compatibility {
-    print_msg "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    print_msg "Running YDK-0.7.3 BUNDLE BACKWARD COMPATIBILITY TESTS"
-    cd $YDKGEN_HOME
-    CURRENT_GIT_REV=$(git rev-parse HEAD)
-    git checkout 454ffc06ec79995832538642638e03259e622b53
-    ${PIP_BIN} install -U pyang==1.6
-    run_test generate.py --bundle profiles/test/ydktest-cpp.json
-    init_confd_ydktest
-    py_sanity_run_limited_tests
-    git checkout ${CURRENT_GIT_REV}
-    ${PIP_BIN} install -U $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
-}
-
 #-------------------------------------
 # Python generated model tests bundle
 #-------------------------------------
-
-#function test_gen_tests {
-#    print_msg "test_gen_tests"
-#
-#    cd $YDKGEN_HOME
-#    git clone https://github.com/psykokwak4/ydk-test-yang.git sdk/cpp/core/tests/confd/testgen
-#
-#    py_test_gen
-#    cpp_test_gen
-#}
-
-#function py_test_gen_test {
-#    print_msg "py_test_gen_test"
-#
-#    cd $YDKGEN_HOME
-#    init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/testgen/confd
-#    cd gen-api/python/models_test-bundle/ydk/models/models_test/test/
-#    ${PYTHON_BIN} import_tests.py
-#    cd models_test/
-#    ${PYTHON_BIN} -m unittest discover
-#}
 
 function py_test_gen {
     print_msg "py_test_gen"
@@ -916,10 +881,6 @@ install_py_core
 run_python_bundle_tests
 #run_python_oc_nis_tests
 run_py_metadata_test
-if [[ $confd_version < "7.3" ]]; then
-  run_py_backward_compatibility
-fi
-# test_gen_tests
 
 ######################################
 # Documentation tests

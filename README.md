@@ -470,7 +470,8 @@ For example, the below sequence of commands will generate the documentation for 
 ./generate.py --python --core --generate-doc
 ```
 
-**Note.** The documentation generation for bundles can take few hours due to their size. If you have previously generated documentation using the `--cached-output-dir --output-directory <dir>` option,
+**Note.** The documentation generation for bundles can take few hours due to their size. If you have previously 
+generated documentation using the `--cached-output-dir --output-directory <dir>` option,
 the add-on documentation generation time can be reduced. Adding cisco-ios-xr documentation as an example:
 
 ```
@@ -480,9 +481,6 @@ mv gen-api/python gen-api/cache
 ./generate.py --python --bundle profiles/bundles/cisco_ios_xr_6_6_3.json
 ./generate.py --python --core --generate-doc --output-directory gen-api --cached-output-dir
 ```
-
-Pre-generated documentation for YDK-0.8.3 is available on the web for [Python](http://ydk.cisco.com/py/docs/), 
-[C++](http://ydk.cisco.com/cpp/docs/) and [Go](http://ydk.cisco.com/go/docs/).
 
 # Generating an "Adhoc" YDK-Py Bundle
 
@@ -612,7 +610,7 @@ After installing C++ core packages and activating Python virtual environment:
     ./generate.py -is --bundle profiles/test/ydktest-cpp.json --cpp
     ```
 
-2. Run core tests
+2. Run the core unit tests
 
     ```
     cd ydk-gen/gen-api/cpp/ydk/build
@@ -639,7 +637,7 @@ After installing C++ core packages and activating Python virtual environment:
 
 ## Go
 
-Please refer to [ydk-go README](https://github.com/CiscoDevNet/ydk-gen/blob/master/sdk/go/core/README.md) for details.
+Please refer [here](https://github.com/ygorelik/ydk-gen/blob/yang11/sdk/go/core/README.md).
 
 # Documentation and Support
 
