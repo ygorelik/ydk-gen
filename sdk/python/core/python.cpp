@@ -156,7 +156,7 @@ public:
         );
     }
 
-bool check_leaf_type(const string & leaf_name, ydk::YType leaf_type) const override {
+    bool check_leaf_type(const string & leaf_name, ydk::YType leaf_type) const override {
         PYBIND11_OVERLOAD_PURE(
             bool,
             ydk::Entity,

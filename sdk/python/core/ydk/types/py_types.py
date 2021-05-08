@@ -305,7 +305,7 @@ class Entity(_Entity):
         if leaf.type == leaf_type:
             return True
         elif leaf.type == YType.union:
-            if leaf_type in leaf_tuple[1]:  # TODO!!!
+            if str(leaf_type).split('.')[1].capitalize() in leaf_tuple[1]:
                 return True
         return False
 
