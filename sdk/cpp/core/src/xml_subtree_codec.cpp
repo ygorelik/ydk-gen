@@ -92,8 +92,9 @@ static const path::SchemaNode* find_child_by_name(const path::SchemaNode & paren
     vector<path::SchemaNode*> s = p->find(name);
     if(s.size()==0)
     {
-        YLOG_ERROR("XMLCodec: Could not find node '{}'", name);
-        throw YServiceError{"Could not find node " + name};
+        YLOG_ERROR("XMLCodec: Could not find child node '{}' in schema node '{}'",
+                   name, parent_schema.get_statement().arg);
+        throw YServiceError{"Could not find child schema node " + name};
     }
     return s[0];
 }
