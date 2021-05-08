@@ -396,13 +396,14 @@ class SanityYang(unittest.TestCase):
         result = self.codec.decode(self.provider, payload)
         self.assertIsNotNone(result)
 
-    @assert_with_error("Subtree option can only be used with XML encoding", YServiceError)
-    def test_decode_invalid_subtree_1(self):
-        self.codec.decode(self.json_provider, '{"ydktest-sanity:runner": {}}', subtree=True)
+    def test_decode_json_subtree(self):
+        entity = self.codec.decode(self.json_provider, '{"ydktest-sanity:runner": null}', subtree=True)
+        self.assertEqual(Runner(), entity)
 
-    @assert_with_error("Subtree option can only be used with XML encoding", YServiceError)
-    def test_decode_invalid_subtree_2(self):
-        self.codec.encode(self.json_provider, Runner(), subtree=True)
+    def test_encode_json_subtree_(self):
+        json = self.codec.encode(self.json_provider, Runner(), pretty=False, subtree=True)
+        expected = '''{"ydktest-sanity:runner":null}'''
+        self.assertEqual(expected, json)
 
     def test_encode_decode_typedefs(self):
         system_encode = System()
@@ -452,6 +453,32 @@ class SanityYang(unittest.TestCase):
 
         x = self.codec.encode(self.provider, runner, False)
         self.assertEqual(x, e)
+
+    def test_augment_subtree(self):
+        passive = Runner.Passive()
+        passive.name = "xyz"
+
+        ifc = Runner.Passive.Interfac()
+        ifc.test = "abc"
+        passive.interfac.append(ifc)
+
+        passive.testc.xyz = Runner.Passive.Testc.Xyz()
+        passive.testc.xyz.parent = passive;
+        passive.testc.xyz.xyz = 25
+
+        xml = self.codec.encode(self.provider, passive, subtree=True);
+        expected = '''<passive xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <name>xyz</name>
+  <interfac>
+    <test>abc</test>
+  </interfac>
+  <testc xmlns="http://cisco.com/ns/yang/ydktest-sanity-augm">
+    <xyz>
+      <xyz>25</xyz>
+    </xyz>
+  </testc>
+</passive>'''
+        self.assertEqual(expected, xml)
 
 
 if __name__ == '__main__':

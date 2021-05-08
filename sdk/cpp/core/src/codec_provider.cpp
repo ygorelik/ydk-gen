@@ -99,6 +99,16 @@ path::RootSchemaNode& CodecServiceProvider::get_root_schema_for_bundle(const std
     return *(val);
 }
 
+bool CodecServiceProvider::has_root_schema_for_bundle(const std::string & bundle_name)
+{
+    if (user_provided_repo ||
+        m_root_schema_table.find(bundle_name) != m_root_schema_table.end())
+    {
+        return true;
+    }
+    return false;
+}
+
 void CodecServiceProvider::initialize_root_schema(const std::string & bundle_name, path::Repository & repo)
 {
     YLOG_DEBUG("Initializing root schema for {}", bundle_name);

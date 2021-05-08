@@ -100,8 +100,21 @@ class SanityYang11Test(unittest.TestCase):
         xml_codec = XmlSubtreeCodec()
 
         payload = xml_codec.encode(top, root_schema)
-        self.assertIsNotNone(payload)
-        self.assertIsNot('', payload)
+        expected = '''<empty-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">
+  <filter>
+    <name>abc</name>
+    <enabled/>
+    <prop>one</prop>
+    <outbound-filter/>
+  </filter>
+  <filter>
+    <name>xyz</name>
+    <enabled/>
+    <prop>two</prop>
+    <outbound-filter/>
+  </filter>
+</empty-type>'''
+        self.assertEqual(expected, payload)
 
         entity = xml_codec.decode(payload, EmptyType())
         self.assertEqual(top, entity)

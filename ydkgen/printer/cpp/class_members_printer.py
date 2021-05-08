@@ -60,6 +60,9 @@ class ClassMembersPrinter(object):
         self.ctx.bline()
 
     def _print_common_method_declarations(self, clazz):
+        self.ctx.writeln('std::string get_bundle_name() const override;')
+        self.ctx.writeln('std::string get_bundle_yang_models_location() const override;')
+        self.ctx.writeln('ydk::augment_capabilities_function get_augment_capabilities_function() const override;')
         self.ctx.writeln('bool has_data() const override;')
         self.ctx.writeln('bool has_operation() const override;')
         self.ctx.writeln('std::vector<std::pair<std::string, ydk::LeafData> > get_name_leaf_data() const override;')
@@ -75,9 +78,6 @@ class ClassMembersPrinter(object):
     def _print_top_level_entity_functions(self, clazz):
         if clazz.owner is not None and isinstance(clazz.owner, Package):
             self.ctx.writeln('std::shared_ptr<ydk::Entity> clone_ptr() const override;')
-            self.ctx.writeln('ydk::augment_capabilities_function get_augment_capabilities_function() const override;')
-            self.ctx.writeln('std::string get_bundle_yang_models_location() const override;')
-            self.ctx.writeln('std::string get_bundle_name() const override;')
             self.ctx.writeln('std::map<std::pair<std::string, std::string>, std::string> get_namespace_identity_lookup() const override;')
 
     def _print_class_value_members(self, clazz):
