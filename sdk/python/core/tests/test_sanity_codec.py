@@ -44,9 +44,9 @@ except ImportError:
 from ydk.providers import CodecServiceProvider
 from ydk.services import CodecService
 from ydk.errors import YServiceError
-from ydk.types import EncodingFormat
 
-from test_utils import assert_with_error
+import logging
+from test_utils import assert_with_error, enable_logging
 
 _xml_enum_payload_1 = '''<built-in-t xmlns="http://cisco.com/ns/yang/ydktest-sanity">
   <enum-value>local</enum-value>
@@ -181,6 +181,7 @@ class SanityYang(unittest.TestCase):
         self.codec = CodecService()
         self.provider = CodecServiceProvider(type='xml')
         self.json_provider = CodecServiceProvider(type='json')
+        enable_logging(logging.ERROR)
 
     def test_xml_encode_1(self):
         r_1 = _get_runner_entity()
@@ -329,9 +330,8 @@ class SanityYang(unittest.TestCase):
         r_2 = self.codec.decode(self.provider, payload, subtree=True)
         self.assertEqual(r_1, r_2)
 
-    @unittest.skip('Failing encode entity')
     def test_embedded_quote_leaflist_value(self):
-        """<routing-policy xmlns="http://openconfig.net/yang/routing-policy">
+        expected_payload = """<routing-policy xmlns="http://openconfig.net/yang/routing-policy">
   <defined-sets>
     <bgp-defined-sets xmlns="http://openconfig.net/yang/bgp-policy">
       <community-sets>
@@ -342,11 +342,6 @@ class SanityYang(unittest.TestCase):
             <community-member>ios-regex '^65172:17...$'</community-member>
             <community-member>65172:16001</community-member>
           </config>
-          <state>
-            <community-set-name>COMMUNITY-SET1</community-set-name>
-            <community-member>ios-regex '^65172:17...$'</community-member>
-            <community-member>65172:16001</community-member>
-          </state>
         </community-set>
       </community-sets>
     </bgp-defined-sets>
@@ -361,17 +356,12 @@ class SanityYang(unittest.TestCase):
         com.config.community_member.append("ios-regex '^65172:17...$'")
         com.config.community_member.append("65172:16001")
 
-        com.state.community_set_name = "COMMUNITY-SET1"
-        com.state.community_member.append("ios-regex '^65172:17...$'")
-        com.state.community_member.append("65172:16001")
-
         routing_policy.defined_sets.bgp_defined_sets.community_sets.community_set.append(com)
         payload = self.codec.encode(self.provider, routing_policy)
-        self.assertFalse(payload == "")  # TODO failing when bundle built with --one-module-per-class option
+        self.assertEqual(expected_payload, payload)  # TODO failing when bundle built with --one-module-per-class option
 
         routing_policy_decode = self.codec.decode(self.provider, payload)
-        if routing_policy == routing_policy_decode:
-            self.assertEqual(routing_policy, routing_policy_decode)
+        self.assertEqual(routing_policy, routing_policy_decode)
 
     def test_list_no_keys(self):
         payload = '''<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
@@ -454,24 +444,37 @@ class SanityYang(unittest.TestCase):
         x = self.codec.encode(self.provider, runner, False)
         self.assertEqual(x, e)
 
+    def test_augment_encode(self):
+        passive = Runner.Passive()
+        passive.name = "xyz"
+
+        passive.testc.xyz = Runner.Passive.Testc.Xyz()
+        passive.testc.xyz.parent = passive
+        passive.testc.xyz.xyz = 25
+
+        xml = self.codec.encode(self.provider, passive)
+        expected = '''<passive xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <name>xyz</name>
+  <testc xmlns="http://cisco.com/ns/yang/ydktest-sanity-augm">
+    <xyz>
+      <xyz>25</xyz>
+    </xyz>
+  </testc>
+</passive>
+'''
+        self.assertEqual(expected, xml)
+
     def test_augment_subtree(self):
         passive = Runner.Passive()
         passive.name = "xyz"
 
-        ifc = Runner.Passive.Interfac()
-        ifc.test = "abc"
-        passive.interfac.append(ifc)
-
         passive.testc.xyz = Runner.Passive.Testc.Xyz()
-        passive.testc.xyz.parent = passive;
+        passive.testc.xyz.parent = passive
         passive.testc.xyz.xyz = 25
 
-        xml = self.codec.encode(self.provider, passive, subtree=True);
+        xml = self.codec.encode(self.provider, passive, subtree=True)
         expected = '''<passive xmlns="http://cisco.com/ns/yang/ydktest-sanity">
   <name>xyz</name>
-  <interfac>
-    <test>abc</test>
-  </interfac>
   <testc xmlns="http://cisco.com/ns/yang/ydktest-sanity-augm">
     <xyz>
       <xyz>25</xyz>

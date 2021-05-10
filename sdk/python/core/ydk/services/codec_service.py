@@ -114,16 +114,21 @@ class CodecService(object):
 
         if subtree:
             if provider.encoding == EncodingFormat.XML:
-                return XmlSubtreeCodec().encode(entity, root_schema)
+                self.logger.debug(
+                    "Performing encode operation on entity '{}' with XmlSubtreeCodec".format(entity.yang_name))
+                result = XmlSubtreeCodec().encode(entity, root_schema)
             else:
-                return JsonSubtreeCodec().encode(entity, root_schema, pretty)
-
-        with _handle_error():
-            data_node = _get_data_node_from_entity(entity, root_schema)
-            codec_service = _Codec()
-            result = codec_service.encode(data_node, provider.encoding, pretty)
-            self.logger.debug("Performing encode operation, resulting in {}".format(result))
-            return result
+                self.logger.debug(
+                    "Performing encode operation on entity '{}' with JsonSubtreeCodec".format(entity.yang_name))
+                result = JsonSubtreeCodec().encode(entity, root_schema, pretty)
+        else:
+            self.logger.debug("Performing encode operation on entity '{}'".format(entity.yang_name))
+            with _handle_error():
+                data_node = _get_data_node_from_entity(entity, root_schema)
+                codec_service = _Codec()
+                result = codec_service.encode(data_node, provider.encoding, pretty)
+        self.logger.debug("Encode operation result:\n{}".format(result))
+        return result
 
     @_check_argument
     def decode(self, provider, payload_holder, subtree=False):
@@ -174,8 +179,10 @@ class CodecService(object):
         if subtree:
             if provider.encoding == EncodingFormat.XML:
                 codec = XmlSubtreeCodec()
+                self.logger.debug("Performing decode operation with XmlSubtreeCodec on payload:\n{}".format(payload))
             else:
                 codec = JsonSubtreeCodec()
+                self.logger.debug("Performing decode operation with JsonSubtreeCodec on payload:\n{}".format(payload))
             return codec.decode(payload, entity)
 
         bundle_name = _get_bundle_name(entity)
@@ -184,7 +191,6 @@ class CodecService(object):
         root_schema = provider.get_root_schema(bundle_name)
 
         self.logger.debug("Performing decode operation on payload:\n{}".format(payload))
-
         codec_service = _Codec()
         root_data_node = codec_service.decode(root_schema, payload, provider.encoding)
         data_nodes = root_data_node.get_children();
@@ -199,6 +205,7 @@ class CodecService(object):
     def _log_error_and_raise_exception(self, msg, exception_class):
         self.logger.error(msg)
         raise exception_class(msg)
+
 
 def _get_yang_path(entity):
     """Return YANG models install location for entity.

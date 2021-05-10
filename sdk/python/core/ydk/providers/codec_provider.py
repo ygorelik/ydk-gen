@@ -76,10 +76,13 @@ class CodecServiceProvider(object):
             bundle_name (str): bundle name.
             models_path (str): location for local YANG models.
         """
-        if self._user_provided_repo:
-            self._initialize_root_schema(bundle_name, self._repo, True)
+        name = bundle_name if not self._user_provided_repo else _USER_PROVIDED_REPO
+        if name in self._root_schema_table:
+            return  # root schema is already initialized
 
-        if bundle_name in self._root_schema_table:
+        if self._user_provided_repo:
+            self.logger.log(_TRACE_LEVEL_NUM, "Initializing root schema in user provided repo")
+            self._initialize_root_schema(name, self._repo, True)
             return
 
         self.logger.log(_TRACE_LEVEL_NUM, "Creating repo in path {}".format(models_path))
@@ -93,7 +96,11 @@ class CodecServiceProvider(object):
             bundle_name (str): bundle name.
         """
         if self._user_provided_repo:
-            return self._root_schema_table[_USER_PROVIDED_REPO]
+            if _USER_PROVIDED_REPO in self._root_schema_table:
+                return self._root_schema_table[_USER_PROVIDED_REPO]
+            else:
+                self.logger.error("Root schema on user provided repository has not been created")
+                raise YServiceProviderError(error_msg="Root schema not created")
 
         if bundle_name not in self._root_schema_table:
             self.logger.error("Root schema not created")
@@ -102,18 +109,21 @@ class CodecServiceProvider(object):
         return self._root_schema_table[bundle_name]
 
     def _initialize_root_schema(self, bundle_name, repo, user_provided_repo=False):
-        """Update root schema table entry.
+        """
+        Create/Update root schema table entry.
 
         Args:
-            name (str): bundle name.
+            bundle_name (str): bundle name.
             repo (ydk.path.Repository): default repository or repository provided by the user.
             user_provided_repo (bool, optional): Defaults to False.
-
         """
         name = bundle_name if not user_provided_repo else _USER_PROVIDED_REPO
         self.logger.log(_TRACE_LEVEL_NUM, "Initializing root schema for {}".format(name))
-        # TODO: turn on and off libyang logging
-        capabilities = []
+
+        if name == _USER_PROVIDED_REPO:
+            capabilities = []
+        else:
+            capabilities = _get_bundle_capabilities(bundle_name)
         lookup_tables = _get_bundle_capability_lookup_table(bundle_name)
         self._root_schema_table[name] = repo.create_root_schema(lookup_tables, capabilities)
 
