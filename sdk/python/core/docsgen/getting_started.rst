@@ -82,6 +82,8 @@ Corresponding binaries, libraries, and header files are installed in default loc
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
 
+**NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
+
 .. _howto-install:
 
 Core Installation
@@ -437,7 +439,7 @@ For example, the below sequence of commands will generate the documentation for 
     ./generate.py --python --bundle profiles/bundles/cisco_ios_xr_6_1_1.json
     ./generate.py --python --core --generate-doc
 
-**Note.** The documentation generation for bundles can take few hours due to their sizes.
+**NOTE.** The documentation generation for bundles can take few hours due to their sizes.
 If you have previously generated documentation using the `--cached-output-dir --output-directory <dir>` option,
 the add-on documentation generation time can be reduced. Adding cisco-ios-xr documentation as an example::
 

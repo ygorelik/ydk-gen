@@ -61,6 +61,8 @@ function usage {
     echo "                    if not set, /usr/local/include is assumed"
     echo "CPLUS_INCLUDE_PATH  location of C++ include files;"
     echo "                    if not set, /usr/local/include is assumed"
+    echo "CMAKE_LIBRARY_PATH  Location of Python shared libraries;"
+    echo "                    if not set, default system library location is assumed"
 }
 
 function check_python_installation {
@@ -83,7 +85,7 @@ function check_python_installation {
     exit $status
   fi
   print_msg "Checking pip version and installation"
-  pip -V
+  pip --version
   status=$?
   if [ $status -ne 0 ]; then
     MSG_COLOR=$RED
@@ -339,10 +341,13 @@ if [[ ${os_type} == "Linux" ]]; then
   fi
 fi
 
+curr_dir=$(pwd)
+script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 if [[ -z ${YDKGEN_HOME} || ! -d ${YDKGEN_HOME} ]]; then
-    YDKGEN_HOME=${HOME}/ydk-gen
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+    YDKGEN_HOME=$script_dir
+    print_msg "YDKGEN_HOME is set to $script_dir"
 fi
+cd ${YDKGEN_HOME}
 
 if [[ -z ${C_INCLUDE_PATH} ]]; then
     export C_INCLUDE_PATH=/usr/local/include
@@ -359,17 +364,15 @@ if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
 fi
 
-curr_dir=$(pwd)
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
-
-cd ${YDKGEN_HOME}
-
 if [ ${dependencies} == "yes" ]; then
     instal_dependencies
 fi
+if [ -f ~/.profile.python ]; then
+  source ~/.profile.python
+fi
 
 CMAKE_BIN=cmake
-which cmake3 > /dev/null
+command -v cmake3 > /dev/null
 status=$?
 if [[ ${status} == 0 ]]; then
     CMAKE_BIN=cmake3

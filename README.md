@@ -513,6 +513,8 @@ library. As example:
 
 Please follow [Core Installation](#core-installation) procedures to assure presence of shared Python libraries.
 
+**NOTE.** Due to GitHub issue [#1050](https://github.com/CiscoDevNet/ydk-gen/issues/1050) YDK is not supported with Python 3.9.x.
+
 ## C++ requirements
 
 In some OS configurations during YDK package installation the `cmake` fails to find C/C++ headers for installed YDK libraries.
@@ -544,7 +546,7 @@ generate_bundles.sh          - convinience script to generate core and bundle pa
 generate.py     - script used to generate SDK for YANG models
 install_ydk.sh  - YDK core components installation script
 requirements.txt- python dependencies used during installation
-README          - installation and usage notes
+README.md       - installation and usage notes
 ```
 
 ## Troubleshooting

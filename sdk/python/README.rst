@@ -95,6 +95,8 @@ Corresponding binaries, libraries, and header files are installed in default loc
 which are `/usr/local/bin` ,`/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
 
+**NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
+
 Core Installation
 =================
 
