@@ -148,7 +148,7 @@ class SanityYang11Test(unittest.TestCase):
   <logged-notification>
     <time>2014-07-29T13:43:12Z</time>
     <data>
-      <?xml version="1.0"?>
+      <![CDATA[
       <notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
         <eventTime>2014-07-29T13:43:01Z</eventTime>
         <event xmlns="urn:example:event">
@@ -159,13 +159,16 @@ class SanityYang11Test(unittest.TestCase):
           <severity>major</severity>
         </event>
       </notification>
+      ]]>
     </data>
   </logged-notification>
 </anydata-type>
 '''
-        # TODO: Failing decode the above payload
-        # result = self.codec_service.decode(self.codec_provider, payload)
-        # self.assertIsNotNone(result)
+        entity_data = self.codec_service.decode(self.codec_provider, payload)
+        self.assertIsNotNone(entity_data)
+        self.assertEqual(len(entity_data.logged_notification), 1)
+        notification = entity_data.logged_notification[0]
+        self.assertTrue('<card>Ethernet0</card>' in notification.data)
 
     def test_duplicate_values_in_leaflist_xml(self):
         payload = '''<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11">

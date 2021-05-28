@@ -216,6 +216,19 @@ std::shared_ptr<Entity> XmlSubtreeCodec::decode(const std::string & payload, std
     return entity;
 }
 
+static string remove_cdata_tags(const string & content)
+{
+    string c{content};
+    auto cdata_pos = c.find("<![CDATA[");
+    auto cdata_end_pos = c.rfind("]]>");
+    if (cdata_pos != string::npos && cdata_end_pos != string::npos)
+    {
+        cdata_pos += 9;
+        c = c.substr(cdata_pos, cdata_end_pos-cdata_pos);
+    }
+    return trim(c);
+}
+
 static void check_and_set_leaf(Entity & entity, Entity * parent, xmlNodePtr xml_node, xmlDocPtr doc)
 {
     string current_node_name{to_string(xml_node->name)};
@@ -246,6 +259,7 @@ static void check_and_set_leaf(Entity & entity, Entity * parent, xmlNodePtr xml_
             if (start_pos != string::npos && end_pos != string::npos)
             {
                 value = trim(value.substr(start_pos+1, end_pos-start_pos-1));
+                value = remove_cdata_tags(value);
             }
             YLOG_DEBUG("XMLCodec: Creating anydata leaf '{}' with value:\n{}", current_node_name, value);
             entity.set_value(current_node_name, value);
@@ -280,7 +294,7 @@ static string resolve_leaf_value_namespace(const string & content, const string 
             c = module_name + ":" + c;
         }
     }
-    return c;
+    return remove_cdata_tags(c);
 }
 
 static void check_and_set_content(Entity & entity, const string & leaf_name, xmlNodePtr parent_xml_node, xmlChar * content, xmlDocPtr doc)

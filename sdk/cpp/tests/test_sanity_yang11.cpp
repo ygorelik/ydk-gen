@@ -342,22 +342,36 @@ TEST_CASE("test_type_empty_key2")
 
 static string xml_anydata = R"(<anydata-type xmlns="http://cisco.com/ns/yang/ydktest-yang11">
   <logged-notification>
-	<time>2014-07-29T13:43:12Z</time>
-	<data>
-	  <notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
-		<eventTime>2014-07-29T13:43:01Z</eventTime>
-		<event xmlns="urn:example:event">
-		  <event-class>fault</event-class>
-		  <reporting-entity>
-			<card>Ethernet0</card>
-		  </reporting-entity>
-		  <severity>major</severity>
-		</event>
-	  </notification>
-	</data>
+  <time>2014-07-29T13:43:12Z</time>
+  <data>
+    <![CDATA[
+<notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+  <eventTime>2014-07-29T13:43:01Z</eventTime>
+  <event xmlns="urn:example:event">
+    <event-class>fault</event-class>
+    <reporting-entity>
+      <card>Ethernet0</card>
+    </reporting-entity>
+    <severity>major</severity>
+  </event>
+</notification>
+    ]]>
+  </data>
   </logged-notification>
 </anydata-type>
 )";
+
+static string anydata_expected_xml = R"(<notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+  <eventTime>2014-07-29T13:43:01Z</eventTime>
+  <event xmlns="urn:example:event">
+    <event-class>fault</event-class>
+    <reporting-entity>
+      <card>Ethernet0</card>
+    </reporting-entity>
+    <severity>major</severity>
+  </event>
+</notification>)";
+
 
 static string json_anydata = R"({
   "ydktest-sanity-yang11:anydata-type": {
@@ -391,9 +405,13 @@ TEST_CASE("test_type_anydata")
     auto payload = codec_service.encode(codec_provider, top, false);
     CHECK("<anydata-type xmlns=\"http://cisco.com/ns/yang/ydktest-yang11\"/>" == payload);
 
-    // TODO: Failing decode above payload - the content of anydata node is not retained
     auto entity = codec_service.decode(codec_provider, xml_anydata, make_shared<ydktest_sanity_yang11::AnydataType>());
     CHECK(entity != nullptr);
+    auto entity_data = dynamic_cast<ydktest_sanity_yang11::AnydataType*>(entity.get());
+    CHECK(entity_data->logged_notification.len() > 0);
+    auto notification = dynamic_cast<ydktest_sanity_yang11::AnydataType::LoggedNotification*>(entity_data->logged_notification[0].get());
+    auto notification_data = trim(notification->data.get());
+    CHECK(anydata_expected_xml == notification_data);
 }
 
 TEST_CASE("test_type_anydata_xml_codec")
@@ -406,17 +424,7 @@ TEST_CASE("test_type_anydata_xml_codec")
     auto top = dynamic_cast<ydktest_sanity_yang11::AnydataType*>(entity.get());
     auto notif_entity = top->logged_notification[0];
     auto notification = dynamic_cast<ydktest_sanity_yang11::AnydataType::LoggedNotification*>(notif_entity.get());
-    string expected = R"(<notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
-		<eventTime>2014-07-29T13:43:01Z</eventTime>
-		<event xmlns="urn:example:event">
-		  <event-class>fault</event-class>
-		  <reporting-entity>
-			<card>Ethernet0</card>
-		  </reporting-entity>
-		  <severity>major</severity>
-		</event>
-	  </notification>)";
-    CHECK(expected == notification->data.get());
+    CHECK(anydata_expected_xml == notification->data.get());
 }
 
 TEST_CASE("test_type_anydata_json_codec")
