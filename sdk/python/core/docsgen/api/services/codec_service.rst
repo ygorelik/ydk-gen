@@ -124,7 +124,18 @@ JsonSubtreeCodec
         :param payload: ``str``, JSON encoded string to be decoded.
         :param entity: :py:class:`Entity<ydk.types.Entity>`, instance of shared pointer to expected top level `Entity` class.
         :return: :py:class:`Entity<ydk.types.Entity>`, shared pointer to the decoded `Entity`.
-        :raises: :py:exc:`YInvalidArgumentError<ydk.errors.YInvalidArgumentError>`, if an error has occurred; usually appears when payload does not correspond to `Entity` model.
+        :raises: :py:exc:`YServiceError<ydk.errors.YServiceError>`, if an error has occurred; usually appears when payload does not correspond to `Entity` model;
+
+                 :py:exc:`YInvalidArgumentError<ydk.errors.YInvalidArgumentError>`, if invalid JSON string is specified.
+
+    .. py:method:: convert_string(json, pretty)
+
+        Utility function to convert JSON formatted string to a well formatted multiline indented string or to a single line string with no spaces.
+
+        :param json: ``str`` A JSON encoded string.
+        :param pretty: ``bool``. If set to `True`, the function produces well formatted multiline JSON string. If set to `False` - one line string.
+        :return: ``str`` A JSON encoded string with specified formatting.
+        :raises: :py:exc:`YInvalidArgumentError<ydk.errors.YInvalidArgumentError>` if invalid JSON string is specified.
 
 Example of JsonSubtreeCodec usage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

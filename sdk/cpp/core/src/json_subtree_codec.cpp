@@ -92,6 +92,26 @@ JsonSubtreeCodec::~JsonSubtreeCodec()
 {
 }
 
+std::string JsonSubtreeCodec::convert_string(const std::string & json_string, bool pretty)
+{
+    json root_json_node;
+    try {
+        root_json_node = json::parse(json_string);
+        if (!root_json_node.is_object()) {
+            throw YInvalidArgumentError{"Invalid JSON string"};
+        }
+    }
+    catch (exception & e) {
+        throw YInvalidArgumentError{"Invalid JSON string"};
+    }
+    if (pretty) {
+        return root_json_node.dump(2);
+    }
+    else {
+        return root_json_node.dump(-1);
+    }
+}
+
 //////////////////////////////////////////////////////////////////
 // JsonSubtreeCodec::encode
 //////////////////////////////////////////////////////////////////

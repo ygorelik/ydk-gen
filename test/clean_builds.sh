@@ -69,10 +69,11 @@ fi
 source $PYTHON_VENV/bin/activate
 pip uninstall -y ydk
 pip uninstall -y ydk-models-ydktest
+pip uninstall -y ydk-models-ydktest-yang11
 pip uninstall -y ydk-models-augmentation
 pip uninstall -y ydk-models-deviation
 pip uninstall -y ydk-service-gnmi
 
 print_msg "Deleting C++ packages..."
-sudo rm -rf /usr/local/lib/libydk* /usr/local/lib/libyang
+sudo rm -rf /usr/local/lib/libydk* /usr/local/lib/libyang*
 sudo rm -rf /usr/local/include/ydk /usr/local/include/libyang /usr/local/include/libnetconf

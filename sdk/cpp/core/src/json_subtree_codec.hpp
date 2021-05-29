@@ -36,5 +36,6 @@ public:
 
     std::string encode(Entity & entity, path::RootSchemaNode & root_schema, bool pretty=true);
     std::shared_ptr<Entity> decode(const std::string & payload, std::shared_ptr<Entity> entity);
+    std::string convert_string(const std::string & json_string, bool pretty=true);
 };
 }

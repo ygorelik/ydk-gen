@@ -330,10 +330,19 @@ ydk::path::DataNodeImpl::get_value() const
     std::string ret {};
     if (s_node->nodetype == LYS_LEAF || s_node->nodetype == LYS_LEAFLIST) {
         lyd_node_leaf_list* leaf= reinterpret_cast<lyd_node_leaf_list *>(m_node);
-        return leaf->value_str;
+        ret = leaf->value_str;
     } else if (s_node->nodetype == LYS_ANYXML || s_node->nodetype == LYS_ANYDATA) {
         lyd_node_anydata* anyxml = reinterpret_cast<lyd_node_anydata *>(m_node);
-        return anyxml->value.str;
+        if (anyxml->value.xml && *(anyxml->value.str) == '\0') {
+            char *buf;
+            lyxml_print_mem(&buf, anyxml->value.xml,
+                            LYXML_PRINT_FORMAT | LYXML_PRINT_NO_LAST_NEWLINE | LYXML_PRINT_SIBLINGS);
+            ret = buf;
+            free(buf);
+        }
+        else {
+            ret = anyxml->value.str;
+        }
     }
     return ret;
 }

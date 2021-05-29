@@ -148,18 +148,16 @@ class SanityYang11Test(unittest.TestCase):
   <logged-notification>
     <time>2014-07-29T13:43:12Z</time>
     <data>
-      <![CDATA[
-      <notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
-        <eventTime>2014-07-29T13:43:01Z</eventTime>
-        <event xmlns="urn:example:event">
-          <event-class>fault</event-class>
-          <reporting-entity>
-            <card>Ethernet0</card>
-          </reporting-entity>
-          <severity>major</severity>
-        </event>
-      </notification>
-      ]]>
+<notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0">
+  <eventTime>2014-07-29T13:43:01Z</eventTime>
+  <event xmlns="urn:example:event">
+    <event-class>fault</event-class>
+    <reporting-entity>
+      <card>Ethernet0</card>
+    </reporting-entity>
+    <severity>major</severity>
+  </event>
+</notification>
     </data>
   </logged-notification>
 </anydata-type>
@@ -169,6 +167,37 @@ class SanityYang11Test(unittest.TestCase):
         self.assertEqual(len(entity_data.logged_notification), 1)
         notification = entity_data.logged_notification[0]
         self.assertTrue('<card>Ethernet0</card>' in notification.data)
+
+    def test_anydata_json(self):
+        payload = '''{
+  "ydktest-sanity-yang11:anydata-type": {
+    "logged-notification": [
+      {
+        "time": "2014-07-29T13:43:12Z",
+        "data": {
+          "event-class": "fault",
+          "severity": "major",
+          "message": "Error in Ethernet0 card"
+        }
+      },
+      {
+        "time": "2014-07-29T13:44:00Z",
+        "data": {
+          "event-class": "fault",
+          "severity": "major",
+          "message": "Error in Ethernet0 card"
+        }
+      }
+    ]
+  }
+}'''
+        entity_data = self.codec_service.decode(self.json_codec_provider, payload)
+        self.assertIsNotNone(entity_data)
+        self.assertEqual(len(entity_data.logged_notification), 2)
+        notification = entity_data.logged_notification[1]
+        json_codec = JsonSubtreeCodec()
+        self.assertEqual('''{"event-class":"fault","message":"Error in Ethernet0 card","severity":"major"}''',
+                         json_codec.convert_string(notification.data, False))
 
     def test_duplicate_values_in_leaflist_xml(self):
         payload = '''<backward-incompatible xmlns="http://cisco.com/ns/yang/ydktest-yang11">
