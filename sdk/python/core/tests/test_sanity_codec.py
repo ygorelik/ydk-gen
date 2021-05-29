@@ -331,37 +331,25 @@ class SanityYang(unittest.TestCase):
         self.assertEqual(r_1, r_2)
 
     def test_embedded_quote_leaflist_value(self):
-        expected_payload = """<routing-policy xmlns="http://openconfig.net/yang/routing-policy">
-  <defined-sets>
-    <bgp-defined-sets xmlns="http://openconfig.net/yang/bgp-policy">
-      <community-sets>
-        <community-set>
-          <community-set-name>COMMUNITY-SET1</community-set-name>
-          <config>
-            <community-set-name>COMMUNITY-SET1</community-set-name>
-            <community-member>ios-regex '^65172:17...$'</community-member>
-            <community-member>65172:16001</community-member>
-          </config>
-        </community-set>
-      </community-sets>
-    </bgp-defined-sets>
-  </defined-sets>
-</routing-policy>
+        expected_payload = """<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <ytypes>
+    <built-in-t>
+      <younion-list>ios-regex '^65172:17...$'</younion-list>
+      <younion-list>65172:16001</younion-list>
+    </built-in-t>
+  </ytypes>
+</runner>
 """
-        routing_policy = RoutingPolicy()
+        runner = Runner()
+        runner.ytypes.built_in_t.younion_list.append("ios-regex '^65172:17...$'")
+        runner.ytypes.built_in_t.younion_list.append("65172:16001")
 
-        com = RoutingPolicy.DefinedSets.BgpDefinedSets.CommunitySets.CommunitySet()
-        com.community_set_name = "COMMUNITY-SET1"
-        com.config.community_set_name = "COMMUNITY-SET1"
-        com.config.community_member.append("ios-regex '^65172:17...$'")
-        com.config.community_member.append("65172:16001")
-
-        routing_policy.defined_sets.bgp_defined_sets.community_sets.community_set.append(com)
-        payload = self.codec.encode(self.provider, routing_policy)
+        payload = self.codec.encode(self.provider, runner)
+        print(payload)
         self.assertEqual(expected_payload, payload)  # TODO failing when bundle built with --one-module-per-class option
 
-        routing_policy_decode = self.codec.decode(self.provider, payload)
-        self.assertEqual(routing_policy, routing_policy_decode)
+        runner_decode = self.codec.decode(self.provider, payload)
+        self.assertEqual(runner, runner_decode)
 
     def test_list_no_keys(self):
         payload = '''<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
