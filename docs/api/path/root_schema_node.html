@@ -99,7 +99,7 @@
 <li class="toctree-l3"><a class="reference internal" href="codec.html">Codec</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data_node.html">DataNode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="repository.html">Repository</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">RootSchemaNode</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RootSchemaNode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rpc.html">Rpc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="schema_node.html">SchemaNode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="statement.html">Statement</a></li>
@@ -269,10 +269,10 @@ This methods creates a <a class="reference internal" href="data_node.html#ydk.pa
 </tbody>
 </table>
 <p>Excample usage for creating a <code class="docutils literal"><span class="pre">ydk:create</span></code> rpc:</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.path</span> <span class="kn">import</span> <span class="n">NetconfSession</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.path</span> <span class="kn">import</span> <span class="n">NetconfSession</span>
 <span class="n">session</span> <span class="o">=</span> <span class="n">NetconfSession</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="p">)</span>
 <span class="n">root_schema</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_root_schema</span><span class="p">()</span>
 <span class="n">root_schema</span><span class="o">.</span><span class="n">create_rpc</span><span class="p">(</span><span class="s1">&#39;ydk:create&#39;</span><span class="p">)</span>

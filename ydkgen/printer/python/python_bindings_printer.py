@@ -24,7 +24,7 @@
 """
 
 import os
-import sys
+
 import shutil
 from distutils import dir_util
 
@@ -48,10 +48,7 @@ logger = logging.getLogger('ydkgen')
 class PythonBindingsPrinter(LanguageBindingsPrinter):
 
     def __init__(self, ydk_root_dir, bundle, generate_tests, one_class_per_module):
-        if sys.version_info > (3,):
-            super().__init__(ydk_root_dir, bundle, generate_tests, one_class_per_module)
-        else:
-            super(PythonBindingsPrinter, self).__init__(ydk_root_dir, bundle, generate_tests, one_class_per_module)
+        super().__init__(ydk_root_dir, bundle, generate_tests, one_class_per_module)
         self.bundle = bundle
         self.bundle_name = bundle.name
         self.bundle_version = bundle.str_version
@@ -162,7 +159,7 @@ class PythonBindingsPrinter(LanguageBindingsPrinter):
         extra_args = {'one_class_per_module': self.one_class_per_module,
                       'generate_meta': self.generate_meta,
                       'identity_subclasses': self.identity_subclasses,
-                      'module_namespace_lookup' : self.module_namespace_lookup}
+                      'module_namespace_lookup': self.module_namespace_lookup}
         python_module_file_name = get_python_module_file_name(path, package)
         logger.debug("    Printing python module %s" % python_module_file_name)
         self.print_file(python_module_file_name,

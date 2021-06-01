@@ -899,7 +899,7 @@ module ydktest-sanity {
       error-message "An atm MTU must be  64 .. 17966";
     }
 
-    when "/conditional-interface/ifType = 'ds0'";
+//    when "/conditional-interface/ifType = 'ds0'";
     leaf ds0ChannelNumber {
       type uint16;
     }

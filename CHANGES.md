@@ -1,3 +1,36 @@
+### 2021-05-30 version 0.9.0.1
+
+#### New features and enhancements
+  * Added support for YANG 1.1 features (RFC-7950)
+
+#### Resolved GitHub issues
+  * XmlSubtreeCodec and JsonSubtreeCodec fail decode empty type of data ([#1046](https://github.com/CiscoDevNet/ydk-gen/issues/1046))
+  * Failed to get "ietf-netconf" module with Executor Service and get-schema RPC ([#1047](https://github.com/CiscoDevNet/ydk-gen/issues/1047))
+  * The Executor Service fails to return module content back to user ([#1048](https://github.com/CiscoDevNet/ydk-gen/issues/1048))
+
+#### Other resolved issues and enhancements
+  * YANG-1.1 feature, union can include type leafrer, is not implemented properly ([pyang #724](https://github.com/mbj4668/pyang/issues/724))
+  * An action MUST NOT have any ancestor node that is a list node without a "key" statement ([CESNET #1026](https://github.com/CESNET/libyang/issues/1026))
+  * Changed memory output for empty leaf value in JSON format to null ([libyang](https://github.com/ygorelik/libyang/commit/0ddde82b52e159f4da50fad0de416c27f3b655e3))
+  * Added parsing of 'null' value in JSON payload ([libyang](https://github.com/ygorelik/libyang/commit/82398238cf05bd47baf08f8ded0c7c9e42399a0c))
+  * Fixed few memory leaks in C++ code.
+
+### 2021-05-30 version 0.8.5.2
+
+#### Resolved GitHub issues
+  * Version numbers in bundle resolver to comply with PEP 440 ([#1007](https://github.com/CiscoDevNet/ydk-gen/issues/1007))
+  * The Executor Service fails to return module content to user ([#1035](https://github.com/CiscoDevNet/ydk-gen/issues/1035))
+  * Docker base image python error ([#1036](https://github.com/CiscoDevNet/ydk-gen/issues/1036))
+  * XmlSubtreeCodec fails encode leaf-list data ([#1045](https://github.com/CiscoDevNet/ydk-gen/issues/1045))
+  * C++ CodecService fails to encode non-top level entity to XML subtree ([#1049](https://github.com/CiscoDevNet/ydk-gen/issues/1049))
+
+#### Other resolved issues and enhancements
+  * Fixed few minor bugs in C++ code
+  * Added installation of flex and bison for CentOS platform
+  * Added scripts for local unit testing of YDK release
+  * Tested YDK on Windows 10 using Windows Subsystem for Linux and Ubuntu Bionic (18.04 LTS) and Focal (20.04 LTS) virtual machines.
+  
+
 ### 2020-09-30 version 0.8.5
 
 #### New features and enhancements

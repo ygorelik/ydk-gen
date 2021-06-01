@@ -1,29 +1,24 @@
-//
-// @file types.hpp
-// @brief Header for ydk entity
-//
-// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
-//
-////////////////////////////////////////////////////////////////
-// Licensed to the Apache Software Foundation (ASF) under one
-// or more contributor license agreements.  See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  The ASF licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
-//
-//   http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
-// under the License.
-//
-//////////////////////////////////////////////////////////////////
+/*  ----------------------------------------------------------------
+ YDK - YANG Development Kit
+ Copyright 2016-2019 Cisco Systems. All rights reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
+ ------------------------------------------------------------------*/
 
 #ifndef _TYPES_HPP_
 #define _TYPES_HPP_
@@ -71,10 +66,30 @@ class YLeaf;
 class YLeafList;
 class YList;
 
+enum class YType {
+    uint8,
+    uint16,
+    uint32,
+    uint64,
+    int8,
+    int16,
+    int32,
+    int64,
+    empty,
+    identityref,
+    str,
+    boolean,
+    enumeration,
+    bits,
+    decimal64,
+    anydata,
+    union_
+};
+
 class LeafData
 {
   public:
-    LeafData(const std::string & value, YFilter yfilter, bool is_set, const std::string & name_space, const std::string & name_space_prefix);
+    LeafData(const std::string & value, YType type, YFilter yfilter, bool is_set, const std::string & name_space, const std::string & name_space_prefix);
     ~LeafData();
 
     bool operator == (LeafData & other) const;
@@ -83,6 +98,7 @@ class LeafData
 
   public:
     std::string value;
+    YType type;
     std::string name_space;
     std::string name_space_prefix;
     YFilter yfilter;
@@ -161,6 +177,9 @@ class Entity {
     YList* ylist = nullptr;
 
     std::string get_ylist_key() const;
+
+    std::vector<ydk::YLeaf*> leaf_list{};
+    virtual bool check_leaf_type(const std::string & leaf_name, YType leaf_type) const;
 };
 
 class Bits {
@@ -230,28 +249,10 @@ class Enum {
     }
 };
 
-enum class YType {
-    uint8,
-    uint16,
-    uint32,
-    uint64,
-    int8,
-    int16,
-    int32,
-    int64,
-    empty,
-    identityref,
-    str,
-    boolean,
-    enumeration,
-    bits,
-    decimal64
-};
-
 class YLeaf
 {
   public:
-    YLeaf(YType type, std::string name);
+    YLeaf(YType type, std::string name, const std::vector<ydk::YType> & union_types = {});
     ~YLeaf();
 
     YLeaf(const YLeaf& val);
@@ -308,7 +309,6 @@ class YLeaf
         yfilter = filter;
     };
 
-  public:
     void store_value(std::string && val);
     std::string get_bits_string() const;
 
@@ -316,7 +316,9 @@ class YLeaf
     std::string value;
     int enum_value;
     YType type;
+    YType value_type;
     Bits bits_value;
+    std::vector<ydk::YType> union_types;
 };
 
 class YLeafList {

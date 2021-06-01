@@ -13,6 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
+
 from pyang.error import EmitError
 
 """
@@ -22,7 +28,7 @@ Print rst documents for the generated Python api
 """
 from operator import attrgetter
 
-from ydkgen.api_model import Bits, Class, Enum, Package, Property, get_properties
+from ydkgen.api_model import Bits, Class, Enum, Package
 from ydkgen.common import get_rst_file_name, is_config_stmt
 from ydkgen.printer.meta_data_util import (
     get_bits_class_docstring,
@@ -97,7 +103,8 @@ class DocPrinter(object):
             self.ctx.bline()
             if len(augments) == 1:
                 for aug_class in augments:
-                    line = '\nThis module contains augment: ' + get_class_crossref_tag(aug_class.qn(), aug_class, self.lang) + '\n'
+                    line = '\nThis module contains augment: ' + \
+                           get_class_crossref_tag(aug_class.qn(), aug_class, self.lang) + '\n'
                     self._append(line)
             else:
                 line = '\nThis module contains the following augments:\n'
@@ -208,7 +215,6 @@ class DocPrinter(object):
         self.ctx.lvl_dec()
 
     def _get_toctree_section_title(self, base):
-        result = ''
         if self.lang in ('py', 'cpp'):
             result = '%s Classes' % base
         elif self.lang == 'go':
@@ -229,7 +235,7 @@ class DocPrinter(object):
             leafs = []
             children = []
             for prop in props:
-                if prop.stmt.keyword in ('leaf', 'anyxml', 'leaf-list'):
+                if prop.stmt.keyword in ('leaf', 'anyxml', 'anydata', 'leaf-list'):
                     if prop.is_key():
                         keys.append(prop)
                     else:
@@ -241,13 +247,13 @@ class DocPrinter(object):
             leafs = sorted(leafs, key=attrgetter('name'))
             children = sorted(children, key=attrgetter('name'))
 
-            if len(keys)>0:
+            if len(keys) > 0:
                 self._append('**{}**\n'.format('Keys'))
                 self._print_attribute_list(keys)
-            if len(leafs)>0:
+            if len(leafs) > 0:
                 self._append('**{}**\n'.format('Leafs'))
                 self._print_attribute_list(leafs)
-            if len(children)>0:
+            if len(children) > 0:
                 self._append('**{}**\n'.format('Children'))
                 self._print_attribute_list(children)
 
@@ -269,7 +275,7 @@ class DocPrinter(object):
                 if self.lang == 'py' and isinstance(elem, Bits):
                     bits_classes.append(elem)
 
-                if (isinstance(elem, Class)):
+                if isinstance(elem, Class):
                     if elem.is_identity():
                         idty_classes.append(elem)
                     elif elem.is_rpc():
@@ -310,7 +316,7 @@ class DocPrinter(object):
             parent_list.append(parent)
             parent = parent.owner
 
-        clazz_hierarchy = ['Class Hierarchy \:']
+        clazz_hierarchy = ['Class Hierarchy:']
         if len(parent_list) > 0:
             for parent in reversed(parent_list):
                 if not clazz_hierarchy[0][-1:] == ':':
@@ -319,12 +325,12 @@ class DocPrinter(object):
                 tag = get_class_crossref_tag(parent.name, parent, self.lang)
                 clazz_hierarchy.append(tag)
 
-            return ''.join(clazz_hierarchy)
+            return ' '.join(clazz_hierarchy)
         else:
             return None
 
     def _print_docstring(self, named_element, docstring):
-        if(len(docstring) > 0):
+        if len(docstring) > 0:
             for line in docstring.split('\n'):
                 if line.strip() != '':
                     self._append(line)

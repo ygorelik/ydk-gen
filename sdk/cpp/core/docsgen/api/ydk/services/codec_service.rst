@@ -141,8 +141,21 @@ JsonSubtreeCodec
         :param payload: `std::string`, JSON encoded string to be decoded.
         :param entity: `std::shared_ptr<Entity>`, instance of shared pointer to expected top level `Entity` class.
         :return: `std::shared_ptr<Entity>`, shared pointer to the decoded `Entity`.
-        :raises: :cpp:class:`YInvalidArgumentError<YInvalidArgumentError>`, if an error has occurred;
-                 usually appears when payload does not correspond to `Entity` model.
+        :raises: :cpp:class:`YInvalidArgumentError<YInvalidArgumentError>`, If invalid JSON string is specified;
+
+                 :cpp:class:`YServiceError<YServiceError>`: if serialization error has occurred;
+                 it usually appears when payload does not correspond to `Entity` model.
+
+    .. cpp:function:: std::string convert_string(const std::string & json, bool pretty=true)
+
+        Utility function to convert JSON formatted string to a well formatted multiline indented string or to a single line string with no spaces.
+
+        :param json: `std::string`, JSON encoded string
+        :param pretty: `bool`. If set to `true`, the function produces well formatted multi-line JSON string.
+                               If set to `false` - one line string.
+        :return: A `std::string`. Encoded JSON payload.
+        :raises: :cpp:class:`YInvalidArgumentError<YInvalidArgumentError>`:, if invalid JSON string is specified.
+
 
 Example of JsonSubtreeCodec usage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

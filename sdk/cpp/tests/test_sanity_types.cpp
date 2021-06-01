@@ -692,25 +692,25 @@ TEST_CASE("test_cascading_types")
     SECTION ( "unknown" )
     {
         ctypes->comp_insttype = ydktest_sanity::CompInstType::unknown;
-        ctypes->comp_nicinsttype = ydktest_sanity::CompInstType_::unknown;
+        ctypes->comp_nicinsttype = ydktest_sanity::CompNicInstType::unknown;
     }
 
     SECTION ( "phys" )
     {
         ctypes->comp_insttype = ydktest_sanity::CompInstType::phys;
-        ctypes->comp_nicinsttype = ydktest_sanity::CompInstType_::phys;
+        ctypes->comp_nicinsttype = ydktest_sanity::CompNicInstType::phys;
     }
 
     SECTION ( "virt" )
     {
         ctypes->comp_insttype = ydktest_sanity::CompInstType::virt;
-        ctypes->comp_nicinsttype = ydktest_sanity::CompInstType_::virt;
+        ctypes->comp_nicinsttype = ydktest_sanity::CompNicInstType::virt;
     }
 
     SECTION ( "hv" )
     {
         ctypes->comp_insttype = ydktest_sanity::CompInstType::hv;
-        ctypes->comp_nicinsttype = ydktest_sanity::CompInstType_::hv;
+        ctypes->comp_nicinsttype = ydktest_sanity::CompNicInstType::hv;
     }
     reply = crud.create(provider, *ctypes);
     REQUIRE(reply);

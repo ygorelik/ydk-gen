@@ -20,7 +20,7 @@ header_printer.py
  prints C++ classes
 
 """
-import sys
+
 from ydkgen.api_model import Class
 from ydkgen.builder import MultiFileHeader
 from ydkgen.printer import MultiFilePrinter
@@ -31,10 +31,7 @@ from .class_enum_printer import EnumPrinter
 
 class HeaderPrinter(MultiFilePrinter):
     def __init__(self, ctx, identity_subclasses, bundle_name):
-        if sys.version_info > (3,):
-            super().__init__(ctx)
-        else:
-            super(HeaderPrinter, self).__init__(ctx)
+        super().__init__(ctx)
         self.enum_printer = EnumPrinter(self.ctx)
         self.identity_subclasses = identity_subclasses
         self.bundle_name = bundle_name

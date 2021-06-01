@@ -1,7 +1,7 @@
 /// YANG Development Kit
 // Copyright 2016 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -18,8 +18,13 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
-//////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
+// This file has been modified by Yan Gorelik, YDK Solutions.
+// All modifications in original under CiscoDevNet domain
+// introduced since October 2019 are copyrighted.
+// All rights reserved under Apache License, Version 2.0.
+// -------------------------------------------------------------
+
 #include <sstream>
 
 #include <ydk/entity_data_node_walker.hpp>
@@ -45,7 +50,7 @@ std::string print_tree(ydk::path::DataNode* dn, const std::string& indent)
     try {
         auto filter = yfilter2str(dn);
         ydk::path::Statement s = dn->get_schema_node().get_statement();
-        if(s.keyword == "leaf" || s.keyword == "leaf-list" || s.keyword == "anyxml") {
+        if(s.keyword == "leaf" || s.keyword == "leaf-list" || s.keyword == "anyxml" || s.keyword == "anydata") {
             auto val = dn->get_value();
             buffer << indent << "<" << s.arg << filter << ">" << val << "</" << s.arg << ">" << std::endl;
         }

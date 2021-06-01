@@ -481,17 +481,24 @@ TEST_CASE("invalid_decode")
 
 TEST_CASE("embedded_quote_codec")
 {
-    std::string xml = R"(<routing-policy xmlns="http://openconfig.net/yang/routing-policy"><defined-sets><bgp-defined-sets xmlns="http://openconfig.net/yang/bgp-policy"><community-sets><community-set><community-set-name>COMMUNITY-SET1</community-set-name><config><community-set-name>COMMUNITY-SET1</community-set-name><community-member>ios-regex '^65172:17...$'</community-member><community-member>65172:16001</community-member></config><state><community-set-name>COMMUNITY-SET1</community-set-name><community-member>ios-regex '^65172:17... $'</community-member><community-member>65172:16001</community-member></state></community-set></community-sets></bgp-defined-sets></defined-sets></routing-policy>)";
-
     CodecServiceProvider codec_provider{EncodingFormat::XML};
     CodecService codec_service{};
 
-    auto rp = codec_service.decode(codec_provider, xml, make_unique<openconfig_routing_policy::RoutingPolicy>());
+#ifndef __APPLE__
+    std::string xml = R"(<routing-policy xmlns="http://openconfig.net/yang/routing-policy"><defined-sets><bgp-defined-sets xmlns="http://openconfig.net/yang/bgp-policy"><community-sets><community-set><community-set-name>COMMUNITY-SET1</community-set-name><config><community-set-name>COMMUNITY-SET1</community-set-name><community-member>ios-regex '^65172:17...$'</community-member><community-member>65172:16001</community-member></config><state><community-set-name>COMMUNITY-SET1</community-set-name><community-member>ios-regex '^65172:17... $'</community-member><community-member>65172:16001</community-member></state></community-set></community-sets></bgp-defined-sets></defined-sets></routing-policy>)";
+    auto top1 = make_shared<openconfig_routing_policy::RoutingPolicy>();
+    auto top2 = make_shared<openconfig_routing_policy::RoutingPolicy>();
+#else
+    std::string xml = R"(<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity"><ytypes><built-in-t><name>ios-regex '^65172:17...$'</name></built-in-t></ytypes></runner>)";
+    auto top1 = make_shared<ydktest_sanity::Runner>();
+    auto top2 = make_shared<ydktest_sanity::Runner>();
+#endif
+    auto rp = codec_service.decode(codec_provider, xml, top1);
 
     std::string encoded_xml = codec_service.encode(codec_provider, *rp, false);
     CHECK(xml == encoded_xml);
 
-    auto rp_decode = codec_service.decode(codec_provider, xml, make_unique<openconfig_routing_policy::RoutingPolicy>());
+    auto rp_decode = codec_service.decode(codec_provider, xml, top2);
     CHECK(*rp == *rp_decode);
 }
 
@@ -598,4 +605,60 @@ TEST_CASE( "test_codec_action_node" )
     ydk::path::Codec s{};
     auto xml_reply = s.encode(*reply_dn, EncodingFormat::XML, false);
     REQUIRE(xml_reply==R"(<data xmlns="http://cisco.com/ns/yang/ydktest-action"><action-node><t>ok</t></action-node></data>)");
+}
+
+TEST_CASE("test_codec_augment_subtree_xml")
+{
+    CodecServiceProvider codec_provider{EncodingFormat::XML};
+    CodecService codec_service{};
+
+    auto passive = make_unique<ydktest_sanity::Runner::Passive>();
+    passive->name = "xyz";
+
+    auto ifc = make_shared<ydktest_sanity::Runner::Passive::Interfac>();
+    ifc->test = "abc";
+    passive->interfac.append(ifc);
+
+    passive->testc->xyz = make_shared<ydktest_sanity::Runner::Passive::Testc::Xyz>();
+    passive->testc->xyz->parent = passive.get();
+    passive->testc->xyz->xyz = 25;
+
+    auto xml = codec_service.encode(codec_provider, *passive, true);
+    string expected = R"(<passive xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <name>xyz</name>
+  <interfac>
+    <test>abc</test>
+  </interfac>
+  <testc xmlns="http://cisco.com/ns/yang/ydktest-sanity-augm">
+    <xyz>
+      <xyz>25</xyz>
+    </xyz>
+  </testc>
+</passive>)";
+    CHECK(expected == xml);
+    auto entity = codec_service.decode(codec_provider, xml, make_shared<ydktest_sanity::Runner::Passive>(), true);
+    CHECK(*passive == *entity);
+}
+
+TEST_CASE("test_codec_augment_subtree_json")
+{
+    CodecServiceProvider codec_provider{EncodingFormat::JSON};
+    CodecService codec_service{};
+
+    auto passive = make_unique<ydktest_sanity::Runner::Passive>();
+    passive->name = "xyz";
+
+    auto ifc = make_shared<ydktest_sanity::Runner::Passive::Interfac>();
+    ifc->test = "abc";
+    passive->interfac.append(ifc);
+
+    passive->testc->xyz = make_shared<ydktest_sanity::Runner::Passive::Testc::Xyz>();
+    passive->testc->xyz->parent = passive.get();
+    passive->testc->xyz->xyz = 25;
+
+    auto json = codec_service.encode(codec_provider, *passive, false, true);
+    CHECK(R"({"ydktest-sanity:passive":{"interfac":[{"test":"abc"}],"name":"xyz","ydktest-sanity-augm:testc":{"xyz":{"xyz":25}}}})"
+          == json);
+    auto entity = codec_service.decode(codec_provider, json, make_shared<ydktest_sanity::Runner::Passive>(), true);
+    CHECK(*passive == *entity);
 }

@@ -9,7 +9,8 @@
 .idea*
 .coverage*
 htmlcov
-coverage.xml
+coverage.*
+libydk*
 *.pyc
 *~
 *.swp
@@ -25,7 +26,8 @@ gen-api/
 scripts
 sdk/cpp/core/tests/confd/ydktest/cli-history
 sdk/cpp/gnmi/tests/main.cpp
-sdk/python/core/ydk/models/ydktest
+sdk/cpp/gnmi/samples/args_parser.h
+sdk/python/core/ydk/models
 test/gnmi_client
 yang/nxos*
 profiles/test/ydk-nxos*

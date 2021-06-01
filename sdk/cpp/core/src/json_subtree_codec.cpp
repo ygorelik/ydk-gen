@@ -1,6 +1,6 @@
 /*  ----------------------------------------------------------------
  YDK - YANG Development Kit
- Copyright 2016 Cisco Systems. All rights reserved.
+ Copyright 2016-2019 Cisco Systems. All rights reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
  All rights reserved under Apache License, Version 2.0.
  ------------------------------------------------------------------*/
 
-#include <algorithm>    // std::all_of
+#include <algorithm>    // std::all_of, find
 #include <ctype.h>  	// std::isdigit
 
 #include "entity_util.hpp"
@@ -92,6 +92,26 @@ JsonSubtreeCodec::~JsonSubtreeCodec()
 {
 }
 
+std::string JsonSubtreeCodec::convert_string(const std::string & json_string, bool pretty)
+{
+    json root_json_node;
+    try {
+        root_json_node = json::parse(json_string);
+        if (!root_json_node.is_object()) {
+            throw YInvalidArgumentError{"Invalid JSON string"};
+        }
+    }
+    catch (exception & e) {
+        throw YInvalidArgumentError{"Invalid JSON string"};
+    }
+    if (pretty) {
+        return root_json_node.dump(2);
+    }
+    else {
+        return root_json_node.dump(-1);
+    }
+}
+
 //////////////////////////////////////////////////////////////////
 // JsonSubtreeCodec::encode
 //////////////////////////////////////////////////////////////////
@@ -149,8 +169,9 @@ static const path::SchemaNode* find_child_by_name(const path::SchemaNode & paren
     auto p = const_cast<path::SchemaNode*>(&parent_schema);
     vector<path::SchemaNode*> s = p->find(name);
     if (s.size() == 0) {
-        YLOG_ERROR("Could not find node '{}'", name);
-        throw YServiceError{"Could not find node " + name};
+        YLOG_ERROR("JSONCodec: Could not find child node '{}' in schema node '{}'",
+                   name, parent_schema.get_statement().arg);
+        throw YServiceError{"Could not find child schema node " + name};
     }
     return s[0];
 }
@@ -309,7 +330,10 @@ static void check_and_set_content(Entity & entity, const string & leaf_name, jso
     if (content.front() == '"' && content.back() == '"')
         content = content.substr(1, content.length()-2);
     content = trim(content);
-    if (leaf_name.empty() || content.empty())
+    if (content == "null") {
+        content = "";
+    }
+    if (!entity.has_leaf_or_child_of_name(leaf_name))  // || content.empty())
         return;
 
     auto prefix_key = split_key(content);
@@ -334,12 +358,26 @@ static void check_and_set_leaf(Entity & entity, Entity * parent, const string & 
 {
     if (json_node.is_null())
     {
-        YLOG_DEBUG("JsonCodec: Creating leaf '{}' with no value in entity '{}'", node_name, entity.yang_name);
-        entity.set_filter(node_name, YFilter::read);
+        if (!entity.check_leaf_type(node_name, YType::empty))
+        {
+            YLOG_DEBUG("JsonCodec: Creating leaf '{}' with no value and setting YFilter::read", node_name);
+            entity.set_filter(node_name, YFilter::read);
+        }
+        else
+        {
+            YLOG_DEBUG("JsonCodec: Creating leaf '{}' with empty value", node_name);
+            entity.set_value(node_name, "");
+        }
     }
     else if (json_node.is_primitive())
     {
     	check_and_set_content(entity, node_name, json_node);
+    }
+    else if (entity.check_leaf_type(node_name, YType::anydata))
+    {
+        string value = json(json_node).dump();
+        YLOG_DEBUG("JsonCodec: Creating anydata leaf '{}' with value:\n{}", node_name, value);
+        entity.set_value(node_name, value);
     }
     else {
         decode_json(json_node, entity, parent);

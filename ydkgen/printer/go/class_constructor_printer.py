@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
 
 """
 source_printer.py
@@ -20,7 +25,7 @@ source_printer.py
  prints Go class constructor
 
 """
-import sys
+
 from functools import reduce
 from ydkgen.api_model import Bits, Class, DataType, Enum
 from pyang.types import PathTypeSpec, UnionTypeSpec
@@ -31,10 +36,7 @@ from ydkgen.common import is_list_element
 
 class ClassConstructorPrinter(FunctionPrinter):
     def __init__(self, ctx, clazz, leafs, identity_subclasses):
-        if sys.version_info > (3,):
-            super().__init__(ctx, clazz, leafs)
-        else:
-            super(ClassConstructorPrinter, self).__init__(ctx, clazz, leafs)
+        super().__init__(ctx, clazz, leafs)
         self.identity_subclasses = identity_subclasses
 
     def print_function_header(self):
@@ -94,7 +96,7 @@ class ClassConstructorPrinter(FunctionPrinter):
         for prop in self.clazz.properties():
             if not prop.is_many:
                 self._print_child_inits_unique(prop)
-            elif prop.stmt.keyword != 'anyxml':
+            elif prop.stmt.keyword not in ['anyxml', 'anydata']:
                 self._print_child_inits_many(prop)
 
     def _print_child_inits_unique(self, prop):
@@ -180,7 +182,7 @@ class ClassConstructorPrinter(FunctionPrinter):
             meta_info_data.doc_link = get_type_name(property_type)
             if prop.stmt.keyword == 'leaf-list':
                 meta_info_data.doc_link = 'slice of %s' % get_type_name(property_type)
-            elif prop.stmt.keyword == 'anyxml':
+            elif prop.stmt.keyword in ['anyxml', 'anydata']:
                 return meta_info_data
 
             type_spec = type_stmt.i_type_spec

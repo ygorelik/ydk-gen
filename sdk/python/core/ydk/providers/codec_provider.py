@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
+
 import logging
 import pkgutil
 import importlib
@@ -70,10 +76,13 @@ class CodecServiceProvider(object):
             bundle_name (str): bundle name.
             models_path (str): location for local YANG models.
         """
-        if self._user_provided_repo:
-            self._initialize_root_schema(bundle_name, self._repo, True)
+        name = bundle_name if not self._user_provided_repo else _USER_PROVIDED_REPO
+        if name in self._root_schema_table:
+            return  # root schema is already initialized
 
-        if bundle_name in self._root_schema_table:
+        if self._user_provided_repo:
+            self.logger.log(_TRACE_LEVEL_NUM, "Initializing root schema in user provided repo")
+            self._initialize_root_schema(name, self._repo, True)
             return
 
         self.logger.log(_TRACE_LEVEL_NUM, "Creating repo in path {}".format(models_path))
@@ -87,7 +96,11 @@ class CodecServiceProvider(object):
             bundle_name (str): bundle name.
         """
         if self._user_provided_repo:
-            return self._root_schema_table[_USER_PROVIDED_REPO]
+            if _USER_PROVIDED_REPO in self._root_schema_table:
+                return self._root_schema_table[_USER_PROVIDED_REPO]
+            else:
+                self.logger.error("Root schema on user provided repository has not been created")
+                raise YServiceProviderError(error_msg="Root schema not created")
 
         if bundle_name not in self._root_schema_table:
             self.logger.error("Root schema not created")
@@ -96,86 +109,88 @@ class CodecServiceProvider(object):
         return self._root_schema_table[bundle_name]
 
     def _initialize_root_schema(self, bundle_name, repo, user_provided_repo=False):
-        """Update root schema table entry.
+        """
+        Create/Update root schema table entry.
 
         Args:
-            name (str): bundle name.
+            bundle_name (str): bundle name.
             repo (ydk.path.Repository): default repository or repository provided by the user.
             user_provided_repo (bool, optional): Defaults to False.
-
         """
         name = bundle_name if not user_provided_repo else _USER_PROVIDED_REPO
         self.logger.log(_TRACE_LEVEL_NUM, "Initializing root schema for {}".format(name))
-        # TODO: turn on and off libyang logging
-        capabilities = []
-        lookup_tables = self._get_bundle_capability_lookup_table(bundle_name)
+
+        if name == _USER_PROVIDED_REPO:
+            capabilities = []
+        else:
+            capabilities = _get_bundle_capabilities(bundle_name)
+        lookup_tables = _get_bundle_capability_lookup_table(bundle_name)
         self._root_schema_table[name] = repo.create_root_schema(lookup_tables, capabilities)
 
-    def _get_bundle_yang_ns(self, bundle_name):
-        """Search installed local ydk-models python packages, and return _yang_ns
 
-        Args:
-            bundle_name (str): bundle name.
+def _get_bundle_yang_ns(bundle_name):
+    """Search installed local ydk-models python packages, and return _yang_ns
 
-        Returns:
-            mod_yang_ns (module): bundle's _yang_ns module.
-        """
-        mod_yang_ns = None
-        for (_, name, ispkg) in pkgutil.iter_modules(models.__path__):
-            if ispkg and name == bundle_name:
-                try:
-                    mod_yang_ns = importlib.import_module('ydk.models.{}._yang_ns'.format(name))
-                    break
-                except ImportError:
-                    continue
+    Args:
+        bundle_name (str): bundle name.
 
-        return mod_yang_ns
+    Returns:
+        mod_yang_ns (module): bundle's _yang_ns module.
+    """
+    mod_yang_ns = None
+    for (_, name, ispkg) in pkgutil.iter_modules(models.__path__):
+        if ispkg and name == bundle_name:
+            try:
+                mod_yang_ns = importlib.import_module('ydk.models.{}._yang_ns'.format(name))
+                break
+            except ImportError:
+                continue
+    return mod_yang_ns
 
-    def _get_bundle_capability_lookup_table(self, bundle_name):
-        """Search installed local ydk-models python packages, and return corresponding
-        capability lookup tables.
 
-        Args:
-            bundle_name (str): bundle name.
+def _get_bundle_capability_lookup_table(bundle_name):
+    """Search installed local ydk-models python packages, and return corresponding
+    capability lookup tables.
 
-        Returns:
-            lookup_tables(list of dict(str, ydk.types.Capability)): Capability lookup tables
-        """
-        name_namespace_lookup = {}
+    Args:
+        bundle_name (str): bundle name.
 
-        mod_yang_ns = self._get_bundle_yang_ns(bundle_name)
-        if mod_yang_ns is not None:
-            capability_map = mod_yang_ns.__dict__['CAPABILITIES']
-            namespace_map = mod_yang_ns.__dict__['NAMESPACE_LOOKUP']
-            for d in (capability_map, namespace_map):
-                name_namespace_lookup.update(d)
+    Returns:
+        lookup_tables(list of dict(str, ydk.types.Capability)): Capability lookup tables
+    """
+    name_namespace_lookup = {}
 
-            for name in capability_map:
-                cap = _Capability(name, capability_map[name])
-                name_namespace_lookup[name] = cap
-                # submodule
-                if name in namespace_map:
-                    name_namespace_lookup[namespace_map[name]] = cap
+    mod_yang_ns = _get_bundle_yang_ns(bundle_name)
+    if mod_yang_ns is not None:
+        capability_map = mod_yang_ns.__dict__['CAPABILITIES']
+        namespace_map = mod_yang_ns.__dict__['NAMESPACE_LOOKUP']
+        for d in (capability_map, namespace_map):
+            name_namespace_lookup.update(d)
 
-        return name_namespace_lookup
+        for name in capability_map:
+            cap = _Capability(name, capability_map[name])
+            name_namespace_lookup[name] = cap
+            # submodule
+            if name in namespace_map:
+                name_namespace_lookup[namespace_map[name]] = cap
+    return name_namespace_lookup
 
-    def _get_bundle_capabilities(self, bundle_name):
-        """Search installed local ydk-models python packages, and return corresponding
-        capabilities.
 
-        Args:
-            bundle_name (str): bundle name.
+def _get_bundle_capabilities(bundle_name):
+    """Search installed local ydk-models python packages, and return corresponding
+    capabilities.
 
-        Returns:
-            capabilities (list): List of ydk.path.Capability available for this bundle.
-        """
-        capabilities = []
-        capability_map = {}
+    Args:
+        bundle_name (str): bundle name.
 
-        mod_yang_ns = self._get_bundle_yang_ns(bundle_name)
-        if mod_yang_ns is not None:
-            capability_map = mod_yang_ns.__dict__['CAPABILITIES']
-            for name in capability_map:
-                capabilities.append(_Capability(name, capability_map[name]))
+    Returns:
+        capabilities (list): List of ydk.path.Capability available for this bundle.
+    """
 
-        return capabilities
+    capabilities = []
+    mod_yang_ns = _get_bundle_yang_ns(bundle_name)
+    if mod_yang_ns is not None:
+        capability_map = mod_yang_ns.__dict__['CAPABILITIES']
+        for name in capability_map:
+            capabilities.append(_Capability(name, capability_map[name]))
+    return capabilities

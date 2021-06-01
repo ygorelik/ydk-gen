@@ -1,5 +1,6 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# YDK - YANG Development Kit
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,13 +26,18 @@ source_printer.py
  prints C++ classes
 
 """
-from ydkgen.api_model import Bits, Class, DataType, Enum
+from ydkgen.api_model import Bits, Class, DataType, Enum, AnyData, AnyXml
 from ydkgen.common import get_module_name, has_list_ancestor, is_top_level_class
+
+from pyang.types import UnionTypeSpec
 
 
 def get_type_name(prop_type):
     if prop_type.name == 'string':
-        return 'str'
+        if isinstance(prop_type, AnyData) or isinstance(prop_type, AnyXml):
+            return 'anydata'
+        else:
+            return 'str'
     elif prop_type.name == 'leafref':
         return 'str'
     elif prop_type.name == 'decimal64':
@@ -93,13 +99,19 @@ class ClassConstructorPrinter(object):
                              % (clazz.stmt.arg, clazz.owner.stmt.arg, ('true' if is_top_level_class(clazz) else 'false'),
                                 ('true' if has_list_ancestor(clazz) else 'false'),
                                 ('is_presence_container = true;' if clazz.stmt.search_one('presence') is not None else '')))
+            for prop in leafs:
+                if prop.stmt.keyword == 'leaf' or prop.stmt.keyword == 'anydata' or prop.stmt.keyword == 'anyxml':
+                    if prop.stmt.i_module.arg != clazz.stmt.i_module.arg:
+                        leaf_name = prop.stmt.i_module.arg + ':' + prop.stmt.arg
+                    else:
+                        leaf_name = prop.stmt.arg
+                    self.ctx.writeln('leaf_list.push_back(&%s);' % prop.name)
 
     def _print_init_children(self, children):
         for child in children:
             if child.is_many or child.stmt.search_one('presence') is not None:
                 continue
             self.ctx.writeln('%s->parent = this;' % child.name)
-        self.ctx.bline()
 
     def _print_class_constructor_trailer(self):
         self.ctx.lvl_dec()
@@ -112,13 +124,28 @@ class ClassConstructorPrinter(object):
             index = 0
             while index < len(leafs):
                 prop = leafs[index]
-                leaf_name = ''
                 if prop.stmt.i_module.arg != clazz.stmt.i_module.arg:
                     leaf_name = prop.stmt.i_module.arg + ':' + prop.stmt.arg
                 else:
                     leaf_name = prop.stmt.arg
-                self.ctx.writeln('%s{YType::%s, "%s"}%s' % (prop.name,
-                            get_type_name(prop.property_type), leaf_name, (',' if index != len(leafs) - 1 else '')))
+                if isinstance(prop.property_type, UnionTypeSpec) and prop.stmt.keyword != 'leaf-list':
+                    type_strs = []
+                    for utype in prop.union_types:
+                        type_str = get_type_name(utype)
+                        if type_str not in type_strs:
+                            type_strs.append(type_str)
+                    if len(type_strs) == 1:
+                        self.ctx.writeln('%s{YType::%s, "%s"}%s' % (prop.name,
+                                                                    type_strs[0], leaf_name,
+                                                                    (',' if index != len(leafs) - 1 else '')))
+                    else:
+                        ytypes = ', '.join(['YType::%s' % t for t in type_strs])
+                        self.ctx.writeln('%s{YType::union_, "%s", {%s}}%s' %
+                                         (prop.name, leaf_name, ytypes,
+                                          (',' if index != len(leafs) - 1 else '')))
+                else:
+                    self.ctx.writeln('%s{YType::%s, "%s"}%s' % (prop.name,
+                                     get_type_name(prop.property_type), leaf_name, (',' if index != len(leafs) - 1 else '')))
                 index += 1
 
         init_stmts = []
@@ -133,10 +160,10 @@ class ClassConstructorPrinter(object):
                         key_str += '"%s"' % key.stmt.arg   # key.name
                     init_stmts.append('%s(this, {%s})' % (child.name,  key_str))
             else:
-                if (child.stmt.search_one('presence') is None):
-                    init_stmts.append('%s(std::make_shared<%s>())' % (child.name, child.property_type.qualified_cpp_name()))
-                else:
+                if child.stmt.search_one('presence'):
                     init_stmts.append('%s(nullptr) // presence node' % (child.name))
+                else:
+                    init_stmts.append('%s(std::make_shared<%s>())' % (child.name, child.property_type.qualified_cpp_name()))
         if len(init_stmts) > 0:
             if len(leafs) == 0:
                 self.ctx.writeln(':')

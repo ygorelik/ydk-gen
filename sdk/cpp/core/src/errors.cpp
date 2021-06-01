@@ -1,7 +1,7 @@
-/// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// YANG Development Kit
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -18,18 +18,18 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
-//////////////////////////////////////////////////////////////////
-
+// --------------------------------------------------------------
+// This file has been modified by Yan Gorelik, YDK Solutions.
+// All modifications in original under CiscoDevNet domain
+// introduced since October 2019 are copyrighted.
+// All rights reserved under Apache License, Version 2.0.
+// --------------------------------------------------------------
 
 #include "path/path_private.hpp"
 
-namespace ydk
+std::string ydk::get_libyang_error(const ly_ctx *ctx)
 {
-static std::string get_libyang_error()
-{
-    return std::string(ly_errmsg()) + ". Path: " + std::string(ly_errpath());
-}
+    return std::string(ly_errmsg(ctx)) + ". Path: " + std::string(ly_errpath(ctx));
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ ydk::YOperationNotSupportedError::YOperationNotSupportedError(const std::string&
 //////////////////////////////////////////////////////////////////////////
 /// YDataValidationError
 //////////////////////////////////////////////////////////////////////////
-ydk::path::YDataValidationError::YDataValidationError() : ydk::path::YCoreError{"YDataValidationError:" + get_libyang_error()}
+ydk::path::YDataValidationError::YDataValidationError(const std::string& msg) : ydk::path::YCoreError{"YDataValidationError:" + msg}
 {
 
 }
@@ -137,7 +137,12 @@ ydk::path::YPathError::YPathError(ydk::path::YPathError::Error error_code) : ydk
 /////////////////////////////////////////////////////////////////////////
 /// YCodecError
 /////////////////////////////////////////////////////////////////////////
-ydk::path::YCodecError::YCodecError(YCodecError::Error ec) : YCoreError("YCodecError:" + get_libyang_error()), err{ec}
+ydk::path::YCodecError::YCodecError(YCodecError::Error ec) : YCoreError("YCodecError"), err{ec}
+{
+
+}
+
+ydk::path::YCodecError::YCodecError(YCodecError::Error ec, const std::string& msg) : YCoreError(msg), err{ec}
 {
 
 }
@@ -146,12 +151,7 @@ ydk::path::YCodecError::YCodecError(YCodecError::Error ec) : YCoreError("YCodecE
 /////////////////////////////////////////////////////////////////////////
 /// YModelError
 /////////////////////////////////////////////////////////////////////////
-ydk::YModelError::YModelError() : ydk::YError{"YModelError: " + std::string(ly_errmsg()) + " Path: " + std::string(ly_errpath())}
-{
-
-}
-
-ydk::YModelError::YModelError(const std::string& msg) : ydk::YError{"YModelError: " + msg+" : " + get_libyang_error()}
+ydk::YModelError::YModelError(const std::string& msg) : ydk::YError{"YModelError: " + msg}
 {
 
 }

@@ -90,7 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developer_guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_guide.html">API Guide</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Questions and Answers</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Questions and Answers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#how-do-i-report-a-bug-i-found">How do I report a bug I found?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#i-am-interested-in-contributing-how-do-i-do-this">I am interested in contributing. How do I do this?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#can-you-help-me-change-something-in-a-model-bundle-api">Can you help me change something in a model bundle API?</a></li>
@@ -148,7 +148,10 @@
 </div>
 <div class="section" id="i-am-interested-in-contributing-how-do-i-do-this">
 <h2>I am interested in contributing. How do I do this?<a class="headerlink" href="#i-am-interested-in-contributing-how-do-i-do-this" title="Permalink to this headline">¶</a></h2>
-<p>YDK is an open-source project and we welcome contributions. Please refer to this <a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen/blob/master/CONTRIBUTIONS.md">brief guide</a>, make the changes on your fork of <a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen">ydk-gen</a> and submit a pull request <a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen/pulls">here</a>.</p>
+<p>YDK is an open-source project and we welcome contributions.
+Please refer to this <a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen/blob/master/CONTRIBUTIONS.md">brief guide</a>,
+make the changes on your fork of <a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen">ydk-gen</a> and submit a pull request
+<a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen/pulls">here</a>.</p>
 </div>
 <div class="section" id="can-you-help-me-change-something-in-a-model-bundle-api">
 <h2>Can you help me change something in a model bundle API?<a class="headerlink" href="#can-you-help-me-change-something-in-a-model-bundle-api" title="Permalink to this headline">¶</a></h2>
@@ -169,38 +172,32 @@ In principle, going forward, we plan to maintain backward compatibility between 
 </div></blockquote>
 <p>Also, we use the <a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen">ydk-gen</a> tool to generate the bundles.
 This tool is available for anyone to use in order to generate the bundle version in combination with YDK core version of their choice.
-For example, the below steps will generate &amp; install the <code class="docutils literal"><span class="pre">cisco-ios-xr</span> <span class="pre">6.5.1</span></code> bundle compatible with <code class="docutils literal"><span class="pre">ydk</span> <span class="pre">core</span> <span class="pre">0.8.0</span></code>
+For example, the below steps will generate &amp; install the <cite>cisco-ios-xr 6.5.1</cite> bundle compatible with <cite>ydk core 0.8.5</cite>
 (assuming you have already installed the <a class="reference external" href="https://github.com/CiscoDevNet/ydk-py#system-requirements">system dependencies</a>):</p>
 <ol class="arabic simple">
-<li>Install libydk (taking CentOS as example. For other OS, please see <a class="reference external" href="https://github.com/CiscoDevNet/ydk-py#quick-install">here</a>)</li>
+<li>Install libydk (taking CentOS as example. For other OS, please see in <a class="reference external" href="https://github.com/CiscoDevNet/ydk-py#quick-install">ydk-py</a> repository)</li>
 </ol>
-<div class="highlight-sh"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span>sudo yum install https://devhub.cisco.com/artifactory/rpm-ydk/0.8.5-beta/libydk-0.8.5-1.x86_64.rpm
+<div class="highlight-sh"><div class="highlight"><pre><span></span>sudo yum install https://devhub.cisco.com/artifactory/rpm-ydk/0.8.5-beta/libydk-0.8.5-1.x86_64.rpm
 </pre></div>
-</td></tr></table></div>
+</div>
 <ol class="arabic simple" start="2">
 <li>Generate and install ydk-py core</li>
 </ol>
-<div class="highlight-sh"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span></span>git clone https://github.com/CiscoDevNet/ydk-gen.git
+<div class="highlight-sh"><div class="highlight"><pre><span></span>git clone https://github.com/CiscoDevNet/ydk-gen.git
 git checkout tags/0.8.5 -b <span class="m">0</span>.8.5
 <span class="nb">cd</span> ydk-gen
 pip install -r requirements.txt
 ./generate --core --python
 pip install gen-api/python/ydk/dist/ydk*.tar.gz
 </pre></div>
-</td></tr></table></div>
+</div>
 <ol class="arabic simple" start="3">
 <li>Generate and install bundle</li>
 </ol>
-<div class="highlight-sh"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span></span>./generate --bundle profiles/bundles/cisco-ios-xr_6_5_1.json --python -v
+<div class="highlight-sh"><div class="highlight"><pre><span></span>./generate --bundle profiles/bundles/cisco-ios-xr_6_5_1.json --python -v
 pip install gen-api/python/cisco_ios_xr-bundle/dist/ydk*.tar.gz
 </pre></div>
-</td></tr></table></div>
+</div>
 </div>
 </div>
 

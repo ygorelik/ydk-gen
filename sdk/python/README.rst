@@ -1,7 +1,7 @@
 ..
   # *************************************************************
   #  YDK-YANG Development Kit
-  #  Copyright 2016 Cisco Systems. All rights reserved
+  #  Copyright 2016-2019 Cisco Systems. All rights reserved
   # *************************************************************
   # Licensed to the Apache Software Foundation (ASF) under one
   # or more contributor license agreements.  See the NOTICE file
@@ -26,12 +26,16 @@
   # All rights reserved under Apache License, Version 2.0.
   # *************************************************************
 
-.. image::  https://travis-ci.com/CiscoDevNet/ydk-py.svg?branch=master
+..
+    image::  https://travis-ci.com/CiscoDevNet/ydk-py.svg?branch=master
     :target: https://travis-ci.com/CiscoDevNet/ydk-py
 
-.. image:: https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg
+..
+    image:: https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg
     :alt: Docker Automated build
     :target: https://hub.docker.com/r/ydkdev/ydk-py/
+
+..  image:: https://cloud.githubusercontent.com/assets/16885441/24175899/2010f51e-0e56-11e7-8fb7-30a9f70fbb86.png
 
 =============================
 YANG Development Kit (Python)
@@ -42,270 +46,196 @@ YANG Development Kit (Python)
 Overview
 ========
 
-The YANG Development Kit (YDK) is a Software Development Kit that provides API's that are modeled in YANG.
+The YANG Development Kit (YDK) is a software development tool, which provides API for building applications based on YANG models.
 The main goal of YDK is to reduce the learning curve of YANG data models by expressing the model semantics in an API and abstracting protocol/encoding details.
 YDK is composed of a core package that defines services and providers, plus one or more module bundles that are based on YANG models.
 
 Backward Compatibility
 ======================
 
-The Python YDK-0.8.5 core package is compatible with all model bundles generated previously with ydk-gen releases starting from 0.7.3.
-However the YDK-0.8.5 generates slightly different code and model API comparing to YDK-0.8.4.
-The YDK-0.8.5 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
+Although YDK-0.9.0 API is mostly the same as in previous YDK releases, it generates different code and model API comparing to YDK-0.8.5.
+The YDK-0.9.0 generated code is not compatible with YDK-0.8.5 and earlier bundle packages due to changes in Entity and YLeaf class objects.
 
-..
-  Please see `the release notes <https://github.com/CiscoDevNet/ydk-py/releases/tag/0.8.5>`_ for details.
+**NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
+
 
 Docker
 ======
 
 Currently the `docker image <https://docs.docker.com/engine/reference/run/>`_ for ydk-py is not been generated.
-Please use `ydk-gen <https://github.com/ygorelik/ydk-gen/tree/0.8.5#docker>`_ docker image, which has complete environment for ydk-py based development.
+Please use docker image below, which has complete environment for ydk-py based development.
 
-..
-  A `docker image <https://docs.docker.com/engine/reference/run/>`_ is automatically built with the latest ydk-py commit to the GitHub.
-  The docker image is used to run ydk-py without installing anything natively on your machine.
+A `docker image <https://docs.docker.com/engine/reference/run/>`_ is automatically built with the latest ydk-gen commit
+to the git repository.
+The docker image is used to run YDK based apps without installing anything natively on your machine.
 
-  To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
-  See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
+To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
+See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-    docker run -it ydkdev/ydk-py
+    docker run -it ydksolutions/ydk:0.9.0.1
 
 
 System Requirements
 ===================
 
-Linux
------
+The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
 
-**Ubuntu (Debian-based)**
+ - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
+ - Linux CentOS/RHEL versions 7 and 8
+ - MacOS up to 10.14.6 (Mojave)
 
-The following packages must be present in your system before installing YDK-Py::
+On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
+check `this <https://www.windowscentral.com/install-windows-subsystem-linux-windows-10>`_ for virtual machine installation procedure.
+The YDK has been tested in such environment on Ubuntu Bionic (18.04 LTS) and Focal (20.04 LTS) images obtained
+from Microsoft Store.
 
-  # Install Third-party software
-  sudo apt-get install gdebi-core python3-dev python-dev libtool-bin
-  sudo apt-get install libcurl4-openssl-dev libpcre3-dev libssh-dev libxml2-dev libxslt1-dev cmake
+On supported platforms the YDK can be installed using `Installation Script`_.
+On other platforms the YDK should be installed manually `Building from source`_.
+For both the methods the user must install `git` package prior to the installation procedure.
 
-Download and install YDK core library `libydk`. You can install the library using prebuilt debian packages for Xenial and Bionic LTS distributions.
-For other Ubuntu distributions it is recommended to build core library from source.
+All YDK core components are based on C and C++ code. These components compiled using default compilers for the supported platform.
+Corresponding binaries, libraries, and header files are installed in default locations,
+which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
+The user must have sudo access in order to install YDK core components to these locations.
 
-For Xenial (Ubuntu 16.04.4)::
+**NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
 
-  # Upgrade compiler to gcc 5.*
-  sudo apt-get install gcc-5 g++-5 -y > /dev/null
-  sudo ln -sf /usr/bin/gcc-5 /usr/bin/cc
-  sudo ln -sf /usr/bin/g++-5 /usr/bin/c++
+Core Installation
+=================
 
-  wget https://devhub.cisco.com/artifactory/debian-ydk/0.8.5/xenial/libydk-0.8.5-1.amd64.deb
-  sudo gdebi libydk-0.8.5-1.amd64.deb
-
-For Bionic (Ubuntu 18.04.1)::
-
-  wget https://devhub.cisco.com/artifactory/debian-ydk/0.8.5/bionic/libydk-0.8.5-1.amd64.deb
-  sudo gdebi libydk-0.8.5-1.amd64.deb
-
-**Centos (Fedora-based)**
-
-The following packages must be present in your system before installing YDK-Py. Currently, only Centos7/RHEL7 are known to work::
-
-  # Install Third-party software
-  sudo yum install epel-release
-  sudo yum install libssh-devel gcc-c++ python-devel python3-devel
-
-  # Upgrade compiler to gcc 5.*
-  sudo yum install centos-release-scl -y > /dev/null
-  sudo yum install devtoolset-4-gcc* -y > /dev/null
-  sudo ln -sf /opt/rh/devtoolset-4/root/usr/bin/gcc /usr/bin/cc
-  sudo ln -sf /opt/rh/devtoolset-4/root/usr/bin/g++ /usr/bin/c++
-
-  # Install YDK core library
-  sudo yum install https://devhub.cisco.com/artifactory/rpm-ydk/0.8.5/libydk-0.8.5-1.x86_64.rpm
-
-MacOS
------
-
-It is required to install Xcode command line tools, `homebrew <http://brew.sh>`_ and the following homebrew packages on your system before installing YDK-Py::
-
-  xcode-select --install
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  brew install pkg-config libssh xml2 libxml2 curl pcre cmake pybind11 doxygen libgcrypt
-
-  curl -O https://devhub.cisco.com/artifactory/osx-ydk/0.8.5/libydk-0.8.5-Darwin.pkg
-  sudo installer -pkg libydk-0.8.5-Darwin.pkg -target /
-
-Libssh Installation
+Installation Script
 -------------------
 
-The libssh-0.8.0 `does not support <http://api.libssh.org/master/libssh_tutor_threads.html>`_ separate threading library,
-which is required for YDK. If after installation of libssh package the `libssh_threads.a` is missing, please downgrade the installation to libssh-0.7.6,
-or upgrade to libssh-0.8.1 or higher.
+For YDK installation it is recommended to use script `install_ydk.sh` from `ydk-gen` git repository.
+The script detects platform OS, installs all the dependencies and builds complete set of YDK components for specified language.
+The user must have sudo access to these locations.
 
-**Note for MacOS**
-Before installing `libssh` make sure the environment for `openssl` is setup::
+The YDK extensively uses Python scripts for building its components and model API packages (bundles).
+In order to isolate YDK Python environment from system installation, the script builds Python3 virtual environment.
+The user must manually activate virtual environment when generating model bundles and/or running YDK based application.
+By default the Python virtual environment is installed under `$HOME/venv` directory.
+If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
-  brew reinstall openssl
-  export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
-
-Download libssh-0.7.6 source code, compile it and install::
-
-  wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.6.tar.gz
-  tar zxf libssh-0.7.6.tar.gz && rm -f libssh-0.7.6.tar.gz
-  mkdir libssh-0.7.6/build && cd libssh-0.7.6/build
-  cmake ..
-  sudo make install
-
-gNMI Requirements
------------------
-
-In order to enable YDK support for gNMI protocol, which is optional, the following third party software must be installed prior to gNMI YDK component installation.
-
-Install protobuf and protoc
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Here is simple example of core YDK installation for Python programming language:
 
 .. code-block:: sh
 
-  wget https://github.com/google/protobuf/releases/download/v3.5.0/protobuf-cpp-3.5.0.zip
-  unzip protobuf-cpp-3.5.0.zip
-  cd protobuf-3.5.0
-  ./configure
-  make
-  sudo make install
-  sudo ldconfig
+    git clone https://github.com/ygorelik/ydk-gen.git -b yang11
+    cd ydk-gen
+    export YDKGEN_HOME=`pwd`  # optional
+    export PYTHON_VENV=$HOME/ydk_vne  # optional
+    ./install_ydk.sh --core
 
-Install gRPC
-~~~~~~~~~~~~
 
-.. code-block:: sh
+The script also allows to install individual components like dependencies, core, and service packages
+for specified programming language or for all supported languages.
+Full set of script capabilities could be viewed like this::
 
-  git clone -b v1.9.1 https://github.com/grpc/grpc
-  cd grpc
-  git submodule update --init
-  make
-  sudo make install
-  sudo ldconfig
+    ./install_ydk.sh --help
+    usage: install_ydk [-l [cpp, py, go]] [-s gnmi] [-h] [-n]
+    Options and arguments:
+      -l [cpp, py, go, all] installation language; if not specified Python is assumed
+                            'all' corresponds to all available languages
+      -c|--core             install YDK core package
+      -s|--service gnmi     install gNMI service package
+      -n|--no-deps          skip installation of dependencies
+      -h|--help             print this help message and exit
 
-Instal YDK gNMI library
-~~~~~~~~~~~~~~~~~~~~~~~
+    Environment variables:
+    YDKGEN_HOME         specifies location of ydk-gen git repository;
+                        if not set, $HOME/ydk-gen is assumed
+    PYTHON_VENV         specifies location of python virtual environment;
+                        if not set, /home/ygorelik/venv is assumed
+    GOROOT              specifies installation directory of go software;
+                        if not set, /usr/local/go is assumed
+    GOPATH              specifies location of go source directory;
+                        if not set, $HOME/go is assumed
+    C_INCLUDE_PATH      location of C include files;
+                        if not set, /usr/local/include is assumed
+    CPLUS_INCLUDE_PATH  location of C++ include files;
+                        if not set, /usr/local/include is assumed
+    CMAKE_LIBRARY_PATH  Location of Python shared libraries;
+                        if not set, default system library location is assumed
 
-**Ubuntu**
 
-For Xenial (Ubuntu 16.04.4)::
+If user environment is different from the default one (different Python installation or different
+location of libraries) then building from source method should be used.
 
-  wget https://devhub.cisco.com/artifactory/debian-ydk/0.8.5/xenial/libydk_gnmi-0.4.0-5.amd64.deb
-  sudo gdebi libydk_gnmi-0.4.0-5.amd64.deb
+Building from source
+--------------------
 
-For Bionic (Ubuntu 18.04.1)::
-
-  wget https://devhub.cisco.com/artifactory/debian-ydk/0.8.5/bionic/libydk_gnmi-0.4.0-5.amd64.deb
-  sudo gdebi libydk_gnmi-0.4.0-5.amd64.deb
-
-**CentOS**::
-
-  sudo yum install https://devhub.cisco.com/artifactory/rpm-ydk/0.8.5/libydk_gnmi-0.4.0-5.x86_64.rpm
-
-**MacOS**::
-
-  curl -O https://devhub.cisco.com/artifactory/osx-ydk/0.8.5/libydk_gnmi-0.4.0-5.Darwin.pkg
-  sudo installer -pkg libydk_gnmi-0.4.0-5.Darwin.pkg -target /
-
-Runtime environment
-~~~~~~~~~~~~~~~~~~~
-
-There is an open issue with gRPC on Centos/Fedora, which requires an extra step before running any YDK gNMI application.
-See this issue on `GRPC GitHub <https://github.com/grpc/grpc/issues/10942#issuecomment-312565041>`_ for details.
-As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable::
-
-  PROTO="/Your-Protobuf-and-Grpc-installation-directory"
-  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5.0/src/.libs:/usr/local/lib64
-
-Python Requirements
--------------------
-
-YDK supports both Python2 and Python3 versions. At least Python2.7 or Python3.4 must be installed on your system.
-
-It is also required for Python installation to include corresponding shared library. As example::
-
-  python2.7  - /usr/lib/x86_64-linux-gnu/libpython2.7.so
-  python3.5m - /usr/lib/x86_64-linux-gnu/libpython3.5m.so
-
-Please follow `System Requirements`_ to assure presence of shared Python libraries.
-
-If you choose to install Python from source (need specific version), please include `--enable-shared` flag in `configure`
-command to include build of shared library::
-
-  cd Python3.4.1
-  ./configure --prefix=/opt/python --enable-shared
-  make
-  make install
-
-Here the `/opt/python` is your Python installation directory. If installation directory is different from the system path,
-you need to configure `CMAKE_LIBRARY_PATH` environment variable to assure that `cmake` uses correct Python library::
-
-  export CMAKE_LIBRARY_PATH=/opt/python/lib
-
-Run `pip install ydk` command with `-v` option and in the console output note location of found `PythonLibs`.
-Make sure it matches with your installed Pyton dynamic library location::
-
-  -- Found PythonLibs: /opt/python/lib/libpython3.4m.so
+Environment variables
+~~~~~~~~~~~~~~~~~~~~~
 
 In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
 In this case the header location must be specified explicitly (in below commands the default location is shown)::
 
-  export C_INCLUDE_PATH=/usr/local/include
-  export CPLUS_INCLUDE_PATH=/usr/local/include
+    export C_INCLUDE_PATH=/usr/local/include
+    export CPLUS_INCLUDE_PATH=/usr/local/include
 
-Mac OS
-~~~~~~
+When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.
 
-The developers of Python2 on Mac OS might face an `installation issue <https://github.com/CiscoDevNet/ydk-gen/issues/837>`_.
-This is well known and documented issue. Each developer might have different approaches for its resolution.
-One of them is to use Python2 virtual environment. See section `Using Python virtual environment`_ for details.
+Installing third party dependencies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition it is required properly set `CMAKE_LIBRARY_PATH` environment variable to assure that `cmake` uses correct Python library.
-Follow these steps to find and set correct library path.
+If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
+The script will also install Python virtual environment in default or specified location::
 
-1. Find installations of `libpython2.7` library:
+    # Clone ydk-gen from GitHub
+    git clone https://github.com/ygorelik/ydk-gen.git -b yang11
+    cd ydk-gen
 
-.. code-block:: sh
+    # Define optional environment variables and install dependencies
+    export YDKGEN_HOME=`pwd`
+    export PYTHON_VENV=$HOME/ydk_venv
+    ./install_ydk.sh   # also builds Python virtual environment
 
-  locate libpython2.7.dylib
-  /System/Library/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib
-  /System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config/libpython2.7.dylib
-  /usr/lib/libpython2.7.dylib
-  /usr/local/Cellar/python@2/2.7.15_1/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib
-  /usr/local/Cellar/python@2/2.7.15_1/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config/libpython2.7.dylib
+For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
-2. Choose non-system Python library installation and set `CMAKE_LIBRARY_PATH` before any YDK component installation. Example:
+Installing core components
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: sh
+Please follow this procedure to install YDK core components for Python apps development::
 
-  export CMAKE_LIBRARY_PATH=/usr/local/Cellar/python@2/2.7.15_1/Frameworks/Python.framework/Versions/2.7/lib
+    # Activate Python virtual environment
+    source $PYTHON_VENV/bin/activate
 
-3. Run YDK core package installation with '-v' flag to check that `PythonLibs` points to correct library path. Example:
+    # Generate and install YDK core library
+    ./generate.py -is --core --cpp
 
-.. code-block:: sh
+    # Generate and install Python core package
+    ./generate.py -i --core --python
 
-  $ ./generate.py --core
-  $ pip install -v gen-api/python/ydk/dist/ydk*.tar.gz
+Adding gNMI Service
+-------------------
 
-4. In 'cmake' log look for 'PythonLibs' and 'found version' settings line:
+In order to enable YDK support for gNMI protocol, which is optional, the user need install third party software
+and YDK gNMI service package.
 
-.. code-block:: sh
+gNMI service installation
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  -- Found PythonLibs: /usr/local/Cellar/python@2/2.7.15_1/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib (found version "2.7.15")
+Here is simple example, how gNMI service package for Python could be added::
 
-5. Finally test you YDK core library installation from CLI, making sure there are no errors:
-
-.. code-block:: sh
-
-  $ python -c "import ydk.types"
+    cd ydk-gen
+    ./install_ydk.sh -l py --service gnmi
 
 
-How to install
-==============
+gNMI runtime environment
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+There is an open issue with gRPC on Centos/RHEL, which requires an extra step before running any YDK gNMI application.
+See this issue on `GRPC GitHub <https://github.com/grpc/grpc/issues/10942#issuecomment-312565041>`_ for details.
+As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable::
+
+    PROTO=$HOME  # Default location defined during installation
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+
 
 Using Python virtual environment
---------------------------------
+================================
 
 You may want to perform the installation under Python virtual environment (`virtualenv <https://pypi.python.org/pypi/virtualenv/>`_/`virtualenvwrapper  <https://pypi.python.org/pypi/virtualenvwrapper>`_).
 The virtual environment allows you to install multiple versions of YDK if needed.  In addition, it prevents any potential conflicts between package dependencies in your system.
@@ -330,90 +260,84 @@ To exit virtual environment::
 Once Python virtual environment is activated, you can perform quick installation or installation from source described above.
 Take into consideration that you must not attempt to install YDK as root user under virtual environment.
 
-Quick Install
--------------
+Quick Bundle Installation
+=========================
 
 You can install the latest model packages from the Python package index.  Note that, in some systems, you need to install the new package as root.
-You get a fully operational YDK environment by installing the ``cisco-ios-xr`` and/or ``cisco-ios-xe`` bundle(s) (depending on whether you're developing for an IOS XR or IOS XE platform),
-which automatically installs all other YDK-related packages (``ydk``, ``openconfig`` and ``ietf`` packages)::
+You get a fully operational YDK environment by installing the `cisco-ios-xr` and/or `cisco-ios-xe` bundle(s) (depending on whether you're developing for an IOS XR or IOS XE platform),
+which automatically installs all other dependent packages (`openconfig` and `ietf` packages)::
 
   pip install ydk-models-cisco-ios-xr
   pip install ydk-models-cisco-ios-xe
 
-Alternatively, you can perform a partial installation.  If you only want to install the ``openconfig`` bundle and its dependencies (``ydk`` and ``ietf`` packages), execute::
+Alternatively, you can perform a partial installation.  If you only want to install the `openconfig` bundle and its dependencies (`ydk` and `ietf` packages), execute::
 
   pip install ydk-models-openconfig
 
-If you only want to install the ``ietf`` bundle and its dependencies (``ydk`` package), execute::
+If you only want to install the `ietf` bundle and its dependencies (`ydk` package), execute::
 
   pip install ydk-models-ietf
 
-To installation of model bundles on CentOS/RedHat platforms require special handling; please follow the below steps.
-
-**Python2.7**::
-
-  pip install ydk
-  pip install --install-option="--install-purelib=/usr/lib64/python2.7/site-packages" --no-deps ydk-models-ietf
-  pip install --install-option="--install-purelib=/usr/lib64/python2.7/site-packages" --no-deps ydk-models-openconfig
-  pip install --install-option="--install-purelib=/usr/lib64/python2.7/site-packages" --no-deps ydk-models-cisco-ios-xr
-  pip install --install-option="--install-purelib=/usr/lib64/python2.7/site-packages" --no-deps ydk-models-cisco-ios-xe
-
-**Python3.4**::
-
-  pip install ydk
-  pip install --install-option="--install-purelib=/usr/lib64/python3.4/site-packages" --no-deps ydk-models-ietf
-  pip install --install-option="--install-purelib=/usr/lib64/python3.4/site-packages" --no-deps ydk-models-openconfig
-  pip install --install-option="--install-purelib=/usr/lib64/python3.4/site-packages" --no-deps ydk-models-cisco-ios-xr
-  pip install --install-option="--install-purelib=/usr/lib64/python3.4/site-packages" --no-deps ydk-models-cisco-ios-xe
-
-**Python3.6**::
-
-  pip install ydk
-  pip install --install-option="--install-purelib=/usr/lib64/python3.6/site-packages" --no-deps ydk-models-ietf
-  pip install --install-option="--install-purelib=/usr/lib64/python3.6/site-packages" --no-deps ydk-models-openconfig
-  pip install --install-option="--install-purelib=/usr/lib64/python3.6/site-packages" --no-deps ydk-models-cisco-ios-xr
-  pip install --install-option="--install-purelib=/usr/lib64/python3.6/site-packages" --no-deps ydk-models-cisco-ios-xe
-
 Installing from Source
-----------------------
+======================
 
-If you prefer not to use the YDK packages in the Python package index, you need to install manually the ``ydk`` core package and then the model bundles you plan to use.
-To install the ``ydk`` core package, execute::
+If you prefer not to use the YDK packages from the Python package index,
+you have to install manually the `ydk` core package first, and then the model bundles you plan to use.
+It is recommended to use `ydk-gen/install_ydk.sh` script in order to install the core components::
 
-  $ cd core
-  core$ python setup.py sdist
-  core$ pip install dist/ydk*.gz
+  # Clone ydk-gen from GitHub
+  git clone https://github.com/ygorelik/ydk-gen.git
+  cd ydk-gen
 
-Once you have installed the ``ydk`` core package, you can install one more model bundles.  Note that some bundles have dependencies on other bundles.
-Those dependencies are already captured in the bundle package.  Make sure you install the desired bundles in the order below.  To install the ``ietf`` bundle, execute::
+  # Define optional environment variables and install dependencies
+  export YDKGEN_HOME=`pwd`
+  export PYTHON_VENV=$HOME/ydk_venv
+  ./install_ydk.sh   # also builds Python virtual environment
 
-  core$ cd ../ietf
-  ietf$ python setup.py sdist
-  ietf$ pip install dist/ydk*.gz
 
-To install the ``openconfig`` bundle, execute::
+Once you have installed the `ydk` core package, you can install one or more model bundles.  Note that some bundles have dependencies on other bundles.
+Those dependencies are already captured in the bundle package.  Make sure you install the desired bundles in the order below.
+To install the `ietf` bundle from `ydk-gen` execute::
 
-  ietf$ cd ../openconfig
-  openconfig$ python setup.py sdist
-  openconfig$ pip install dist/ydk*.gz
+  # Activate Python virtual environment and navigate to ydk-gen directory
+  source $PYTHON_VENV/bin/activate
+  cd ydk-gen
+  # Generate and install the bundle
+  ./generate.py --python --bundle profiles/bundles/ietf_0_1_5_post2.json -i
 
-To install the ``cisco-ios-xr`` bundle, execute::
+To install the `openconfig` bundle, execute::
 
-  openconfig$ cd ../cisco-ios-xr
-  cisco-ios-xr$ python setup.py sdist
-  cisco-ios-xr$ pip install dist/ydk*.gz
-  cisco-ios-xr$ cd ..
+  # Activate Python virtual environment and navigate to ydk-gen directory
+  source $PYTHON_VENV/bin/activate
+  cd ydk-gen
+  # Generate and install the bundle
+  ./generate.py --python --bundle profiles/bundles/openconfig_0_1_8.json -i
+
+To install the `cisco-ios-xr` bundle, execute::
+
+  # Activate Python virtual environment and navigate to ydk-gen directory
+  source $PYTHON_VENV/bin/activate
+  cd ydk-gen
+  # Generate and install the bundle
+  ./generate.py --python --bundle profiles/bundles/cisco-ios-xr-6_6_3_post1.json -i
+
 
 Documentation and Support
 =========================
 
-- Read the `API documentation <http://ydk.cisco.com/py/docs>`_ for details on how to use the API and specific models
-- Samples can be found under the `samples directory <https://github.com/CiscoDevNet/ydk-py/tree/master/core/samples>`_
-- Hundreds of additional samples can be found in the `YDK-PY samples repository <https://github.com/CiscoDevNet/ydk-py-samples>`_
-- Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with other users and with the makers of YDK
-- Additional YDK information can be found at `ydk.io <http://ydk.io>`_
+Available resources:
+
+- Read the `API documentation <http://ydk.cisco.com/py/docs>`_ (release 0.8.3) for details on how to use the API and specific models
+- Find some app samples in the `samples directory <https://github.com/CiscoDevNet/ydk-py/tree/master/core/samples>`_
+- Find hundreds of additional samples in the `YDK-PY samples repository <https://github.com/CiscoDevNet/ydk-py-samples>`_
+- Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with YDK users and developers
+
+..
+    - Check `GitHub Pages <https://ygorelik.github.io/ydk-gen>`_ for the latest YDK release documentation
 
 Release Notes
 =============
 
-The current YDK release version is 0.8.5. YDK-Py is licensed under the Apache 2.0 License.
+The current YDK release version is 0.9.0.1.
+
+YDK is licensed under the Apache 2.0 License.

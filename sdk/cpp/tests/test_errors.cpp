@@ -1,6 +1,7 @@
 /*  ----------------------------------------------------------------
- Copyright 2016 Cisco Systems
-
+ YDK - YANG Development Kit
+ Copyright 2016-2019 Cisco Systems
+ -------------------------------------------------------------------
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
@@ -12,6 +13,11 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
  ------------------------------------------------------------------*/
 
 #define TEST_MODULE LevelsTests
@@ -371,4 +377,15 @@ TEST_CASE("int8_list_ignore_validation")
     auto bint_ent = bint_ent_list[0];
     auto bint = dynamic_cast<ydktest_sanity::Runner::Ytypes::BuiltInT*>(bint_ent.get());
     REQUIRE(bint->number8 == r_1->ytypes->built_in_t->number8);
+}
+
+TEST_CASE("bool_value_invalid")
+{
+    NetconfServiceProvider provider{"127.0.0.1", "admin", "admin", 12022};
+    CrudService crud{};
+
+    auto runner = ydktest_sanity::Runner();
+	runner.ytypes->built_in_t->bool_value = "a string";
+
+	CHECK_THROWS_WITH(crud.create(provider, runner), CONTAINS_ERROR_MESSAGE);
 }

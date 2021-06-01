@@ -164,10 +164,7 @@ class TestCasesBuilder(ValueBuilder):
     """
 
     def __init__(self, lang, identity_subclasses):
-        if sys.version_info > (3,):
-            super().__init__(lang, identity_subclasses)
-        else:
-            super(TestCasesBuilder, self).__init__(lang, identity_subclasses)
+        super().__init__(lang, identity_subclasses)
         self.stmts = Statements()
         self.test_name = ''
         self.clazz = None

@@ -1,7 +1,7 @@
-/// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// YANG Development Kit
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -23,7 +23,7 @@
 // All modifications in original under CiscoDevNet domain
 // introduced since October 2019 are copyrighted.
 // All rights reserved under Apache License, Version 2.0.
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 
 #include "path_private.hpp"
 
@@ -66,9 +66,9 @@ ydk::path::DataNode::create_datanode(const std::string& path)
 ydk::path::DataNodeImpl::DataNodeImpl(DataNode* parent, lyd_node* node, const std::shared_ptr<RepositoryPtr> & repo): m_parent{parent}, m_node{node}, m_priv_repo{repo}
 {
     //add the children
-    if(m_node && m_node->child && !(m_node->schema->nodetype == LYS_LEAF ||
-                          m_node->schema->nodetype == LYS_LEAFLIST ||
-                          m_node->schema->nodetype == LYS_ANYXML))
+    if (m_node &&
+        !(m_node->schema->nodetype & (LYS_LEAF | LYS_LEAFLIST | LYS_ANYXML | LYS_ANYDATA)) &&
+        m_node->child)
     {
         lyd_node *iter = nullptr;
         LY_TREE_FOR(m_node->child, iter) {
@@ -145,7 +145,13 @@ ydk::path::DataNodeImpl::create_datanode(const std::string& path, const std::str
         }
     }
     populate_new_schemas_from_path(path);
-    populate_new_schemas_from_path(v);
+
+    // Do not populate new schemas from URL value
+    if ( !(v.length() > strlen("http://") && v.substr(0, strlen("http://")) == "http://") &&
+         !(v.length() > strlen("https://") && v.substr(0, strlen("https://")) == "https://") )
+    {
+        populate_new_schemas_from_path(v);
+    }
 
     return create_helper(path, v);
 }
@@ -241,7 +247,7 @@ ydk::path::DataNodeImpl::create_helper(const std::string& path, const std::strin
         if (i != segments.size() - 1)
         {
             YLOG_DEBUG("Creating new data path '{}' in '{}'", child_segment, cn->schema->name);
-            cn = lyd_new_path(cn, nullptr, child_segment.c_str(), nullptr, LYD_ANYDATA_SXML, 0);
+            cn = lyd_new_path(cn, nullptr, child_segment.c_str(), nullptr, LYD_ANYDATA_CONSTSTRING, 0);
         }
         else
         {
@@ -304,15 +310,15 @@ ydk::path::DataNodeImpl::set_value(const std::string& value)
             throw(YInvalidArgumentError{"Invalid value"});
         }
     }
-    else if (s_node->nodetype == LYS_ANYXML)
+    else if (s_node->nodetype == LYS_ANYXML || s_node->nodetype == LYS_ANYDATA)
     {
         lyd_node_anydata* anyxml = reinterpret_cast<lyd_node_anydata *>(m_node);
         anyxml->value.str = value.c_str();
     }
     else
     {
-        YLOG_ERROR("Trying to set value {} for a non leaf non anyxml node.", value);
-        throw(YInvalidArgumentError{"Cannot set value for this Data Node"});
+        YLOG_ERROR("Trying to set value '{}' for a non leaf, anyxml, anydata node.", value);
+        throw(YInvalidArgumentError{"Cannot set value for Data Node"});
     }
 }
 
@@ -323,10 +329,19 @@ ydk::path::DataNodeImpl::get_value() const
     std::string ret {};
     if (s_node->nodetype == LYS_LEAF || s_node->nodetype == LYS_LEAFLIST) {
         lyd_node_leaf_list* leaf= reinterpret_cast<lyd_node_leaf_list *>(m_node);
-        return leaf->value_str;
-    } else if (s_node->nodetype == LYS_ANYXML ){
+        ret = leaf->value_str;
+    } else if (s_node->nodetype == LYS_ANYXML || s_node->nodetype == LYS_ANYDATA) {
         lyd_node_anydata* anyxml = reinterpret_cast<lyd_node_anydata *>(m_node);
-        return anyxml->value.str;
+        if (anyxml->value.xml && *(anyxml->value.str) == '\0') {
+            char *buf;
+            lyxml_print_mem(&buf, anyxml->value.xml,
+                            LYXML_PRINT_FORMAT | LYXML_PRINT_NO_LAST_NEWLINE | LYXML_PRINT_SIBLINGS);
+            ret = buf;
+            free(buf);
+        }
+        else {
+            ret = anyxml->value.str;
+        }
     }
     return ret;
 }
@@ -379,9 +394,9 @@ ydk::path::DataNodeImpl::get_children() const
     std::vector<std::shared_ptr<DataNode>> ret{};
     //the ordering should be determined by the lyd_node
     lyd_node *iter;
-    if(m_node && m_node->child && !(m_node->schema->nodetype == LYS_LEAF ||
-                          m_node->schema->nodetype == LYS_LEAFLIST ||
-                          m_node->schema->nodetype == LYS_ANYXML))
+    if (m_node &&
+        !(m_node->schema->nodetype & (LYS_LEAF | LYS_LEAFLIST | LYS_ANYXML | LYS_ANYDATA)) &&
+        m_node->child)
     {
         LY_TREE_FOR(m_node->child, iter){
             auto p = child_map.find(iter);

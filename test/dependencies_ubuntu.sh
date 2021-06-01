@@ -1,6 +1,6 @@
 #!/bin/bash
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,17 +27,17 @@
 # ------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date) *** dependencies_ubuntu.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date) *** dependencies_ubuntu.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
     local cmd=$@
     print_msg "Running: $cmd"
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
@@ -67,15 +67,16 @@ function install_dependencies {
         run_cmd sudo apt-get install libtool -y > /dev/null
     fi
     if [[ $codename == "focal" ]]; then
-        sudo apt-get install -y mlocate git
+        sudo apt-get install -y mlocate git > /dev/null
         if [[ ! -h /usr/local/lib/libnettle.so.6 ]]; then
           cd /usr/local/lib/
           sudo ln -s $curr_dir/3d_party/linux/ubuntu/lib/libnettle.so.6.4
           sudo ln -s libnettle.so.6.4 libnettle.so.6
+          cd -
         fi
     else
-        run_cmd sudo apt-get install -y locate git
-        run_cmd sudo apt-get install -y curl libcurl4-openssl-dev
+        run_cmd sudo apt-get install -y locate git > /dev/null
+        run_cmd sudo apt-get install -y curl libcurl4-openssl-dev > /dev/null
     fi
     run_cmd sudo apt-get install -y bison doxygen flex unzip wget cmake gdebi-core lcov > /dev/null
     run_cmd sudo apt-get install -y libcmocka0 libpcre3-dev libpcre++-dev > /dev/null
@@ -100,7 +101,7 @@ function check_install_gcc {
     gcc_version="4.0.0"
   fi
   local major=$(echo $gcc_version | cut -d '.' -f 1)
-  if [[ $gcc_version < "4.8.1" || $major > 7 ]]
+  if [[ $gcc_version < "4.8.1" || $major -gt 7 ]]
   then
     print_msg "Installing gcc/g++ version 7"
     sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
@@ -112,19 +113,24 @@ function check_install_gcc {
     sudo ln -fs /usr/bin/gcc-7 /usr/bin/gcc
     gcc_version=$(echo $(gcc --version) | awk '{ print $3 }' | cut -d '-' -f 1)
     print_msg "Installed gcc/g++ version is $gcc_version"
+  else
+    sudo ln -fs /usr/bin/g++ /usr/bin/c++
+    sudo ln -fs /usr/bin/gcc /usr/bin/cc
   fi
 }
 
 function check_install_curl {
   if [[ ! -x /usr/local/bin/curl ]]; then
     print_msg "Installing curl from source"
-    git clone https://github.com/curl/curl.git
+    git clone https://github.com/curl/curl.git -b curl-7_61_1
     cd curl
     ./buildconf
-    ./configure --enable-versioned-symbols > /dev/null
+    ./configure --enable-versioned-symbols --with-openssl > /dev/null
     make > /dev/null
     sudo make install
     cd -
+    sudo rm -f /usr/lib/x86_64-linux-gnu/libcurl.so
+    sudo ln -sf /usr/local/lib/libcurl.so.4 /usr/lib/x86_64-linux-gnu/libcurl.so
     rm -rf curl
     print_msg "Installed curl version: $(curl --version | sed 1q | awk '{print$2}')"
   fi
@@ -160,7 +166,7 @@ function check_install_go {
   fi
   if (( $minor < 9 )); then
     print_msg "Installing Golang version 1.13.1 in /usr/local/go"
-    run_cmd sudo wget https://storage.googleapis.com/golang/go1.13.1.linux-amd64.tar.gz
+    run_cmd wget https://storage.googleapis.com/golang/go1.13.1.linux-amd64.tar.gz
     sudo tar -zxf  go1.13.1.linux-amd64.tar.gz -C /usr/local/
     rm -f go1.13.1.linux-amd64.tar.gz
     cd /usr/local/bin
@@ -171,7 +177,7 @@ function check_install_go {
 
 function check_install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $ubuntu_release < 20 ]]; then
+    if [[ $ubuntu_release -lt 16 ]]; then
       print_msg "Installing confd-basic-6.2"
       run_cmd wget https://github.com/CiscoDevNet/ydk-gen/files/562538/confd-basic-6.2.linux.x86_64.zip &> /dev/null
       unzip confd-basic-6.2.linux.x86_64.zip
@@ -205,7 +211,7 @@ check_install_libssh
 
 check_install_go
 
-if [[ $ubuntu_release > 19 ]]; then
+if [[ $ubuntu_release -gt 19 ]]; then
   check_install_curl
 fi
 check_install_confd

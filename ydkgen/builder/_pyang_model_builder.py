@@ -21,9 +21,9 @@
 
 import logging
 import os
-import pyang
+from pyang import repository as _repository, context as _context
 import re
-import sys
+# import sys
 
 from pyang import error, statements
 from pyang.error import err_add
@@ -36,20 +36,19 @@ logger.addHandler(logging.NullHandler())
 
 class PyangModelBuilder(object):
     def __init__(self, resolved_model_dir):
-        self.repos = pyang.FileRepository(resolved_model_dir, False)
-        self.ctx = pyang.Context(self.repos)
+        self.repos = _repository.FileRepository(resolved_model_dir, False)
+        self.ctx = _context.Context(self.repos)
         self.resolved_model_dir = resolved_model_dir
         self.submodules = []
-        try:
-            reload(sys)
-            sys.setdefaultencoding('utf8')
-        except:
-            pass
+        # try:
+        #     sys.reload()
+        #     sys.setdefaultencoding('utf8')
+        # except:
+        #     pass
 
     def parse_and_return_modules(self):
         """ Use pyang to parse the files, validate them and get a list of modules.
 
-            :param str resolved_model_dir The directory where all models to be compiled are found.
             :raise YdkGenException If there was a problem parsing the modules
         """
         statements.add_validation_fun('reference_3', ['deviation'], self._add_i_deviation)
@@ -63,7 +62,7 @@ class PyangModelBuilder(object):
         modules = self._get_pyang_modules(filenames)
         self._validate_pyang_modules(filenames)
 
-        self.submodules = [m for m in modules if  m.keyword == 'submodule']
+        self.submodules = [m for m in modules if m.keyword == 'submodule']
         return [m for m in modules if m.keyword == 'module']
 
     def get_submodules(self):
@@ -184,7 +183,6 @@ class PyangModelBuilder(object):
 
     def _set_i_aug(self, ctx, stmt):
         """ inject bool 'i_augment' to top statement for model being augmented"""
-        i_target_node = None
         if hasattr(stmt, 'i_target_node'):
             i_target_node = stmt.i_target_node
         else:
@@ -227,7 +225,7 @@ class PyangModelBuilder(object):
                 logger.debug(
                     'Parsing file %s. Module name: %s. Revision: %s', filename, name, rev)
                 module = self.ctx.add_module(filename, text, format, name, rev,
-                                        expect_failure_error=False)
+                                             expect_failure_error=False)
             else:
                 module = self.ctx.add_module(filename, text)
             if module is None:

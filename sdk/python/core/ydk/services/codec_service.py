@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import importlib
 
 from ydk.entity_utils import get_data_node_from_entity as _get_data_node_from_entity
 from ydk.entity_utils import get_entity_from_data_node as _get_entity_from_data_node
-from ydk.entity_utils import XmlSubtreeCodec
+from ydk.entity_utils import XmlSubtreeCodec, JsonSubtreeCodec
 from ydk.entity_utils import _payload_to_top_entity, _get_bundle_name
 
 from ydk.path import Codec as _Codec
@@ -113,17 +113,22 @@ class CodecService(object):
         root_schema = provider.get_root_schema(bundle_name)
 
         if subtree:
-            if provider.encoding != EncodingFormat.XML:
-                raise YServiceError('Subtree option can only be used with XML encoding')
-            xml_codec = XmlSubtreeCodec()
-            return xml_codec.encode(entity, root_schema)
-
-        with _handle_error():
-            data_node = _get_data_node_from_entity(entity, root_schema)
-            codec_service = _Codec()
-            result = codec_service.encode(data_node, provider.encoding, pretty)
-            self.logger.debug("Performing encode operation, resulting in {}".format(result))
-            return result
+            if provider.encoding == EncodingFormat.XML:
+                self.logger.debug(
+                    "Performing encode operation on entity '{}' with XmlSubtreeCodec".format(entity.yang_name))
+                result = XmlSubtreeCodec().encode(entity, root_schema)
+            else:
+                self.logger.debug(
+                    "Performing encode operation on entity '{}' with JsonSubtreeCodec".format(entity.yang_name))
+                result = JsonSubtreeCodec().encode(entity, root_schema, pretty)
+        else:
+            self.logger.debug("Performing encode operation on entity '{}'".format(entity.yang_name))
+            with _handle_error():
+                data_node = _get_data_node_from_entity(entity, root_schema)
+                codec_service = _Codec()
+                result = codec_service.encode(data_node, provider.encoding, pretty)
+        self.logger.debug("Encode operation result:\n{}".format(result))
+        return result
 
     @_check_argument
     def decode(self, provider, payload_holder, subtree=False):
@@ -172,10 +177,13 @@ class CodecService(object):
         entity = _payload_to_top_entity(payload, provider.encoding)
 
         if subtree:
-            if provider.encoding != EncodingFormat.XML:
-                raise YServiceError('Subtree option can only be used with XML encoding')
-            xml_codec = XmlSubtreeCodec()
-            return xml_codec.decode(payload, entity)
+            if provider.encoding == EncodingFormat.XML:
+                codec = XmlSubtreeCodec()
+                self.logger.debug("Performing decode operation with XmlSubtreeCodec on payload:\n{}".format(payload))
+            else:
+                codec = JsonSubtreeCodec()
+                self.logger.debug("Performing decode operation with JsonSubtreeCodec on payload:\n{}".format(payload))
+            return codec.decode(payload, entity)
 
         bundle_name = _get_bundle_name(entity)
         provider.initialize(bundle_name, _get_yang_path(entity))
@@ -183,7 +191,6 @@ class CodecService(object):
         root_schema = provider.get_root_schema(bundle_name)
 
         self.logger.debug("Performing decode operation on payload:\n{}".format(payload))
-
         codec_service = _Codec()
         root_data_node = codec_service.decode(root_schema, payload, provider.encoding)
         data_nodes = root_data_node.get_children();
@@ -198,6 +205,7 @@ class CodecService(object):
     def _log_error_and_raise_exception(self, msg, exception_class):
         self.logger.error(msg)
         raise exception_class(msg)
+
 
 def _get_yang_path(entity):
     """Return YANG models install location for entity.

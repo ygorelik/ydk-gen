@@ -64,7 +64,6 @@ using json = nlohmann::json;
         get_namespaces_from_xml_doc(root, namespaces);
 
         xmlFreeDoc(doc);
-        xmlCleanupParser();
 
         return namespaces;
     }

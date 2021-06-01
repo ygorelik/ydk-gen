@@ -32,20 +32,14 @@ class MultiFile(object):
 
 class MultiFileHeader(MultiFile):
     def __init__(self, package, file_index, fragmented):
-        if sys.version_info > (3,):
-            super().__init__(fragmented)
-        else:
-            super(MultiFileHeader, self).__init__(fragmented)
+        super().__init__(fragmented)
         self.file_name = _get_header_name(package, file_index)
         self.include_guard = get_include_guard_name(package.name, file_index)
 
 
 class MultiFileSource(MultiFile):
     def __init__(self, package, file_index, fragmented):
-        if sys.version_info > (3,):
-            super().__init__(fragmented)
-        else:
-            super(MultiFileSource, self).__init__(fragmented)
+        super().__init__(fragmented)
         self.file_name = _get_source_name(package, file_index)
 
 

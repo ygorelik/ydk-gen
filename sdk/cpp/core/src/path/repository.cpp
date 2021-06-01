@@ -1,7 +1,7 @@
 /// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -18,8 +18,13 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
-//////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------
+// This file has been modified by Yan Gorelik, YDK Solutions.
+// All modifications in original under CiscoDevNet domain
+// introduced since October 2019 are copyrighted.
+// All rights reserved under Apache License, Version 2.0.
+// -------------------------------------------------------------
+
 #include <pwd.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -110,7 +115,7 @@ namespace ydk {
             delete [] static_cast<char*>(model_data);
         }
 
-        extern "C" void c_free_data(void *model_data)
+        extern "C" void c_free_data(void *model_data, void *user_data)
         {
             std::free(model_data);
         }
@@ -142,8 +147,8 @@ namespace ydk {
             return enlarged_data;
         }
 
-        extern "C" char* get_module_callback(const char* module_name, const char* module_rev, const char *submod_name, const char *sub_rev,
-                                       void* user_data, LYS_INFORMAT* format, void (**free_module_data)(void *model_data))
+        extern "C" const char* get_module_callback(const char* module_name, const char* module_rev, const char *submod_name, const char *sub_rev,
+                                       void* user_data, LYS_INFORMAT* format, void (**free_module_data)(void *model_data, void *user_data))
         {
             YLOG_DEBUG("Getting module '{}' submodule '{}'", module_name, (submod_name?submod_name:"none"));
             *free_module_data = c_free_data;
@@ -252,7 +257,7 @@ ly_ctx* ydk::path::RepositoryPtr::create_ly_context()
         YLOG_INFO("Path where models are to be downloaded: {}", path);
     }
     YLOG_DEBUG("Creating libyang context in path: {}", path);
-    struct ly_ctx* ctx = ly_ctx_new(path.c_str(), LY_CTX_ALLIMPLEMENTED);
+    struct ly_ctx* ctx = ly_ctx_new(path.c_str(), LY_CTX_ALLIMPLEMENTED | LY_CTX_PREFER_SEARCHDIRS);
 
     if(!ctx) {
         YLOG_ERROR("Could not create repository in: {}", path);

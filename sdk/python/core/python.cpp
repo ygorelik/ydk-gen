@@ -1,5 +1,5 @@
 /*  ----------------------------------------------------------------
- Copyright 2016 Cisco Systems
+ Copyright 2016-2019 Cisco Systems
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -12,7 +12,13 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+ ------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
  ------------------------------------------------------------------*/
+
 #include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
@@ -147,6 +153,16 @@ public:
             LeafDataList,
             ydk::Entity,
             get_name_leaf_data
+        );
+    }
+
+    bool check_leaf_type(const string & leaf_name, ydk::YType leaf_type) const override {
+        PYBIND11_OVERLOAD_PURE(
+            bool,
+            ydk::Entity,
+			check_leaf_type,
+            leaf_name,
+			leaf_type
         );
     }
 
@@ -529,7 +545,9 @@ PYBIND11_MODULE(ydk_, ydk)
         .value("boolean", ydk::YType::boolean)
         .value("enumeration", ydk::YType::enumeration)
         .value("bits", ydk::YType::bits)
-        .value("decimal64", ydk::YType::decimal64);
+        .value("decimal64", ydk::YType::decimal64)
+        .value("anydata", ydk::YType::anydata)
+        .value("union", ydk::YType::union_);
 
     enum_<ydk::path::ModelCachingOption>(types, "ModelCachingOption")
         .value("common", ydk::path::ModelCachingOption::COMMON)
@@ -548,8 +566,9 @@ PYBIND11_MODULE(ydk_, ydk)
                          });
 
     class_<ydk::LeafData>(types, "LeafData")
-        .def(init<const string &, ydk::YFilter, bool, const string &, const string &>())
+        .def(init<const string &, ydk::YType, ydk::YFilter, bool, const string &, const string &>())
         .def_readonly("value", &ydk::LeafData::value, return_value_policy::reference)
+        .def_readonly("type", &ydk::LeafData::type, return_value_policy::reference)
         .def_readonly("yfilter", &ydk::LeafData::yfilter, return_value_policy::reference)
         .def_readonly("is_set", &ydk::LeafData::is_set, return_value_policy::reference)
         .def_readonly("name_space", &ydk::LeafData::name_space, return_value_policy::reference)
@@ -653,7 +672,8 @@ PYBIND11_MODULE(ydk_, ydk)
         .def_readwrite("name", &ydk::Enum::YLeaf::name);
 
     class_<ydk::YLeaf>(types, "YLeaf")
-        .def(init<ydk::YType, string>(), arg("leaf_type"), arg("name"))
+        .def(init<ydk::YType, string, const std::vector<ydk::YType>&>(),
+                  arg("leaf_type"), arg("name"), arg("union_types")=pybind11::list())
         .def("get", &ydk::YLeaf::get, return_value_policy::reference)
         .def("get_name_leafdata", &ydk::YLeaf::get_name_leafdata, return_value_policy::reference)
         .def(self == self, return_value_policy::reference)
@@ -683,6 +703,7 @@ PYBIND11_MODULE(ydk_, ydk)
         .def_readonly("is_set", &ydk::YLeaf::is_set, return_value_policy::reference)
         .def_readonly("name", &ydk::YLeaf::name, return_value_policy::reference)
         .def_readonly("type", &ydk::YLeaf::type, return_value_policy::reference)
+        .def_readwrite("value_type", &ydk::YLeaf::value_type, return_value_policy::reference)
         .def_readwrite("yfilter", &ydk::YLeaf::yfilter)
         .def_readwrite("value_namespace", &ydk::YLeaf::value_namespace)
         .def_readwrite("value_namespace_prefix", &ydk::YLeaf::value_namespace_prefix);
@@ -947,7 +968,8 @@ PYBIND11_MODULE(ydk_, ydk)
     class_<ydk::JsonSubtreeCodec>(entity_utils, "JsonSubtreeCodec")
         .def(init<>())
         .def("encode", &ydk::JsonSubtreeCodec::encode, return_value_policy::reference)
-        .def("decode", &ydk::JsonSubtreeCodec::decode);
+        .def("decode", &ydk::JsonSubtreeCodec::decode)
+		.def("convert_string", &ydk::JsonSubtreeCodec::convert_string, return_value_policy::reference);
 
     entity_utils.def("get_entity_from_data_node", &ydk::get_entity_from_data_node);
     #if defined(PYBIND11_OVERLOAD_CAST)

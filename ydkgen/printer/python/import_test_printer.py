@@ -33,9 +33,10 @@ class ImportTestPrinter(object):
         self.ctx.bline()
         self.ctx.writeln('import unittest')
         self.ctx.bline()
+        self.ctx.bline()
         self.ctx.writeln('class ImportTest(unittest.TestCase):')
         self.ctx.lvl_inc()
-        self.ctx.bline()
+        # self.ctx.bline()
 
         def collect_types(element, typelist):
             sorted(types, key=lambda x: x.name)
@@ -58,10 +59,10 @@ class ImportTestPrinter(object):
             else:
                 self.ctx.writeln('pass')
             self.ctx.lvl_dec()
-            self.ctx.bline()
+
         self.ctx.lvl_dec()
         self.ctx.bline()
-
+        self.ctx.bline()
         self.ctx.writeln("if __name__ == '__main__':")
         self.ctx.lvl_inc()
         self.ctx.writeln('unittest.main()')

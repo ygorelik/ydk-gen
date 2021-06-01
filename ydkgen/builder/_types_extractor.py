@@ -20,16 +20,15 @@
  Extractor for types
 """
 
-from pyang.types import EnumerationTypeSpec, BitsTypeSpec, UnionTypeSpec, PathTypeSpec, \
-    IdentityrefTypeSpec
+from pyang.types import EnumTypeSpec, BitTypeSpec, UnionTypeSpec, PathTypeSpec, IdentityrefTypeSpec
 
 
 class TypesExtractor(object):
     def __init__(self):
-        self.get_enum_type_stmt = lambda stmt: self._get_type_stmt(stmt, EnumerationTypeSpec)
+        self.get_enum_type_stmt = lambda stmt: self._get_type_stmt(stmt, EnumTypeSpec)
         self.get_identity_ref_type_stmt = lambda stmt: self._get_type_stmt(
             stmt, IdentityrefTypeSpec)
-        self.get_bits_type_stmt = lambda stmt: self._get_type_stmt(stmt, BitsTypeSpec)
+        self.get_bits_type_stmt = lambda stmt: self._get_type_stmt(stmt, BitTypeSpec)
         self.get_union_type_stmt = lambda stmt: self._get_type_stmt(stmt, UnionTypeSpec)
 
     def _get_type_stmt(self, stmt, typeSpec):
@@ -65,7 +64,7 @@ class TypesExtractor(object):
         union_type_stmt = self.get_union_type_stmt(type_stmt)
         contained_property_type = type_stmt.i_type_spec
         if isinstance(contained_property_type, IdentityrefTypeSpec):
-            contained_property_type = contained_property_type.base.i_identity.i_class
+            contained_property_type = contained_property_type.idbases[0].i_identity.i_class
         elif enum_type_stmt is not None:
             # this is an enumeration
             contained_property_type = enum_type_stmt.i_enum

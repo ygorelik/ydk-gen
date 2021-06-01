@@ -1,11 +1,7 @@
-//
-// @file path_api.hpp
-// @brief The main ydk public header.
-//
 // YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -22,8 +18,12 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
-//////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------
+// This file has been modified by Yan Gorelik, YDK Solutions.
+// All modifications in original under CiscoDevNet domain
+// introduced since October 2019 are copyrighted.
+// All rights reserved under Apache License, Version 2.0.
+// --------------------------------------------------------------
 
 #ifndef YDK_CORE_HPP
 #define YDK_CORE_HPP
@@ -318,7 +318,6 @@ struct YCoreError : public ydk::YError
     YCoreError();
 
     YCoreError(const std::string& msg);
-
 };
 
 
@@ -363,7 +362,7 @@ struct YDataValidationError : public YCoreError
 
     };
 
-    YDataValidationError();
+    YDataValidationError(const std::string& msg);
 
     /// List of pair<DataNode, ValidationError>. The Validation Error is specific to
     /// this node
@@ -406,7 +405,9 @@ struct YCodecError : public YCoreError
 
         XML_MISS,     ///  missing XML object
         XML_INVAL,    ///  invalid XML object
-        XML_INCHAR,   /// invalid XML character
+        XML_INCHAR,   ///  invalid XML character
+
+		JSON_INVAL,   ///  invalid JSON object
 
         EOF_ERR,      /// unexpected end of input data
 
@@ -415,6 +416,7 @@ struct YCodecError : public YCoreError
     Error err;
 
     YCodecError(YCodecError::Error merror);
+    YCodecError(YCodecError::Error merror, const std::string& msg);
 };
 
 ///

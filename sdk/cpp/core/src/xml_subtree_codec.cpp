@@ -1,6 +1,6 @@
 /*  ----------------------------------------------------------------
  YDK - YANG Development Kit
- Copyright 2016 Cisco Systems. All rights reserved.
+ Copyright 2016-2019 Cisco Systems. All rights reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@
 #include "logger.hpp"
 #include "xml_util.hpp"
 #include "xml_subtree_codec.hpp"
+#include "common_utilities.hpp"
 
 using namespace std;
 
@@ -91,8 +92,9 @@ static const path::SchemaNode* find_child_by_name(const path::SchemaNode & paren
     vector<path::SchemaNode*> s = p->find(name);
     if(s.size()==0)
     {
-        YLOG_ERROR("XMLCodec: Could not find node '{}'", name);
-        throw YServiceError{"Could not find node " + name};
+        YLOG_ERROR("XMLCodec: Could not find child node '{}' in schema node '{}'",
+                   name, parent_schema.get_statement().arg);
+        throw YServiceError{"Could not find child schema node " + name};
     }
     return s[0];
 }
@@ -136,11 +138,20 @@ static void populate_xml_node(Entity & entity, const path::SchemaNode & parent_s
     walk_children(entity, *schema, child);
 }
 
-static const xmlChar* get_content_from_leafdata(LeafData & leaf_data)
+static const xmlChar* get_content_from_leafdata(string leaf_name, LeafData & leaf_data)
 {
     const xmlChar* content = NULL;
     if(leaf_data.is_set)
     {
+        string leaf_type = "leaf";
+        auto pos = leaf_name.find("[.=\"");
+        if (pos != string::npos) {
+            leaf_data.value = leaf_name.substr(pos+4, leaf_name.length()-pos-6);
+            leaf_name = leaf_name.substr(0, pos);
+            leaf_type = "leaf-list";
+        }
+        YLOG_DEBUG("XmlCodec: Creating {} node '{}' with value: '{}'",
+                   leaf_type, leaf_name, leaf_data.value);
         content = to_xmlchar(leaf_data.value);
     }
     else if(is_set(leaf_data.yfilter))
@@ -175,7 +186,7 @@ static void populate_xml_node_contents(const path::SchemaNode & parent_schema, E
         YLOG_DEBUG("XMLCodec: Creating child {} of {} with value: '{}', is_set: {}", name_value.first, parent_schema.get_path(),
                 leaf_data.value, leaf_data.is_set);
 
-        const xmlChar* content = get_content_from_leafdata(leaf_data);
+        const xmlChar* content = get_content_from_leafdata(name_value.first, leaf_data);
         if(leaf_to_be_created(leaf_data))
         {
             xmlNodePtr child = create_and_populate_xml_node(parent_schema, *schema, leaf_data.yfilter, xml_node, content);
@@ -205,16 +216,57 @@ std::shared_ptr<Entity> XmlSubtreeCodec::decode(const std::string & payload, std
     return entity;
 }
 
+static string remove_cdata_tags(const string & content)
+{
+    string c{content};
+    auto cdata_pos = c.find("<![CDATA[");
+    auto cdata_end_pos = c.rfind("]]>");
+    if (cdata_pos != string::npos && cdata_end_pos != string::npos)
+    {
+        cdata_pos += 9;
+        c = c.substr(cdata_pos, cdata_end_pos-cdata_pos);
+    }
+    return trim(c);
+}
+
 static void check_and_set_leaf(Entity & entity, Entity * parent, xmlNodePtr xml_node, xmlDocPtr doc)
 {
     string current_node_name{to_string(xml_node->name)};
-    if(xml_node->children == NULL)
+    if (xml_node->children == NULL)
     {
-        YLOG_DEBUG("XMLCodec: Creating leaf '{}' with no value", current_node_name);
-        entity.set_filter(current_node_name, YFilter::read);
+        if (!entity.check_leaf_type(current_node_name, YType::empty))
+        {
+            YLOG_DEBUG("XMLCodec: Creating leaf '{}' with no value", current_node_name);
+            entity.set_filter(current_node_name, YFilter::read);
+        }
+        else
+        {
+            YLOG_DEBUG("XMLCodec: Creating leaf '{}' with empty value", current_node_name);
+            entity.set_value(current_node_name, "");
+        }
     }
-    else
+    else if (entity.check_leaf_type(current_node_name, YType::anydata))
     {
+        xmlBufferPtr buffer = xmlBufferCreate();
+        if (xmlNodeDump(buffer, doc, xml_node, 0, 0) < 0)
+        {
+            YLOG_ERROR("XMLCodec: Failed create anydata leaf '{}'", current_node_name);
+        }
+        else {
+            string value = to_string(buffer->content);
+            auto start_pos = value.find(">");
+            auto end_pos = value.rfind("</");
+            if (start_pos != string::npos && end_pos != string::npos)
+            {
+                value = trim(value.substr(start_pos+1, end_pos-start_pos-1));
+                value = remove_cdata_tags(value);
+            }
+            YLOG_DEBUG("XMLCodec: Creating anydata leaf '{}' with value:\n{}", current_node_name, value);
+            entity.set_value(current_node_name, value);
+        }
+        xmlBufferFree(buffer);
+    }
+    else {
         decode_xml(doc, xml_node->children, entity, parent, current_node_name);
     }
 }
@@ -242,12 +294,12 @@ static string resolve_leaf_value_namespace(const string & content, const string 
             c = module_name + ":" + c;
         }
     }
-    return c;
+    return remove_cdata_tags(c);
 }
 
 static void check_and_set_content(Entity & entity, const string & leaf_name, xmlNodePtr parent_xml_node, xmlChar * content, xmlDocPtr doc)
 {
-    if(leaf_name.size()>0 && !isonlywhitespace(content))
+    if (entity.has_leaf_or_child_of_name(leaf_name))
     {
         xmlNsPtr * nsList = xmlGetNsList(doc, parent_xml_node);
         string name_space;

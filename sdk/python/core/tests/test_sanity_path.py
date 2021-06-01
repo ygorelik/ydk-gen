@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,21 +44,18 @@ class SanityTest(unittest.TestCase):
             cls.port,
             cls.protocol,
             cls.on_demand,
-            cls.common_cache,
-            cls.timeout)
+        )
         cls.root_schema = cls.nc_session.get_root_schema()
         cls.codec = Codec()
 
     def _delete_runner(self):
         runner = self.root_schema.create_datanode("ydktest-sanity:runner")
         xml = self.codec.encode(runner, EncodingFormat.XML)
-        create_rpc = self.root_schema.create_rpc("ydk:delete")
-        create_rpc.get_input_node().create_datanode("entity", xml)
-        # RuntimeError: YCoreError: YCodecError:Schema node not found.. Path: input/config if invoked
-        create_rpc(self.nc_session)
+        delete_rpc = self.root_schema.create_rpc("ydk:delete")
+        delete_rpc.get_input_node().create_datanode("entity", xml)
+        delete_rpc(self.nc_session)
 
     def tearDown(self):
-        # RuntimeError: YCoreError: YCodecError:Schema node not found.. Path: input/config if invoked
         self._delete_runner()
 
     def test_leafs(self):
@@ -163,25 +160,6 @@ class SanityTest(unittest.TestCase):
         datanode = get_rpc(self.nc_session)
         self.assertIsNotNone(datanode)
 
-    def test_anyxml_action(self):
-        expected = '''<data xmlns="http://cisco.com/ns/yang/ydktest-action">
-  <action-node>
-    <test>xyz</test>
-  </action-node>
-</data>
-'''
-        native = self.root_schema.create_datanode("ydktest-sanity-action:data", "")
-        a = native.create_action("action-node")
-        a.create_datanode("test", "xyz")
-
-        xml = self.codec.encode(native, EncodingFormat.XML)
-        self.assertEqual(xml, expected)
-
-        try:
-            native(self.nc_session)
-        except Exception as e:
-            self.assertTrue(isinstance(e, RuntimeError))
-
     def test_path_codec_list(self):
         root_shema = self.nc_session.get_root_schema()
 
@@ -200,9 +178,9 @@ class SanityTest(unittest.TestCase):
         xml_decode = self.codec.encode(node_decode, EncodingFormat.XML, True)
         self.assertEqual(xml_encode, xml_decode)
 
-    def test_rpc_get_schema_no_decode(self):
+    def test_get_schema_no_decode(self):
         rpc = self.root_schema.create_rpc("ietf-netconf-monitoring:get-schema")
-        rpc.get_input_node().create_datanode("identifier", "ydktest-sanity-action")
+        rpc.get_input_node().create_datanode("identifier", "main")
 
         reply = self.nc_session.execute_netconf_operation(rpc)
         self.assertTrue(len(reply) > 0)

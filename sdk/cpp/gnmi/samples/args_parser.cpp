@@ -1,5 +1,6 @@
 /*  ----------------------------------------------------------------
- Copyright 2016 Cisco Systems
+ YDK - YANG Development Kit
+ Copyright 2016-2019 Cisco Systems
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -12,6 +13,11 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+-------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
 ------------------------------------------------------------------*/
 
 #include <iostream>
@@ -133,7 +139,7 @@ void print_tree(ydk::path::DataNode* dn, const std::string& indent)
 {
   try {
     ydk::path::Statement s = dn->get_schema_node().get_statement();
-    if(s.keyword == "leaf" || s.keyword == "leaf-list" || s.keyword == "anyxml") {
+    if (s.keyword == "leaf" || s.keyword == "leaf-list" || s.keyword == "anyxml" || s.keyword == "anydata") {
         auto val = dn->get_value();
         std::cout << indent << "<" << s.arg << ">" << val << "</" << s.arg << ">" << std::endl;
     } else {

@@ -1,7 +1,7 @@
 // YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -18,12 +18,12 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// -------------------------------------------------------------------
+// --------------------------------------------------------------
 // This file has been modified by Yan Gorelik, YDK Solutions.
 // All modifications in original under CiscoDevNet domain
 // introduced since October 2019 are copyrighted.
 // All rights reserved under Apache License, Version 2.0.
-//////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------
 
 #include <iostream>
 #include "../src/path_api.hpp"
@@ -39,7 +39,7 @@ static std::unordered_map<std::string, ydk::path::Capability> test_openconfig_lo
     {"http://openconfig.net/yang/policy-types", {"openconfig-policy-types", ""}},
     {"http://openconfig.net/yang/routing-policy", {"openconfig-routing-policy", ""}},
     {"http://openconfig.net/yang/openconfig-types", {"openconfig-types", ""}},
-    {"urn:ietf:params:xml:ns:netconf:base:1.0", {"ietf-netconf", ""}},
+    {"urn:ietf:params:xml:ns:netconf:base:1.0", {"ietf-netconf", "", {"validate", "candidate"}, {}}},
     {"urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring", {"ietf-netconf-monitoring", ""}},
     {"urn:ietf:params:xml:ns:yang:ietf-interfaces", {"ietf-interfaces", ""}},
     {"http://cisco.com/ns/yang/ydk", {"ydk", ""}},
@@ -48,11 +48,10 @@ static std::unordered_map<std::string, ydk::path::Capability> test_openconfig_lo
     {"http://cisco.com/ns/yang/ydktest-types", {"ydktest-types", ""}}
 };
 
-
 namespace mock {
 class MockSession : public ydk::path::Session 
 {
-public:
+  public:
     MockSession(const std::string & searchdir, const std::vector<ydk::path::Capability> capabilities, ydk::EncodingFormat encoding)
      : m_searchdir{searchdir}, m_capabilities{capabilities}, m_encoding{encoding}
     {
@@ -67,7 +66,6 @@ public:
     ~MockSession()
     {
     }
-
 
     ydk::path::RootSchemaNode& get_root_schema() const
     {
@@ -96,7 +94,8 @@ public:
 
         return nullptr;
     }
-private:
+
+  private:
     std::string m_searchdir;
     std::vector<ydk::path::Capability> m_capabilities;
     std::shared_ptr<ydk::path::RootSchemaNode> root_schema;
@@ -112,7 +111,7 @@ static std::vector<ydk::path::Capability> test_openconfig {
     {"openconfig-policy-types", ""},
     {"openconfig-routing-policy", ""},
     {"openconfig-types", ""},
-    {"ietf-netconf", ""},
+    {"ietf-netconf", "", {"validate", "candidate"}, {}},
     {"ietf-netconf-monitoring", ""},
     {"ietf-interfaces", ""},
     {"ydk", ""},
@@ -120,4 +119,3 @@ static std::vector<ydk::path::Capability> test_openconfig {
     {"ydktest-sanity-action", ""},
     {"ydktest-types", ""}
 };
-

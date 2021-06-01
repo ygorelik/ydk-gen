@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
 
 import importlib
 
@@ -25,6 +30,7 @@ REFERENCE_ENUM_CLASS = 5
 REFERENCE_BITS = 6
 REFERENCE_UNION = 7
 ANYXML_CLASS = 8
+ANYDATA_CLASS = 9
 
 
 class _MetaInfoClassMember(object):

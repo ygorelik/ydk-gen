@@ -19,12 +19,8 @@
 Sample app for odl.
 """
 import os
-import sys
 from argparse import ArgumentParser
-if sys.version_info > (3,):
-    from urllib.parse import urlparse
-else:
-    from urlparse import urlparse
+from urllib.parse import urlparse
 
 from ydk.types import Empty
 from ydk.services import CRUDService

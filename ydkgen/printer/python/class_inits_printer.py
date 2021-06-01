@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
 
 """
 class_inits_printer.py
@@ -23,7 +28,7 @@ class_inits_printer.py
 
 from pyang.types import UnionTypeSpec
 
-from ydkgen.api_model import Bits, Class, Package, DataType, Enum, snake_case, get_property_name
+from ydkgen.api_model import Bits, Class, Package, DataType, Enum, get_property_name
 from ydkgen.builder import TypesExtractor
 from ydkgen.common import get_module_name, has_list_ancestor, is_top_level_class, get_qualified_yang_name, get_unclashed_name
 from ydkgen.printer.meta_data_util import get_meta_info_data
@@ -33,7 +38,7 @@ from .class_get_entity_path_printer import GetAbsolutePathPrinter, GetSegmentPat
 def get_leafs(clazz):
     leafs = []
     for child in clazz.owned_elements:
-        if child.stmt.keyword in ('leaf', 'anyxml'):
+        if child.stmt.keyword in ('leaf', 'anyxml', 'anydata'):
             leafs.append(child)
     return leafs
 
@@ -92,19 +97,9 @@ class ClassInitsPrinter(object):
 
     def _print_class_inits_body(self, clazz, leafs, children):
         if clazz.is_identity():
-            self.ctx.writeln('if sys.version_info > (3,):')
-            self.ctx.writeln('    super().__init__(ns, pref, tag)')
-            self.ctx.writeln('else:')
-            line = '    super(%s, self).__init__(ns, pref, tag)' % clazz.name
-            self.ctx.writeln(line)
+            self.ctx.writeln('super().__init__(ns, pref, tag)')
         else:
-            self.ctx.writeln('if sys.version_info > (3,):')
-            self.ctx.writeln('    super().__init__()')
-            self.ctx.writeln('else:')
-            if self.one_class_per_module:
-                self.ctx.writeln('    super(%s, self).__init__()' % clazz.name)
-            else:
-                self.ctx.writeln('    super(%s, self).__init__()' % clazz.qn())
+            self.ctx.writeln('super().__init__()')
             if clazz.owner is not None and isinstance(clazz.owner, Package):
                 self.ctx.writeln('self._top_entity = None')
             self.ctx.bline()
@@ -138,15 +133,15 @@ class ClassInitsPrinter(object):
 
         for prop in leafs:
             leaf_name = prop.name
-            ytype = self._get_type_name(prop.property_type)
+            ytype = _get_type_name(prop.property_type)
 
             leaf_type = 'YLeaf'
-            declaration_stmt =      'self.%s = None' % leaf_name
+            declaration_stmt = 'self.%s = None' % leaf_name
             if prop.is_many:
                 leaf_type = 'YLeafList'
-                declaration_stmt =  'self.%s = []' % leaf_name
+                declaration_stmt = 'self.%s = []' % leaf_name
             elif isinstance(prop.property_type, Bits):
-                declaration_stmt =  'self.%s = Bits()' % leaf_name
+                declaration_stmt = 'self.%s = Bits()' % leaf_name
 
             yname = prop.stmt.arg
             if all((prop.stmt.top.arg != clazz.stmt.top.arg,
@@ -180,7 +175,7 @@ class ClassInitsPrinter(object):
         for child in children:
             if not child.is_many:
                 self.ctx.bline()
-                if (child.stmt.search_one('presence') is None):
+                if child.stmt.search_one('presence') is None:
                     if self.one_class_per_module:
                         self.ctx.writeln('self.%s = %s.%s()' % (
                             child.name, get_unclashed_name(child.property_type, child.property_type.iskeyword),
@@ -189,7 +184,7 @@ class ClassInitsPrinter(object):
                         self.ctx.writeln('self.%s = %s()' % (child.name, child.property_type.qn()))
                     self.ctx.writeln('self.%s.parent = self' % child.name)
                 else:
-                    self.ctx.writeln('self.%s = None' % (child.name))
+                    self.ctx.writeln('self.%s = None' % child.name)
                 self.ctx.writeln('self._children_name_map["%s"] = "%s"' % (child.name, get_qualified_yang_name(child)))
 
     def _print_init_lists(self, clazz):
@@ -217,28 +212,29 @@ class ClassInitsPrinter(object):
         self.ctx.lvl_dec()
         self.ctx.bline()
 
-    def _get_type_name(self, prop_type):
-        if prop_type.name == 'string':
-            return 'str'
-        elif prop_type.name == 'leafref':
-            return 'str'
-        elif prop_type.name == 'decimal64':
-            return 'str'
-        elif prop_type.name == 'union':
-            return 'str'
-        elif prop_type.name == 'binary':
-            return 'str'
-        elif prop_type.name == 'instance-identifier':
-            return 'str'
-        elif isinstance(prop_type, Bits):
-            return 'bits'
-        elif isinstance(prop_type, Class) and prop_type.is_identity():
-            return 'identityref'
-        elif isinstance(prop_type, Enum):
-            return 'enumeration'
-        elif isinstance(prop_type, DataType):
-            return 'str'
-        return prop_type.name
+
+def _get_type_name(prop_type):
+    if prop_type.name == 'string':
+        return 'str'
+    elif prop_type.name == 'leafref':
+        return 'str'
+    elif prop_type.name == 'decimal64':
+        return 'str'
+    elif prop_type.name == 'union':
+        return 'union'
+    elif prop_type.name == 'binary':
+        return 'str'
+    elif prop_type.name == 'instance-identifier':
+        return 'str'
+    elif isinstance(prop_type, Bits):
+        return 'bits'
+    elif isinstance(prop_type, Class) and prop_type.is_identity():
+        return 'identityref'
+    elif isinstance(prop_type, Enum):
+        return 'enumeration'
+    elif isinstance(prop_type, DataType):
+        return 'str'
+    return prop_type.name
 
 
 class ClassSetAttrPrinter(object):
@@ -252,7 +248,7 @@ class ClassSetAttrPrinter(object):
         yleaf_lists = get_leaf_lists(clazz)
         children = get_child_classes(clazz, self.one_class_per_module)
 
-        if len(yleafs) + len(yleaf_lists) + len(children)> 0:
+        if len(yleafs) + len(yleaf_lists) + len(children) > 0:
             self._print_class_setattr_header()
             self._print_class_setattr_body(clazz, leafs)
             self._print_class_setattr_trailer()
@@ -262,11 +258,11 @@ class ClassSetAttrPrinter(object):
         self.ctx.lvl_inc()
 
     def _print_class_setattr_body(self, clazz, leafs):
-        leaf_names = ['%s' % (leaf.name) for leaf in leafs]
+        leaf_names = ['%s' % leaf.name for leaf in leafs]
         if self.one_class_per_module:
-            self.ctx.writeln('self._perform_setattr(%s, %s, name, value)'%(clazz.name, leaf_names))
+            self.ctx.writeln('self._perform_setattr(%s, %s, name, value)' % (clazz.name, leaf_names))
         else:
-            self.ctx.writeln('self._perform_setattr(%s, %s, name, value)'%(clazz.qn(), leaf_names))
+            self.ctx.writeln('self._perform_setattr(%s, %s, name, value)' % (clazz.qn(), leaf_names))
 
     def _print_class_setattr_trailer(self):
         self.ctx.lvl_dec()
@@ -274,7 +270,7 @@ class ClassSetAttrPrinter(object):
 
 
 def get_ptypes(prop, property_type, type_stmt, one_class_per_module, identity_subclasses):
-    if prop.stmt.keyword == 'anyxml':
+    if prop.stmt.keyword == 'anyxml' or prop.stmt.keyword == 'anydata':
         return ["'str'"]
 
     ptypes = []
@@ -317,7 +313,7 @@ def get_pmodule_name_for_one_class_per_module(pmodule_name, property_type):
             pmodule_name = "'%s.%s'" % (p, p.split('.')[-1])
         else:
             c = property_type.owner
-            while (not isinstance(c.owner, Package)):
+            while not isinstance(c.owner, Package):
                 c = c.owner
             c = get_property_name(c, c.iskeyword)
             pmodule_name = "'%s.%s.%s'" % (p, c, c)

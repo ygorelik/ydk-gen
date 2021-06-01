@@ -1,6 +1,6 @@
 #!/bin/bash
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,17 +27,17 @@
 # ------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date) *** dependencies_centos.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date) *** dependencies_centos.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    local cmd=$@
+    local cmd=$*
     print_msg "Running: $cmd"
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
@@ -86,17 +86,22 @@ function install_dependencies {
     run_cmd sudo yum update -y > /dev/null
     run_cmd sudo yum install epel-release -y > /dev/null
 #    run_cmd sudo yum install https://centos7.iuscommunity.org/ius-release.rpm -y > /dev/null
-    run_cmd sudo yum install which libxml2-devel libxslt-devel libssh-devel libtool gcc-c++ pcre-devel -y > /dev/null
-    run_cmd sudo yum install cmake3 wget curl-devel unzip make java mlocate -y > /dev/null
+    run_cmd sudo yum install which libxml2-devel libxslt-devel libssh-devel libtool gcc-c++ -y > /dev/null
+    run_cmd sudo yum install pcre-devel pcre-static.x86_64 glibc-static libstdc++-static -y > /dev/null
+    run_cmd sudo yum install cmake3 wget curl-devel unzip make java mlocate flex bison -y > /dev/null
     run_cmd sudo yum install python3-devel -y > /dev/null
     sudo yum install valgrind -y > /dev/null
     sudo yum install rpm-build redhat-lsb redhat-lsb-core -y > /dev/null
     sudo yum install python3-venv -y
     centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
     print_msg "Running Centos/RHEL version $centos_version"
+    if [[ $centos_version == 8 ]]; then
+      sudo yum install dnf-plugins-core -y
+      sudo yum config-manager --set-enabled powertools
+    fi
+    sudo yum install doxygen -y
     if [[ $centos_version < 8 ]]; then
       # TODO: to be resolved for Centos-8
-      sudo yum install doxygen -y
       sudo yum install lcov -y
     fi
 }
@@ -144,7 +149,7 @@ function check_install_libssh {
 
 function install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $centos_version > 7 ]]; then
+    if [[ $centos_version -gt 6 ]]; then
       print_msg "Installing confd basic 7.3"
       unzip $curr_dir/3d_party/linux/confd-basic-7.3.linux.x86_64.zip
       cd confd-basic-7.3.linux.x86_64

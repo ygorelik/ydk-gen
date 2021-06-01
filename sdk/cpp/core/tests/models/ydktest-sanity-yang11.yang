@@ -1,0 +1,178 @@
+module ydktest-sanity-yang11 {
+
+  yang-version 1.1;
+
+  /*** NAMESPACE / PREFIX DEFINITION ***/
+
+  namespace "http://cisco.com/ns/yang/ydktest-yang11";
+
+  prefix "yang11";
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  organization "YDK Solutions";
+
+  contact
+    "Yan Gorelik";
+
+  description
+    "This module contains a collection of YANG-11 definitions
+     for sanity package.
+
+     Copyright (c) 2020 by Yan Gorelik of YDK Solutions.
+     All rights reserved.";
+
+  revision "2020-11-30" {
+    description
+      "Initial revision of sanity module to test YANG-11 types.";
+  }
+
+
+  identity public-key {
+    description
+      "Base identity used to identify public key crypto algorithms.";
+  }
+  identity private-key {
+    description
+      "Base identity used to identify private key crypto algorithms.";
+  }
+
+  identity ssl-key {
+     description
+          "Derived identity to identify private and public SSL keys.";
+     base public-key;
+     base private-key;
+  }
+
+  typedef base-colors {
+     type enumeration {
+         enum white {
+           value 1;
+         }
+         enum yellow {
+           value 2;
+         }
+         enum red {
+           value 3;
+         }
+     }
+  }
+
+  typedef mybits-type {
+    type bits {
+      bit disable-nagle {
+        position 0;
+      }
+      bit auto-sense-speed {
+        position 1;
+      }
+      bit ten-mb-only {
+        position 2;
+      }
+    }
+  }
+
+  container backward-incompatible {
+    description Backward_incompatible_container_description;
+
+    leaf key {
+      description
+          "Model to test identities derived from multiple bases";
+      type identityref {
+        base private-key;
+        base public-key;
+      }
+    }
+
+    leaf-list non-unique {
+       config false;
+       type string;
+       description "Test duplicate values in state leaf-list";
+    }
+
+    leaf invert {
+      description "Model to test pattern modifier";
+      type string {
+        length "0..4";
+        pattern "[0-9a-fA-F]*" {
+          modifier invert-match;
+        }
+      }
+    }
+
+    choice interface-type {
+      description
+        'As a shorthand, the "case" statement can be omitted if the branch
+         contains a single "anydata", "anyxml", "choice", "container", "leaf",
+         "list", or "leaf-list" statement.';
+      leaf ethernet {
+        type empty;
+      }
+    }
+
+    leaf my-color {
+      description "Allow enumerations to be subtyped.";
+      type base-colors {
+        enum white;
+        enum red;
+      }
+    }
+
+    leaf-list my_bits {
+      description "Allow bits type to be subtyped.";
+      type mybits-type {
+        bit disable-nagle;
+        bit auto-sense-speed;
+      }
+    }
+  }
+
+  container empty-type {
+    list filter {
+      key "name enabled";
+      leaf name {
+        type string;
+      }
+      leaf enabled {
+        type empty;
+      }
+      leaf prop {
+        type string;
+      }
+
+      leaf outbound-filter {
+        description "Model to test use of empty and lifref types in union";
+        type union {
+          type leafref {
+            path "/empty-type/filter/name";
+          }
+          type enumeration {
+            enum default-filter;
+            enum primary-filter;
+          }
+          type bits {
+              bit enable;
+              bit disable;
+          }
+          type empty;
+        }
+      }
+    }
+  }
+
+  container anydata-type {
+    description "Model to test anydata node";
+    config false;
+    list logged-notification {
+      key time;
+      leaf time {
+        type yang:date-and-time;
+      }
+      anydata data {
+        description "Notification in XML format";
+      }
+    }
+  }
+}

@@ -61,6 +61,8 @@ function usage {
     echo "                    if not set, /usr/local/include is assumed"
     echo "CPLUS_INCLUDE_PATH  location of C++ include files;"
     echo "                    if not set, /usr/local/include is assumed"
+    echo "CMAKE_LIBRARY_PATH  Location of Python shared libraries;"
+    echo "                    if not set, default system library location is assumed"
 }
 
 function check_python_installation {
@@ -83,7 +85,7 @@ function check_python_installation {
     exit $status
   fi
   print_msg "Checking pip version and installation"
-  pip -V
+  pip --version
   status=$?
   if [ $status -ne 0 ]; then
     MSG_COLOR=$RED
@@ -96,9 +98,7 @@ function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
   pip install -r requirements.txt
-  if [[ ${ydk_lang} == "py" || ${ydk_lang} == "all" ]]; then
-    pip install pybind11
-  fi
+  pip install $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
 }
 
 function init_go_env {
@@ -130,7 +130,12 @@ function init_go_env {
     go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
     print_msg "Current Go version is $go_version"
 
-    go get github.com/stretchr/testify
+    if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
+        go get github.com/stretchr/testify
+        cd $GOPATH/src/github.com/stretchr/testify
+        git checkout tags/v1.6.1
+        cd -
+    fi
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
@@ -336,10 +341,13 @@ if [[ ${os_type} == "Linux" ]]; then
   fi
 fi
 
+curr_dir=$(pwd)
+script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 if [[ -z ${YDKGEN_HOME} || ! -d ${YDKGEN_HOME} ]]; then
-    YDKGEN_HOME=${HOME}/ydk-gen
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+    YDKGEN_HOME=$script_dir
+    print_msg "YDKGEN_HOME is set to $script_dir"
 fi
+cd ${YDKGEN_HOME}
 
 if [[ -z ${C_INCLUDE_PATH} ]]; then
     export C_INCLUDE_PATH=/usr/local/include
@@ -356,17 +364,15 @@ if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
 fi
 
-curr_dir=$(pwd)
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
-
-cd ${YDKGEN_HOME}
-
 if [ ${dependencies} == "yes" ]; then
     instal_dependencies
 fi
+if [ -f ~/.profile.python ]; then
+  source ~/.profile.python
+fi
 
 CMAKE_BIN=cmake
-which cmake3 > /dev/null
+command -v cmake3 > /dev/null
 status=$?
 if [[ ${status} == 0 ]]; then
     CMAKE_BIN=cmake3
@@ -385,4 +391,3 @@ install_ydk_go
 
 deactivate
 cd ${curr_dir}
-

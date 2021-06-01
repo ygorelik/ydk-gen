@@ -14,6 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
 #
 # Script for running YDK gNMI tests on travis-ci.org
 #
@@ -31,27 +36,27 @@ MSG_COLOR=$YELLOW
 ######################################################################
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date): gnmi_tests.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date): gnmi_tests.sh | $* ${NOCOLOR}"
 }
 
-function run_exec_test {
-    $@
+function run_cmd {
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
 }
 
 function run_test_no_coverage {
-    print_msg "Executing: ${PYTHON_BIN} $@"
-    ${PYTHON_BIN} $@
+    print_msg "Executing: ${PYTHON_BIN} $*"
+    ${PYTHON_BIN} $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '${PYTHON_BIN} $@' with status=$status"
+        print_msg "Exiting '${PYTHON_BIN} $*' with status=$status"
         exit $status
     fi
     return $status
@@ -59,28 +64,28 @@ function run_test_no_coverage {
 
 function run_test {
     if [[ $(command -v coverage) && $run_with_coverage ]]; then
-        print_msg "Executing with coverage: $@"
-        coverage run --omit=/usr/* --branch --parallel-mode $@ > /dev/null
+        print_msg "Executing with coverage: $*"
+        coverage run --omit=/usr/* --branch --parallel-mode $* > /dev/null
         local status=$?
         print_msg "Returned status is ${status}"
         if [ $status -ne 0 ]; then
             MSG_COLOR=$RED
-            print_msg "Exiting 'coverage run $@' with status=$status"
+            print_msg "Exiting 'coverage run $*' with status=$status"
             exit $status
         fi
         return $status
     fi
-    run_test_no_coverage $@
+    run_test_no_coverage $*
     local status=$?
     return $status
 }
 
 function pip_check_install {
     if [[ $(uname) == "Linux" ]] && [[ ${os_info} == *"fedora"* && ${PYTHON_VERSION} == "2"* ]] ; then
-        print_msg "Custom pip install of $@ for CentOS"
-        ${PIP_BIN} install --install-option="--install-purelib=/usr/lib64/python${PYTHON_VERSION}/site-packages" --no-deps $@
+        print_msg "Custom pip install of $* for CentOS"
+        ${PIP_BIN} install --install-option="--install-purelib=/usr/lib64/python${PYTHON_VERSION}/site-packages" --no-deps $*
     else
-        ${PIP_BIN} install --no-deps $@
+        ${PIP_BIN} install --no-deps $*
     fi
 }
 
@@ -105,10 +110,16 @@ function check_python_installation {
     fi
   fi
 
-  if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* && ${PYTHON_VERSION} == "3"* ]]; then
-    print_msg "Creating Python3 virtual environment in $YDKGEN_HOME/venv"
-    run_exec_test ${PYTHON_BIN} -m venv $YDKGEN_HOME/venv
-    run_exec_test source $YDKGEN_HOME/venv/bin/activate
+  if [[ ! $run_with_coverage ]]; then
+    if [[ -z ${PYTHON_VENV} ]]; then
+      PYTHON_VENV=${HOME}/venv
+      print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
+    fi
+    if [[ ! -d ${PYTHON_VENV} ]]; then
+      print_msg "Creating Python3 virtual environment in ${PYTHON_VENV}"
+      run_cmd python3 -m venv ${PYTHON_VENV}
+    fi
+    run_cmd source ${PYTHON_VENV}/bin/activate
   fi
 
   print_msg "Checking installation of ${PYTHON_BIN}"
@@ -134,7 +145,8 @@ function check_python_installation {
 function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
-  ${PIP_BIN} install -r requirements.txt pybind11==2.2.2
+  ${PIP_BIN} install -r requirements.txt
+  ${PIP_BIN} install $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
   if [[ $run_with_coverage ]] ; then
     ${PIP_BIN} install coverage
   fi
@@ -169,10 +181,12 @@ function init_go_env {
     go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
     print_msg "Current Go version is $go_version"
 
-    go get github.com/stretchr/testify
-    cd $GOPATH/src/github.com/stretchr/testify
-    git checkout tags/v1.6.1
-    cd -
+    if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
+        go get github.com/stretchr/testify
+        cd $GOPATH/src/github.com/stretchr/testify
+        git checkout tags/v1.6.1
+        cd -
+    fi
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
@@ -191,11 +205,11 @@ function install_cpp_core {
 
     if [[ $run_with_coverage ]] ; then
       print_msg "Compiling with coverage"
-      run_exec_test ${CMAKE_BIN} -DCOVERAGE=True ..
+      run_cmd ${CMAKE_BIN} -DCOVERAGE=True ..
     else
-      run_exec_test ${CMAKE_BIN} ..
+      run_cmd ${CMAKE_BIN} ..
     fi
-    run_exec_test make &> /dev/null
+    run_cmd make &> /dev/null
     sudo make install
 }
 
@@ -222,7 +236,7 @@ function install_cpp_ydktest_bundle {
     cd $YDKGEN_HOME
     run_test generate.py --bundle profiles/test/ydktest-cpp.json --cpp
     cd gen-api/cpp/ydktest-bundle/build
-    run_exec_test make &> /dev/null
+    run_cmd make &> /dev/null
     sudo make install
     cd -
 }
@@ -233,11 +247,11 @@ function build_gnmi_cpp_core_library {
     mkdir -p build
     cd build
     if [[ $run_with_coverage ]] ; then
-      run_exec_test ${CMAKE_BIN} -DCOVERAGE=True ..
+      run_cmd ${CMAKE_BIN} -DCOVERAGE=True ..
     else
-      run_exec_test ${CMAKE_BIN} ..
+      run_cmd ${CMAKE_BIN} ..
     fi
-    run_exec_test make &> /dev/null
+    run_cmd make &> /dev/null
     sudo make install
     cd $YDKGEN_HOME
 }
@@ -248,14 +262,14 @@ function build_and_run_cpp_gnmi_tests {
     mkdir -p build
     cd build
     if [[ $run_with_coverage ]] ; then
-      run_exec_test ${CMAKE_BIN} -DCOVERAGE=True ..
+      run_cmd ${CMAKE_BIN} -DCOVERAGE=True ..
     else
-      run_exec_test ${CMAKE_BIN} ..
+      run_cmd ${CMAKE_BIN} ..
     fi
-    run_exec_test make &> /dev/null
+    run_cmd make &> /dev/null
 
     cd $YDKGEN_HOME/sdk/cpp/gnmi/tests/build
-    run_exec_test ./ydk_gnmi_test -d yes
+    run_cmd ./ydk_gnmi_test -d yes
 
     collect_cpp_coverage
 }
@@ -290,8 +304,8 @@ function run_cpp_gnmi_memcheck_tests {
     cd $YDKGEN_HOME/sdk/cpp/gnmi/samples
     mkdir -p build
     cd build
-    run_exec_test ${CMAKE_BIN} ..
-    run_exec_test make &> /dev/null
+    run_cmd ${CMAKE_BIN} ..
+    run_cmd make &> /dev/null
 
     print_msg "Running gnmi sample tests with memcheck"
     valgrind --leak-check=summary ./bgp_gnmi_subscribe ssh://admin:admin@127.0.0.1:50051
@@ -303,8 +317,8 @@ function start_gnmi_server {
     if [ ! -x ./build/gnmi_server ]; then
         print_msg "Building YDK gNMI server"
         mkdir -p build && cd build
-        run_exec_test ${CMAKE_BIN} ..
-        run_exec_test make &> /dev/null
+        run_cmd ${CMAKE_BIN} ..
+        run_cmd make &> /dev/null
     fi
 
     print_msg "Starting YDK gNMI server"
@@ -352,7 +366,7 @@ function run_go_gnmi_tests {
     print_msg "Running Go gNMI tests"
 
     cd $YDKGEN_HOME/sdk/go/gnmi/tests
-    run_exec_test go test
+    run_cmd go test
 
     run_go_gnmi_samples
 
@@ -365,8 +379,8 @@ function run_go_gnmi_samples {
     print_msg "Running Go gNMI samples"
 
     cd $YDKGEN_HOME/sdk/go/gnmi/samples
-    run_exec_test go run service_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
-    run_exec_test go run session_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
+    run_cmd go run service_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
+    run_cmd go run session_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
 }
 
 
@@ -419,7 +433,7 @@ function build_python_gnmi_package {
 
     cd $YDKGEN_HOME
     run_test generate.py --service profiles/services/gnmi-0.4.0.json
-    run_exec_test ${PIP_BIN} install --no-deps gen-api/python/ydk-service-gnmi/dist/ydk*.tar.gz
+    run_cmd ${PIP_BIN} install --no-deps gen-api/python/ydk-service-gnmi/dist/ydk*.tar.gz
 
     print_msg "Verifying Python gNMI package installation"
     ${PYTHON_BIN} -c "from ydk.gnmi.path import gNMISession"

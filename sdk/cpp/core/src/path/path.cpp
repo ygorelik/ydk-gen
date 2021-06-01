@@ -1,7 +1,7 @@
-/// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// YANG Development Kit
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -23,7 +23,7 @@
 // All modifications in original under CiscoDevNet domain
 // introduced since October 2019 are copyrighted.
 // All rights reserved under Apache License, Version 2.0.
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 
 #include <pcre.h>
 #include <fstream>
@@ -159,7 +159,7 @@ ydk::path::ValidationService::validate(const ydk::path::DataNode & dn, ydk::Vali
             break;
         case ydk::ValidationService::Option::GET_CONFIG:
             option_str="GET-CONFIG";
-            ly_option = LYD_OPT_GETCONFIG | LYD_OPT_NOAUTODEL;
+            ly_option = LYD_OPT_GETCONFIG;  // | LYD_OPT_NOAUTODEL;
             break;
     }
 
@@ -169,8 +169,9 @@ ydk::path::ValidationService::validate(const ydk::path::DataNode & dn, ydk::Vali
     const ydk::path::DataNodeImpl & dn_impl = dynamic_cast<const ydk::path::DataNodeImpl&>(dn);
     struct lyd_node* lynode = dn_impl.m_node;
     int rc = lyd_validate(&lynode,ly_option, NULL);
-    if(rc) {
-        YLOG_ERROR("Data validation failed: {}. Path: {}", ly_errmsg(), ly_errpath());
+    if (rc) {
+        ly_ctx *ctx = lynode->schema->module->ctx;
+        YLOG_ERROR("Data validation failed: {}. Path: {}", ly_errmsg(ctx), ly_errpath(ctx));
         throw(ydk::YModelError{""});
     }
 
@@ -217,8 +218,9 @@ static struct lyd_node* create_lyd_node_for_rpc(ydk::path::RootSchemaNodeImpl & 
     struct lyd_node* rpc = lyd_new_path(NULL, rs_impl.m_ctx, rpc_path.c_str(), NULL, LYD_ANYDATA_SXML, 0);
     if( rpc == nullptr || ly_errno )
     {
-        ydk::YLOG_ERROR( "Parsing failed with message {}", ly_errmsg());
-        throw(ydk::path::YCodecError{ydk::path::YCodecError::Error::XML_INVAL});
+        ly_ctx *ctx = rpc->schema->module->ctx;
+        ydk::YLOG_ERROR( "Parsing failed with message {}", ly_errmsg(ctx));
+        throw(ydk::path::YCodecError{ydk::path::YCodecError::Error::XML_INVAL, ly_errmsg(ctx)});
     }
     return rpc;
 }
@@ -308,8 +310,9 @@ ydk::path::Codec::decode(RootSchemaNode & root_schema, const std::string& buffer
 
     if( root == nullptr || ly_errno )
     {
-        YLOG_ERROR( "Parsing failed with message {}", ly_errmsg());
-        throw(YCodecError{YCodecError::Error::XML_INVAL});
+        YLOG_ERROR( "Decoding failed with message: {}", ly_errmsg(rs_impl.m_ctx));
+        auto error_code = (format==ydk::EncodingFormat::JSON) ? YCodecError::Error::JSON_INVAL : YCodecError::Error::XML_INVAL;
+        throw(YCodecError{error_code, ly_errmsg(rs_impl.m_ctx)});
     }
     return perform_decode(rs_impl, root);
 }
@@ -328,8 +331,8 @@ ydk::path::Codec::decode_rpc_output(RootSchemaNode & root_schema, const std::str
                 get_ly_format(format), LYD_OPT_TRUSTED |  LYD_OPT_RPCREPLY, rpc, NULL);
     if( root == nullptr || ly_errno )
     {
-        YLOG_ERROR( "Parsing failed with message {}", ly_errmsg());
-        throw(YCodecError{YCodecError::Error::XML_INVAL});
+        YLOG_ERROR( "Decoding failed with message: {}", ly_errmsg(rs_impl.m_ctx));
+        throw(YCodecError{YCodecError::Error::XML_INVAL, ly_errmsg(rs_impl.m_ctx)});
     }
     auto dn = perform_decode(rs_impl, root);
     if (rpc) lyd_free(rpc);
@@ -352,8 +355,8 @@ ydk::path::Codec::decode_json_output(RootSchemaNode & root_schema, const std::ve
 
         struct lyd_node *dnode = lyd_parse_mem(rs_impl.m_ctx, buffer.c_str(), LYD_JSON, LYD_OPT_TRUSTED | LYD_OPT_GET);
         if (dnode == nullptr || ly_errno) {
-            YLOG_ERROR( "Parsing failed with message {}", ly_errmsg());
-            throw(YCodecError{YCodecError::Error::XML_INVAL});
+            YLOG_ERROR( "Decoding failed with message: {}", ly_errmsg(rs_impl.m_ctx));
+            throw(YCodecError{YCodecError::Error::JSON_INVAL, ly_errmsg(rs_impl.m_ctx)});
         }
 
         // Attach first node to the root

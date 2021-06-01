@@ -21,10 +21,10 @@ matrix:
 #   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=xenial  PYTHON_VERSION=3.5 GNMI=true
 #   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=2.7
 #   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=2.7 GNMI=true
-   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=3
-   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=3 GNMI=true
-#   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=focal  PYTHON_VERSION=3
-#   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=focal  PYTHON_VERSION=3 GNMI=true
+#   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=3
+#   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=bionic  PYTHON_VERSION=3 GNMI=true
+   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=focal  PYTHON_VERSION=3
+   - env: DOCKER=true OS_TYPE=ubuntu OS_VERSION=focal  PYTHON_VERSION=3 GNMI=true
   allow_failures:
    - os: osx
 

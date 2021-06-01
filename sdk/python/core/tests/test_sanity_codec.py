@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,9 +44,9 @@ except ImportError:
 from ydk.providers import CodecServiceProvider
 from ydk.services import CodecService
 from ydk.errors import YServiceError
-from ydk.types import EncodingFormat
 
-from test_utils import assert_with_error
+import logging
+from test_utils import assert_with_error, enable_logging
 
 _xml_enum_payload_1 = '''<built-in-t xmlns="http://cisco.com/ns/yang/ydktest-sanity">
   <enum-value>local</enum-value>
@@ -137,12 +137,7 @@ _json_runner_payload = """{
 }
 """
 
-_xml_oc_pattern_payload = '''<oc-A xmlns="http://cisco.com/ns/yang/oc-pattern">
-  <a>Hello</a>
-</oc-A>
-'''
-
-_json_oc_pattern_payload = """{
+_json_oc_pattern_payload = '''{
   "oc-pattern:oc-A": [
     {
       "a": "Hello",
@@ -151,7 +146,8 @@ _json_oc_pattern_payload = """{
       }
     }
   ]
-}"""
+}
+'''
 
 
 def _get_runner_entity():
@@ -185,6 +181,7 @@ class SanityYang(unittest.TestCase):
         self.codec = CodecService()
         self.provider = CodecServiceProvider(type='xml')
         self.json_provider = CodecServiceProvider(type='json')
+        enable_logging(logging.ERROR)
 
     def test_xml_encode_1(self):
         r_1 = _get_runner_entity()
@@ -266,16 +263,20 @@ class SanityYang(unittest.TestCase):
         obj_a = OcA()
         obj_a.a = 'Hello'
 
-        entity = self.codec.decode(self.provider, _xml_oc_pattern_payload)
+        xml_oc_pattern_payload = '''<oc-A xmlns="http://cisco.com/ns/yang/oc-pattern">
+          <a>Hello</a>
+        </oc-A>
+        '''
+
+        entity = self.codec.decode(self.provider, xml_oc_pattern_payload)
 
         self.assertEqual(obj_a.a, entity.a)
 
     # JSON
 
     def test_json_encode_1(self):
-        json_provider = CodecServiceProvider(type='json')
         entity = _get_runner_entity()
-        payload = self.codec.encode(json_provider, entity)
+        payload = self.codec.encode(self.json_provider, entity)
         self.assertEqual(_json_runner_payload, payload)
 
     def test_json_encode_2(self):
@@ -307,15 +308,14 @@ class SanityYang(unittest.TestCase):
             self.assertEqual(payload_holder[module],
                              self.codec.encode(self.json_provider, entities[module]))
 
-    @unittest.skip('encodes to "oc-pattern:a": "(!error!)"')
     def test_json_encode_oc_pattern(self):
         obj_a = OcA()
         obj_a.a = 'Hello'
         obj_a.b.b = 'Hello'
-        self.assertEqual(self.codec.encode(self.json_provider, obj_a),
-                         _json_oc_pattern_payload)
+        json_payload = self.codec.encode(self.json_provider, obj_a)
+        self.assertEqual(_json_oc_pattern_payload, json_payload)
 
-    @unittest.skip('YCoreError: YCodecError:Unknown element "oc-A".. Path:')
+    @unittest.skip('YCoreError: Unknown element "oc-A".. Path:')
     def test_json_decode_oc_pattern(self):
         entity = self.codec.decode(self.json_provider, _json_oc_pattern_payload)
 
@@ -331,47 +331,25 @@ class SanityYang(unittest.TestCase):
         self.assertEqual(r_1, r_2)
 
     def test_embedded_quote_leaflist_value(self):
-        """<routing-policy xmlns="http://openconfig.net/yang/routing-policy">
-  <defined-sets>
-    <bgp-defined-sets xmlns="http://openconfig.net/yang/bgp-policy">
-      <community-sets>
-        <community-set>
-          <community-set-name>COMMUNITY-SET1</community-set-name>
-          <config>
-            <community-set-name>COMMUNITY-SET1</community-set-name>
-            <community-member>ios-regex '^65172:17...$'</community-member>
-            <community-member>65172:16001</community-member>
-          </config>
-          <state>
-            <community-set-name>COMMUNITY-SET1</community-set-name>
-            <community-member>ios-regex '^65172:17...$'</community-member>
-            <community-member>65172:16001</community-member>
-          </state>
-        </community-set>
-      </community-sets>
-    </bgp-defined-sets>
-  </defined-sets>
-</routing-policy>
+        expected_payload = """<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <ytypes>
+    <built-in-t>
+      <younion-list>ios-regex '^65172:17...$'</younion-list>
+      <younion-list>65172:16001</younion-list>
+    </built-in-t>
+  </ytypes>
+</runner>
 """
-        routing_policy = RoutingPolicy()
+        runner = Runner()
+        runner.ytypes.built_in_t.younion_list.append("ios-regex '^65172:17...$'")
+        runner.ytypes.built_in_t.younion_list.append("65172:16001")
 
-        com = RoutingPolicy.DefinedSets.BgpDefinedSets.CommunitySets.CommunitySet()
-        com.community_set_name = "COMMUNITY-SET1"
-        com.config.community_set_name = "COMMUNITY-SET1"
-        com.config.community_member.append("ios-regex '^65172:17...$'")
-        com.config.community_member.append("65172:16001")
+        payload = self.codec.encode(self.provider, runner)
+        print(payload)
+        self.assertEqual(expected_payload, payload)  # TODO failing when bundle built with --one-module-per-class option
 
-        com.state.community_set_name = "COMMUNITY-SET1"
-        com.state.community_member.append("ios-regex '^65172:17...$'")
-        com.state.community_member.append("65172:16001")
-
-        routing_policy.defined_sets.bgp_defined_sets.community_sets.community_set.append(com)
-        xml_provider = CodecServiceProvider(type='xml')
-        payload = self.codec.encode(xml_provider, routing_policy)
-
-        routing_policy_decode = self.codec.decode(xml_provider, payload)
-        if routing_policy == routing_policy_decode:  # TODO failing on travis for --one-module-per-class option
-            self.assertEqual(routing_policy, routing_policy_decode)
+        runner_decode = self.codec.decode(self.provider, payload)
+        self.assertEqual(runner, runner_decode)
 
     def test_list_no_keys(self):
         payload = '''<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
@@ -382,9 +360,8 @@ class SanityYang(unittest.TestCase):
     <test>xyz</test>
   </no-key-list>
 </runner>'''
-        xml_provider = CodecServiceProvider(type='xml')
-        no_key = self.codec.decode(xml_provider, payload)
-        no_key_payload = self.codec.encode(xml_provider, no_key, subtree=True)
+        no_key = self.codec.decode(self.provider, payload)
+        no_key_payload = self.codec.encode(self.provider, no_key, subtree=True)
         self.assertEqual(payload, no_key_payload)
 
     def test_anyxml(self):
@@ -397,13 +374,14 @@ class SanityYang(unittest.TestCase):
         result = self.codec.decode(self.provider, payload)
         self.assertIsNotNone(result)
 
-    @assert_with_error("Subtree option can only be used with XML encoding", YServiceError)
-    def test_decode_invalid_subtree_1(self):
-        self.codec.decode(self.json_provider, '{"ydktest-sanity:runner": {}}', subtree=True)
+    def test_decode_json_subtree(self):
+        entity = self.codec.decode(self.json_provider, '{"ydktest-sanity:runner": null}', subtree=True)
+        self.assertEqual(Runner(), entity)
 
-    @assert_with_error("Subtree option can only be used with XML encoding", YServiceError)
-    def test_decode_invalid_subtree_2(self):
-        self.codec.encode(self.json_provider, Runner(), subtree=True)
+    def test_encode_json_subtree_(self):
+        json = self.codec.encode(self.json_provider, Runner(), pretty=False, subtree=True)
+        expected = '''{"ydktest-sanity:runner":null}'''
+        self.assertEqual(expected, json)
 
     def test_encode_decode_typedefs(self):
         system_encode = System()
@@ -453,6 +431,45 @@ class SanityYang(unittest.TestCase):
 
         x = self.codec.encode(self.provider, runner, False)
         self.assertEqual(x, e)
+
+    def test_augment_encode(self):
+        passive = Runner.Passive()
+        passive.name = "xyz"
+
+        passive.testc.xyz = Runner.Passive.Testc.Xyz()
+        passive.testc.xyz.parent = passive
+        passive.testc.xyz.xyz = 25
+
+        xml = self.codec.encode(self.provider, passive)
+        expected = '''<passive xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <name>xyz</name>
+  <testc xmlns="http://cisco.com/ns/yang/ydktest-sanity-augm">
+    <xyz>
+      <xyz>25</xyz>
+    </xyz>
+  </testc>
+</passive>
+'''
+        self.assertEqual(expected, xml)
+
+    def test_augment_subtree(self):
+        passive = Runner.Passive()
+        passive.name = "xyz"
+
+        passive.testc.xyz = Runner.Passive.Testc.Xyz()
+        passive.testc.xyz.parent = passive
+        passive.testc.xyz.xyz = 25
+
+        xml = self.codec.encode(self.provider, passive, subtree=True)
+        expected = '''<passive xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <name>xyz</name>
+  <testc xmlns="http://cisco.com/ns/yang/ydktest-sanity-augm">
+    <xyz>
+      <xyz>25</xyz>
+    </xyz>
+  </testc>
+</passive>'''
+        self.assertEqual(expected, xml)
 
 
 if __name__ == '__main__':

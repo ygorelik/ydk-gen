@@ -1,5 +1,6 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# YDK - YANG Development Kit
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
 
 """
   api_model.py
@@ -22,8 +28,8 @@
 """
 from __future__ import absolute_import
 
-import sys
-from pyang.types import UnionTypeSpec
+from pyang.statements import TypeStatement
+from pyang.types import UnionTypeSpec, PathTypeSpec
 
 
 class Element(object):
@@ -137,10 +143,7 @@ class NamedElement(Element):
 
     def __init__(self):
         """ The name of the named element """
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(NamedElement, self).__init__()
+        super().__init__()
         self.name = None
 
     def get_py_mod_name(self):
@@ -270,10 +273,7 @@ class Package(NamedElement):
     """
 
     def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Package, self).__init__()
+        super().__init__()
         self._stmt = None
         self._sub_name = ''
         self._bundle_name = ''
@@ -281,6 +281,7 @@ class Package(NamedElement):
         self._augments_other = False
         self.identity_subclasses = {}
         self.iskeyword = iskeyword
+        self.version = '1'
 
     def qn(self):
         """ Return the qualified name """
@@ -297,6 +298,7 @@ class Package(NamedElement):
     @property
     def augments_other(self):
         return self._augments_other
+
     @augments_other.setter
     def augments_other(self, augments_other):
         self._augments_other = augments_other
@@ -350,6 +352,8 @@ class Package(NamedElement):
         desc = stmt.search_one('description')
         if desc is not None:
             self.comment = desc.arg
+        if hasattr(stmt, 'i_version'):
+            self.version = stmt.i_version
 
     def imported_types(self):
         """
@@ -377,10 +381,7 @@ class DataType(NamedElement):
     """
 
     def __init__(self):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(DataType, self).__init__()
+        super().__init__()
 
 
 class Class(NamedElement):
@@ -390,10 +391,7 @@ class Class(NamedElement):
     """
 
     def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Class, self).__init__()
+        super().__init__()
         self._stmt = None
         self._extends = []
         self._module = None
@@ -404,11 +402,12 @@ class Class(NamedElement):
         """ Returns the immediate super classes of this class. """
         if self.is_identity():
             base = []
-            base_stmt = self.stmt.search_one('base')
-            if base_stmt is not None and hasattr(base_stmt, 'i_identity'):
-                base_identity = base_stmt.i_identity
-                if hasattr(base_identity, 'i_class'):
-                    base.append(base_identity.i_class)
+            base_stmts = self.stmt.search('base')
+            for base_stmt in base_stmts:
+                if hasattr(base_stmt, 'i_identity'):
+                    base_identity = base_stmt.i_identity
+                    if hasattr(base_identity, 'i_class'):
+                        base.append(base_identity.i_class)
             return base
         else:
             return self._extends
@@ -463,7 +462,7 @@ class Class(NamedElement):
             prop_types = [p.property_type]
             if isinstance(p.property_type, UnionTypeSpec):
                 for child_type_stmt in p.property_type.types:
-                    prop_types.extend(self._get_union_types(child_type_stmt, p))
+                    prop_types.extend(_get_union_types(child_type_stmt))
             for prop_type in prop_types:
                 if isinstance(prop_type, Class) or isinstance(prop_type, Enum) or isinstance(prop_type, Bits):
                     if prop_type.get_package() != package:
@@ -472,18 +471,9 @@ class Class(NamedElement):
         # do this for nested classes too
         for nested_class in [clazz for clazz in self.owned_elements if isinstance(clazz, Class)]:
             imported_types.extend(
-                [c for c in nested_class.imported_types() if not c in imported_types])
+                [c for c in nested_class.imported_types() if c not in imported_types])
 
         return imported_types
-
-    def _get_union_types(self, type_stmt, p):
-        from .builder import TypesExtractor
-        prop_type = TypesExtractor().get_property_type(type_stmt)
-        prop_types = [prop_type]
-        if isinstance(prop_type, UnionTypeSpec):
-            for child_type_stmt in prop_type.types:
-                prop_types.extend(self._get_union_types(child_type_stmt, p))
-        return prop_types
 
     def get_dependent_siblings(self):
         ''' This will return all types that are referenced by this Class
@@ -608,15 +598,39 @@ class AnyXml(NamedElement):
     """
 
     def __init__(self):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(AnyXml, self).__init__()
+        super().__init__()
         self._stmt = None
 
     @property
     def stmt(self):
         """ Returns the `pyang.statements.Statement` instance associated with this AnyXml instance."""
+        return self._stmt
+
+    @stmt.setter
+    def stmt(self, stmt):
+        self.name = 'string'
+        self._stmt = stmt
+        desc = stmt.search_one('description')
+        if desc is not None:
+            self.comment = desc.arg
+
+    def properties(self):
+        return get_properties(self.owned_elements)
+
+
+class AnyData(NamedElement):
+
+    """
+        Represents an anydata element.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self._stmt = None
+
+    @property
+    def stmt(self):
+        """ Returns the `pyang.statements.Statement` instance associated with this AnyData instance."""
         return self._stmt
 
     @stmt.setter
@@ -638,10 +652,7 @@ class Bits(DataType):
     """
 
     def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Bits, self).__init__()
+        super().__init__()
         self._stmt = None
         self._dictionary = None
         self._pos_map = None
@@ -674,7 +685,7 @@ class Bits(DataType):
         # the name of the enumeration is derived either from the typedef
         # or the leaf under which it is defined
         leaf_or_typedef = stmt
-        while leaf_or_typedef.parent is not None and not leaf_or_typedef.keyword in ('leaf', 'leaf-list', 'typedef'):
+        while leaf_or_typedef.parent is not None and leaf_or_typedef.keyword not in ('leaf', 'leaf-list', 'typedef'):
             leaf_or_typedef = leaf_or_typedef.parent
 
         name = '%s' % camel_case(leaf_or_typedef.arg)
@@ -704,10 +715,7 @@ class Property(NamedElement):
     """
 
     def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Property, self).__init__()
+        super().__init__()
         self._stmt = None
         self.is_static = False
         self.featuring_classifiers = []
@@ -715,6 +723,7 @@ class Property(NamedElement):
         self.is_many = False
         self.id = False
         self._property_type = None
+        self.union_types = []
         self.max_elements = None
         self.min_elements = None
         self.iskeyword = iskeyword
@@ -765,6 +774,21 @@ class Property(NamedElement):
 
         if self._stmt.keyword in ['leaf', 'leaf-list']:
             type_stmt = self._stmt.search_one('type')
+
+            # Build union_types list
+            if isinstance(type_stmt.i_type_spec, UnionTypeSpec) and not self.union_types:
+                prop_type_specs = []
+                for child_type_stmt in type_stmt.i_type_spec.types:
+                    prop_type_specs.extend(_get_union_types(child_type_stmt))
+                for type_spec in prop_type_specs:
+                    while isinstance(type_spec, PathTypeSpec):
+                        if not hasattr(type_spec, 'i_target_node'):
+                            break  # error in pyang
+                        target_type_stmt = type_spec.i_target_node.search_one('type')
+                        type_spec = target_type_stmt.i_type_spec
+                    if type_spec not in self.union_types:
+                        self.union_types.append(type_spec)
+
             return type_stmt.i_type_spec
         else:
             return None
@@ -778,14 +802,14 @@ class Enum(DataType):
 
     """ Represents an enumeration. """
 
-    def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(Enum, self).__init__()
+    def __init__(self, iskeyword, typedef_stmt=None):
+        super().__init__()
         self._stmt = None
         self.literals = []
         self.iskeyword = iskeyword
+        while typedef_stmt and typedef_stmt.keyword != 'typedef' and typedef_stmt.parent:
+            typedef_stmt = typedef_stmt.parent
+        self.typedef_stmt = typedef_stmt
 
     def get_package(self):
         """ Returns the Package that this enum is found in. """
@@ -803,10 +827,13 @@ class Enum(DataType):
         if hasattr(self, 'goName'):
             return self.goName
 
-        while stmt.parent is not None and not stmt.keyword in ('leaf', 'leaf-list', 'typedef'):
+        while stmt.parent is not None and stmt.keyword not in ['leaf', 'leaf-list', 'typedef']:
             stmt = stmt.parent
 
-        name = escape_name(stmt.unclashed_arg if hasattr(stmt, 'unclashed_arg') else stmt.arg)
+        name = stmt.arg
+        if self.typedef_stmt:
+            name = self.typedef_stmt.arg
+        name = escape_name(stmt.unclashed_arg if hasattr(stmt, 'unclashed_arg') else name)
         name = camel_case(name)
         if self.iskeyword(name):
             name = '%s%s' % ('Y', name)
@@ -826,10 +853,13 @@ class Enum(DataType):
         # the name of the numeration is derived either from the typedef
         # or the leaf under which it is defined
         leaf_or_typedef = stmt
-        while leaf_or_typedef.parent is not None and not leaf_or_typedef.keyword in ('leaf', 'leaf-list', 'typedef'):
+        while leaf_or_typedef.parent is not None and leaf_or_typedef.keyword not in ('leaf', 'leaf-list', 'typedef'):
             leaf_or_typedef = leaf_or_typedef.parent
 
-        name = camel_case(escape_name(leaf_or_typedef.arg))
+        name = leaf_or_typedef.arg
+        if self.typedef_stmt:
+            name = self.typedef_stmt.arg
+        name = camel_case(escape_name(name))
         if self.iskeyword(name) or self.iskeyword(name.lower()):
             name = '%s_' % name
 
@@ -838,15 +868,17 @@ class Enum(DataType):
 
         self.name = name
 
-        desc = stmt.search_one('description')
-        if desc is not None:
+        desc = None
+        if self.typedef_stmt:
+            desc = self.typedef_stmt.search_one('description')
+            if desc is None:
+                desc = stmt.search_one('description')
+                if desc is None:
+                    leaf_or_typedef.search_one('description')
+        if desc:
             self.comment = desc.arg
         else:
-            desc = leaf_or_typedef.search_one('description')
-            if desc is not None:
-                self.comment = desc.arg
-            else:
-                self.comment = ""
+            self.comment = ""
 
         for enum_stmt in stmt.search('enum'):
             literal = EnumLiteral(self.iskeyword)
@@ -859,10 +891,7 @@ class EnumLiteral(NamedElement):
     """ Represents an enumeration literal. """
 
     def __init__(self, iskeyword):
-        if sys.version_info > (3,):
-            super().__init__()
-        else:
-            super(EnumLiteral, self).__init__()
+        super().__init__()
         self._stmt = None
         self.value = None
         self.iskeyword = iskeyword
@@ -975,7 +1004,7 @@ def camel_case(input_text):
     result = ''.join([_capitalize(word) for word in input_text.split('-')])
     result = ''.join([_capitalize(word) for word in result.split('_')])
     if input_text.startswith('_'):
-        result = '_'+result;
+        result = '_'+result
     return result
 
 
@@ -1010,3 +1039,17 @@ def escape_name(name):
     name = name.replace(';', '__SEMICOLON__')
 
     return name
+
+
+def _get_union_types(type_stmt):
+    from .builder import TypesExtractor
+    prop_type = TypesExtractor().get_property_type(type_stmt)
+    if isinstance(prop_type, TypeStatement):
+        prop_type = prop_type.i_type_spec
+    prop_type_specs = []
+    if isinstance(prop_type, UnionTypeSpec):
+        for child_type_stmt in prop_type.types:
+            prop_type_specs.extend(_get_union_types(child_type_stmt))
+    else:
+        prop_type_specs.append(prop_type)
+    return prop_type_specs

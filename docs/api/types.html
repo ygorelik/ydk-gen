@@ -96,7 +96,7 @@
 <li class="toctree-l3"><a class="reference internal" href="services/services.html">Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="providers/providers.html">Service Providers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="filters.html">Filters</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Types</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Types</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#yang-built-in-types">YANG built-in types</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ydk-types">YDK types</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#utility-functions">Utility functions</a></li>
@@ -192,7 +192,7 @@ and <a class="reference internal" href="#ydk.types.YType" title="ydk.types.YType
 <em class="property">class </em><code class="descclassname">ydk.types.</code><code class="descname">Bits</code><a class="headerlink" href="#ydk.types.Bits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a YANG built-in bits type.</p>
 <p>Instantiate a bit object:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ydk.types</span> <span class="kn">import</span> <span class="n">Bits</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ydk.types</span> <span class="kn">import</span> <span class="n">Bits</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bits</span> <span class="o">=</span> <span class="n">Bits</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -200,7 +200,7 @@ and <a class="reference internal" href="#ydk.types.YType" title="ydk.types.YType
 <dt>
 <code class="descname">__setitem__(self, name, value):</code></dt>
 <dd><p>Called to implement assignment to <code class="docutils literal"><span class="pre">self[name]</span></code>. Assign boolean value for <code class="docutils literal"><span class="pre">name</span></code>:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bits</span><span class="p">[</span><span class="s1">&#39;disable-nagle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bits</span><span class="p">[</span><span class="s1">&#39;disable-nagle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -209,7 +209,7 @@ and <a class="reference internal" href="#ydk.types.YType" title="ydk.types.YType
 <dt>
 <code class="descname">__getitem__(self, name):</code></dt>
 <dd><p>Called to implement evaluation of <code class="docutils literal"><span class="pre">self[name]</span></code>. Return boolean value for <code class="docutils literal"><span class="pre">name</span></code>:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bits</span><span class="p">[</span><span class="s1">&#39;disable-nagle&#39;</span><span class="p">]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bits</span><span class="p">[</span><span class="s1">&#39;disable-nagle&#39;</span><span class="p">]</span>
 <span class="go">False</span>
 </pre></div>
 </div>
@@ -219,7 +219,7 @@ and <a class="reference internal" href="#ydk.types.YType" title="ydk.types.YType
 <dt>
 <code class="descname">get_bitmap(self):</code></dt>
 <dd><p>Return a dictionary wrapper for an internal C++ <code class="docutils literal"><span class="pre">std::map&lt;std::string,</span> <span class="pre">bool&gt;</span></code> bitmap:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bits</span><span class="o">.</span><span class="n">get_bitmap</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bits</span><span class="o">.</span><span class="n">get_bitmap</span><span class="p">()</span>
 <span class="go">{&#39;disable-nagle&#39;: False}</span>
 </pre></div>
 </div>
@@ -240,7 +240,7 @@ and <a class="reference internal" href="#ydk.types.YType" title="ydk.types.YType
 </tbody>
 </table>
 <p>Instantiate a decimal64 object:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ydk.types</span> <span class="kn">import</span> <span class="n">Decimal64</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ydk.types</span> <span class="kn">import</span> <span class="n">Decimal64</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">decimal</span> <span class="o">=</span> <span class="n">Decimal64</span><span class="p">(</span><span class="s1">&#39;922337203685.4775807&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -248,7 +248,7 @@ and <a class="reference internal" href="#ydk.types.YType" title="ydk.types.YType
 <dt id="ydk.types.Decimal64.value">
 <code class="descname">value</code><a class="headerlink" href="#ydk.types.Decimal64.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>A string representation for decimal value.</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decimal</span><span class="o">.</span><span class="n">value</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decimal</span><span class="o">.</span><span class="n">value</span>
 <span class="go">&#39;922337203685.4775807&#39;</span>
 </pre></div>
 </div>
@@ -261,7 +261,7 @@ and <a class="reference internal" href="#ydk.types.YType" title="ydk.types.YType
 <em class="property">class </em><code class="descclassname">ydk.types.</code><code class="descname">Empty</code><a class="headerlink" href="#ydk.types.Empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a YANG built-in empty type.</p>
 <p>Instantiate an empty object:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ydk.types</span> <span class="kn">import</span> <span class="n">Empty</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ydk.types</span> <span class="kn">import</span> <span class="n">Empty</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">empty</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -272,7 +272,7 @@ and <a class="reference internal" href="#ydk.types.YType" title="ydk.types.YType
 <em class="property">class </em><code class="descclassname">ydk.types.</code><code class="descname">Enum</code><a class="headerlink" href="#ydk.types.Enum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a YANG built-in enum type, a base type for all YDK enums.
 The usage is the same as a Python enum:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ydk.models.openconfig</span> <span class="kn">import</span> <span class="n">openconfig_bgp_types</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ydk.models.openconfig</span> <span class="kn">import</span> <span class="n">openconfig_bgp_types</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">openconfig_bgp_types</span><span class="o">.</span><span class="n">BgpSessionDirection</span><span class="o">.</span><span class="n">INBOUND</span>
 </pre></div>
 </div>
@@ -282,7 +282,7 @@ The usage is the same as a Python enum:</p>
 <dt id="ydk.types.Identity">
 <em class="property">class </em><code class="descclassname">ydk.types.</code><code class="descname">Identity</code><a class="headerlink" href="#ydk.types.Identity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a YANG built-in identity type, a base type for all YDK identities:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ydk.models.openconfig</span> <span class="kn">import</span> <span class="n">openconfig_bgp_types</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ydk.models.openconfig</span> <span class="kn">import</span> <span class="n">openconfig_bgp_types</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">identity</span> <span class="o">=</span> <span class="n">openconfig_bgp_types</span><span class="o">.</span><span class="n">L3VpnIpv6Multicast</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -920,15 +920,15 @@ container absolute path and value of type <cite>tuple</cite> represents differen
 </div>
 <div class="section" id="examples">
 <h2><a class="toc-backref" href="#id6">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<p>In examples below we assume that you have <cite>openconfig</cite> bundle installed, see <a class="reference internal" href="../getting_started.html#howto-install"><span class="std std-ref">Quick install</span></a></p>
+<p>In examples below we assume that you have <cite>openconfig</cite> bundle installed, see <a class="reference internal" href="../getting_started.html#howto-install"><span class="std std-ref">Core Installation</span></a></p>
 <div class="section" id="how-instantiate-and-use-entity-objects">
 <h3><a class="toc-backref" href="#id7">How instantiate and use Entity objects</a><a class="headerlink" href="#how-instantiate-and-use-entity-objects" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.openconfig</span> <span class="kn">import</span> <span class="n">openconfig_bgp</span> <span class="k">as</span> <span class="n">oc_bgp</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.openconfig</span> <span class="kn">import</span> <span class="n">openconfig_bgp</span> <span class="k">as</span> <span class="n">oc_bgp</span>
 <span class="kn">from</span> <span class="nn">ydk.models.openconfig</span> <span class="kn">import</span> <span class="n">openconfig_bgp_types</span> <span class="k">as</span> <span class="n">oc_bgp_types</span>
 <span class="kn">from</span> <span class="nn">ydk.models.openconfig</span> <span class="kn">import</span> <span class="n">openconfig_routing_policy</span> <span class="k">as</span> <span class="n">oc_routing_policy</span>
 <span class="n">bgp</span> <span class="o">=</span> <span class="n">oc_bgp</span><span class="o">.</span><span class="n">Bgp</span><span class="p">()</span>
@@ -939,20 +939,20 @@ container absolute path and value of type <cite>tuple</cite> represents differen
 </div>
 <div class="section" id="how-to-assign-values-to-leaves">
 <h3><a class="toc-backref" href="#id8">How to assign values to leaves</a><a class="headerlink" href="#how-to-assign-values-to-leaves" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">bgp</span><span class="o">.</span><span class="n">global_</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">as_</span> <span class="o">=</span> <span class="mi">65172</span>                                          <span class="c1"># uint32</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">bgp</span><span class="o">.</span><span class="n">global_</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">as_</span> <span class="o">=</span> <span class="mi">65172</span>                                          <span class="c1"># uint32</span>
 <span class="n">bgp</span><span class="o">.</span><span class="n">global_</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">router_id</span> <span class="o">=</span> <span class="s1">&#39;1.2.3.4&#39;</span>                                <span class="c1"># string</span>
 <span class="n">afi_safi</span><span class="o">.</span><span class="n">afi_safi_name</span> <span class="o">=</span> <span class="n">oc_bgp_types</span><span class="o">.</span><span class="n">L3VpnIpv4Unicast</span><span class="p">()</span>                <span class="c1"># identityref</span>
 <span class="n">afi_safi</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>                                          <span class="c1"># bool</span>
@@ -971,19 +971,19 @@ container absolute path and value of type <cite>tuple</cite> represents differen
 </div>
 <div class="section" id="how-to-append-values-to-leaf-list">
 <h3><a class="toc-backref" href="#id9">How to append values to leaf-list</a><a class="headerlink" href="#how-to-append-values-to-leaf-list" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">as_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">65172</span><span class="p">)</span>                                            <span class="c1"># uint32, config is a dummy container</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">as_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">65172</span><span class="p">)</span>                                            <span class="c1"># uint32, config is a dummy container</span>
 <span class="n">config</span><span class="o">.</span><span class="n">router_id</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;1.2.3.4&quot;</span><span class="p">)</span>                                      <span class="c1"># ip-address, config is a dummy container</span>
 <span class="nb">id</span> <span class="o">=</span> <span class="n">oc_bgp_types</span><span class="o">.</span><span class="n">L3VpnIpv4Unicast</span>                                      <span class="c1"># identityref</span>
 <span class="n">config</span><span class="o">.</span><span class="n">types_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>                                            <span class="c1"># identityref, config is a dummy container</span>
@@ -1002,20 +1002,20 @@ container absolute path and value of type <cite>tuple</cite> represents differen
 <div class="section" id="how-to-setting-the-read-leaf-values">
 <span id="read-filter"></span><h3><a class="toc-backref" href="#id10">How to setting the read leaf values</a><a class="headerlink" href="#how-to-setting-the-read-leaf-values" title="Permalink to this headline">¶</a></h3>
 <p>Here we use filter for a <code class="xref cpp cpp-class docutils literal"><span class="pre">leaf</span></code> (specifically, the <cite>as number</cite> leaf) under <code class="xref py py-class docutils literal"><span class="pre">openconfig</span> <span class="pre">BGP</span></code></p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.filters</span> <span class="kn">import</span> <span class="n">YFilter</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.filters</span> <span class="kn">import</span> <span class="n">YFilter</span>
 
 <span class="c1"># Instantiate a bgp object representing the bgp container from the openconfig-bgp YANG model</span>
 <span class="n">bgp</span> <span class="o">=</span> <span class="n">ydk</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">openconfig_bgp</span><span class="o">.</span><span class="n">Bgp</span><span class="p">()</span>
@@ -1035,11 +1035,11 @@ container absolute path and value of type <cite>tuple</cite> represents differen
 </div>
 <div class="section" id="validation">
 <h2><a class="toc-backref" href="#id11">Validation</a><a class="headerlink" href="#validation" title="Permalink to this headline">¶</a></h2>
-<p>YDK performs local validation of leafs based on the model type definition. A few examples of validation are given below (assuming you have <code class="docutils literal"><span class="pre">openconfig</span></code> bundle installed, see <a class="reference internal" href="../getting_started.html#howto-install"><span class="std std-ref">Quick install</span></a>).  Assigning an invalid type results in a local validation error.</p>
+<p>YDK performs local validation of leafs based on the model type definition. A few examples of validation are given below (assuming you have <code class="docutils literal"><span class="pre">openconfig</span></code> bundle installed, see <a class="reference internal" href="../getting_started.html#howto-install"><span class="std std-ref">Core Installation</span></a>).  Assigning an invalid type results in a local validation error.</p>
 <p>The <code class="xref py py-class docutils literal"><span class="pre">openconfig</span> <span class="pre">BGP</span></code> model defines the field <cite>as_</cite> as a <cite>int</cite> (specifically, unsigned 32 bit integer).</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Instantiate a bgp object representing the bgp container from the openconfig-bgp YANG model</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Instantiate a bgp object representing the bgp container from the openconfig-bgp YANG model</span>
 <span class="n">bgp</span> <span class="o">=</span> <span class="n">ydk</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">openconfig_bgp</span><span class="o">.</span><span class="n">Bgp</span><span class="p">()</span>
 <span class="n">bgp</span><span class="o">.</span><span class="n">global_</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">as_</span> <span class="o">=</span> <span class="s2">&quot;Hello&quot;</span> <span class="c1">#invalid type</span>
 </pre></div>
@@ -1049,9 +1049,9 @@ container absolute path and value of type <cite>tuple</cite> represents differen
 </pre></div>
 </div>
 <p>The <code class="xref py py-class docutils literal"><span class="pre">openconfig</span> <span class="pre">BGP</span></code> model defines the field <cite>router_id</cite> as a <cite>str</cite> (specifically, with IP address pattern).</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Instantiate a bgp object representing the bgp container from the openconfig-bgp YANG model</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Instantiate a bgp object representing the bgp container from the openconfig-bgp YANG model</span>
 <span class="n">bgp</span> <span class="o">=</span> <span class="n">ydk</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">openconfig_bgp</span><span class="o">.</span><span class="n">Bgp</span><span class="p">()</span>
 <span class="n">bgp</span><span class="o">.</span><span class="n">global_</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">router_id</span> <span class="o">=</span> <span class="s2">&quot;Hello&quot;</span> <span class="c1">#invalid value</span>
 </pre></div>

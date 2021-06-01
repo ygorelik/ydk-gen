@@ -1,7 +1,8 @@
 #!/bin/bash
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
-#
+# YDK = YANG Development Kit
+# Copyright 2016-2019 Cisco Systems
+# ------------------------------------------------------------------
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -20,7 +21,7 @@
 # All rights reserved under Apache License, Version 2.0.
 # ------------------------------------------------------------------
 #
-# Script for running ydk CI on travis-ci.org
+# Script for running YDK unit tests on travis-ci.com
 #
 # ------------------------------------------------------------------
 
@@ -35,11 +36,11 @@ MSG_COLOR=$YELLOW
 ######################################################################
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date): tests.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date): tests.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -50,8 +51,8 @@ function run_cmd {
 }
 
 function run_exec_test {
-    print_msg "Executing: $@"
-    $@
+    print_msg "Executing: $*"
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -62,8 +63,8 @@ function run_exec_test {
 }
 
 function run_test_no_coverage {
-    print_msg "Executing: ${PYTHON_BIN} $@"
-    ${PYTHON_BIN} $@
+    print_msg "Executing: ${PYTHON_BIN} $*"
+    ${PYTHON_BIN} $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -75,17 +76,17 @@ function run_test_no_coverage {
 
 function run_test {
     if [[ $(command -v coverage) && $run_with_coverage ]]; then
-        print_msg "Executing with coverage: $@"
-        coverage run --omit=/usr/* --branch --parallel-mode $@
+        print_msg "Executing with coverage: $*"
+        coverage run --omit=/usr/* --branch --parallel-mode $*
         local status=$?
         if [ $status -ne 0 ]; then
             MSG_COLOR=$RED
-            print_msg "Exiting 'coverage run $@' with status=$status"
+            print_msg "Exiting 'coverage run $*' with status=$status"
             exit $status
         fi
         return $status
     fi
-    run_test_no_coverage $@
+    run_test_no_coverage $*
     local status=$?
     return $status
 }
@@ -93,10 +94,10 @@ function run_test {
 function pip_check_install {
     if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* && ${PYTHON_VERSION} == "2"* ]]
     then
-        print_msg "Custom pip install of $@ for CentOS"
-        ${PIP_BIN} install --install-option="--install-purelib=/usr/lib64/python${PYTHON_VERSION}/site-packages" --no-deps -U $@
+        print_msg "Custom pip install of $* for CentOS"
+        ${PIP_BIN} install --install-option="--install-purelib=/usr/lib64/python${PYTHON_VERSION}/site-packages" --no-deps -U $*
     else
-        ${PIP_BIN} install --no-deps -U $@
+        ${PIP_BIN} install --no-deps -U $*
     fi
 }
 
@@ -104,11 +105,15 @@ function pip_check_install {
 # Environment setup-teardown functions
 ######################################################################
 
+function init_confd_rc {
+    print_msg "Initializing confd resource"
+    source $HOME/confd/confdrc
+    confd_version=$(confd --version)
+}
+
 function init_confd {
     cd $1
     print_msg "Initializing confd in $(pwd)"
-    source $HOME/confd/confdrc
-    confd_version=$(confd --version)
     run_cmd make stop > /dev/null
     run_cmd make clean > /dev/null
     run_cmd make all > /dev/null
@@ -122,11 +127,6 @@ function reset_yang_repository {
       mkdir -p $HOME/.ydk/127.0.0.1
     fi
     rm -f $HOME/.ydk/127.0.0.1/*
-
-    # Correct issue with confd 7.3
-    if [[ $confd_version > 7.2 ]]; then
-      cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
-    fi
 }
 
 function init_confd_ydktest {
@@ -170,10 +170,16 @@ function check_python_installation {
     fi
   fi
 
-  if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* && ${PYTHON_VERSION} == "3"* ]]; then
-    print_msg "Creating Python3 virtual environment in $HOME/venv"
-    run_cmd ${PYTHON_BIN} -m venv $HOME/venv
-    run_cmd source $HOME/venv/bin/activate
+  if [[ ! $run_with_coverage ]]; then
+    if [[ -z ${PYTHON_VENV} ]]; then
+      PYTHON_VENV=${HOME}/venv
+      print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
+    fi
+    if [[ ! -d ${PYTHON_VENV} ]]; then
+      print_msg "Creating Python3 virtual environment in ${PYTHON_VENV}"
+      run_cmd python3 -m venv ${PYTHON_VENV}
+    fi
+    run_cmd source ${PYTHON_VENV}/bin/activate
   fi
 
   print_msg "Checking installation of ${PYTHON_BIN}"
@@ -199,7 +205,8 @@ function check_python_installation {
 function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
-  ${PIP_BIN} install -r requirements.txt pybind11==2.2.2
+  ${PIP_BIN} install -r requirements.txt
+  ${PIP_BIN} install $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
   if [[ $run_with_coverage ]] ; then
     ${PIP_BIN} install coverage
   fi
@@ -234,10 +241,12 @@ function init_go_env {
     go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
     print_msg "Current Go version is $go_version"
 
-    go get github.com/stretchr/testify
-    cd $GOPATH/src/github.com/stretchr/testify
-    git checkout tags/v1.6.1
-    cd -
+    if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
+        go get github.com/stretchr/testify
+        cd $GOPATH/src/github.com/stretchr/testify
+        git checkout tags/v1.6.1
+        cd -
+    fi
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
@@ -271,7 +280,7 @@ function install_cpp_core {
       run_exec_test ${CMAKE_BIN} ..
     fi
     print_msg "Compiling C++ core library"
-    run_cmd make &> /dev/null
+    run_cmd make # &> /dev/null
     sudo make install
 }
 
@@ -383,6 +392,7 @@ function generate_install_specified_cpp_bundle {
 function cpp_sanity_ydktest_gen_install {
     print_msg "Generating and installing C++ ydktest bundle"
     generate_install_specified_cpp_bundle profiles/test/ydktest-cpp.json ydktest-bundle
+    generate_install_specified_cpp_bundle profiles/test/ydktest-yang11.json ydktest_yang11-bundle
 
 #    print_msg "Generating and installing C++ ydktest-oc-nis bundle"
 #    generate_install_specified_cpp_bundle profiles/test/ydktest-oc-nis.json ydktest_oc_nis-bundle
@@ -396,7 +406,6 @@ function cpp_sanity_ydktest_test {
     sudo touch /var/confd/homes/admin/.ssh/authorized_keys
     cd $YDKGEN_HOME
     sudo sh -c 'cat sdk/cpp/tests/ssh_host_rsa_key.pub >> /var/confd/homes/admin/.ssh/authorized_keys'
-    cd -
 
     print_msg "Building and running C++ bundle tests"
     mkdir -p $YDKGEN_HOME/sdk/cpp/tests/build && cd sdk/cpp/tests/build
@@ -466,6 +475,7 @@ function run_go_bundle_tests {
     print_msg "Generating/installing go sanity bundle tests"
     cd $YDKGEN_HOME
     run_test generate.py -i --bundle profiles/test/ydktest-cpp.json --go
+    run_test generate.py -i --bundle profiles/test/ydktest-yang11.json --go
 
     run_go_tests
 }
@@ -511,8 +521,8 @@ function run_go_sanity_tests {
 function run_python_bundle_tests {
     print_msg "Running python bundle tests"
     py_sanity_ydktest
-    if [[ ${os_type} != "Darwin" && $confd_version < 7.3 ]]; then
-        # GitHub issue #909
+    if [[ ${os_type} != "Darwin" ]]; then
+        # GitHub issue #890
         py_sanity_deviation
     fi
     py_sanity_augmentation
@@ -528,7 +538,7 @@ function py_sanity_ydktest {
     print_msg "Generating, installing and testing python ydktest bundle"
 
     py_sanity_ydktest_gen
-    if [[ $run_with_coverage ]]
+    if [[ $run_with_coverage && ${PYTHON_VERSION} == "2"* ]]
     then
         py_sanity_ydktest_test
         py_sanity_ydktest_install
@@ -539,20 +549,18 @@ function py_sanity_ydktest {
 }
 
 function py_sanity_ydktest_gen {
-    print_msg "Generating python ydk core and ydktest bundle"
-
     cd $YDKGEN_HOME
 
-    print_msg "py_sanity_ydktest_gen: testing bundle and documentation generation"
-    run_test generate.py --bundle profiles/test/ydktest-cpp.json --python --generate-doc
+    print_msg "Testing ydktest bundle generation"
+    run_test generate.py --bundle profiles/test/ydktest-cpp.json --python
 
-    print_msg "py_sanity_ydktest_gen: testing core and documentation generation"
-    run_test generate.py --core
+    print_msg "Testing core and bundle documentation generation"
+    run_test generate.py --core --generate-doc
 }
 
 function py_sanity_ydktest_install {
-    print_msg "Running py_sanity_ydktest_install"
     cd $YDKGEN_HOME
+    print_msg "Running ydktest bundle installation"
     pip_check_install gen-api/python/ydktest-bundle/dist/ydk*.tar.gz
 
     print_msg "Running import tests on generated bundle"
@@ -562,7 +570,7 @@ function py_sanity_ydktest_install {
 function py_sanity_ydktest_test {
     print_msg "Running py_sanity_ydktest_test with coverage"
     cd $YDKGEN_HOME
-    cp -r gen-api/python/ydktest-bundle/ydk/models/* sdk/python/core/ydk/models
+    cp -r gen-api/python/ydktest-bundle/ydk/models sdk/python/core/ydk/
 
     print_msg "Uninstall ydk py core from pip for testing with coverage"
     ${PIP_BIN} uninstall ydk -y
@@ -590,7 +598,7 @@ function py_sanity_ydktest_test {
     fi
 
     cd $YDKGEN_HOME/sdk/python/core/
-    rm -f *.so
+    rm -rf *.so ydk/models
 
     print_msg "Restoring YDK core installation"
     ${PYTHON_BIN} setup.py sdist
@@ -632,22 +640,11 @@ function py_sanity_ydktest_test_netconf_ssh {
     run_test sdk/python/core/tests/test_sanity_types.py
     run_test sdk/python/core/tests/test_non_top_operations.py
     run_test sdk/python/core/tests/test_entity_diff.py
-#    run_test_no_coverage sdk/python/core/tests/test_sanity_executor_rpc.py
+    run_test_no_coverage sdk/python/core/tests/test_sanity_executor_rpc.py
   if [[ ${os_type} != "Darwin" ]] ; then
     print_msg "Running py_sanity_ydktest_test_netconf_ssh with no on-demand"
     run_test sdk/python/core/tests/test_netconf_operations.py --non-demand
     run_test sdk/python/core/tests/test_sanity_delete.py --non-demand
-    run_test sdk/python/core/tests/test_sanity_errors.py --non-demand
-    run_test sdk/python/core/tests/test_sanity_filter_read.py --non-demand
-    run_test sdk/python/core/tests/test_sanity_filters.py --non-demand
-    run_test sdk/python/core/tests/test_sanity_levels.py --non-demand
-    run_test sdk/python/core/tests/test_sanity_netconf.py --non-demand
-    # run_test sdk/python/core/tests/test_sanity_path.py --non-demand
-    run_test sdk/python/core/tests/test_netconf_provider.py --non-demand
-    run_test sdk/python/core/tests/test_sanity_service_errors.py --non-demand
-    run_test sdk/python/core/tests/test_sanity_type_mismatch_errors.py --non-demand
-    run_test sdk/python/core/tests/test_sanity_types.py --non-demand
-#    run_test_no_coverage sdk/python/core/tests/test_sanity_executor_rpc.py --non-demand
   fi
 }
 
@@ -659,121 +656,58 @@ function py_sanity_ydktest_test_tcp {
 }
 
 #--------------------------
-# Python deviation bundle
+# Python deviation tests
 #--------------------------
 
 function py_sanity_deviation {
-    reset_yang_repository
-    py_sanity_deviation_ydktest_gen
-    py_sanity_deviation_ydktest_install
+    init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
+
     py_sanity_deviation_ydktest_test
 
-    py_sanity_deviation_bgp_gen
-    py_sanity_deviation_bgp_install
     py_sanity_deviation_bgp_test
-    reset_yang_repository
-}
-
-function py_sanity_deviation_ydktest_gen {
-    print_msg "Running py_sanity_deviation_ydktest_gen"
-
-    cd $YDKGEN_HOME
-    rm -rf gen-api/python/*
-    run_test generate.py --bundle profiles/test/ydktest-cpp.json --python
-}
-
-function py_sanity_deviation_ydktest_install {
-    print_msg "Running py_sanity_deviation_ydktest_install"
-
-    ${PIP_BIN} uninstall ydk-models-ydktest -y
-    pip_check_install gen-api/python/ydktest-bundle/dist/ydk*.tar.gz
 }
 
 function py_sanity_deviation_ydktest_test {
     print_msg "Running py_sanity_deviation_ydktest_test"
-
-    init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
+    cd $YDKGEN_HOME
+    run_test generate.py --bundle profiles/test/ydktest-cpp.json --python -i
     run_test sdk/python/core/tests/test_sanity_deviation.py
-#    run_test sdk/python/core/tests/test_sanity_deviation.py --non-demand
-}
-
-function py_sanity_deviation_bgp_gen {
-    print_msg "Running py_sanity_deviation_bgp_gen"
-
-    rm -rf gen-api/python/*
-    cd $YDKGEN_HOME
-    run_test generate.py --bundle profiles/test/deviation.json --verbose
-}
-
-function py_sanity_deviation_bgp_install {
-    print_msg "Running py_sanity_deviation_bgp_install"
-
-    cd $YDKGEN_HOME
-    pip_check_install gen-api/python/deviation-bundle/dist/*.tar.gz
 }
 
 function py_sanity_deviation_bgp_test {
     print_msg "Running py_sanity_deviation_bgp_test"
-
+    cd $YDKGEN_HOME
+    run_test generate.py --bundle profiles/test/deviation.json --verbose -i
     run_test sdk/python/core/tests/test_sanity_deviation_bgp.py
-#    run_test sdk/python/core/tests/test_sanity_deviation_bgp.py --non-demand
 }
 
 #--------------------------
-# Python augmentation bundle
+# Python augmentation tests
 #--------------------------
 function py_sanity_augmentation {
-    print_msg "Running py_sanity_augmentation"
-
-    reset_yang_repository
-    py_sanity_augmentation_gen
-    py_sanity_augmentation_install
-    py_sanity_augmentation_test
-    reset_yang_repository
-}
-
-function py_sanity_augmentation_gen {
-    print_msg "Running py_sanity_augmentation_gen"
-
-    cd $YDKGEN_HOME && rm -rf gen-api/python/*
-    run_test generate.py --core
-    run_test generate.py --bundle profiles/test/ydktest-augmentation.json
-}
-
-function py_sanity_augmentation_install {
-    print_msg "Running py_sanity_augmentation_install"
-
-    cd $YDKGEN_HOME
-    ${PIP_BIN} uninstall ydk -y
-    ${PIP_BIN} install gen-api/python/ydk/dist/ydk*.tar.gz
-    pip_check_install gen-api/python/augmentation-bundle/dist/*.tar.gz
-}
-
-function py_sanity_augmentation_test {
     print_msg "Running py_sanity_augmentation_test"
 
+    cd $YDKGEN_HOME
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/augmentation
-
+    run_test generate.py --bundle profiles/test/ydktest-augmentation.json -i
     run_test sdk/python/core/tests/test_sanity_augmentation.py
-#    run_test sdk/python/core/tests/test_sanity_augmentation.py --non-demand
     run_test sdk/python/core/tests/test_on_demand.py
 }
 
 function py_sanity_common_cache {
     print_msg "Running py_sanity_common_cache"
 
-    reset_yang_repository
-  if [[ ${os_type} != "Darwin" && $confd_version < 7.3 ]]; then
-    # GitHub issue #909
-    init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
-    run_test sdk/python/core/tests/test_sanity_deviation.py --common-cache
-  fi
+    if [[ ${os_type} != "Darwin" ]]; then
+        # GitHub issue #890
+        init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
+        run_test sdk/python/core/tests/test_sanity_deviation.py --common-cache
+    fi
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/augmentation
     run_test sdk/python/core/tests/test_sanity_augmentation.py --common-cache
 
+    init_confd_ydktest
     run_test sdk/python/core/tests/test_sanity_levels.py --common-cache
     run_test sdk/python/core/tests/test_sanity_types.py --common-cache
-    reset_yang_repository
 }
 
 function py_sanity_run_limited_tests {
@@ -792,45 +726,13 @@ function py_sanity_one_class_per_module {
     print_msg "Running ONE CLASS PER MODULE TESTS"
     cd $YDKGEN_HOME
     run_test generate.py --bundle profiles/test/ydktest-cpp.json -o
-    py_sanity_run_limited_tests
-}
-
-function run_py_backward_compatibility {
-    print_msg "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    print_msg "Running YDK-0.7.3 BUNDLE BACKWARD COMPATIBILITY TESTS"
-    cd $YDKGEN_HOME
-    CURRENT_GIT_REV=$(git rev-parse HEAD)
-    git checkout 454ffc06ec79995832538642638e03259e622b53
-    run_test generate.py --bundle profiles/test/ydktest-cpp.json
     init_confd_ydktest
     py_sanity_run_limited_tests
-    git checkout ${CURRENT_GIT_REV}
 }
 
 #-------------------------------------
 # Python generated model tests bundle
 #-------------------------------------
-
-#function test_gen_tests {
-#    print_msg "test_gen_tests"
-#
-#    cd $YDKGEN_HOME
-#    git clone https://github.com/psykokwak4/ydk-test-yang.git sdk/cpp/core/tests/confd/testgen
-#
-#    py_test_gen
-#    cpp_test_gen
-#}
-
-#function py_test_gen_test {
-#    print_msg "py_test_gen_test"
-#
-#    cd $YDKGEN_HOME
-#    init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/testgen/confd
-#    cd gen-api/python/models_test-bundle/ydk/models/models_test/test/
-#    ${PYTHON_BIN} import_tests.py
-#    cd models_test/
-#    ${PYTHON_BIN} -m unittest discover
-#}
 
 function py_test_gen {
     print_msg "py_test_gen"
@@ -946,6 +848,7 @@ if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]] ; then
 fi
 
 init_py_env
+init_confd_rc
 init_confd_ydktest
 init_rest_server
 init_tcp_server
@@ -965,6 +868,7 @@ if [[ ${os_info} != *"focal"* ]]; then
   # TODO: issue running go tests on ubuntu:focal
   # execution unexpectedly stalls.
   # The tests are passing well on platform and docker
+  # GitHub issue #1028
   init_go_env
   install_go_core
   run_go_bundle_tests
@@ -977,10 +881,6 @@ install_py_core
 run_python_bundle_tests
 #run_python_oc_nis_tests
 run_py_metadata_test
-if [[ $confd_version < 7.3 ]]; then
-  run_py_backward_compatibility
-fi
-# test_gen_tests
 
 ######################################
 # Documentation tests

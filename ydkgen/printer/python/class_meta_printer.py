@@ -81,16 +81,17 @@ class ClassMetaPrinter(object):
             mtype = 'REFERENCE_LEAFLIST'
         elif clazz.stmt.keyword == 'identity':
             mtype = 'REFERENCE_IDENTITY_CLASS'
-        self.ctx.writeln('\'%s\' : {' % (clazz.qn()))
+        self.ctx.writeln('\'%s\': {' % (clazz.qn()))
         self.ctx.lvl_inc()
-        self.ctx.writeln("'meta_info' : _MetaInfoClass('%s', %s," % (clazz.qn(), mtype))
+        self.ctx.writeln("'meta_info': _MetaInfoClass(")
         self.ctx.lvl_inc()
+        self.ctx.writeln("'%s', %s," % (clazz.qn(), mtype))
         description = " "
         for st in clazz.stmt.substmts:
             if st.keyword == 'description':
                 description = st.arg
                 break
-        self.ctx.writeln("'''%s'''," % description)
+        self.ctx.writeln('"""%s""",' % description)
         if clazz.is_grouping():
             self.ctx.writeln('True, ')
         else:
@@ -151,15 +152,16 @@ class ClassMetaPrinter(object):
         min_elements = meta_info_data.min_elements
         default_value_object = meta_info_data.default_value_object
 
-        ctx.writeln("_MetaInfoClassMember('%s', %s, '%s', '%s'," % (name, mtype, ptype, ytype))
+        ctx.writeln("  _MetaInfoClassMember(")
         ctx.lvl_inc()
+        ctx.writeln("'%s', %s, '%s', '%s'," % (name, mtype, ptype, ytype))
         ctx.writeln("%s, %s," % (pmodule_name, clazz_name))
         ctx.writeln("%s, %s," % (str(prange), str(pattern)))
-        ctx.write("'''")
+        ctx.writeln('"""')
         if meta_info_data.comment is not None:
             for line in meta_info_data.comment.split('\n'):
                 ctx.writeln('%s' % line)
-        ctx.writeln("''',")
+        ctx.writeln('""",')
         ctx.writeln("'%s'," % presentation_name)
 
         if len(meta_info_data.children) > 0:

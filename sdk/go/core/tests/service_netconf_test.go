@@ -413,9 +413,9 @@ func (suite *NetconfServiceTestSuite) TestDeleteContainer() {
 }
 
 func TestNetconfServiceTestSuite(t *testing.T) {
-// 	if testing.Verbose() {
-// 		ydk.EnableLogging(ydk.Debug)
-// 	}
+	if testing.Verbose() {
+		ydk.EnableLogging(ydk.Debug)
+	}
 	suite.Run(t, new(NetconfServiceTestSuite))
 }
 

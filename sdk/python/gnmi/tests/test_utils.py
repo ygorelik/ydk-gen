@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
 # ------------------------------------------------------------------
 
 """test_utils.py
@@ -28,10 +33,7 @@ from argparse import ArgumentParser
 from ydk.entity_utils import get_data_node_from_entity
 from ydk.errors import YCoreError
 
-if sys.version_info > (3,):
-    from urllib.parse import urlparse
-else:
-    from urlparse import urlparse
+from urllib.parse import urlparse
 
 
 class EmptyTest(unittest.TestCase):
@@ -67,7 +69,7 @@ def enable_logging(level):
 def datanode_to_str(dn, indent=''):
     try:
         s = dn.get_schema_node().get_statement()
-        if s.keyword == "leaf" or s.keyword == "leaf-list" or s.keyword == "anyxml":
+        if s.keyword in ["leaf", "leaf-list", "anyxml", "anydata"]:
             out = indent + "<" + s.arg + ">" + dn.get_value() + "</" + s.arg + ">\n"
         else:
             out = indent + "<" + s.arg + ">\n"
@@ -103,10 +105,7 @@ class ParametrizedTestCase(unittest.TestCase):
         inherit from this class.
     """
     def __init__(self, method_name='runTest'):
-        if sys.version_info > (3,):
-            super().__init__(method_name)
-        else:
-            super(ParametrizedTestCase, self).__init__(method_name)
+        super().__init__(method_name)
 
     @staticmethod
     def parametrize(testcase_klass, device):

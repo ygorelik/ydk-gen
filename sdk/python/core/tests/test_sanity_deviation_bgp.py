@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 #  ----------------------------------------------------------------
 # Copyright 2016 Cisco Systems
 #
@@ -14,14 +13,15 @@ from __future__ import absolute_import
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+from __future__ import absolute_import
+
 import sys
 import unittest
 
-import ydk.types as ytypes
 from ydk.services import CRUDService
 from ydk.providers import NetconfServiceProvider
-from ydk.types import Empty, Decimal64
-from ydk.errors import YError, YModelError
+from ydk.errors import YError
+
 from ydk.models.deviation import openconfig_bgp, openconfig_bgp_types
 from ydk.models.deviation.openconfig_routing_policy import DefaultPolicyType
 
@@ -52,7 +52,7 @@ class SanityTest(unittest.TestCase):
         ipv4_afsf.apply_policy.config.default_export_policy = DefaultPolicyType.ACCEPT_ROUTE
         bgp_cfg.global_.afi_safis.afi_safi.append(ipv4_afsf)
 
-        self.assertRaises(YModelError, self.crud.create, self.ncc, bgp_cfg)
+        self.assertRaises(YError, self.crud.create, self.ncc, bgp_cfg)
 
 
 if __name__ == '__main__':

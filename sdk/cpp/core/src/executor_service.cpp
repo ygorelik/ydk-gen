@@ -1,4 +1,4 @@
-/// YANG Development Kit
+// YANG Development Kit
 // Copyright 2016 Cisco Systems. All rights reserved
 //
 ////////////////////////////////////////////////////////////////
@@ -18,7 +18,11 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
+// -------------------------------------------------------------
+// This file has been modified by Yan Gorelik, YDK Solutions.
+// All modifications in original under CiscoDevNet domain
+// introduced since October 2019 are copyrighted.
+// All rights reserved under Apache License, Version 2.0.
 //////////////////////////////////////////////////////////////////
 
 #include "entity_data_node_walker.hpp"
@@ -67,7 +71,7 @@ shared_ptr<Entity> ExecutorService::execute_rpc(ServiceProvider& provider,
 
     // Handle output
     auto output = rpc_entity.get_child_by_name("output", "");
-    if (output != nullptr && result_datanode != nullptr)
+    if (output != nullptr && result_datanode != nullptr && top_entity != nullptr)
     {
         auto filter = result_datanode->get_children()[0].get();
 

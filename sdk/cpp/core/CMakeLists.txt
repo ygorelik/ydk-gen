@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 cmake_policy(SET CMP0048 NEW)
-project(ydk VERSION 0.8.5 LANGUAGES C CXX)
+project(ydk VERSION 0.9.0 LANGUAGES C CXX)
 
 set(YDK_DESCRIPTION "YANG Development Kit Library. The library for  YDK API.")
 
@@ -296,13 +296,12 @@ set(libyang_location ${CMAKE_CURRENT_BINARY_DIR}/project_libyang/src/project_lib
 set(libyang_build_location ${CMAKE_CURRENT_BINARY_DIR}/project_libyang/src/project_libyang-build)
 
 set(libyang_headers
-    ${libyang_location}/src/common.h
     ${libyang_location}/src/context.h
     ${libyang_location}/src/dict.h
-    ${libyang_location}/src/dict_private.h
+    ${libyang_location}/src/hash_table.h
     ${libyang_location}/src/extensions.h
-    ${libyang_build_location}/src/extensions_config.h
     ${libyang_build_location}/src/libyang.h
+    ${libyang_build_location}/src/common.h
     ${libyang_location}/src/parser.h
     ${libyang_location}/src/parser_yang.h
     ${libyang_location}/src/parser_yang_bis.h
@@ -313,27 +312,32 @@ set(libyang_headers
     ${libyang_location}/src/tree_internal.h
     ${libyang_location}/src/tree_schema.h
     ${libyang_location}/src/validation.h
+    ${libyang_location}/src/user_types.h
     ${libyang_location}/src/xml.h
     ${libyang_location}/src/xml_internal.h
     ${libyang_location}/src/xpath.h
 )
 
 set(yang_objs
+    compat.c.o
     common.c.o
     context.c.o
-    dict.c.o
-    extensions.c.o
+    hash_table.c.o
     log.c.o
     parser.c.o
     parser_json.c.o
+    parser_lyb.c.o
     parser_xml.c.o
     parser_yang.c.o
     parser_yang_bis.c.o
     parser_yang_lex.c.o
     parser_yin.c.o
+    plugins.c.o
     printer.c.o
     printer_info.c.o
     printer_json.c.o
+    printer_json_schema.c.o
+    printer_lyb.c.o
     printer_tree.c.o
     printer_xml.c.o
     printer_yang.c.o
@@ -366,7 +370,7 @@ include(ExternalProject)
 ExternalProject_Add(project_libnetconf
     PREFIX "${CMAKE_CURRENT_BINARY_DIR}/project_libnetconf"
     URL "https://github.com/ygorelik/libnetconf/archive/master.zip"
-    CONFIGURE_COMMAND ./configure
+    CONFIGURE_COMMAND ./configure --enable-debug
     BUILD_COMMAND "make"
     INSTALL_DIR "${libnetconf_location}"
     INSTALL_COMMAND mkdir -p ${libnetconf_headers_location}/libnetconf && cp ${libnetconf_headers} ${libnetconf_headers_location}/libnetconf
@@ -406,8 +410,8 @@ set(libyang_include_location include/libyang)
 set(libyang_headers_location ${CMAKE_CURRENT_BINARY_DIR}/project_libyang/headers)
 ExternalProject_Add(project_libyang
     PREFIX "${CMAKE_CURRENT_BINARY_DIR}/project_libyang"
-    URL "https://github.com/ygorelik/libyang/archive/master.zip"
-    CMAKE_ARGS -DSTATIC=true -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_LIBDIR=lib
+    URL "https://github.com/ygorelik/libyang/archive/yang11.zip"
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_LIBDIR=lib
     INSTALL_DIR "${libyang_location}"
     INSTALL_COMMAND mkdir -p ${libyang_headers_location}/libyang && cp ${libyang_headers} ${libyang_headers_location}/libyang
 )
@@ -436,6 +440,18 @@ foreach(yang_obj IN LISTS yang_objs)
     )
     list(APPEND libyang_inc_objs ${libyang_objs}/${yang_obj})
 endforeach(yang_obj)
+
+set(libyang_extensions metadata nacm yangdata user_inet_types user_yang_types)
+
+foreach(ext IN LISTS libyang_extensions)
+    add_custom_command(
+        OUTPUT ${libyang_objs}/${ext}.c.o
+        COMMAND ar -x ${libyang_build_location}/lib${ext}.a ${ext}.c.o
+        MAIN_DEPENDENCY ${libyang_objs}
+        WORKING_DIRECTORY ${libyang_objs}
+    )
+    list(APPEND libyang_inc_objs ${libyang_objs}/${ext}.c.o)
+endforeach(ext)
 
 include_directories(
     ${LIBYANG_INCLUDE_DIRS}
@@ -468,11 +484,6 @@ target_link_libraries(ydk
 
 set_property(TARGET ydk PROPERTY CXX_STANDARD 11)
 set_property(TARGET ydk PROPERTY CXX_STANDARD_REQUIRED ON)
-set(libyang_extension_lib
-	${libyang_build_location}/src/extensions/libyang_ext_test${CMAKE_SHARED_LIBRARY_SUFFIX}
-	${libyang_build_location}/src/extensions/metadata${CMAKE_SHARED_LIBRARY_SUFFIX}
-	${libyang_build_location}/src/extensions/nacm${CMAKE_SHARED_LIBRARY_SUFFIX}
-)
 
 install(TARGETS ydk DESTINATION ${LIB_INSTALL_DIR})
 install(FILES ${libydk_install_headers} DESTINATION ${INCLUDE_INSTALL_DIR})
@@ -481,7 +492,6 @@ install(FILES ${SPDLOG_DETAILS_HEADERS} DESTINATION ${spdlog_details_include_loc
 install(FILES ${SPDLOG_FMT_HEADERS} DESTINATION ${spdlog_fmt_include_location})
 install(FILES ${SPDLOG_FMT_BUNDLED_HEADERS} DESTINATION ${spdlog_fmt_bundled_include_location})
 install(FILES ${SPDLOG_SINKS_HEADERS} DESTINATION ${spdlog_sinks_include_location})
-install(FILES ${libyang_extension_lib} DESTINATION ${LIBYANG_EXT_PLUGINS_DIR})
 
 # generate doxygen documentation for ydk_core API
 find_package(Doxygen)

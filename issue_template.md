@@ -1,10 +1,10 @@
 Issue tracker is ONLY used for reporting bugs. Please use the [YDK Community](https://communities.cisco.com/community/developer/ydk) for any support issues.
 
-## Expected Behavior
-
-
-
 ## Current Behavior
+
+
+
+## Expected Behavior
 
 
 

@@ -23,7 +23,6 @@ import unittest
 
 from ydk.services import CRUDService
 from ydk.providers import NetconfServiceProvider
-from ydk.errors import YError
 from ydk.filters import YFilter
 from ydk.models.ydktest import ydktest_sanity as ysanity
 
@@ -31,8 +30,38 @@ from test_utils import ParametrizedTestCase
 from test_utils import get_device_info
 
 
-class SanityYang(unittest.TestCase):
+def get_nested_object():
+    # return nested object with selected list elements
+    runner_create = ysanity.Runner()
+    e_1 = ysanity.Runner.InbtwList.Ldata()
+    e_2 = ysanity.Runner.InbtwList.Ldata()
+    e_1.number = 11
+    e_1.name = 'runner:inbtwlist:[11]:name'
+    e_1.subc.number = 111
+    e_1.subc.name = 'runner:inbtwlist:[11]:subc:name'
+    e_2.number = 12
+    e_2.name = 'runner:inbtwlist:[12]:name'
+    e_2.subc.number = 121
+    e_2.subc.name = 'runner:inbtwlist:[12]:name'
+    e_11 = e_1.subc.SubcSubl1()
+    e_11.number = 111
+    e_11.name = 'runner:inbtwlist:[11]:subc:subcsubl1[111]:name'
+    e_12 = ysanity.Runner.InbtwList.Ldata.Subc.SubcSubl1()
+    e_12.number = 112
+    e_12.name = 'runner:inbtwlist:[11]:subc:subcsubl1[112]:name'
+    e_1.subc.subc_subl1.extend([e_11, e_12])
+    e_21 = ysanity.Runner.InbtwList.Ldata.Subc.SubcSubl1()
+    e_21.number = 121
+    e_21.name = 'runner:inbtwlist:[12]:subc:subcsubl1[121]:name'
+    e_22 = ysanity.Runner.InbtwList.Ldata.Subc.SubcSubl1()
+    e_22.number = 122
+    e_22.name = 'runner:inbtwlist:[12]:subc:subcsubl1[122]:name'
+    e_2.subc.subc_subl1.extend([e_21, e_22])
+    runner_create.inbtw_list.ldata.extend([e_1, e_2])
+    return runner_create, e_2, e_22
 
+
+class SanityYang(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -62,37 +91,6 @@ class SanityYang(unittest.TestCase):
     def read_from_empty_filter(self):
         empty_runner = ysanity.Runner()
         return self.crud.read(self.ncc, empty_runner)
-
-    def get_nested_object(self):
-        # return nested object with selected list elements
-        runner_create = ysanity.Runner()
-        e_1 = ysanity.Runner.InbtwList.Ldata()
-        e_2 = ysanity.Runner.InbtwList.Ldata()
-        e_1.number = 11
-        e_1.name = 'runner:inbtwlist:[11]:name'
-        e_1.subc.number = 111
-        e_1.subc.name = 'runner:inbtwlist:[11]:subc:name'
-        e_2.number = 12
-        e_2.name = 'runner:inbtwlist:[12]:name'
-        e_2.subc.number = 121
-        e_2.subc.name = 'runner:inbtwlist:[12]:name'
-        e_11 = e_1.subc.SubcSubl1()
-        e_11.number = 111
-        e_11.name = 'runner:inbtwlist:[11]:subc:subcsubl1[111]:name'
-        e_12 = ysanity.Runner.InbtwList.Ldata.Subc.SubcSubl1()
-        e_12.number = 112
-        e_12.name = 'runner:inbtwlist:[11]:subc:subcsubl1[112]:name'
-        e_1.subc.subc_subl1.extend([e_11, e_12])
-        e_21 = ysanity.Runner.InbtwList.Ldata.Subc.SubcSubl1()
-        e_21.number = 121
-        e_21.name = 'runner:inbtwlist:[12]:subc:subcsubl1[121]:name'
-        e_22 = ysanity.Runner.InbtwList.Ldata.Subc.SubcSubl1()
-        e_22.number = 122
-        e_22.name = 'runner:inbtwlist:[12]:subc:subcsubl1[122]:name'
-        e_2.subc.subc_subl1.extend([e_21, e_22])
-        runner_create.inbtw_list.ldata.extend([e_1, e_2])
-
-        return runner_create, e_2, e_22
 
     def test_delete_object_on_leaf(self):
         # create runner with two leaves, one and two
@@ -169,6 +167,7 @@ class SanityYang(unittest.TestCase):
 
         runner_read_filter = ysanity.Runner()
         runner_read = self.crud.read(self.ncc, runner_read_filter)
+        self.assertIsNotNone(runner_read)
 
         # delete container two
         runner_update = ysanity.Runner()
@@ -182,7 +181,7 @@ class SanityYang(unittest.TestCase):
         self.assertEqual(runner_compare, runner_read)
 
     def test_delete_on_nested_list_1(self):
-        runner_create, _, e_22 = self.get_nested_object()
+        runner_create, _, e_22 = get_nested_object()
         self.crud.create(self.ncc, runner_create)
 
         runner_read = self.read_from_empty_filter()
@@ -199,7 +198,7 @@ class SanityYang(unittest.TestCase):
         self.assertEqual(runner_compare, runner_read)
 
     def test_delete_on_nested_list(self):
-        runner_create, _, e_22 = self.get_nested_object()
+        runner_create, _, e_22 = get_nested_object()
         self.crud.create(self.ncc, runner_create)
 
         runner_update = self.read_from_empty_filter()
@@ -215,10 +214,11 @@ class SanityYang(unittest.TestCase):
         self.assertEqual(runner_compare, runner_read)
 
     def test_delete_on_list_element(self):
-        runner_create, e_2, _ = self.get_nested_object()
+        runner_create, e_2, _ = get_nested_object()
         self.crud.create(self.ncc, runner_create)
 
         runner_read = self.read_from_empty_filter()
+        self.assertIsNotNone(runner_read)
 
         runner_update = runner_create
         runner_update.inbtw_list.ldata[1].yfilter = YFilter.delete

@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
-import sys
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
+
 import inspect
 import contextlib
 
@@ -27,10 +32,6 @@ from ydk.errors import YModelError as _YModelError
 from ydk.errors import YOperationNotSupportedError as _YOperationNotSupportedError
 from ydk.errors import YServiceError as _YServiceError
 from ydk.errors import YServiceProviderError as _YServiceProviderError
-
-
-if sys.version_info > (3, 0):
-    inspect.getargspec = inspect.getfullargspec
 
 
 _ERRORS = {"YError": _YError,
@@ -50,10 +51,7 @@ def _raise(exc):
     """Suppress old exception context for Python > 3.3,
     Use exec to avoid SyntaxError under Python 2 environment.
     """
-    if sys.version_info >= (3,3):
-        exec("raise exc from None")
-    else:
-        raise exc
+    exec("raise exc from None")
 
 
 @contextlib.contextmanager
@@ -105,7 +103,7 @@ def handle_import_error(logger, level):
 
 def check_argument(func):
     def helper(self, provider, entity, *args, **kwargs):
-        _, pname, ename = inspect.getargspec(func).args[:3]
+        _, pname, ename = inspect.getfullargspec(func).args[:3]
         if provider is None or entity is None:
             err_msg = "'{0}' and '{1}' cannot be None".format(pname, ename)
             raise _YServiceError(error_msg=err_msg)
