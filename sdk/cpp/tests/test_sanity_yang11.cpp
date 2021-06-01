@@ -30,7 +30,7 @@ using namespace ydk;
 using namespace ydktest_yang11;
 using namespace std;
 
-TEST_CASE("test_bits_subtyping")
+TEST_CASE("yang11_bits_subtyping")
 {
     CodecServiceProvider codec_provider{EncodingFormat::XML};
     CodecService codec_service{};
@@ -55,7 +55,7 @@ TEST_CASE("test_bits_subtyping")
     CHECK(top == *entity);
 }
 
-TEST_CASE("test_bits_subtyping_xml_codec")
+TEST_CASE("yang11_bits_subtyping_xml_codec")
 {
     XmlSubtreeCodec xml_codec{};
     vector<path::Capability> caps {
@@ -94,7 +94,7 @@ static string xml_empty_key_expected = R"(<empty-type xmlns="http://cisco.com/ns
 </empty-type>
 )";
 
-TEST_CASE("test_type_empty_in_union")
+TEST_CASE("yang11_type_empty_in_union")
 {
     ydk::path::Repository repo{TEST_HOME};
     CodecServiceProvider codec_provider{repo, EncodingFormat::XML};
@@ -115,7 +115,7 @@ TEST_CASE("test_type_empty_in_union")
     CHECK(container == *entity);
 }
 
-TEST_CASE("test_type_empty_key_xml_codec")
+TEST_CASE("yang11_type_empty_key_xml_codec")
 {
     XmlSubtreeCodec xml_codec{};
     vector<path::Capability> caps {
@@ -139,7 +139,7 @@ TEST_CASE("test_type_empty_key_xml_codec")
     CHECK(container == *entity);
 }
 
-TEST_CASE("test_type_empty_key_json_codec")
+TEST_CASE("yang11_type_empty_key_json_codec")
 {
     JsonSubtreeCodec json_codec{};
     vector<path::Capability> caps {
@@ -176,7 +176,7 @@ TEST_CASE("test_type_empty_key_json_codec")
     CHECK(container == *entity);
 }
 
-TEST_CASE("test_type_empty_in_union_json")
+TEST_CASE("yang11_type_empty_in_union_json")
 {
     CodecServiceProvider codec_provider{EncodingFormat::JSON};
     CodecService codec_service{};
@@ -209,7 +209,7 @@ TEST_CASE("test_type_empty_in_union_json")
     CHECK(container == *entity);
 }
 
-TEST_CASE("test_type_leafref_in_union")
+TEST_CASE("yang11_type_leafref_in_union")
 {
     CodecServiceProvider codec_provider{EncodingFormat::XML};
     CodecService codec_service{};
@@ -249,7 +249,7 @@ static string vector_to_string(vector<string> & string_vector)
     return buf.str();
 }
 
-TEST_CASE("test_type_empty_key")
+TEST_CASE("yang11_type_empty_key")
 {
     ydk::path::Repository repo{TEST_HOME};
     CodecServiceProvider codec_provider{repo, EncodingFormat::XML};
@@ -291,7 +291,7 @@ TEST_CASE("test_type_empty_key")
     CHECK(!empty_type->filter.has_key("x"));
 }
 
-TEST_CASE("test_type_empty_key2")
+TEST_CASE("yang11_type_empty_key2")
 {
     ydk::path::Repository repo{TEST_HOME};
     CodecServiceProvider codec_provider{repo, EncodingFormat::XML};
@@ -394,7 +394,7 @@ static string json_anydata = R"({
   }
 })";
 
-TEST_CASE("test_type_anydata")
+TEST_CASE("yang11_type_anydata")
 {
     CodecServiceProvider codec_provider{EncodingFormat::XML};
     CodecService codec_service{};
@@ -412,7 +412,7 @@ TEST_CASE("test_type_anydata")
     CHECK(anydata_expected_xml == notification_data);
 }
 
-TEST_CASE("test_type_anydata_xml_codec")
+TEST_CASE("yang11_type_anydata_xml_codec")
 {
     XmlSubtreeCodec xml_codec{};
 
@@ -425,7 +425,7 @@ TEST_CASE("test_type_anydata_xml_codec")
     CHECK(anydata_expected_xml == notification->data.get());
 }
 
-TEST_CASE("test_type_anydata_json")
+TEST_CASE("yang11_type_anydata_json")
 {
     CodecServiceProvider codec_provider{EncodingFormat::JSON};
     CodecService codec_service{};
@@ -441,7 +441,7 @@ TEST_CASE("test_type_anydata_json")
           == json_codec.convert_string(notification->data.get(), false));
 }
 
-TEST_CASE("test_type_anydata_json_codec")
+TEST_CASE("yang11_type_anydata_json_codec")
 {
     JsonSubtreeCodec json_codec{};
 

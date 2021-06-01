@@ -264,7 +264,7 @@ static void check_and_set_leaf(Entity & entity, Entity * parent, xmlNodePtr xml_
             YLOG_DEBUG("XMLCodec: Creating anydata leaf '{}' with value:\n{}", current_node_name, value);
             entity.set_value(current_node_name, value);
         }
-        xmlFree(buffer);
+        xmlBufferFree(buffer);
     }
     else {
         decode_xml(doc, xml_node->children, entity, parent, current_node_name);

@@ -33,7 +33,7 @@ using namespace std;
 
 const char* test_string="<runner xmlns=\"http://cisco.com/ns/yang/ydktest-sanity\"><ytypes><built-in-t><number8>2</number8></built-in-t></ytypes></runner>";
 
-TEST_CASE( "codec_encode"  )
+TEST_CASE( "c_api_codec_encode"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
@@ -59,7 +59,7 @@ TEST_CASE( "codec_encode"  )
     YDKStateFree(state);
 }
 
-TEST_CASE( "codec_decode"  )
+TEST_CASE( "c_api_codec_decode"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
@@ -85,7 +85,7 @@ TEST_CASE( "codec_decode"  )
     YDKStateFree(state);
 }
 
-TEST_CASE( "provider_withpath"  )
+TEST_CASE( "c_api_provider_withpath"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
@@ -98,7 +98,7 @@ TEST_CASE( "provider_withpath"  )
     YDKStateFree(state);
 }
 
-TEST_CASE( "provider"  )
+TEST_CASE( "c_api_provider"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Repository repo = RepositoryInit();
@@ -111,7 +111,7 @@ TEST_CASE( "provider"  )
     YDKStateFree(state);
 }
 
-TEST_CASE( "rpc" )
+TEST_CASE( "c_api_rpc" )
 {
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();

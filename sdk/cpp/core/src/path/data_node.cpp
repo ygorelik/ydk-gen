@@ -66,10 +66,9 @@ ydk::path::DataNode::create_datanode(const std::string& path)
 ydk::path::DataNodeImpl::DataNodeImpl(DataNode* parent, lyd_node* node, const std::shared_ptr<RepositoryPtr> & repo): m_parent{parent}, m_node{node}, m_priv_repo{repo}
 {
     //add the children
-    if(m_node && m_node->child && !(m_node->schema->nodetype == LYS_LEAF ||
-                          m_node->schema->nodetype == LYS_LEAFLIST ||
-                          m_node->schema->nodetype == LYS_ANYXML ||
-                          m_node->schema->nodetype == LYS_ANYDATA))
+    if (m_node &&
+        !(m_node->schema->nodetype & (LYS_LEAF | LYS_LEAFLIST | LYS_ANYXML | LYS_ANYDATA)) &&
+        m_node->child)
     {
         lyd_node *iter = nullptr;
         LY_TREE_FOR(m_node->child, iter) {
@@ -248,7 +247,7 @@ ydk::path::DataNodeImpl::create_helper(const std::string& path, const std::strin
         if (i != segments.size() - 1)
         {
             YLOG_DEBUG("Creating new data path '{}' in '{}'", child_segment, cn->schema->name);
-            cn = lyd_new_path(cn, nullptr, child_segment.c_str(), nullptr, LYD_ANYDATA_SXML, 0);
+            cn = lyd_new_path(cn, nullptr, child_segment.c_str(), nullptr, LYD_ANYDATA_CONSTSTRING, 0);
         }
         else
         {
@@ -395,12 +394,9 @@ ydk::path::DataNodeImpl::get_children() const
     std::vector<std::shared_ptr<DataNode>> ret{};
     //the ordering should be determined by the lyd_node
     lyd_node *iter;
-    if (m_node && m_node->child &&
-        !(m_node->schema->nodetype == LYS_LEAF ||
-          m_node->schema->nodetype == LYS_LEAFLIST ||
-          m_node->schema->nodetype == LYS_ANYXML ||
-          m_node->schema->nodetype == LYS_ANYDATA
-          ))
+    if (m_node &&
+        !(m_node->schema->nodetype & (LYS_LEAF | LYS_LEAFLIST | LYS_ANYXML | LYS_ANYDATA)) &&
+        m_node->child)
     {
         LY_TREE_FOR(m_node->child, iter){
             auto p = child_map.find(iter);
