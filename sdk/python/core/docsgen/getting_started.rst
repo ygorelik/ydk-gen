@@ -140,6 +140,8 @@ Full set of script capabilities could be viewed like this::
                         if not set, /usr/local/include is assumed
     CPLUS_INCLUDE_PATH  location of C++ include files;
                         if not set, /usr/local/include is assumed
+    CMAKE_LIBRARY_PATH  Location of Python shared libraries;
+                        if not set, default system library location is assumed
 
 
 If user environment is different from the default one (different Python installation or different
@@ -147,6 +149,19 @@ location of libraries), then building from source method should be used.
 
 Building from source
 --------------------
+
+Environment variables
+~~~~~~~~~~~~~~~~~~~~~
+
+In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
+In this case the header location must be specified explicitly (in below commands the default location is shown)::
+
+  export C_INCLUDE_PATH=/usr/local/include
+  export CPLUS_INCLUDE_PATH=/usr/local/include
+
+When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.
 
 Installing third party dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -165,19 +180,10 @@ The script will also install Python virtual environment in default or specified 
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
-Environment variables
-~~~~~~~~~~~~~~~~~~~~~
-
-In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
-In this case the header location must be specified explicitly (in below commands the default location is shown)::
-
-  export C_INCLUDE_PATH=/usr/local/include
-  export CPLUS_INCLUDE_PATH=/usr/local/include
-
 Installing core components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-::
+Please follow this procedure to install YDK core components for Python apps development::
 
     # Activate Python virtual environment
     source $PYTHON_VENV/bin/activate
@@ -185,12 +191,8 @@ Installing core components
     # Generate and install YDK core library
     ./generate.py -is --core --cpp
 
-    # For Python programming language add
-    ./generate.py -i --core
-
-    # For Go programming language add
-    ./generate.py -i --core --go
-
+    # Generate and install Python core package
+    ./generate.py -i --core --py
 
 Adding gNMI Service
 -------------------
@@ -344,7 +346,7 @@ All other attributes, like "author" and "copyright", are optional and will not a
 
     "name":"cisco-ios-xr",
     "version": "6.5.3",
-    "core_version": "0.8.5",
+    "core_version": "0.9.0.1",
     "author": "Cisco",
     "copyright": "Cisco",
     "description": "Cisco IOS-XR Native Models From Git",
@@ -405,8 +407,8 @@ Python virtual environment must be activated prior to these procedures::
 Check Python packages installed::
 
     pip list | grep ydk
-    ydk (0.8.5)
-    ydk-models-<name-of-bundle> (0.5.1)
+    ydk (0.9.0.1)
+    ydk-models-<name-of-bundle> (0.1.1)
     ...
 
 Generate "adhoc" bundle

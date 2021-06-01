@@ -96,8 +96,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#core-installation">Core Installation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#installation-script">Installation Script</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#building-from-source">Building from source</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#installing-third-party-dependencies">Installing third party dependencies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#environment-variables">Environment variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#installing-third-party-dependencies">Installing third party dependencies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#installing-core-components">Installing core components</a></li>
 </ul>
 </li>
@@ -183,8 +183,8 @@
 <li><a class="reference internal" href="#core-installation" id="id7">Core Installation</a><ul>
 <li><a class="reference internal" href="#installation-script" id="id8">Installation Script</a></li>
 <li><a class="reference internal" href="#building-from-source" id="id9">Building from source</a><ul>
-<li><a class="reference internal" href="#installing-third-party-dependencies" id="id10">Installing third party dependencies</a></li>
-<li><a class="reference internal" href="#environment-variables" id="id11">Environment variables</a></li>
+<li><a class="reference internal" href="#environment-variables" id="id10">Environment variables</a></li>
+<li><a class="reference internal" href="#installing-third-party-dependencies" id="id11">Installing third party dependencies</a></li>
 <li><a class="reference internal" href="#installing-core-components" id="id12">Installing core components</a></li>
 </ul>
 </li>
@@ -233,7 +233,7 @@ The YDK-0.9.0 generated code is not compatible with YDK-0.8.5 and earlier bundle
 This be used to run ydk-gen without installing anything natively on your platform.</p>
 <p>To use the docker image, <a class="reference external" href="https://docs.docker.com/install/">install docker</a> on your system and run the below command.
 See the <a class="reference external" href="https://docs.docker.com/engine/reference/run/">docker documentation</a> for more details:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="n">ydksolutions</span><span class="o">/</span><span class="n">ydk</span><span class="p">:</span><span class="mf">0.9</span><span class="o">.</span><span class="mf">0.1</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="n">ydksolutions</span><span class="o">/</span><span class="n">ydk</span><span class="p">:</span><span class="mf">0.9.0.1</span>
 </pre></div>
 </div>
 </div>
@@ -306,6 +306,8 @@ C_INCLUDE_PATH      location of C include files;
                     if not set, /usr/local/include is assumed
 CPLUS_INCLUDE_PATH  location of C++ include files;
                     if not set, /usr/local/include is assumed
+CMAKE_LIBRARY_PATH  Location of Python shared libraries;
+                    if not set, default system library location is assumed
 </pre></div>
 </div>
 <p>If user environment is different from the default one (different Python installation or different
@@ -313,8 +315,20 @@ location of libraries), then building from source method should be used.</p>
 </div>
 <div class="section" id="building-from-source">
 <h3><a class="toc-backref" href="#id9">Building from source</a><a class="headerlink" href="#building-from-source" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="environment-variables">
+<h4><a class="toc-backref" href="#id10">Environment variables</a><a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h4>
+<p>In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
+In this case the header location must be specified explicitly (in below commands the default location is shown):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">C_INCLUDE_PATH</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">include</span>
+<span class="n">export</span> <span class="n">CPLUS_INCLUDE_PATH</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">include</span>
+</pre></div>
+</div>
+<p>When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.</p>
+</div>
 <div class="section" id="installing-third-party-dependencies">
-<h4><a class="toc-backref" href="#id10">Installing third party dependencies</a><a class="headerlink" href="#installing-third-party-dependencies" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id11">Installing third party dependencies</a><a class="headerlink" href="#installing-third-party-dependencies" title="Permalink to this headline">¶</a></h4>
 <p>If user platform is supported one, it is recommended to use <cite>ydk-gen/install_ydk.sh</cite> script.
 The script will also install Python virtual environment in default or specified location:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span># Clone ydk-gen from GitHub
@@ -329,28 +343,17 @@ export PYTHON_VENV=$HOME/ydk_venv
 </div>
 <p>For unsupported platforms it is recommended to follow logic of <cite>ydk-gen/test/dependencies-*</cite> scripts.</p>
 </div>
-<div class="section" id="environment-variables">
-<h4><a class="toc-backref" href="#id11">Environment variables</a><a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h4>
-<p>In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
-In this case the header location must be specified explicitly (in below commands the default location is shown):</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">C_INCLUDE_PATH</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">include</span>
-<span class="n">export</span> <span class="n">CPLUS_INCLUDE_PATH</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">include</span>
-</pre></div>
-</div>
-</div>
 <div class="section" id="installing-core-components">
 <h4><a class="toc-backref" href="#id12">Installing core components</a><a class="headerlink" href="#installing-core-components" title="Permalink to this headline">¶</a></h4>
+<p>Please follow this procedure to install YDK core components for Python apps development:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span># Activate Python virtual environment
 source $PYTHON_VENV/bin/activate
 
 # Generate and install YDK core library
 ./generate.py -is --core --cpp
 
-# For Python programming language add
-./generate.py -i --core
-
-# For Go programming language add
-./generate.py -i --core --go
+# Generate and install Python core package
+./generate.py -i --core --py
 </pre></div>
 </div>
 </div>
@@ -497,7 +500,7 @@ The &#8220;name&#8221; of the bundle will form part of the installation path of 
 All other attributes, like &#8220;author&#8221; and &#8220;copyright&#8221;, are optional and will not affect the bundle generation:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;cisco-ios-xr&quot;</span><span class="p">,</span>
 <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;6.5.3&quot;</span><span class="p">,</span>
-<span class="s2">&quot;core_version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.8.5&quot;</span><span class="p">,</span>
+<span class="s2">&quot;core_version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.9.0.1&quot;</span><span class="p">,</span>
 <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco&quot;</span><span class="p">,</span>
 <span class="s2">&quot;copyright&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco&quot;</span><span class="p">,</span>
 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco IOS-XR Native Models From Git&quot;</span><span class="p">,</span>
@@ -557,8 +560,8 @@ Python virtual environment must be activated prior to these procedures:</p>
 </div>
 <p>Check Python packages installed:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">ydk</span>
-<span class="n">ydk</span> <span class="p">(</span><span class="mf">0.8</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">ydk</span><span class="o">-</span><span class="n">models</span><span class="o">-&lt;</span><span class="n">name</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">bundle</span><span class="o">&gt;</span> <span class="p">(</span><span class="mf">0.5</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ydk</span> <span class="p">(</span><span class="mf">0.9.0.1</span><span class="p">)</span>
+<span class="n">ydk</span><span class="o">-</span><span class="n">models</span><span class="o">-&lt;</span><span class="n">name</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">bundle</span><span class="o">&gt;</span> <span class="p">(</span><span class="mf">0.1.1</span><span class="p">)</span>
 <span class="o">...</span>
 </pre></div>
 </div>

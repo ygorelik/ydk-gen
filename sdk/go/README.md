@@ -24,10 +24,10 @@
 # introduced since October 2019 are copyrighted.
 # All rights reserved under Apache License, Version 2.0.
 # *************************************************************
--->
 [![Build Status](https://travis-ci.org/CiscoDevNet/ydk-go.svg?branch=master)](https://travis-ci.org/CiscoDevNet/ydk-go)
 [![GoDoc](https://godoc.org/github.com/CiscoDevNet/ydk-go?status.svg)](https://godoc.org/github.com/CiscoDevNet/ydk-go)
 [![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/ydkdev/ydk-go/)
+-->
 
 ![ydk-logo-128](https://cloud.githubusercontent.com/assets/16885441/24175899/2010f51e-0e56-11e7-8fb7-30a9f70fbb86.png)
 
@@ -50,7 +50,9 @@
 
 ## Overview
 
-The YANG Development Kit (YDK) is a Software Development Kit that provides API's that are modeled in YANG. The main goal of YDK is to reduce the learning curve of YANG data models by expressing the model semantics in an API and abstracting protocol/encoding details.  YDK is composed of a core package that defines services and providers, plus one or more module bundles that are based on YANG models.  
+The YANG Development Kit (YDK) is a software development tool, which provides API for building applications based on YANG models.
+The main goal of YDK is to reduce the learning curve of YANG data models by expressing the model semantics in an API and abstracting protocol/encoding details.
+YDK is composed of a core package that defines services and providers, plus one or more module bundles that are based on YANG models.
 
 ## Docker
 
@@ -86,7 +88,7 @@ For both the methods the user must install `git` package prior to the installati
 
 All YDK core components are based on C and C++ code. These components compiled using default compilers for the supported platform.
 Corresponding binaries, libraries, and header files are installed in default locations,
-which are `/usr/local/bin` ,`/usr/local/lib`, and `/usr/local/include`.
+which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
 
 ## Core Installation
@@ -148,6 +150,20 @@ location of libraries) then building from source method should be used.
 
 ### Building from source
 
+#### Environment variables
+
+In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
+In this case the header location must be specified explicitly (in below commands the default location is shown):
+
+```
+  export C_INCLUDE_PATH=/usr/local/include
+  export CPLUS_INCLUDE_PATH=/usr/local/include
+```
+
+When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.
+
 #### Installing third party dependencies
 
 If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script. 
@@ -166,22 +182,19 @@ export PYTHON_VENV=$HOME/ydk_venv
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
  
-#### Environment variables
-
-In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
-In this case the header location must be specified explicitly (in below commands the default location is shown)::
-
-  export C_INCLUDE_PATH=/usr/local/include
-  export CPLUS_INCLUDE_PATH=/usr/local/include
-
 #### Installing core components
+
+Please follow this procedure to install YDK core components for Go apps development:
 
 ```
 # Activate Python virtual environment
 source $PYTHON_VENV/bin/activate
 
 # Generate and install YDK core library
-./generate.py -is --core --go
+./generate.py -is --core --cpp
+
+# Generate and install Go core packages
+./generate.py -i --core --go
 ```
 
 ## Adding gNMI Service
@@ -217,4 +230,6 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5
 
 ## Release Notes
 
-The current YDK release version is 0.9.0.1. YDK is licensed under the Apache 2.0 License.
+The current YDK release version is 0.9.0.1.
+
+YDK is licensed under the Apache 2.0 License.

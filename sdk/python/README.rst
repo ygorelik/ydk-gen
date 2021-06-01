@@ -26,12 +26,16 @@
   # All rights reserved under Apache License, Version 2.0.
   # *************************************************************
 
-.. image::  https://travis-ci.com/CiscoDevNet/ydk-py.svg?branch=master
+..
+    image::  https://travis-ci.com/CiscoDevNet/ydk-py.svg?branch=master
     :target: https://travis-ci.com/CiscoDevNet/ydk-py
 
-.. image:: https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg
+..
+    image:: https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg
     :alt: Docker Automated build
     :target: https://hub.docker.com/r/ydkdev/ydk-py/
+
+..  image:: https://cloud.githubusercontent.com/assets/16885441/24175899/2010f51e-0e56-11e7-8fb7-30a9f70fbb86.png
 
 =============================
 YANG Development Kit (Python)
@@ -49,12 +53,11 @@ YDK is composed of a core package that defines services and providers, plus one 
 Backward Compatibility
 ======================
 
-The Python YDK-0.8.5 core package is compatible with all model bundles generated previously with ydk-gen releases starting from 0.7.3.
-However the YDK-0.8.5 generates slightly different code and model API comparing to YDK-0.8.4.
-The YDK-0.8.5 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
+Although YDK-0.9.0 API is mostly the same as in previous YDK releases, it generates different code and model API comparing to YDK-0.8.5.
+The YDK-0.9.0 generated code is not compatible with YDK-0.8.5 and earlier bundle packages due to changes in Entity and YLeaf class objects.
 
-..
-  Please see `the release notes <https://github.com/CiscoDevNet/ydk-py/releases/tag/0.8.5>`_ for details.
+**NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
+
 
 Docker
 ======
@@ -92,7 +95,7 @@ For both the methods the user must install `git` package prior to the installati
 
 All YDK core components are based on C and C++ code. These components compiled using default compilers for the supported platform.
 Corresponding binaries, libraries, and header files are installed in default locations,
-which are `/usr/local/bin` ,`/usr/local/lib`, and `/usr/local/include`.
+which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
 
 **NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
@@ -151,6 +154,8 @@ Full set of script capabilities could be viewed like this::
                         if not set, /usr/local/include is assumed
     CPLUS_INCLUDE_PATH  location of C++ include files;
                         if not set, /usr/local/include is assumed
+    CMAKE_LIBRARY_PATH  Location of Python shared libraries;
+                        if not set, default system library location is assumed
 
 
 If user environment is different from the default one (different Python installation or different
@@ -159,6 +164,19 @@ location of libraries) then building from source method should be used.
 Building from source
 --------------------
 
+Environment variables
+~~~~~~~~~~~~~~~~~~~~~
+
+In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
+In this case the header location must be specified explicitly (in below commands the default location is shown)::
+
+    export C_INCLUDE_PATH=/usr/local/include
+    export CPLUS_INCLUDE_PATH=/usr/local/include
+
+When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.
+
 Installing third party dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -166,7 +184,7 @@ If user platform is supported one, it is recommended to use `ydk-gen/install_ydk
 The script will also install Python virtual environment in default or specified location::
 
     # Clone ydk-gen from GitHub
-    git clone https://github.com/ygorelik/ydk-gen.git
+    git clone https://github.com/ygorelik/ydk-gen.git -b yang11
     cd ydk-gen
 
     # Define optional environment variables and install dependencies
@@ -176,19 +194,10 @@ The script will also install Python virtual environment in default or specified 
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
-Environment variables
-~~~~~~~~~~~~~~~~~~~~~
-
-In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
-In this case the header location must be specified explicitly (in below commands the default location is shown)::
-
-  export C_INCLUDE_PATH=/usr/local/include
-  export CPLUS_INCLUDE_PATH=/usr/local/include
-
 Installing core components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-::
+Please follow this procedure to install YDK core components for Python apps development::
 
     # Activate Python virtual environment
     source $PYTHON_VENV/bin/activate
@@ -196,12 +205,8 @@ Installing core components
     # Generate and install YDK core library
     ./generate.py -is --core --cpp
 
-    # For Python programming language add
-    ./generate.py -i --core
-
-    # For Go programming language add
-    ./generate.py -i --core --go
-
+    # Generate and install Python core package
+    ./generate.py -i --core --python
 
 Adding gNMI Service
 -------------------
@@ -209,7 +214,7 @@ Adding gNMI Service
 In order to enable YDK support for gNMI protocol, which is optional, the user need install third party software
 and YDK gNMI service package.
 
-gNMI Service installation
+gNMI service installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Here is simple example, how gNMI service package for Python could be added::

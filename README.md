@@ -98,7 +98,7 @@ This gives the developer an ability to customize scope of their bundle based on 
 # Backward Compatibility
 
 Although YDK-0.9.0 API is mostly the same as in previous YDK releases, it generates different code and model API comparing to YDK-0.8.5.
-The YDK-0.9.0 generated code is not compatible with YDK-0.8.5 and earlier bundle packages due to changes Entity and YLeaf class objects.
+The YDK-0.9.0 generated code is not compatible with YDK-0.8.5 and earlier bundle packages due to changes in Entity and YLeaf class objects.
 
 **NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
 
@@ -132,7 +132,7 @@ For both the methods the user must install `git` package prior to the installati
 
 All YDK core components are based on C and C++ code. These components compiled using default compilers for the supported platform.
 Corresponding binaries, libraries, and header files are installed in default locations,
-which are `/usr/local/bin` ,`/usr/local/lib`, and `/usr/local/include`.
+which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
 
 # Core Installation
@@ -187,12 +187,28 @@ C_INCLUDE_PATH      location of C include files;
                     if not set, /usr/local/include is assumed
 CPLUS_INCLUDE_PATH  location of C++ include files;
                     if not set, /usr/local/include is assumed
+CMAKE_LIBRARY_PATH  Location of Python shared libraries;
+                    if not set, default system library location is assumed
 ```
 
 If user environment is different from the default one (different Python installation or different
 location of libraries) then building from source method should be used.
 
 ## Building from source
+
+### Environment variables
+
+In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
+In this case the header location must be specified explicitly (in below commands the default location is shown):
+
+```
+  export C_INCLUDE_PATH=/usr/local/include
+  export CPLUS_INCLUDE_PATH=/usr/local/include
+```
+
+When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.
 
 ### Installing third party dependencies
 
@@ -212,14 +228,6 @@ export PYTHON_VENV=$HOME/ydk_venv
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
  
-### Environment variables
-
-In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
-In this case the header location must be specified explicitly (in below commands the default location is shown)::
-
-  export C_INCLUDE_PATH=/usr/local/include
-  export CPLUS_INCLUDE_PATH=/usr/local/include
-
 ### Installing core components
 
 ```
@@ -230,7 +238,7 @@ source $PYTHON_VENV/bin/activate
 ./generate.py -is --core --cpp
 
 # For Python programming language add
-./generate.py -i --core 
+./generate.py -i --core --py
 
 # For Go programming language add
 ./generate.py -i --core --go

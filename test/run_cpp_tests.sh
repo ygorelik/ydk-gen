@@ -135,7 +135,7 @@ function cpp_test_gen_test {
     os_type=$(uname)
     if [[ ${os_type} == "Linux" ]] ; then
         print_msg "Running tcp tests on linux"
-        run_cmd ./ydk_bundle_test *tcp*
+        run_cmd ./ydk_bundle_test *tcp* -d yes
     fi
 }
 
@@ -187,7 +187,7 @@ function build_and_run_tests {
     ${CMAKE_BIN} .. && make clean && make
 
     init_gnmi_server
-    ./ydk_gnmi_test
+    ./ydk_gnmi_test -d yes
     stop_gnmi_server
 }
 
@@ -237,7 +237,7 @@ if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
   print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
-which cmake3
+command -v cmake3
 status=$?
 if [[ ${status} == 0 ]] ; then
     CMAKE_BIN=cmake3
@@ -266,7 +266,12 @@ install_test_cpp_core
 run_cpp_bundle_tests
 
 run_cpp_gnmi_tests
-run_cpp_gnmi_memcheck_tests
+
+command -v valgrind
+status=$?
+if [[ ${status} == 0 ]]; then
+    run_cpp_gnmi_memcheck_tests
+fi
 
 $script_dir/clean_test_env.sh
 

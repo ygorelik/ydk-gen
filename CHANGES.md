@@ -13,7 +13,7 @@
   * An action MUST NOT have any ancestor node that is a list node without a "key" statement ([CESNET #1026](https://github.com/CESNET/libyang/issues/1026))
   * Changed memory output for empty leaf value in JSON format to null ([libyang](https://github.com/ygorelik/libyang/commit/0ddde82b52e159f4da50fad0de416c27f3b655e3))
   * Added parsing of 'null' value in JSON payload ([libyang](https://github.com/ygorelik/libyang/commit/82398238cf05bd47baf08f8ded0c7c9e42399a0c))
-
+  * Fixed few memory leaks in C++ code.
 
 ### 2021-05-30 version 0.8.5.2
 
