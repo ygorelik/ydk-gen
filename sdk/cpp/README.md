@@ -40,6 +40,7 @@
 **Table of Contents**
 
 - [Overview](#overview)
+- [Backward Compatibility](#backward-compatibility)
 - [Docker](#docker)
 - [System Requirements](#system-requirements)
 - [Core Installation](#core-installation)
@@ -59,6 +60,12 @@ Currently supported languages are: Python, Go and C++.
 Currently implemented protocols are: Netconf, Restconf, OpenDaylight and gNMI.
 YDK provides CRUD and protocol specific service over above protocols.
 YDK also provides Codec service to translate API models to/from XML and JSON encoded strings.
+
+## Backward Compatibility
+
+The YDK-0.9.0 C++ code got significant changes, which broke backward compatibility with YDK-0.8.5 and earlier releases.
+
+**NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
 
 ## Docker
 

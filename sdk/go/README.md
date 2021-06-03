@@ -38,6 +38,7 @@
 **Table of Contents**
 
 - [Overview](#overview)
+- [Backward Compatibility](#backward-compatibility)
 - [Docker](#docker)
 - [Core Installation](#core-installation)
   - [Installation script](#installation-script)
@@ -53,6 +54,12 @@
 The YANG Development Kit (YDK) is a software development tool, which provides API for building applications based on YANG models.
 The main goal of YDK is to reduce the learning curve of YANG data models by expressing the model semantics in an API and abstracting protocol/encoding details.
 YDK is composed of a core package that defines services and providers, plus one or more module bundles that are based on YANG models.
+
+## Backward Compatibility
+
+The Go generated API starting from YDK-0.7.3 is fully compatible with YDK-0.9.0.
+
+**NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
 
 ## Docker
 

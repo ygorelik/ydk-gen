@@ -41,8 +41,7 @@ plus one or more module bundles that are based on YANG models.
 Backward Compatibility
 ======================
 
-Although YDK-0.9.0 API is mostly the same as in previous YDK releases, it generates different code and model API comparing to YDK-0.8.5.
-The YDK-0.9.0 generated code is not compatible with YDK-0.8.5 and earlier bundle packages due to changes in Entity and YLeaf classes.
+The Go generated API starting from YDK-0.7.3 is fully compatible with YDK-0.9.0.
 
 **NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
 
