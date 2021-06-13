@@ -19,10 +19,12 @@
 # All rights reserved under Apache License, Version 2.0.
 # ------------------------------------------------------------------
 
-"""test_utils.py
+"""
+test_utils.py
 
 Utility function for test cases.
 """
+
 import re
 import unittest
 import logging
@@ -33,17 +35,21 @@ from urllib.parse import urlparse
 from ydk.entity_utils import get_data_node_from_entity
 from ydk.errors       import YCoreError
 
+logger = logging.getLogger('ydk')
 
-def assert_with_error(pattern, ErrorClass):
+
+def assert_with_error(pattern, error_class):
     def assert_with_pattern(func):
         def helper(self, *args, **kwargs):
             try:
                 func(self)
-            except ErrorClass as error:
+            except error_class as error:
                 if hasattr(error, 'message'):
                     res = re.match(pattern, error.message.strip())
                 elif hasattr(error, 'args'):
                     res = pattern in error.args[0]
+                else:
+                    res = False
                 self.assertTrue(res)
         return helper
     return assert_with_pattern
@@ -97,7 +103,7 @@ def get_device_info():
     return device, args.non_demand, args.common_cache, args.timeout
 
 
-def datanode_to_str(dn, indent = ''):
+def datanode_to_str(dn, indent=''):
     try:
         s = dn.get_schema_node().get_statement()
         if s.keyword in ["leaf", "leaf-list", "anyxml", "anydata"]:
@@ -122,14 +128,13 @@ def print_data_node(dn):
 
 
 def print_entity(entity, root_schema):
-    dn = get_data_node_from_entity( entity, root_schema);
+    dn = get_data_node_from_entity(entity, root_schema)
     print_data_node(dn)
 
 
 def enable_logging(level):
-    log = logging.getLogger('ydk')
-    log.setLevel(level)
+    logger.setLevel(level)
     handler = logging.StreamHandler()
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     handler.setFormatter(formatter)
-    log.addHandler(handler)
+    logger.addHandler(handler)
