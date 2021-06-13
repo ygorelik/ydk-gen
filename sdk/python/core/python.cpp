@@ -969,7 +969,8 @@ PYBIND11_MODULE(ydk_, ydk)
         .def(init<>())
         .def("encode", &ydk::JsonSubtreeCodec::encode, return_value_policy::reference)
         .def("decode", &ydk::JsonSubtreeCodec::decode)
-		.def("convert_string", &ydk::JsonSubtreeCodec::convert_string, return_value_policy::reference);
+		.def("convert_string", &ydk::JsonSubtreeCodec::convert_string,
+		     arg("json_string"), arg("pretty"), return_value_policy::reference);
 
     entity_utils.def("get_entity_from_data_node", &ydk::get_entity_from_data_node);
     #if defined(PYBIND11_OVERLOAD_CAST)

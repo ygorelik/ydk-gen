@@ -130,6 +130,6 @@ def enable_logging(level):
     log = logging.getLogger('ydk')
     log.setLevel(level)
     handler = logging.StreamHandler()
-    formatter = logging.Formatter(("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     handler.setFormatter(formatter)
     log.addHandler(handler)
