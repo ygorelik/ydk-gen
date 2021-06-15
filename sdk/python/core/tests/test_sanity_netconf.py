@@ -389,7 +389,6 @@ class SanityNetconf(unittest.TestCase):
         result = crud.delete(self.ncc, create_list)
         self.assertEqual(result, True)
 
-    @unittest.skipIf('xenial' not in platform.platform(), 'Segmentation fault in libyang')
     def test_netconf_get_candidate_config(self):
         ns = NetconfService()
         config = ns.get_config(self.ncc, Datastore.candidate)
@@ -398,7 +397,6 @@ class SanityNetconf(unittest.TestCase):
         for entity in config:
             print(entity.path())
 
-    @unittest.skipIf('xenial' not in platform.platform(), 'Segmentation fault in libyang')
     def test_netconf_get_running_config(self):
         ns = NetconfService()
         config = ns.get_config(self.ncc)
@@ -407,7 +405,6 @@ class SanityNetconf(unittest.TestCase):
         for entity in config:
             print(entity.path())
 
-    @unittest.skipIf('xenial' not in platform.platform(), 'Segmentation fault in libyang')
     def test_crud_get_all_config(self):
         crud = CRUDService()
         config = crud.read_config(self.ncc)
