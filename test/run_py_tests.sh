@@ -125,7 +125,7 @@ function init_python_env {
     run_cmd python3 -m venv ${PYTHON_VENV}
     run_cmd source ${PYTHON_VENV}/bin/activate
     pip install -r requirements.txt
-    pip install $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
+    pip install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
   else
     run_cmd source ${PYTHON_VENV}/bin/activate
   fi

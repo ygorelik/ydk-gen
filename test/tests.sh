@@ -206,7 +206,7 @@ function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
   ${PIP_BIN} install -r requirements.txt
-  ${PIP_BIN} install $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
+  ${PIP_BIN} install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
   if [[ $run_with_coverage ]] ; then
     ${PIP_BIN} install coverage
   fi

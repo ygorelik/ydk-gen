@@ -98,7 +98,7 @@ function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
   pip install -r requirements.txt
-  pip install $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
+  pip install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
 }
 
 function init_go_env {
