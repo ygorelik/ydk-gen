@@ -1,6 +1,22 @@
 #!/bin/bash
-#  ----------------------------------------------------------------
+#  -----------------------------------------------------------------------------
+# Copyright 2020 Yan Gorelik, YDK Solutions
 #
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
+#
+# Bash script to install YDK-CPP and run unit tests
+# ------------------------------------------------------------------------------
 
 function print_msg {
     echo -e "${MSG_COLOR}*** $(date): run_cpp_test.sh: $* ${NOCOLOR}"
@@ -220,7 +236,6 @@ if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
     export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
     print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
-
 
 CMAKE_BIN=cmake
 which cmake3

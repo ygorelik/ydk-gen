@@ -511,8 +511,8 @@ function run_go_sanity_tests {
 function run_python_bundle_tests {
     print_msg "Running python bundle tests"
     py_sanity_ydktest
-    if [[ ${os_type} != "Darwin" && $confd_version < 7.3 ]]; then
-        # GitHub issue #909
+    if [[ ${os_type} != "Darwin" && .$confd_version < ".7.3" ]]; then
+        # GitHub issue #890
         py_sanity_deviation
     fi
     py_sanity_augmentation
@@ -689,8 +689,8 @@ function py_sanity_augmentation {
 function py_sanity_common_cache {
     print_msg "Running py_sanity_common_cache"
 
-    if [[ ${os_type} != "Darwin" && $confd_version < 7.3 ]]; then
-        # GitHub issue #909
+    if [[ ${os_type} != "Darwin" && .$confd_version < ".7.3" ]]; then
+        # GitHub issue #890
         init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/deviation
         run_test sdk/python/core/tests/test_sanity_deviation.py --common-cache
     fi
@@ -737,27 +737,6 @@ function run_py_backward_compatibility {
 #-------------------------------------
 # Python generated model tests bundle
 #-------------------------------------
-
-#function test_gen_tests {
-#    print_msg "test_gen_tests"
-#
-#    cd $YDKGEN_HOME
-#    git clone https://github.com/psykokwak4/ydk-test-yang.git sdk/cpp/core/tests/confd/testgen
-#
-#    py_test_gen
-#    cpp_test_gen
-#}
-
-#function py_test_gen_test {
-#    print_msg "py_test_gen_test"
-#
-#    cd $YDKGEN_HOME
-#    init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/testgen/confd
-#    cd gen-api/python/models_test-bundle/ydk/models/models_test/test/
-#    ${PYTHON_BIN} import_tests.py
-#    cd models_test/
-#    ${PYTHON_BIN} -m unittest discover
-#}
 
 function py_test_gen {
     print_msg "py_test_gen"
@@ -905,10 +884,9 @@ install_py_core
 run_python_bundle_tests
 #run_python_oc_nis_tests
 run_py_metadata_test
-if [[ $confd_version < 7.3 ]]; then
+if [[ .$confd_version < ".7.3" ]]; then
   run_py_backward_compatibility
 fi
-# test_gen_tests
 
 ######################################
 # Documentation tests
