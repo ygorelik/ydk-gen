@@ -235,10 +235,12 @@ function init_go_env {
     go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
     print_msg "Current Go version is $go_version"
 
-    go get github.com/stretchr/testify
-    cd $GOPATH/src/github.com/stretchr/testify
-    git checkout tags/v1.6.1
-    cd -
+    if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
+        go get github.com/stretchr/testify
+        cd $GOPATH/src/github.com/stretchr/testify
+        git checkout tags/v1.6.1
+        cd -
+    fi
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
