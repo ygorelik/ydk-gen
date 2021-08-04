@@ -1,8 +1,31 @@
+/*  ----------------------------------------------------------------
+ YDK - YANG Development Kit
+ Copyright 2016-2019 Cisco Systems. All rights reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
+ ------------------------------------------------------------------*/
+
 package test
 
 import (
 	"fmt"
 	ysanity "github.com/CiscoDevNet/ydk-go/ydk/models/ydktest/sanity"
+	ysanity_bgp "github.com/CiscoDevNet/ydk-go/ydk/models/ydktest/openconfig_bgp"
 	"github.com/CiscoDevNet/ydk-go/ydk/models/ydktest/ietf_netconf_acm"
 	"github.com/CiscoDevNet/ydk-go/ydk"
 	"github.com/CiscoDevNet/ydk-go/ydk/providers"
@@ -103,6 +126,30 @@ func (suite *CrudTestSuite) BeforeTest(suiteName, testName string) {
 // 	suite.Equal(funcDidPanic, true)
 // 	fmt.Println(panicValue)
 // }
+
+func (suite *CrudTestSuite) TestReadVsReadConfig() {
+    // Delete BGP config
+    bgp := ysanity_bgp.Bgp{}
+    suite.CRUD.Delete(&suite.Provider, &bgp)
+
+    // Create BGP config
+    bgp.Global.Config.As = 65172
+    bgp.Global.Config.RouterId = "1.2.3.4"
+    neighbor := ysanity_bgp.Bgp_Neighbors_Neighbor{}
+    neighbor.NeighborAddress = "172.16.255.2"
+    neighbor.Config.NeighborAddress = "172.16.255.2"
+    neighbor.Config.PeerAs = 65172
+    bgp.Neighbors.Neighbor = append(bgp.Neighbors.Neighbor, &neighbor)
+    suite.CRUD.Create(&suite.Provider, &bgp)
+
+    // Read  BGP Config and Status, then compare
+    bgp = ysanity_bgp.Bgp{}
+    bgpConfigEntity := suite.CRUD.ReadConfig(&suite.Provider, &bgp)
+    bgpStatusEntity := suite.CRUD.Read(&suite.Provider, &bgp)
+    suite.NotEqual(GetEntityXMLString(bgpConfigEntity), GetEntityXMLString(bgpStatusEntity))
+
+    suite.CRUD.Delete(&suite.Provider, &bgp)
+}
 
 func (suite *CrudTestSuite) TestDeleteObjectOnLeaf() {
 	runnerCreate := ysanity.Runner{}

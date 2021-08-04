@@ -1,3 +1,10 @@
+
+### 2021-08-30 version 0.9.0.2
+
+#### New features and enhancements
+  * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
+  * Upgraded pyang to modified version 2.5.0.m1
+
 ### 2021-05-30 version 0.9.0.1
 
 #### New features and enhancements
@@ -14,6 +21,7 @@
   * Changed memory output for empty leaf value in JSON format to null ([libyang](https://github.com/ygorelik/libyang/commit/0ddde82b52e159f4da50fad0de416c27f3b655e3))
   * Added parsing of 'null' value in JSON payload ([libyang](https://github.com/ygorelik/libyang/commit/82398238cf05bd47baf08f8ded0c7c9e42399a0c))
   * Fixed few memory leaks in C++ code.
+
 
 ### 2021-05-30 version 0.8.5.2
 
