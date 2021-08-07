@@ -889,33 +889,28 @@ func deepValueEqual(e1, e2 Entity) bool {
 
 	marker := make(map[string]bool)
 
-	ret := true
 	for k, c1 := range children1 {
 		if c1.Value != nil {
 			marker[k] = true
-			if HasDataOrFilter(c1.Value) {
-				c2, ok := children2[k]
-				if ok && deepValueEqual(c1.Value, c2.Value) {
-					ret = ret && nameValuesEqual(c1.Value, c2.Value)
-				} else {
-					ret = false
-					break
-				}
+			c2, ok := children2[k]
+			if ok && deepValueEqual(c1.Value, c2.Value) {
+				continue
+			} else {
+				return false
 			}
 		}
 	}
 
 	for k := range children2 {
-		if children2[k].Value != nil{
+		if children2[k].Value != nil {
 			_, ok := marker[k]
 			if !ok {
-				ret = false
-				break
+				return false
 			}
 		}
 	}
 
-	return ret
+	return nameValuesEqual(e1, e2)
 }
 
 // EntityEqual returns whether the entities x and y and their children are equal in value
