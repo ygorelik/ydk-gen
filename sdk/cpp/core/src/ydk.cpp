@@ -1,28 +1,26 @@
-//////////////////////////////////////////////////////////////////
-// @file ydk.cpp
-//
-// YANG Development Kit
-// Copyright 2017 Cisco Systems. All rights reserved
-//
-////////////////////////////////////////////////////////////////
-// Licensed to the Apache Software Foundation (ASF) under one
-// or more contributor license agreements.  See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  The ASF licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
-//
-//   http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
-// under the License.
-//
-//////////////////////////////////////////////////////////////////
+/*  ----------------------------------------------------------------
+ @file ydk.cpp
+
+ YDK - YANG Development Kit
+ Copyright 2017-2019 Cisco Systems. All rights reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
+ ------------------------------------------------------------------*/
 
 #include "crud_service.hpp"
 #include "errors.hpp"
@@ -625,7 +623,7 @@ Session ServiceProviderGetSession(ServiceProvider provider)
     return static_cast<void*>(&s);
 }
 
-RootSchemaNode SessionGetRootSchema(YDKStatePtr state, Session session)
+RootSchemaWrapper SessionGetRootSchemaNode(YDKStatePtr state, Session session)
 {
     try {
     	ydk::path::Session * real_session = static_cast<ydk::path::Session*>(session);
@@ -899,7 +897,11 @@ const char* DataNodeGetSegmentPath(DataNode datanode)
 
 void EnableLogging(LogLevel level)
 {
-    auto console = spdlog::stdout_color_mt("ydk");
+    auto console = spdlog::get("ydk");
+    if (console == nullptr)
+    {
+        console = spdlog::stdout_color_mt("ydk");
+    }
     switch(level)
     {
         case DEBUG:
@@ -974,3 +976,87 @@ void YLogError(const char* msg)
     ydk::YLOG_ERROR(msg);
 }
 
+Session NetconfSessionInit(YDKStatePtr state, Repository repo,
+                           const char * address, const char * username, const char * password, int port,
+                           const char * protocol, boolean on_demand, boolean common_cache, int timeout,
+                           const char * server_certificate, const char * private_key)
+{
+    try
+    {
+        ydk::path::NetconfSession * real_session;
+        if (repo)
+        {
+            ydk::path::Repository* real_repo = static_cast<ydk::path::Repository*>(repo);
+            if (server_certificate && *server_certificate)
+            {
+                real_session = new ydk::path::NetconfSession(
+                    *real_repo,
+                    address, username,
+                    private_key, server_certificate,
+                    port, on_demand, timeout);
+            }
+            else
+            {
+                real_session = new ydk::path::NetconfSession(
+                    *real_repo,
+                    address, username, password, port,
+                    protocol, on_demand, timeout);
+            }
+        }
+        else
+        {
+            if (server_certificate && *server_certificate)
+            {
+                real_session = new ydk::path::NetconfSession(
+                    address, username,
+                    private_key, server_certificate,
+                    port, on_demand, common_cache, timeout);
+            }
+            else
+            {
+                real_session = new ydk::path::NetconfSession(
+                    address, username, password, port,
+                    protocol, on_demand, common_cache, timeout);
+            }
+        }
+        return static_cast<void*>(real_session);
+    }
+    catch(...)
+    {
+        YDKState* real_state = static_cast<YDKState*>(state);
+        handle_error(real_state);
+        return NULL;
+    }
+}
+
+void NetconfSessionFree(Session session)
+{
+    ydk::path::NetconfSession * real_session = static_cast<ydk::path::NetconfSession*>(session);
+    if (real_session)
+    {
+        delete real_session;
+    }
+}
+
+DataNode SessionExecuteRpc(YDKStatePtr state, Session session, Rpc rpc)
+{
+    try
+    {
+        RpcWrapper* rpc_wrapper = (RpcWrapper*)rpc;
+        ydk::path::Rpc* real_rpc = unwrap(rpc_wrapper);
+
+        ydk::path::Session * real_session = (ydk::path::Session *) session;
+        std::shared_ptr<ydk::path::DataNode> result = real_session->invoke(*real_rpc);
+
+        if (result)
+            return static_cast<void*>(wrap(result));
+        else
+            return nullptr;
+    }
+    catch(...)
+    {
+        YDKState* real_state = static_cast<YDKState*>(state);
+        handle_error(real_state);
+        return NULL;
+    }
+}

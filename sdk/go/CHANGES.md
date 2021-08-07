@@ -1,3 +1,9 @@
+### 2021-08-30 version 0.8.5.3
+
+#### New features and enhancements
+  * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
+
+
 ### 2021-04-30 version 0.8.5.2
 
 #### Resolved GitHub issues
