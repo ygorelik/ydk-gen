@@ -146,7 +146,7 @@ func (suite *CrudTestSuite) TestReadVsReadConfig() {
     bgp = ysanity_bgp.Bgp{}
     bgpConfigEntity := suite.CRUD.ReadConfig(&suite.Provider, &bgp)
     bgpStatusEntity := suite.CRUD.Read(&suite.Provider, &bgp)
-    suite.NotEqual(GetEntityXMLString(bgpConfigEntity), GetEntityXMLString(bgpStatusEntity))
+    suite.False(types.EntityEqual(bgpConfigEntity, bgpStatusEntity))
 
     suite.CRUD.Delete(&suite.Provider, &bgp)
 }
