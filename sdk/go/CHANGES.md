@@ -3,6 +3,9 @@
 #### New features and enhancements
   * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
 
+#### Resolved GitHub issues
+  * Go function EntityEqual result depends on parameters order ([#1053](https://github.com/CiscoDevNet/ydk-gen/issues/1053))
+
 
 ### 2021-04-30 version 0.8.5.2
 
