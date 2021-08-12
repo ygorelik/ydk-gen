@@ -1,7 +1,8 @@
 #!/bin/bash
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
-#
+# YDK = YANG Development Kit
+# Copyright 2016-2019 Cisco Systems
+# ------------------------------------------------------------------
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -171,10 +172,16 @@ function check_python_installation {
     fi
   fi
 
-  if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* && ${PYTHON_VERSION} == "3"* ]]; then
-    print_msg "Creating Python3 virtual environment in $HOME/venv"
-    run_cmd ${PYTHON_BIN} -m venv $HOME/venv
-    run_cmd source $HOME/venv/bin/activate
+  if [[ ! $run_with_coverage ]]; then
+    if [[ -z ${PYTHON_VENV} ]]; then
+      PYTHON_VENV=${HOME}/venv
+      print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
+    fi
+    if [[ ! -d ${PYTHON_VENV} ]]; then
+      print_msg "Creating Python3 virtual environment in ${PYTHON_VENV}"
+      run_cmd python3 -m venv ${PYTHON_VENV}
+    fi
+    run_cmd source ${PYTHON_VENV}/bin/activate
   fi
 
   print_msg "Checking installation of ${PYTHON_BIN}"
@@ -244,6 +251,9 @@ function init_go_env {
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
+    if [[ $go_version > "1.11." ]]; then
+        go env -w GO111MODULE=off
+    fi
 }
 
 ######################################################################

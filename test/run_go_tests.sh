@@ -23,6 +23,7 @@ function print_msg {
 }
 
 function run_cmd {
+    print_msg "Running $*"
     $*
     local status=$?
     if [ $status -ne 0 ]; then
@@ -74,6 +75,9 @@ function init_go_env {
     print_msg "CC: ${CC}"
     print_msg "CXX: ${CXX}"
 
+    go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
+    print_msg "Current Go version is $go_version"
+
     if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
       print_msg "Installing 'testify' package"
       run_cmd go get github.com/stretchr/testify
@@ -84,6 +88,9 @@ function init_go_env {
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
+    if [[ $go_version > "1.11." ]]; then
+        go env -w GO111MODULE=off
+    fi
 }
 
 function install_go_core {
@@ -214,6 +221,14 @@ if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64:/usr/lib64
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
     centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+fi
+
+command -v cmake3
+status=$?
+if [[ ${status} == 0 ]] ; then
+    CMAKE_BIN=cmake3
+else
+    CMAKE_BIN=cmake
 fi
 
 curr_dir="$(pwd)"

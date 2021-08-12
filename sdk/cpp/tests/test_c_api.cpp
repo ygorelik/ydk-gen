@@ -1,28 +1,26 @@
-//////////////////////////////////////////////////////////////////
-// @file golang.cpp
-//
-// YANG Development Kit
-// Copyright 2017 Cisco Systems. All rights reserved
-//
-////////////////////////////////////////////////////////////////
-// Licensed to the Apache Software Foundation (ASF) under one
-// or more contributor license agreements.  See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  The ASF licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
-//
-//   http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
-// under the License.
-//
-//////////////////////////////////////////////////////////////////
+/*  ----------------------------------------------------------------
+ @file ydk.cpp
+
+ YDK - YANG Development Kit
+ Copyright 2017-2019 Cisco Systems. All rights reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
+ ------------------------------------------------------------------*/
 
 #include <iostream>
 
@@ -33,11 +31,12 @@ using namespace std;
 
 const char* test_string="<runner xmlns=\"http://cisco.com/ns/yang/ydktest-sanity\"><ytypes><built-in-t><number8>2</number8></built-in-t></ytypes></runner>";
 
-TEST_CASE( "codec_encode"  )
+TEST_CASE( "c_api_codec_encode"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
     Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
+    REQUIRE(repo!=NULL);
     ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
     REQUIRE(provider!=NULL);
 
@@ -58,11 +57,12 @@ TEST_CASE( "codec_encode"  )
     YDKStateFree(state);
 }
 
-TEST_CASE( "codec_decode"  )
+TEST_CASE( "c_api_codec_decode"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
     Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
+    REQUIRE(repo!=NULL);
     ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
     REQUIRE(provider!=NULL);
 
@@ -83,13 +83,12 @@ TEST_CASE( "codec_decode"  )
     YDKStateFree(state);
 }
 
-TEST_CASE( "provider_withpath"  )
+TEST_CASE( "c_api_provider_withpath"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
-    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
-
     REQUIRE(repo!=NULL);
+    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
     REQUIRE(provider!=NULL);
 
     NetconfServiceProviderFree(provider);
@@ -97,13 +96,12 @@ TEST_CASE( "provider_withpath"  )
     YDKStateFree(state);
 }
 
-TEST_CASE( "provider"  )
+TEST_CASE( "c_api_provider"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Repository repo = RepositoryInit();
-    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
-
     REQUIRE(repo!=NULL);
+    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
     REQUIRE(provider!=NULL);
 
     NetconfServiceProviderFree(provider);
@@ -111,13 +109,13 @@ TEST_CASE( "provider"  )
     YDKStateFree(state);
 }
 
-TEST_CASE( "rpc" )
+TEST_CASE( "c_api_rpc" )
 {
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
 
     Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
-
+    REQUIRE(repo!=NULL);
     ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
     REQUIRE(provider!=NULL);
 
@@ -146,5 +144,29 @@ TEST_CASE( "rpc" )
     NetconfServiceProviderFree(provider);
     RepositoryFree(repo);
     CodecFree(c);
+    YDKStateFree(state);
+}
+
+TEST_CASE( "c_api_session"  )
+{
+    // Connect to Netconf server
+    YDKStatePtr state = YDKStateCreate();
+    Repository repo = RepositoryInit();
+    REQUIRE(repo!=NULL);
+    auto session = NetconfSessionInit(state, repo, "localhost", "admin", "admin", 12022,
+                                      "ssh", true, false, -1, "", "");
+    REQUIRE(session!=NULL);
+
+    // Get capabilities
+    int len = 0;
+    auto capabilities = NetconfSessionGetCapabilities(state, session, &len);
+    CHECK(len > 0);
+    cout << "Total capabilities - "<< len << endl;
+    cout << capabilities[0] << endl;
+    CapabilitiesArrayFree(capabilities, len);
+
+    // Disconnect from Netconf server
+    NetconfSessionFree(session);
+    RepositoryFree(repo);
     YDKStateFree(state);
 }

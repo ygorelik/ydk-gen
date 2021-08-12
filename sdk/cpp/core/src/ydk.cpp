@@ -1060,3 +1060,39 @@ DataNode SessionExecuteRpc(YDKStatePtr state, Session session, Rpc rpc)
         return NULL;
     }
 }
+
+char** NetconfSessionGetCapabilities(YDKStatePtr state, Session session, int* len)
+{
+    try {
+        ydk::path::NetconfSession * real_session = static_cast<ydk::path::NetconfSession *>(session);
+        if (real_session)
+        {
+            std::vector<std::string> capabilites = real_session->get_capabilities();
+            char** cap_array = (char **)calloc(capabilites.size(), sizeof(char*));
+            for (unsigned long i=0; i<capabilites.size(); i++)
+            {
+                char * cstr = (char*) calloc(capabilites[i].length()+1, sizeof(char));
+                std::strcpy(cstr, capabilites[i].c_str());
+                cap_array[i] = cstr;
+            }
+            *len = capabilites.size();
+            return cap_array;
+        }
+        return NULL;
+    }
+    catch(...)
+    {
+        YDKState* real_state = static_cast<YDKState*>(state);
+        handle_error(real_state);
+        return NULL;
+    }
+}
+
+void CapabilitiesArrayFree(char** caps, int len)
+{
+    for (int i=0; i<len; i++)
+    {
+        free((void*)caps[i]);
+    }
+    free((void*)caps);
+}

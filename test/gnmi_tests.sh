@@ -110,10 +110,16 @@ function check_python_installation {
     fi
   fi
 
-  if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* && ${PYTHON_VERSION} == "3"* ]]; then
-    print_msg "Creating Python3 virtual environment in $YDKGEN_HOME/venv"
-    run_exec_test ${PYTHON_BIN} -m venv $YDKGEN_HOME/venv
-    run_exec_test source $YDKGEN_HOME/venv/bin/activate
+  if [[ ! $run_with_coverage ]]; then
+    if [[ -z ${PYTHON_VENV} ]]; then
+      PYTHON_VENV=${HOME}/venv
+      print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
+    fi
+    if [[ ! -d ${PYTHON_VENV} ]]; then
+      print_msg "Creating Python3 virtual environment in ${PYTHON_VENV}"
+      run_cmd python3 -m venv ${PYTHON_VENV}
+    fi
+    run_cmd source ${PYTHON_VENV}/bin/activate
   fi
 
   print_msg "Checking installation of ${PYTHON_BIN}"
@@ -174,13 +180,18 @@ function init_go_env {
     go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
     print_msg "Current Go version is $go_version"
 
-    go get github.com/stretchr/testify
-    cd $GOPATH/src/github.com/stretchr/testify
-    git checkout tags/v1.6.1
-    cd -
+    if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
+        go get github.com/stretchr/testify
+        cd $GOPATH/src/github.com/stretchr/testify
+        git checkout tags/v1.6.1
+        cd -
+    fi
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
+    if [[ $go_version > "1.11." ]]; then
+        go env -w GO111MODULE=off
+    fi
 }
 
 ######################################################################

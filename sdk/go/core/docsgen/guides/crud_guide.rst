@@ -1,6 +1,6 @@
 ..
   #  YDK - YANG Development Kit
-  #  Copyright 2016 Cisco Systems. All rights reserved
+  #  Copyright 2016-2019 Cisco Systems. All rights reserved
   # *************************************************************
   # Licensed to the Apache Software Foundation (ASF) under one
   # or more contributor license agreements.  See the NOTICE file
@@ -41,11 +41,11 @@ Creating a configuration with a list
 
 To configure a rule in the SNMP trap correlator, the below approach can be used.
 
-Note that the ``Rule`` field in :go:struct:`Snmp_Correlator_Rules <ydk/models/cisco_ios_xr/snmp_agent_cfg/Snmp_Correlator_Rules>`
+Note that the `Rule` field in :go:struct:`Snmp_Correlator_Rules <ydk/models/cisco_ios_xr/snmp_agent_cfg/Snmp_Correlator_Rules>`
 is a Go ``slice`` of :go:struct:`Snmp_Correlator_Rules_Rule<ydk/models/cisco_ios_xr/snmp_agent_cfg/Snmp_Correlator_Rules_Rule>`,
-which needs to be instantiated in its parent's constructor.
+which needs to be instantiated in its parent constructor.
 
-Also, the field ``NonStateful`` is set to ``nil`` by default. Therefore it needs to be instantiated.
+Also, the field `NonStateful` is set to `nil` by default. Therefore it needs to be instantiated.
 
 .. code-block:: c
     :linenos:
@@ -78,7 +78,7 @@ Creating and replacing a configuration
 --------------------------------------
 
 First, let us create a configuration for the :go:struct:`Bgp_Global_Config<ydk/models/openconfig/openconfig_bgp/Bgp_Global_Config>` class.
-Here, we set the leaf ``As``, which represents the autonomous system number, to ``65001`` and the leaf ``RouterId`` to ``"10.0.0.1"``.
+Here, we set the leaf `As`, which represents the autonomous system number, to `65001` and the leaf `RouterId` to `"10.0.0.1"`
 
 .. code-block:: c
     :linenos:
@@ -144,7 +144,7 @@ Reading a list
 
 For example, to read the instances of a deeply nested ``slice`` called
 :go:struct:`Rib_Vrfs_Vrf_Afs_Af_Safs_Saf_IpRibRouteTableNames_IpRibRouteTableName_Routes_Route<ydk/models/cisco_ios_xr/ip_rib_ipv4_oper/Rib_Vrfs_Vrf_Afs_Af_Safs_Saf_IpRibRouteTableNames_IpRibRouteTableName_Routes_Route>`
-in the ``ip_rib_ipv4_oper`` package using YDK's :go:struct:`CrudService<ydk/services/CrudService>`, the below approach can be used.
+in the `ip_rib_ipv4_oper` package using YDK's :go:struct:`CrudService<ydk/services/CrudService>`, the below approach can be used.
 
 .. code-block:: c
     :linenos:
@@ -203,7 +203,8 @@ in the ``ip_rib_ipv4_oper`` package using YDK's :go:struct:`CrudService<ydk/serv
 Accessing list elements
 -----------------------
 
-Lets continue previous example to demonstrate, how user can access `rib.Vrfs.Vrf` directly and by key identifier, which is `vrf.VrfName`.
+Lets continue previous example to demonstrate, how user can access `rib.Vrfs.Vrf` directly and by key identifier,
+which is `vrf.VrfName`.
 
 .. code-block:: c
     :linenos:
@@ -243,9 +244,9 @@ Lets continue previous example to demonstrate, how user can access `rib.Vrfs.Vrf
 Reading a leaf
 --------------
 
-For example, to read a ``YLeaf`` called ``Running`` in the
+For example, to read a `YLeaf` called `Running` in the
 :go:struct:`Instance <ydk/models/cisco_ios_xr/clns_isis_cfg/Isis_Instances_Instance>`
-class in the ``clns_isis_cfg`` module using YDK's :go:struct:`CrudService <ydk/services/CrudService>`,
+class in the `clns_isis_cfg` module using YDK's :go:struct:`CrudService <ydk/services/CrudService>`,
 the below approach can be used.
 
 .. code-block:: c
@@ -284,7 +285,7 @@ Deleting a list
 
 In order to delete entire list from configuration, all its elements must be deleted. For example, to delete
 a Go ``slice`` called :go:struct:`Instance <ydk/models/cisco_ios_xr/clns_isis_cfg/Isis_Instances_Instance>`
-in the ``clns_isis_cfg`` module using YDK's :go:struct:`CrudService<ydk/services/CrudService>`,
+in the `clns_isis_cfg` module using YDK's :go:struct:`CrudService<ydk/services/CrudService>`,
 the below approach can be used.
 
 .. code-block:: c
@@ -301,15 +302,15 @@ the below approach can be used.
         // First read the ISIS configuration
         // (assuming you have already instantiated the service and provider)
         isis := clns_isis_cfg.Isis{}
-	isisEntity := crud.ReadConfig(&provider, &isis)
+        isisEntity := crud.ReadConfig(&provider, &isis)
         isisConfig := isisEntity.(&clns_isis_cfg.Isis)
 
         // Go over all ISIS instances (list elements) to set yfilter.Delete flag
         for _, ins := range isisConfig.Instances.Instance {
-        	ins.YFilter = yfilter.Delete
-	}
+            ins.YFilter = yfilter.Delete
+        }
         // Call the CRUD update on the isisConfig object
-	// This operation will remove the entire list 'instance' from ISIS configuration
+        // This operation will remove the entire list 'instance' from ISIS configuration
         result := crud.Update(&provider, &isisConfig)
     }
 
@@ -318,8 +319,8 @@ Deleting a leaf
 ---------------
 
 In order to delete a leaf from configuration, instead of a value assign it yfilter.Delete flag.
-For example, to delete a ``YLeaf`` called ``Running`` in the :go:struct:`Instance <ydk/models/cisco_ios_xr/clns_isis_cfg/Isis_Instances>`
-class in the ``clns_isis_cfg`` module using YDK's :go:struct:`CrudService<ydk/services/CrudService>`, the below approach can be used.
+For example, to delete a `YLeaf` called `Running` in the :go:struct:`Instance <ydk/models/cisco_ios_xr/clns_isis_cfg/Isis_Instances>`
+class in the `clns_isis_cfg` module using YDK's :go:struct:`CrudService<ydk/services/CrudService>`, the below approach can be used.
 
 .. code-block:: c
     :linenos:
@@ -361,9 +362,9 @@ delete operation filter to avoid Libyang error on emty value. For this purpose t
 .. code-block:: c
     :linenos:
 
-	package main
+    package main
 
-	import (
+    import (
 		"github.com/CiscoDevNet/ydk-go/ydk/types"
 		"github.com/CiscoDevNet/ydk-go/ydk/types/yfilter"
 		ysanity_bgp "github.com/CiscoDevNet/ydk-go/ydk/models/ydktest/openconfig_bgp"
@@ -373,7 +374,7 @@ delete operation filter to avoid Libyang error on emty value. For this purpose t
 		"github.com/CiscoDevNet/ydk-go/ydk/services"
 	)
 
-	func configBgp(bgp *ysanity_bgp.Bgp) {
+    func configBgp(bgp *ysanity_bgp.Bgp) {
 		bgp.Global.Config.As = 65001
 
 		ipv6_afisafi := ysanity_bgp.Bgp_Global_AfiSafis_AfiSafi{}
@@ -401,7 +402,7 @@ delete operation filter to avoid Libyang error on emty value. For this purpose t
 		bgp.PeerGroups.PeerGroup = append(bgp.PeerGroups.PeerGroup, &peer_group)
 	}
 
-	func deletePolicy(bgp *ysanity_bgp.Bgp, policy string) {
+    func deletePolicy(bgp *ysanity_bgp.Bgp, policy string) {
 		peer_group := ysanity_bgp.Bgp_PeerGroups_PeerGroup{}
 		peer_group.PeerGroupName = "EBGP"
 
@@ -417,7 +418,7 @@ delete operation filter to avoid Libyang error on emty value. For this purpose t
 		bgp.PeerGroups.PeerGroup = append(bgp.PeerGroups.PeerGroup, &peer_group)
 	}
 
-	func configRoutingPolicies(routingPolicy *ysanity_rp.RoutingPolicy) {
+    func configRoutingPolicies(routingPolicy *ysanity_rp.RoutingPolicy) {
 		policy_def1 := ysanity_rp.RoutingPolicy_PolicyDefinitions_PolicyDefinition{Name: "POLICY1"}
 		policy_def3 := ysanity_rp.RoutingPolicy_PolicyDefinitions_PolicyDefinition{Name: "POLICY3"}
 		policy_def1.Config.Name = "POLICY1"
@@ -428,7 +429,7 @@ delete operation filter to avoid Libyang error on emty value. For this purpose t
 			append(routingPolicy.PolicyDefinitions.PolicyDefinition, &policy_def3)
 	}
 
-	func main() {
+    func main() {
 		// Connect to the device
 		var provider = providers.NetconfServiceProvider{
 					Address:  "127.0.0.1",

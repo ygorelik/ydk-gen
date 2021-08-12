@@ -136,3 +136,27 @@ func (ns *NetconfSession) ExecuteRpc(rpc types.Rpc) types.DataNode {
 	dn := types.DataNode{Private: cdn}
 	return dn
 }
+
+// GetState returns error state from NetconfSession
+func (ns *NetconfSession) GetState() *errors.State {
+	return &ns.State
+}
+
+// GetCapabilities returns list of capabilities supported by NetconfSession
+func (ns *NetconfSession) GetCapabilities() []string {
+
+	csession := ns.Private.(C.Session)
+	cstate := GetCState(&ns.State)
+	length := C.int(0)
+	var theCArray **C.char = C.NetconfSessionGetCapabilities(*cstate, csession, &length);
+	capLen := int(length)
+
+	slice := (*[1 << 30]*C.char)(unsafe.Pointer(theCArray))[:capLen:capLen]
+	capabilities := make([]string, capLen)
+	for i := range capabilities {
+		capabilities[i] = C.GoString(slice[i])
+	}
+	C.CapabilitiesArrayFree(theCArray, length)
+	return capabilities
+}
+
