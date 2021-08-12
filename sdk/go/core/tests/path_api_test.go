@@ -73,7 +73,7 @@ func (suite *PathApiTestSuite) TestBgpConfig() {
 	path.CreateDataNode( neighbor, "config/neighbor-address", "172.16.255.2")
 	path.CreateDataNode( neighbor, "config/peer-as","65172")
 
-	  createRpc := path.CreateRpc( suite.RootSchema, "ydk:create")
+	createRpc := path.CreateRpc( suite.RootSchema, "ydk:create")
 	path.CreateDataNode( createRpc.Input, "entity", path.CodecEncode( bgp, encoding.XML, true))
 	suite.Session.ExecuteRpc(createRpc)
 
@@ -109,6 +109,15 @@ func (suite *PathApiTestSuite) TestBgpConfig() {
 
 	// Delete BGP config
 	suite.Session.ExecuteRpc(deleteRpc)
+}
+
+func (suite *PathApiTestSuite) TestCapabilities() {
+    capabilities := suite.Session.GetCapabilities()
+    suite.True(len(capabilities) > 0)
+    fmt.Printf("===== Capabilities (%d):\n", len(capabilities))
+    for i := 0; i < 2; i++ {
+        fmt.Println(capabilities[i])
+    }
 }
 
 func TestPathApiTestSuite(t *testing.T) {

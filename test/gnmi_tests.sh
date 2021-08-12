@@ -190,6 +190,9 @@ function init_go_env {
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
+    if [[ $go_version > "1.11." ]]; then
+        go env -w GO111MODULE=off
+    fi
 }
 
 ######################################################################

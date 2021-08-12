@@ -3,6 +3,10 @@
 #### New features and enhancements
   * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
 
+#### Resolved GitHub issues
+  * Go function EntityEqual result depends on parameters order ([#1053](https://github.com/CiscoDevNet/ydk-gen/issues/1053))
+
+
 
 ### 2021-05-30 version 0.9.0.1
 
@@ -25,6 +29,7 @@
 #### Resolved GitHub issues
   * Version numbers in bundle resolver to comply with PEP 440 ([#1007](https://github.com/CiscoDevNet/ydk-gen/issues/1007))
   * The Executor Service fails to return module content to user ([#1035](https://github.com/CiscoDevNet/ydk-gen/issues/1035))
+  * Docker base image python error ([#1036](https://github.com/CiscoDevNet/ydk-gen/issues/1036))
 
 #### Other resolved issues and enhancements
   * Fixed few minor bugs in C++ code

@@ -36,6 +36,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"strconv"
 	"testing"
+	"github.com/stretchr/testify/assert"
 )
 
 func getE(code int) ysanity.Runner_InbtwList_Ldata {
@@ -103,30 +104,6 @@ func (suite *CrudTestSuite) BeforeTest(suiteName, testName string) {
 	fmt.Printf("%v: %v ...\n", suiteName, testName)
 }
 
-// todo: Read and ReadConfig both not working for OneReadOnly
-// func (suite *CrudTestSuite) TestReadOnlyContainer() {
-// 	intrfaces := interfaces.Interfaces{}
-// 	intrfaces.Interface = make([]interfaces.Interfaces_Interface, 1)
-
-// 	funcDidPanic, panicValue := didPanic(func() {
-// 		suite.CRUD.ReadConfig(&suite.Provider, &intrfaces) })
-
-// 	fmt.Println(intrfaces)
-
-// 	runner := ysanity.Runner{}
-// 	runner.OneReadOnly.Name = "runner.OneReadOnly.Name"
-
-// 	suite.CRUD.Read(&suite.Provider, &runner)
-// 	fmt.Println(runner)
-
-// 	// Try ReadConfig, expecting failure
-// 	funcDidPanic, panicValue = didPanic(func() {
-// 		suite.CRUD.ReadConfig(&suite.Provider, &runner) })
-
-// 	suite.Equal(funcDidPanic, true)
-// 	fmt.Println(panicValue)
-// }
-
 func (suite *CrudTestSuite) TestReadVsReadConfig() {
     // Delete BGP config
     bgp := ysanity_bgp.Bgp{}
@@ -146,7 +123,6 @@ func (suite *CrudTestSuite) TestReadVsReadConfig() {
     bgp = ysanity_bgp.Bgp{}
     bgpConfigEntity := suite.CRUD.ReadConfig(&suite.Provider, &bgp)
     bgpStatusEntity := suite.CRUD.Read(&suite.Provider, &bgp)
-    suite.NotEqual(GetEntityXMLString(bgpConfigEntity), GetEntityXMLString(bgpStatusEntity))
     suite.False(types.EntityEqual(bgpConfigEntity, bgpStatusEntity))
 
     suite.CRUD.Delete(&suite.Provider, &bgp)
@@ -170,9 +146,8 @@ func (suite *CrudTestSuite) TestDeleteObjectOnLeaf() {
 	suite.Equal(types.EntityEqual(entityRead, &runnerCmp), true)
 }
 
-func (suite *CrudTestSuite) TestDeleteOnLeafListSlice() {
+func (suite *CrudTestSuite) TestDeleteOnLeafListElement() {
     runnerCreate := ysanity.Runner{}
-    runnerCreate.One.Name = "runner.YdktestSanityOne.Name"
     runnerCreate.Ytypes.BuiltInT.Llstring = append(runnerCreate.Ytypes.BuiltInT.Llstring, "1")
     runnerCreate.Ytypes.BuiltInT.Llstring = append(runnerCreate.Ytypes.BuiltInT.Llstring, "2")
     runnerCreate.Ytypes.BuiltInT.Llstring = append(runnerCreate.Ytypes.BuiltInT.Llstring, "3")
@@ -180,39 +155,16 @@ func (suite *CrudTestSuite) TestDeleteOnLeafListSlice() {
     runnerCreate.Ytypes.BuiltInT.Llstring = append(runnerCreate.Ytypes.BuiltInT.Llstring, "5")
     suite.CRUD.Create(&suite.Provider, &runnerCreate)
 
-    entityRead := suite.CRUD.Read(&suite.Provider, &ysanity.Runner{})
-    suite.True(types.EntityEqual(&runnerCreate, entityRead))
+    runnerUpdate := ysanity.Runner{}
+    deleteElement := types.LeafData{Value: "3", Filter: yfilter.Delete}
+    runnerUpdate.Ytypes.BuiltInT.Llstring = append(runnerUpdate.Ytypes.BuiltInT.Llstring, deleteElement)
+
+    suite.CRUD.Update(&suite.Provider, &runnerUpdate)
+
+    // try delete again with expected error
+    assert.Panicsf(suite.T(), func() { suite.CRUD.Update(&suite.Provider, &runnerUpdate) },
+	"Did not receive OK reply from the device", "formatted")
 }
-
-// TODO: delete leaf from leaf-list
-// func (suite *CrudTestSuite) TestDeleteOnLeafList() {
-//     runnerCreate := ysanity.Runner{}
-//     runnerCreate.One.Name = "runner.YdktestSanityOne.Name"
-//     runnerCreate.Ytypes.BuiltInT.Llstring = append(runnerCreate.Ytypes.BuiltInT.Llstring, "0")
-//     runnerCreate.Ytypes.BuiltInT.Llstring = append(runnerCreate.Ytypes.BuiltInT.Llstring, "1")
-//     runnerCreate.Ytypes.BuiltInT.Llstring = append(runnerCreate.Ytypes.BuiltInT.Llstring, "2")
-//     runnerCreate.Ytypes.BuiltInT.Llstring = append(runnerCreate.Ytypes.BuiltInT.Llstring, "3")
-//     runnerCreate.Ytypes.BuiltInT.Llstring = append(runnerCreate.Ytypes.BuiltInT.Llstring, "4")
-
-//     suite.CRUD.Create(&suite.Provider, &runnerCreate)
-
-//     runnerUpdate := ysanity.Runner{}
-//     // TODO: how to target a particular leaf from leaf-list using YFilter?
-//     runnerUpdate.Ytypes.BuiltInT.Llstring = append(runnerUpdate.Ytypes.BuiltInT.Llstring, "3")
-//     // runnerUpdate.Ytypes.BuiltInT.Llstring = yfilter.Delete
-//     suite.CRUD.Update(&suite.Provider, &runnerUpdate)
-
-//     entityRead := suite.CRUD.Read(&suite.Provider, &ysanity.Runner{})
-
-//     runnerCmp := ysanity.Runner{}
-//     runnerCmp.One.Name = "runner.YdktestSanityOne.Name"
-//     runnerCmp.Ytypes.BuiltInT.Llstring = append(runnerCmp.Ytypes.BuiltInT.Llstring, "0")
-//     runnerCmp.Ytypes.BuiltInT.Llstring = append(runnerCmp.Ytypes.BuiltInT.Llstring, "1")
-//     runnerCmp.Ytypes.BuiltInT.Llstring = append(runnerCmp.Ytypes.BuiltInT.Llstring, "2")
-//     runnerCmp.Ytypes.BuiltInT.Llstring = append(runnerCmp.Ytypes.BuiltInT.Llstring, "4")
-
-//     suite.Equal(types.EntityEqual(entityRead, &runnerCmp), true)
-// }
 
 func (suite *CrudTestSuite) TestDeleteOnListWithIdentitykey() {
 	il := ysanity.Runner_OneList_IdentityList{}
@@ -246,25 +198,24 @@ func (suite *CrudTestSuite) TestDeleteOnContainer() {
 	suite.Equal(types.EntityEqual(entityRead, &runnerCmp), true)
 }
 
-// TODO: Delete whole list using YFilter
-// func (suite *CrudTestSuite) TestDeleteOnNestedList() {
-// 	runnerCreate := getNestedObject()
-// 	ydk.YLogDebug(ee22)
-// 	suite.CRUD.Create(&suite.Provider, &runnerCreate)
+func (suite *CrudTestSuite) TestDeleteOnNestedList() {
+	runnerCreate := getNestedObject()
+	suite.CRUD.Create(&suite.Provider, &runnerCreate)
 
-//     entity := suite.CRUD.Read(&suite.Provider, &ysanity.Runner{})
-//     runnerUpdate := entity.(*ysanity.Runner)
+	entity := suite.CRUD.Read(&suite.Provider, &ysanity.Runner{})
+	runnerUpdate := entity.(*ysanity.Runner)
 
-//     // TODO: YANG list is printed as []interface, not able to assign YFilter Delete to YANG list
-//     runnerUpdate.InbtwList.Ldata[1].Subc.SubcSubl1 = yfilter.Delete
-//     suite.CRUD.Update(&suite.Provider, runnerUpdate)
+	for _, e := range runnerUpdate.InbtwList.Ldata[1].Subc.SubcSubl1 {
+	    e.YFilter = yfilter.Delete
+	}
+	suite.CRUD.Update(&suite.Provider, runnerUpdate)
 
-//     entity = suite.CRUD.Read(&suite.Provider, &ysanity.Runner{})
-//     runnerCmp := runnerCreate
-//     runnerCmp.InbtwList.Ldata[1].Subc.SubcSubl1 = runnerCmp.InbtwList.Ldata[1].Subc.SubcSubl1[:0]
+	entity = suite.CRUD.Read(&suite.Provider, &ysanity.Runner{})
 
-//     suite.Equal(types.EntityEqual(entity, &runnerCmp), true)
-// }
+	runnerCmp := getNestedObject()
+	runnerCmp.InbtwList.Ldata[1].Subc.SubcSubl1 = []*ysanity.Runner_InbtwList_Ldata_Subc_SubcSubl1{}
+	suite.True(types.EntityEqual(entity, &runnerCmp))
+}
 
 func (suite *CrudTestSuite) TestDeleteOnListElement() {
 	runnerCreate := getNestedObject()
@@ -282,7 +233,7 @@ func (suite *CrudTestSuite) TestDeleteOnListElement() {
 	suite.Equal(types.EntityEqual(entity, &runnerCmp), true)
 }
 
-func (suite *CrudTestSuite) TestDeleteOnListElements() {
+func (suite *CrudTestSuite) TestDeleteOnFewListElements() {
 	runnerCreate := ysanity.Runner{}
 	runnerCreate.One.Name = "one"
 	foo := ysanity.Runner_OneList_Ldata{}
@@ -338,7 +289,7 @@ func (suite *CrudTestSuite) TestSanityMultipleEntities() {
 	filterEC := types.NewFilter(&runnerFilter, &nativeFilter)
 
 	// Read running config
-	readEntity := suite.CRUD.Read(&suite.Provider, filterEC);
+	readEntity := suite.CRUD.Read(&suite.Provider, filterEC)
 	suite.Equal( types.IsEntityCollection(readEntity), true)
 
 	// Get results
@@ -348,58 +299,59 @@ func (suite *CrudTestSuite) TestSanityMultipleEntities() {
 	}
 
 	// Delete configuration
-	result = suite.CRUD.Delete(&suite.Provider, configEC);
+	result = suite.CRUD.Delete(&suite.Provider, configEC)
 	suite.Equal(result, true)
 }
 
 func (suite *CrudTestSuite) TestSanityReadConfig() {
-
 	// Import ietf_netconf_acm package in order to register otherwise missing entity 
 	nacm := ietf_netconf_acm.Nacm{}
 	
-    // Build empty filter
-    filterEC := types.NewFilter(&nacm)
-    filterEC.Clear()
+	// Build empty filter
+	filterEC := types.NewFilter(&nacm)
+	filterEC.Clear()
 
-    // Read running config
-    readEntity := suite.CRUD.ReadConfig(&suite.Provider, filterEC);
-    suite.Equal( types.IsEntityCollection(readEntity), true)
+	// Read running config
+	readEntity := suite.CRUD.ReadConfig(&suite.Provider, filterEC)
+	suite.Equal( types.IsEntityCollection(readEntity), true)
 
-    // Get results
-    readEC := types.EntityToCollection(readEntity)
-    for _, entity := range readEC.Entities() {
-    	ydk.YLogDebug(fmt.Sprintf("Printing %s", GetEntityXMLString(entity)))
-    }
+	// Get results
+	readEC := types.EntityToCollection(readEntity)
+	for _, entity := range readEC.Entities() {
+		ydk.YLogDebug(fmt.Sprintf("Printing %s", GetEntityXMLString(entity)))
+	}
 }
 
-// TODO: Delete list using YFilter
-// func (suite *CrudTestSuite) TestDeleteOnList() {
-//     runnerCreate := ysanity.Runner{}
-//     runnerCreate.One.Name = "one"
-//     foo := ysanity.Runner_OneList_Ldata{}
-//     bar := ysanity.Runner_OneList_Ldata{}
-//     foo.Number = 1
-//     foo.Name = "foo"
-//     bar.Number = 2
-//     bar.Name = "bar"
+func (suite *CrudTestSuite) TestDeleteList() {
+	// CREATE
+	runnerCreate := ysanity.Runner{}
+	runnerCreate.One.Name = "one"
+	foo := ysanity.Runner_OneList_Ldata{}
+	bar := ysanity.Runner_OneList_Ldata{}
+	foo.Number = 1
+	foo.Name = "foo"
+	bar.Number = 2
+	bar.Name = "bar"
 
-//     runnerCreate.OneList.Ldata = append(runnerCreate.OneList.Ldata, foo)
-//     runnerCreate.OneList.Ldata = append(runnerCreate.OneList.Ldata, bar)
+	runnerCreate.OneList.Ldata = append(runnerCreate.OneList.Ldata, &foo)
+	runnerCreate.OneList.Ldata = append(runnerCreate.OneList.Ldata, &bar)
 
-//     suite.CRUD.Create(&suite.Provider, &runnerCreate)
+	suite.CRUD.Create(&suite.Provider, &runnerCreate)
 
-//     entity := suite.CRUD.Read(&suite.Provider, &ysanity.Runner{})
-//     runnerUpdate := entity.(*ysanity.Runner)
+	// READ then DELETE all list elements
+	entity := suite.CRUD.Read(&suite.Provider, &ysanity.Runner{})
+	runnerUpdate := entity.(*ysanity.Runner)
+	for _, e := range runnerUpdate.OneList.Ldata {
+		e.YFilter = yfilter.Delete
+	}
+	suite.CRUD.Update(&suite.Provider, runnerUpdate)
 
-//     // TODO: Delete whole list using YFilter
-//     // runnerUpdate.OneList.Ldata = yfilter.Delete
-//     // suite.CRUD.Update(&suite.Provider, runnerUpdate)
-
-//     runnerCmp := runnerCreate
-//     runnerCmp.OneList.Ldata = runnerCmp.OneList.Ldata[:0]
-
-//     suite.Equal(types.EntityEqual(entity, &runnerCmp), true)
-// }
+	// READ and VALIDATE
+	entity = suite.CRUD.Read(&suite.Provider, &ysanity.Runner{})
+	runnerCmp := runnerCreate
+	runnerCmp.OneList.Ldata = []*ysanity.Runner_OneList_Ldata {}
+	suite.Equal(types.EntityEqual(entity, &runnerCmp), true)
+}
 
 func (suite *CrudTestSuite) TestDeleteContainer() {
 	// Build loopback configuration

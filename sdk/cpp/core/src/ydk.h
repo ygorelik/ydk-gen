@@ -129,6 +129,8 @@ Session NetconfSessionInit(YDKStatePtr state, Repository repo,
 void NetconfSessionFree(Session);
 
 DataNode SessionExecuteRpc(YDKStatePtr state, Session session, Rpc rpc);
+char** NetconfSessionGetCapabilities(YDKStatePtr state, Session session, int* len);
+void CapabilitiesArrayFree(char** caps, int len);
 
 ServiceProvider RestconfServiceProviderInitWithRepo(YDKStatePtr state, Repository repo, const char * address, const char * username, const char * password, int port, EncodingFormat encoding, const char* config_url_root, const char* state_url_root);
 void RestconfServiceProviderFree(ServiceProvider);

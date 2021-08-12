@@ -1,3 +1,30 @@
+..
+  #  YDK - YANG Development Kit
+  #  Copyright 2016-2019 Cisco Systems. All rights reserved
+  # *************************************************************
+  # Licensed to the Apache Software Foundation (ASF) under one
+  # or more contributor license agreements.  See the NOTICE file
+  # distributed with this work for additional information
+  # regarding copyright ownership.  The ASF licenses this file
+  # to you under the Apache License, Version 2.0 (the
+  # "License"); you may not use this file except in compliance
+  # with the License.  You may obtain a copy of the License at
+  #
+  #   http:#www.apache.org/licenses/LICENSE-2.0
+  #
+  #  Unless required by applicable law or agreed to in writing,
+  # software distributed under the License is distributed on an
+  # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  # KIND, either express or implied.  See the License for the
+  # specific language governing permissions and limitations
+  # under the License.
+  # *************************************************************
+  # This file has been modified by Yan Gorelik, YDK Solutions.
+  # All modifications in original under CiscoDevNet domain
+  # introduced since October 2019 are copyrighted.
+  # All rights reserved under Apache License, Version 2.0.
+  # *************************************************************
+
 .. _ydk-providers:
 
 Service Providers
@@ -23,19 +50,19 @@ Open Daylight
 
 		A Go ``string`` that represents the path
 
-	.. attribute:: Address
+	.. :noindex:attribute:: Address
 
 		A Go ``string`` that represents the IP address of the device supporting a open daylight interface
 
-	.. attribute:: Username
+	.. :noindex:attribute:: Username
 
 		A Go ``string`` that represents the username to log in to the device
 
-	.. attribute:: Password
+	.. :noindex:attribute:: Password
 
 		A Go ``string`` that represents the password to log in to the device
 	
-	.. attribute:: Port
+	.. :noindex:attribute:: Port
 
 		An ``int`` that represents the device port used to access the open daylight interface.
 
@@ -73,23 +100,23 @@ Netconf
 
 	NetconfServiceProvider Implementation of ServiceProvider for the NETCONF protocol: https://tools.ietf.org/html/rfc6241
 
-	.. attribute:: Repo
+	.. :noindex:attribute:: Repo
 
 		An instance of :go:struct:`Repository<ydk/types/Repository>` This attribute represents the repository of YANG models.
 
-	.. attribute:: Address
+	.. :noindex:attribute:: Address
 
 		A Go ``string`` that represents the IP address of the device supporting a netconf interface
 
-	.. attribute:: Username
+	.. :noindex:attribute:: Username
 
 		A Go ``string`` that represents the username to log in to the device
 
-	.. attribute:: Password
+	.. :noindex:attribute:: Password
 
 		A Go ``string`` that represents the password to log in to the device
 
-	.. attribute:: Port
+	.. :noindex:attribute:: Port
 
 		An ``int`` that represents the device port used to access the netconf interface.
 
@@ -140,19 +167,19 @@ Restconf
 
 		A Go ``string`` that represents the path
 
-	.. attribute:: Address
+	.. :noindex:attribute:: Address
 
 		A Go ``string`` that represents the IP address of the device supporting a restconf interface
 
-	.. attribute:: Username
+	.. :noindex:attribute:: Username
 
 		A Go ``string`` that represents the username to log in to the device
 
-	.. attribute:: Password
+	.. :noindex:attribute:: Password
 
 		A Go ``string`` that represents the password to log in to the device
 
-	.. attribute:: Port
+	.. :noindex:attribute:: Port
 
 		An ``int`` that represents the device port used to access the restconfs interface.
 
@@ -200,32 +227,32 @@ gNMI
 
 	Implementation of ServiceProvider for the gNMI protocol.
 
-	.. attribute:: Repo
+	.. :noindex:attribute:: Repo
 
 		An instance of :go:struct:`Repository<ydk/types/Repository>` This attribute represents the repository of YANG models.
 
-	.. attribute:: Address
+	.. :noindex:attribute:: Address
 
 		A Go ``string`` that represents the IP address of the device supporting a netconf interface.
 
-	.. attribute:: Username
+	.. :noindex:attribute:: Username
 
 		A Go ``string`` that represents the username to log in to the device.
 
-	.. attribute:: Password
+	.. :noindex:attribute:: Password
 
 		A Go ``string`` that represents the password to log in to the device.
 
-	.. attribute:: Port
+	.. :noindex:attribute:: Port
 
 		An ``int`` that represents the device port used to access the gRPC interface.
 
-	.. attribute:: ServerCert
+	.. :noindex:attribute:: ServerCert
 	
-	    A Go ``string`` that represents full path to a file containing gNMI server certificate of authorization (public key).
+        A Go ``string`` that represents full path to a file containing gNMI server certificate of authorization (public key).
 	    If not specified the service provider creates non-secure connection to the gNMI server.
 	    
-	.. attribute:: PrivateKey
+	.. :noindex:attribute:: PrivateKey
 
 		A Go ``string`` that represents full path to a file containing private key of YDK application host.
 		If not specified and **ServerCert** attribute is defined (secure connection) the gRPC protocol uses its own private key.
@@ -273,7 +300,7 @@ Codec
 
 	CodecServiceProvider Encode and decode to XML/JSON format
 
-	.. attribute:: Repo
+	.. :noindex:attribute:: Repo
 
 		An instance of :go:struct:`Repository<ydk/types/Repository>` This attribute represents the repository of YANG models.
 

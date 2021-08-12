@@ -5,6 +5,10 @@
   * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
   * Upgraded pyang to modified version 2.5.0.m1
 
+#### Resolved GitHub issues
+  * Go function EntityEqual result depends on parameters order ([#1053](https://github.com/CiscoDevNet/ydk-gen/issues/1053))
+
+
 ### 2021-05-30 version 0.9.0.1
 
 #### New features and enhancements

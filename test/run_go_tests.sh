@@ -63,6 +63,9 @@ function init_go_env {
     print_msg "CC: ${CC}"
     print_msg "CXX: ${CXX}"
 
+    go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
+    print_msg "Current Go version is $go_version"
+
     if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
       print_msg "Installing 'testify' package"
       run_cmd go get github.com/stretchr/testify
@@ -73,6 +76,9 @@ function init_go_env {
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
+    if [[ $go_version > "1.11." ]]; then
+        go env -w GO111MODULE=off
+    fi
 }
 
 function install_go_core {
