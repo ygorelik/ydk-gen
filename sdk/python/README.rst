@@ -330,4 +330,4 @@ Available resources:
 Release Notes
 =============
 
-The current YDK release version for Python is 0.8.5.post2. The `ydk-py` GitHub repository is not maintained for this release.
+The current YDK release version for Python is 0.8.5.post3. The `ydk-py` GitHub repository is not maintained for this release.
