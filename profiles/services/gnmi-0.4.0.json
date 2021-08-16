@@ -1,6 +1,6 @@
 {
   "name": "gnmi",
-  "version": "0.4.0-post5",
+  "version": "0.4.0.5",
   "author": "Cisco",
   "copyright": "Cisco",
   "description": "YDK gNMI service profile",

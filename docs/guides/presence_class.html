@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>What are presence classes? &mdash; YANG Development Kit 0.8.5.2 documentation</title>
+  <title>What are presence classes? &mdash; YANG Development Kit 0.8.5.3 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.5.2 documentation" href="../index.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.5.3 documentation" href="../index.html"/>
         <link rel="up" title="Developer Guide" href="../developer_guide.html"/>
         <link rel="next" title="What are deviations?" href="deviation.html"/>
         <link rel="prev" title="How to Disable Validation" href="validation.html"/> 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.8.5.2
+                0.8.5.3
               </div>
             
           
@@ -106,6 +106,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_guide.html">API Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Questions and Answers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ydk.models.ydktest.html">ydktest bundle API</a></li>
 </ul>
 
             
@@ -153,34 +154,34 @@
   <div class="section" id="what-are-presence-classes">
 <span id="presence-class"></span><h1>What are presence classes?<a class="headerlink" href="#what-are-presence-classes" title="Permalink to this headline">¶</a></h1>
 <p>According to <a class="reference external" href="https://tools.ietf.org/html/rfc6020#section-7.5.1">RFC 6020</a>, YANG supports two styles of containers. One is for organizing hierarchy. Another type (called &#8216;presence container&#8217;) is for representing configuration data. For instance the existence of presence container <code class="docutils literal"><span class="pre">ssh</span></code> indicates the capability to log in to the device using ssh. Let us consider a presence node <code class="docutils literal"><span class="pre">match-community-set</span></code> in <a class="reference external" href="https://github.com/YangModels/yang/blob/96883adbf612605f02271523d7eaa731ded46b61/vendor/cisco/xr/621/openconfig-bgp-policy.yang#L126">openconfig-bgp-policy.yang</a>. This node is generated as a YDK class shown below:</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BgpConditions</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BgpConditions</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ...</span>
 
@@ -253,7 +254,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.8.5.2',
+            VERSION:'0.8.5.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false

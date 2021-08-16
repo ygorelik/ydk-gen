@@ -653,5 +653,5 @@ Please refer [here](https://github.com/ygorelik/ydk-gen/blob/master/sdk/go/core/
 
 # Release Notes
 
-The current YDK release version is 0.8.5.3 (Python package 0.8.5.post3).
+The current YDK release version is 0.8.5.3.
 YDK-Gen is licensed under the Apache 2.0 License.

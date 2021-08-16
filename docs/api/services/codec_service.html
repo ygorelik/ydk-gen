@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Codec Services &mdash; YANG Development Kit 0.8.5.2 documentation</title>
+  <title>Codec Services &mdash; YANG Development Kit 0.8.5.3 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.5.2 documentation" href="../../index.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.5.3 documentation" href="../../index.html"/>
         <link rel="up" title="Services" href="services.html"/>
         <link rel="next" title="CRUD Service" href="crud_service.html"/>
         <link rel="prev" title="Services" href="services.html"/> 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.8.5.2
+                0.8.5.3
               </div>
             
           
@@ -112,6 +112,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../faq.html">Questions and Answers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ydk.models.ydktest.html">ydktest bundle API</a></li>
 </ul>
 
             
@@ -182,7 +183,9 @@ which represent containers in the device supported YANG models.</p>
 <li><strong>entity</strong> &#8211; <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal"><span class="pre">Entity</span></code></a> instance or collection of <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal"><span class="pre">Entity</span></code></a> instances of type <code class="docutils literal"><span class="pre">list</span></code> or <code class="docutils literal"><span class="pre">dict</span></code>
 or <a class="reference internal" href="../types.html#ydk.types.EntityCollection" title="ydk.types.EntityCollection"><code class="xref py py-class docutils literal"><span class="pre">EntityCollection</span></code></a>.</li>
 <li><strong>pretty</strong> &#8211; <code class="docutils literal"><span class="pre">bool</span></code> flag, which specifies if resulting string must be in human readable way with indentation.</li>
-<li><strong>subtree</strong> &#8211; <code class="docutils literal"><span class="pre">bool</span></code> flag, which directs to encode entity to XML subtree.</li>
+<li><strong>subtree</strong> &#8211; <code class="docutils literal"><span class="pre">bool</span></code> flag, which directs to encode entity to XML or JSON subtree. When set to <cite>true</cite>,
+the <a class="reference internal" href="#ydk.entity_utils.XmlSubtreeCodec" title="ydk.entity_utils.XmlSubtreeCodec"><code class="xref py py-class docutils literal"><span class="pre">XmlSubtreeCodec</span></code></a>
+or <a class="reference internal" href="#ydk.entity_utils.JsonSubtreeCodec" title="ydk.entity_utils.JsonSubtreeCodec"><code class="xref py py-class docutils literal"><span class="pre">JsonSubtreeCodec</span></code></a> is called accordingly.</li>
 </ul>
 </td>
 </tr>
@@ -207,7 +210,9 @@ or <a class="reference internal" href="../types.html#ydk.types.EntityCollection"
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>provider</strong> &#8211; <a class="reference internal" href="../providers/codec_provider.html#ydk.providers.CodecServiceProvider" title="ydk.providers.CodecServiceProvider"><code class="xref py py-class docutils literal"><span class="pre">CodecServiceProvider</span></code></a> - Codec Provider instance.</li>
 <li><strong>payload</strong> &#8211; <code class="docutils literal"><span class="pre">str</span></code> or collection of <code class="docutils literal"><span class="pre">str</span></code> Either a single encoded payload or a collection of payloads encapsulated to <code class="docutils literal"><span class="pre">list</span></code> or <code class="docutils literal"><span class="pre">dict</span></code>.</li>
-<li><strong>subtree</strong> &#8211; <code class="docutils literal"><span class="pre">bool</span></code> flag, which directs to encode entity to XML subtree.</li>
+<li><strong>subtree</strong> &#8211; <code class="docutils literal"><span class="pre">bool</span></code> flag, which directs to encode entity to XML or JSON subtree. When set to <cite>true</cite>,
+the <a class="reference internal" href="#ydk.entity_utils.XmlSubtreeCodec" title="ydk.entity_utils.XmlSubtreeCodec"><code class="xref py py-class docutils literal"><span class="pre">XmlSubtreeCodec</span></code></a>
+or <a class="reference internal" href="#ydk.entity_utils.JsonSubtreeCodec" title="ydk.entity_utils.JsonSubtreeCodec"><code class="xref py py-class docutils literal"><span class="pre">JsonSubtreeCodec</span></code></a> is called accordingly.</li>
 </ul>
 </td>
 </tr>
@@ -231,7 +236,8 @@ or a collection of <a class="reference internal" href="../types.html#ydk.types.E
 <dt id="ydk.entity_utils.XmlSubtreeCodec">
 <em class="property">class </em><code class="descclassname">ydk.entity_utils.</code><code class="descname">XmlSubtreeCodec</code><a class="headerlink" href="#ydk.entity_utils.XmlSubtreeCodec" title="Permalink to this definition">¶</a></dt>
 <dd><p>XmlSubtreeCodec class designed to provide encoding and decoding Python model API objects of type <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal"><span class="pre">Entity</span></code></a> to/from XML encoded string.
-Compared to <a class="reference internal" href="#ydk.services.CodecService" title="ydk.services.CodecService"><code class="xref py py-class docutils literal"><span class="pre">CodecService</span></code></a> the class does not validate encoded data for their types and values.</p>
+Compared to <a class="reference internal" href="#ydk.services.CodecService" title="ydk.services.CodecService"><code class="xref py py-class docutils literal"><span class="pre">CodecService</span></code></a> the class does not validate encoded data for their types and values.
+It is also can be used to encode/decode non-top level entities.</p>
 <dl class="method">
 <dt id="ydk.entity_utils.XmlSubtreeCodec.XmlSubtreeCodec">
 <code class="descname">XmlSubtreeCodec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.XmlSubtreeCodec.XmlSubtreeCodec" title="Permalink to this definition">¶</a></dt>
@@ -295,7 +301,8 @@ Compared to <a class="reference internal" href="#ydk.services.CodecService" titl
 <dt id="ydk.entity_utils.JsonSubtreeCodec">
 <em class="property">class </em><code class="descclassname">ydk.entity_utils.</code><code class="descname">JsonSubtreeCodec</code><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec" title="Permalink to this definition">¶</a></dt>
 <dd><p>JsonSubtreeCodec class designed to provide encoding and decoding Python model API objects of type <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal"><span class="pre">Entity</span></code></a> to/from JSON encoded string.
-Compared to <a class="reference internal" href="#ydk.services.CodecService" title="ydk.services.CodecService"><code class="xref py py-class docutils literal"><span class="pre">CodecService</span></code></a> the class does not validate encoded data for their types and values.</p>
+Compared to <a class="reference internal" href="#ydk.services.CodecService" title="ydk.services.CodecService"><code class="xref py py-class docutils literal"><span class="pre">CodecService</span></code></a> the class does not validate encoded data for their types and values.
+It is also can be used to encode/decode non-top level entities.</p>
 <dl class="method">
 <dt id="ydk.entity_utils.JsonSubtreeCodec.JsonSubtreeCodec">
 <code class="descname">JsonSubtreeCodec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec.JsonSubtreeCodec" title="Permalink to this definition">¶</a></dt>
@@ -437,7 +444,7 @@ then print it using <a class="reference internal" href="#ydk.entity_utils.JsonSu
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.8.5.2',
+            VERSION:'0.8.5.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false
