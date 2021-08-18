@@ -127,9 +127,16 @@ Session NetconfSessionInit(YDKStatePtr state, Repository repo,
                            const char * protocol, boolean on_demand, boolean common_cache, int timeout,
                            const char * server_certificate_path, const char * private_key_path);
 void NetconfSessionFree(Session);
+char** NetconfSessionGetCapabilities(YDKStatePtr state, Session session, int* len);
+
+Session RestconfSessionInit(YDKStatePtr state, Repository repo,
+                            const char * address, const char * username, const char * password, int port,
+                            EncodingFormat encoding,
+                            const char * config_url_root, const char * state_url_root);
+void RestconfSessionFree(Session);
 
 DataNode SessionExecuteRpc(YDKStatePtr state, Session session, Rpc rpc);
-char** NetconfSessionGetCapabilities(YDKStatePtr state, Session session, int* len);
+
 void CapabilitiesArrayFree(char** caps, int len);
 
 ServiceProvider RestconfServiceProviderInitWithRepo(YDKStatePtr state, Repository repo, const char * address, const char * username, const char * password, int port, EncodingFormat encoding, const char* config_url_root, const char* state_url_root);

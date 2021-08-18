@@ -1096,3 +1096,36 @@ void CapabilitiesArrayFree(char** caps, int len)
     }
     free((void*)caps);
 }
+
+Session RestconfSessionInit(YDKStatePtr state, Repository repo,
+                            const char * address, const char * username, const char * password, int port,
+                            EncodingFormat encoding,
+                            const char * config_url_root, const char * state_url_root)
+{
+    try
+    {
+        ydk::path::RestconfSession * real_session;
+        ydk::path::Repository* real_repo = static_cast<ydk::path::Repository*>(repo);
+        real_session = new ydk::path::RestconfSession(
+            *real_repo,
+            address, username, password, port,
+            get_real_encoding(encoding),
+            config_url_root, state_url_root);
+        return static_cast<void*>(real_session);
+    }
+    catch(...)
+    {
+        YDKState* real_state = static_cast<YDKState*>(state);
+        handle_error(real_state);
+        return NULL;
+    }
+}
+
+void RestconfSessionFree(Session session)
+{
+    ydk::path::RestconfSession * real_session = static_cast<ydk::path::RestconfSession*>(session);
+    if (real_session)
+    {
+        delete real_session;
+    }
+}
