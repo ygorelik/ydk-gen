@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------
 YANG Development Kit
-Package path implements support for Netconf Session in Go.
+Package path implements support for Restconf Session in Go.
 
 Copyright 2021 Yan Gorelik, YDK Solutions. All rights reserved.
 
@@ -48,7 +48,7 @@ type RestconfSession struct {
 	State   errors.State
 }
 
-// Connect to Netconf Session
+// Connect to Restconf Session
 func (rs *RestconfSession) Connect() {
 	var cAddress *C.char = C.CString(rs.Address)
 	defer C.free(unsafe.Pointer(cAddress))
@@ -88,6 +88,7 @@ func (rs *RestconfSession) Connect() {
 	if len(rs.Repo.Path) > 0 {
 		var path *C.char = C.CString(rs.Repo.Path)
 		repo = C.RepositoryInitWithPath(*cstate, path)
+		defer C.RepositoryFree(repo)
 		PanicOnCStateError(cstate)
 	}
 
@@ -139,7 +140,25 @@ func (rs *RestconfSession) ExecuteRpc(rpc types.Rpc) types.DataNode {
 	return dn
 }
 
-// GetState returns error state from NetconfSession
-func (ns *RestconfSession) GetState() *errors.State {
-	return &ns.State
+// GetState returns error state from RestconfSession
+func (rs *RestconfSession) GetState() *errors.State {
+	return &rs.State
+}
+
+// GetCapabilities returns list of capabilities supported by RestconfSession
+func (rs *RestconfSession) GetCapabilities() []string {
+
+	csession := rs.Private.(C.Session)
+	cstate := GetCState(&rs.State)
+	length := C.int(0)
+	var theCArray **C.char = C.SessionGetCapabilities(*cstate, csession, &length)
+	capLen := int(length)
+
+	slice := (*[1 << 30]*C.char)(unsafe.Pointer(theCArray))[:capLen:capLen]
+	capabilities := make([]string, capLen)
+	for i := range capabilities {
+		capabilities[i] = C.GoString(slice[i])
+	}
+	C.CapabilitiesArrayFree(theCArray, length)
+	return capabilities
 }

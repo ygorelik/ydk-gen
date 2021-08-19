@@ -127,7 +127,7 @@ Session NetconfSessionInit(YDKStatePtr state, Repository repo,
                            const char * protocol, boolean on_demand, boolean common_cache, int timeout,
                            const char * server_certificate_path, const char * private_key_path);
 void NetconfSessionFree(Session);
-char** NetconfSessionGetCapabilities(YDKStatePtr state, Session session, int* len);
+char** SessionGetCapabilities(YDKStatePtr state, Session session, int* len);
 
 Session RestconfSessionInit(YDKStatePtr state, Repository repo,
                             const char * address, const char * username, const char * password, int port,
@@ -154,7 +154,7 @@ void CodecFree(Codec);
 const char* CodecEncode(YDKStatePtr state, Codec, DataNode, EncodingFormat, boolean);
 DataNode CodecDecode(YDKStatePtr state, Codec, RootSchemaNode, const char*, EncodingFormat);
 
-DataNode RootSchemaNodeCreate(YDKStatePtr, RootSchemaNode, const char*);
+DataNode RootSchemaNodeCreate(YDKStatePtr, RootSchemaNode, const char*, const char*);
 Rpc RootSchemaNodeRpc(YDKStatePtr state, RootSchemaNode, const char*);
 RootSchemaNode RootSchemaWrapperUnwrap(RootSchemaWrapper);
 

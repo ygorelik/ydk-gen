@@ -699,12 +699,12 @@ DataNode CodecDecode(
     }
 }
 
-DataNode RootSchemaNodeCreate(YDKStatePtr state, RootSchemaNode root_schema, const char* path)
+DataNode RootSchemaNodeCreate(YDKStatePtr state, RootSchemaNode root_schema, const char* path, const char* value)
 {
     try
     {
         ydk::path::RootSchemaNode * real_root_schema = (ydk::path::RootSchemaNode*)root_schema;
-        ydk::path::DataNode * datanode = &real_root_schema->create_datanode(path);
+        ydk::path::DataNode * datanode = &real_root_schema->create_datanode(path, value);
 
         return static_cast<void*>(wrap(datanode));
     }
@@ -1061,10 +1061,10 @@ DataNode SessionExecuteRpc(YDKStatePtr state, Session session, Rpc rpc)
     }
 }
 
-char** NetconfSessionGetCapabilities(YDKStatePtr state, Session session, int* len)
+char** SessionGetCapabilities(YDKStatePtr state, Session session, int* len)
 {
     try {
-        ydk::path::NetconfSession * real_session = static_cast<ydk::path::NetconfSession *>(session);
+        ydk::path::Session * real_session = static_cast<ydk::path::Session *>(session);
         if (real_session)
         {
             std::vector<std::string> capabilites = real_session->get_capabilities();

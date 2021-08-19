@@ -1,21 +1,21 @@
 /* ----------------------------------------------------------------------
- YANG Development Kit
- Package path implements support for Netconf Session in Go.
+YANG Development Kit
+Package path implements support for Netconf Session in Go.
 
- Copyright 2021 Yan Gorelik, YDK Solutions. All rights reserved.
+Copyright 2021 Yan Gorelik, YDK Solutions. All rights reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
- http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- --------------------------------------------------------------------- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--------------------------------------------------------------------- */
 
 package path
 
@@ -24,10 +24,11 @@ package path
 import "C"
 
 import (
+	"unsafe"
+
 	"github.com/CiscoDevNet/ydk-go/ydk"
 	"github.com/CiscoDevNet/ydk-go/ydk/errors"
 	"github.com/CiscoDevNet/ydk-go/ydk/types"
-	"unsafe"
 )
 
 // NetconfSession declaration and methods
@@ -45,8 +46,8 @@ type NetconfSession struct {
 	ServerCert  string
 	PrivateKey  string
 
-	Private     interface{}
-	State       errors.State
+	Private interface{}
+	State   errors.State
 }
 
 // Connect to Netconf Session
@@ -65,9 +66,13 @@ func (ns *NetconfSession) Connect() {
 	defer C.free(unsafe.Pointer(cprotocol))
 
 	var cOnDemand C.boolean = 1
-	if ns.OnDemand { cOnDemand = 0 }
+	if ns.OnDemand {
+		cOnDemand = 0
+	}
 	var cCommonCache C.boolean = 0
-	if ns.CommonCache { cCommonCache = 1 }
+	if ns.CommonCache {
+		cCommonCache = 1
+	}
 
 	var cserver *C.char = C.CString(ns.ServerCert)
 	defer C.free(unsafe.Pointer(cserver))
@@ -86,12 +91,13 @@ func (ns *NetconfSession) Connect() {
 	if len(ns.Repo.Path) > 0 {
 		var path *C.char = C.CString(ns.Repo.Path)
 		repo = C.RepositoryInitWithPath(*cstate, path)
+		defer C.RepositoryFree(repo)
 		PanicOnCStateError(cstate)
 	}
 
-	ns.Private = C.NetconfSessionInit( *cstate, repo, caddress, cusername, cpassword, cport,
-	                                   cprotocol, cOnDemand, cCommonCache, ctimeout,
-	                                   cserver, cclient);
+	ns.Private = C.NetconfSessionInit(*cstate, repo, caddress, cusername, cpassword, cport,
+		cprotocol, cOnDemand, cCommonCache, ctimeout,
+		cserver, cclient)
 	PanicOnCStateError(cstate)
 }
 
@@ -111,7 +117,7 @@ func (ns *NetconfSession) GetRootSchemaNode() types.RootSchemaNode {
 
 	realSession := ns.Private.(C.Session)
 
-	var rootSchema C.RootSchemaWrapper = C.SessionGetRootSchemaNode( *cstate, realSession)
+	var rootSchema C.RootSchemaWrapper = C.SessionGetRootSchemaNode(*cstate, realSession)
 	PanicOnCStateError(cstate)
 
 	if rootSchema == nil {
@@ -130,7 +136,7 @@ func (ns *NetconfSession) ExecuteRpc(rpc types.Rpc) types.DataNode {
 	csession := ns.Private.(C.Session)
 	crpc := rpc.Private.(C.Rpc)
 
-	cdn := C.SessionExecuteRpc( *cstate, csession, crpc)
+	cdn := C.SessionExecuteRpc(*cstate, csession, crpc)
 	PanicOnCStateError(cstate)
 
 	dn := types.DataNode{Private: cdn}
@@ -148,7 +154,7 @@ func (ns *NetconfSession) GetCapabilities() []string {
 	csession := ns.Private.(C.Session)
 	cstate := GetCState(&ns.State)
 	length := C.int(0)
-	var theCArray **C.char = C.NetconfSessionGetCapabilities(*cstate, csession, &length);
+	var theCArray **C.char = C.SessionGetCapabilities(*cstate, csession, &length)
 	capLen := int(length)
 
 	slice := (*[1 << 30]*C.char)(unsafe.Pointer(theCArray))[:capLen:capLen]
@@ -159,4 +165,3 @@ func (ns *NetconfSession) GetCapabilities() []string {
 	C.CapabilitiesArrayFree(theCArray, length)
 	return capabilities
 }
-
