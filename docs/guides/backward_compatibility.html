@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Backward compatibility notes &mdash; YANG Development Kit 0.8.5.2 documentation</title>
+  <title>Backward compatibility notes &mdash; YANG Development Kit 0.8.5.3 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.5.2 documentation" href="../index.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.5.3 documentation" href="../index.html"/>
         <link rel="up" title="Developer Guide" href="../developer_guide.html"/>
         <link rel="next" title="API Guide" href="../api_guide.html"/>
         <link rel="prev" title="Using Restconf with HTTPS" href="restconf_https.html"/> 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.8.5.2
+                0.8.5.3
               </div>
             
           
@@ -111,6 +111,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_guide.html">API Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Questions and Answers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ydk.models.ydktest.html">ydktest bundle API</a></li>
 </ul>
 
             
@@ -187,12 +188,12 @@
 <li>The <code class="docutils literal"><span class="pre">is_config()</span></code> method is no longer available for the YDK model APIs. This may be added back in a future release.</li>
 <li>For <code class="docutils literal"><span class="pre">CRUDService</span></code> and other services, using a child container or list, which is not the top-level node in a yang model is no longer supported. For example:</li>
 </ol>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.cisco_ios_xe</span> <span class="kn">import</span> <span class="n">Cisco_IOS_XE_bgp_oper</span> <span class="k">as</span> <span class="n">bgp_oper</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.cisco_ios_xe</span> <span class="kn">import</span> <span class="n">Cisco_IOS_XE_bgp_oper</span> <span class="k">as</span> <span class="n">bgp_oper</span>
 
 <span class="c1"># connect to provider etc ...</span>
 
@@ -201,12 +202,12 @@
 </pre></div>
 </td></tr></table></div>
 <p>now has to be changed to:</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.cisco_ios_xe</span> <span class="kn">import</span> <span class="n">Cisco_IOS_XE_bgp_oper</span> <span class="k">as</span> <span class="n">bgp_oper</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.cisco_ios_xe</span> <span class="kn">import</span> <span class="n">Cisco_IOS_XE_bgp_oper</span> <span class="k">as</span> <span class="n">bgp_oper</span>
 
 <span class="c1"># connect to provider etc ...</span>
 
@@ -257,7 +258,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.8.5.2',
+            VERSION:'0.8.5.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false

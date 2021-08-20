@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>RootSchemaNode &mdash; YANG Development Kit 0.8.5.2 documentation</title>
+  <title>RootSchemaNode &mdash; YANG Development Kit 0.8.5.3 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.5.2 documentation" href="../../index.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.5.3 documentation" href="../../index.html"/>
         <link rel="up" title="YDK Path API" href="path.html"/>
         <link rel="next" title="Rpc" href="rpc.html"/>
         <link rel="prev" title="Repository" href="repository.html"/> 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.8.5.2
+                0.8.5.3
               </div>
             
           
@@ -111,6 +111,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../faq.html">Questions and Answers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ydk.models.ydktest.html">ydktest bundle API</a></li>
 </ul>
 
             
@@ -269,10 +270,10 @@ This methods creates a <a class="reference internal" href="data_node.html#ydk.pa
 </tbody>
 </table>
 <p>Excample usage for creating a <code class="docutils literal"><span class="pre">ydk:create</span></code> rpc:</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.path</span> <span class="kn">import</span> <span class="n">NetconfSession</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.path</span> <span class="kn">import</span> <span class="n">NetconfSession</span>
 <span class="n">session</span> <span class="o">=</span> <span class="n">NetconfSession</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="p">)</span>
 <span class="n">root_schema</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_root_schema</span><span class="p">()</span>
 <span class="n">root_schema</span><span class="o">.</span><span class="n">create_rpc</span><span class="p">(</span><span class="s1">&#39;ydk:create&#39;</span><span class="p">)</span>
@@ -324,7 +325,7 @@ This methods creates a <a class="reference internal" href="data_node.html#ydk.pa
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.8.5.2',
+            VERSION:'0.8.5.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false
