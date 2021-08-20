@@ -25,6 +25,8 @@
 #include <iostream>
 
 #include <ydk/ydk.h>
+
+#include "config.hpp"
 #include "catch.hpp"
 
 using namespace std;
@@ -147,7 +149,7 @@ TEST_CASE( "c_api_rpc" )
     YDKStateFree(state);
 }
 
-TEST_CASE( "c_api_session"  )
+TEST_CASE( "c_api_netconf_session" )
 {
     // Connect to Netconf server
     YDKStatePtr state = YDKStateCreate();
@@ -159,7 +161,7 @@ TEST_CASE( "c_api_session"  )
 
     // Get capabilities
     int len = 0;
-    auto capabilities = NetconfSessionGetCapabilities(state, session, &len);
+    auto capabilities = SessionGetCapabilities(state, session, &len);
     CHECK(len > 0);
     cout << "Total capabilities - "<< len << endl;
     cout << capabilities[0] << endl;
@@ -167,6 +169,30 @@ TEST_CASE( "c_api_session"  )
 
     // Disconnect from Netconf server
     NetconfSessionFree(session);
+    RepositoryFree(repo);
+    YDKStateFree(state);
+}
+
+TEST_CASE( "c_api_restconf_session" )
+{
+    // Connect to Netconf server
+    YDKStatePtr state = YDKStateCreate();
+    Repository repo = RepositoryInitWithPath(state, TEST_HOME);
+    REQUIRE(repo!=NULL);
+    auto session = RestconfSessionInit(state, repo, "localhost", "admin", "admin", 12306,
+                                       EncodingFormat::JSON, "/data", "/data");
+    REQUIRE(session!=NULL);
+
+    // Get capabilities
+    int len = 0;
+    auto capabilities = SessionGetCapabilities(state, session, &len);
+    CHECK(len > 0);
+    cout << "Total capabilities - "<< len << endl;
+    cout << capabilities[0] << endl;
+    CapabilitiesArrayFree(capabilities, len);
+
+    // Disconnect from Netconf server
+    RestconfSessionFree(session);
     RepositoryFree(repo);
     YDKStateFree(state);
 }

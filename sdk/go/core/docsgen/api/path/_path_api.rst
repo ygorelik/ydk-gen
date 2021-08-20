@@ -1,4 +1,5 @@
 ..
+  # *************************************************************
   #  YDK - YANG Development Kit
   #  Copyright 2016-2019 Cisco Systems. All rights reserved
   # *************************************************************
@@ -41,4 +42,4 @@ YDK Go provides a new interface in the form of Path API, which can be used to wr
 
     path.rst
     netconf_session.rst
-
+    restconf_session.rst

@@ -1,29 +1,24 @@
-//
-// @file path_api.hpp
-// @brief The main ydk public header.
-//
-// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
-//
-////////////////////////////////////////////////////////////////
-// Licensed to the Apache Software Foundation (ASF) under one
-// or more contributor license agreements.  See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  The ASF licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
-//
-//   http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
-// under the License.
-//
-//////////////////////////////////////////////////////////////////
+/*  ----------------------------------------------------------------
+ YDK - YANG Development Kit
+ Copyright 2017-2019 Cisco Systems. All rights reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
+ ------------------------------------------------------------------*/
 
 #ifndef YDK_CORE_HPP
 #define YDK_CORE_HPP
@@ -318,7 +313,6 @@ struct YCoreError : public ydk::YError
     YCoreError();
 
     YCoreError(const std::string& msg);
-
 };
 
 
@@ -1034,7 +1028,9 @@ public:
     /// @param[in] pointer to the Rpc node
     /// @return The pointer to the DataNode representing the output.
     ///
-    virtual std::shared_ptr<DataNode> invoke(DataNode& rpc) const = 0 ;
+    virtual std::shared_ptr<DataNode> invoke(DataNode& rpc) const = 0;
+
+    virtual std::vector<std::string> get_capabilities() const = 0;
 };
 
 class NetconfSession : public Session {
@@ -1116,7 +1112,7 @@ public:
 
 
 class RestconfSession : public Session {
-public:
+  public:
     RestconfSession();
     RestconfSession(Repository & repo,
                     const std::string & address,
@@ -1136,23 +1132,24 @@ public:
 
     ~RestconfSession();
 
+    std::vector<std::string> get_capabilities() const;
     RootSchemaNode& get_root_schema() const;
     std::shared_ptr<DataNode> invoke(Rpc& rpc) const;
     std::shared_ptr<DataNode> invoke(DataNode& rpc) const;
 
-private:
+  private:
     void initialize(Repository & repo);
     std::shared_ptr<DataNode> handle_crud_edit(Rpc& rpc, const std::string & yfilter) const;
     std::shared_ptr<DataNode> handle_crud_read(Rpc& rpc) const;
-private:
-        std::shared_ptr<RestconfClient> client;
-        std::shared_ptr<RootSchemaNode> root_schema;
-        std::vector<std::string> server_capabilities;
 
-        EncodingFormat encoding;
-        std::string edit_method;
-        std::string config_url_root;
-        std::string state_url_root;
+    std::shared_ptr<RestconfClient> client;
+    std::shared_ptr<RootSchemaNode> root_schema;
+    std::vector<std::string> server_capabilities;
+
+    EncodingFormat encoding;
+    std::string edit_method;
+    std::string config_url_root;
+    std::string state_url_root;
 };
 
 

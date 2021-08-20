@@ -35,10 +35,10 @@ type PathApiTestSuite struct {
 
 func (suite *PathApiTestSuite) SetupSuite() {
 	suite.Session = path.NetconfSession{
-	Address:  "127.0.0.1",
-	Username: "admin",
-	Password: "admin",
-	Port:     12022}
+		Address:  "127.0.0.1",
+		Username: "admin",
+		Password: "admin",
+		Port:     12022}
 	suite.Session.Connect()
 	suite.RootSchema = suite.Session.GetRootSchemaNode()
 }
@@ -125,4 +125,61 @@ func TestPathApiTestSuite(t *testing.T) {
 		ydk.EnableLogging(ydk.Debug)
 	}
 	suite.Run(t, new(PathApiTestSuite))
+}
+
+func TestRestconfSessionPathApi(t *testing.T) {
+	if testing.Verbose() {
+		ydk.EnableLogging(ydk.Debug)
+	}
+	_, callerFile, _, _ := runtime.Caller(0)
+	executablePath := filepath.Dir(callerFile)
+	repopath := executablePath + "/../../../cpp/core/tests/models"
+	repo := types.Repository{Path: repopath}
+	session := path.RestconfSession{Repo: repo, Address: "127.0.0.1", Username: "admin", Password: "admin", Port: 12306, Encoding: encoding.JSON}
+	session.Connect()
+	schema := session.GetRootSchemaNode()
+	if schema.Private == nil {
+		t.Error("Could not get root schema")
+	}
+	// check capabilities
+	capabilities := session.GetCapabilities()
+	fmt.Printf("===== Capabilities (%d):\n", len(capabilities))
+	for i := 0; i < 2; i++ {
+		fmt.Println(capabilities[i])
+	}
+
+	// first delete
+	runner := path.CreateRootDataNode(schema, "ydktest-sanity:runner")
+
+	deleteRpc := path.CreateRpc(schema, "ydk:delete")
+	path.CreateDataNode(deleteRpc.Input, "entity", path.CodecEncode(runner, encoding.JSON, true))
+	session.ExecuteRpc(deleteRpc)
+
+	// config
+	path.CreateDataNode(runner, "ytypes/built-in-t/number8", "3")
+	json := path.CodecEncode(runner, encoding.JSON, true)
+
+	createRpc := path.CreateRpc(schema, "ydk:create")
+	path.CreateDataNode(createRpc.Input, "entity", path.CodecEncode(runner, encoding.JSON, true))
+	session.ExecuteRpc(createRpc)
+
+	// read and check result
+	runnerRead := path.CreateRootDataNode(schema, "ydktest-sanity:runner")
+
+	readRpc := path.CreateRpc(schema, "ydk:read")
+	path.CreateDataNode(readRpc.Input, "filter", path.CodecEncode(runnerRead, encoding.JSON, true))
+	path.CreateDataNode(readRpc.Input, "only-config", "")
+	readRunner := session.ExecuteRpc(readRpc)
+	if readRunner.Private == nil {
+		t.Error("Unexpected nil for read RPC result")
+	}
+	json = path.CodecEncode(readRunner, encoding.JSON, false)
+	if `{"ydktest-sanity:runner":{"ytypes":{"built-in-t":{"number8":3}}}}` != json {
+		t.Error("Incorrect RPC read result")
+	}
+
+	// delete config
+	session.ExecuteRpc(deleteRpc)
+
+	session.Disconnect()
 }

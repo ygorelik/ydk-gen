@@ -86,6 +86,7 @@ func (ns *NetconfSession) Connect() {
 	if len(ns.Repo.Path) > 0 {
 		var path *C.char = C.CString(ns.Repo.Path)
 		repo = C.RepositoryInitWithPath(*cstate, path)
+		defer C.RepositoryFree(repo)
 		PanicOnCStateError(cstate)
 	}
 
@@ -111,7 +112,7 @@ func (ns *NetconfSession) GetRootSchemaNode() types.RootSchemaNode {
 
 	realSession := ns.Private.(C.Session)
 
-	var rootSchema C.RootSchemaWrapper = C.SessionGetRootSchemaNode( *cstate, realSession)
+	var rootSchema C.RootSchemaWrapper = C.SessionGetRootSchemaNode(*cstate, realSession)
 	PanicOnCStateError(cstate)
 
 	if rootSchema == nil {
@@ -130,7 +131,7 @@ func (ns *NetconfSession) ExecuteRpc(rpc types.Rpc) types.DataNode {
 	csession := ns.Private.(C.Session)
 	crpc := rpc.Private.(C.Rpc)
 
-	cdn := C.SessionExecuteRpc( *cstate, csession, crpc)
+	cdn := C.SessionExecuteRpc(*cstate, csession, crpc)
 	PanicOnCStateError(cstate)
 
 	dn := types.DataNode{Private: cdn}
@@ -148,7 +149,7 @@ func (ns *NetconfSession) GetCapabilities() []string {
 	csession := ns.Private.(C.Session)
 	cstate := GetCState(&ns.State)
 	length := C.int(0)
-	var theCArray **C.char = C.NetconfSessionGetCapabilities(*cstate, csession, &length);
+	var theCArray **C.char = C.SessionGetCapabilities(*cstate, csession, &length)
 	capLen := int(length)
 
 	slice := (*[1 << 30]*C.char)(unsafe.Pointer(theCArray))[:capLen:capLen]
@@ -159,4 +160,3 @@ func (ns *NetconfSession) GetCapabilities() []string {
 	C.CapabilitiesArrayFree(theCArray, length)
 	return capabilities
 }
-
