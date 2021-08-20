@@ -73,7 +73,7 @@ Netconf Session
 
 	.. attribute:: Timeout
 
-		A Go ``int`` that repesents allowed Netconf server response delay in seconds. Valid range is [1, 255]. If not set
+		A Go ``int`` that repesents allowed Netconf server response delay in microseconds. If not set
 		during initialization the value -1 is set by default, meaning the response delay is not limited.
 
 	.. attribute:: ServerCert
