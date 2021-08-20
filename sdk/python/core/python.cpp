@@ -295,7 +295,8 @@ PYBIND11_MODULE(ydk_, ydk)
     class_<ydk::path::Session>(path, "Session", module_local())
         .def("get_root_schema", &ydk::path::Session::get_root_schema, return_value_policy::reference)
         .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::Session::*)(ydk::path::Rpc& rpc) const) &ydk::path::Session::invoke, return_value_policy::reference)
-        .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::Session::*)(ydk::path::DataNode& rpc) const) &ydk::path::Session::invoke, return_value_policy::reference);
+        .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::Session::*)(ydk::path::DataNode& rpc) const) &ydk::path::Session::invoke, return_value_policy::reference)
+        .def("get_capabilities", (std::vector<std::string> (ydk::path::Session::*)() const) &ydk::path::Session::get_capabilities, return_value_policy::reference);
 
     class_<ydk::path::NetconfSession, ydk::path::Session>(path, "NetconfSession")
         .def(init([](ydk::path::Repository & repo,
@@ -386,7 +387,7 @@ PYBIND11_MODULE(ydk_, ydk)
         .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::NetconfSession::*)(ydk::path::Rpc& rpc) const) &ydk::path::NetconfSession::invoke, return_value_policy::reference)
         .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::NetconfSession::*)(ydk::path::DataNode& rpc) const) &ydk::path::NetconfSession::invoke, return_value_policy::reference)
         .def("execute_netconf_operation", (std::string (ydk::path::NetconfSession::*)(ydk::path::Rpc& rpc) const) &ydk::path::NetconfSession::execute_netconf_operation)
-        .def("get_capabilities", &ydk::path::NetconfSession::get_capabilities, return_value_policy::reference);
+        .def("get_capabilities", (std::vector<std::string> (ydk::path::NetconfSession::*)() const) &ydk::path::NetconfSession::get_capabilities, return_value_policy::reference);
 
     class_<ydk::path::RestconfSession, ydk::path::Session>(path, "RestconfSession")
         .def(init([](ydk::path::Repository& repo,
@@ -411,7 +412,8 @@ PYBIND11_MODULE(ydk_, ydk)
              arg("state_url_root"))
         .def("get_root_schema", &ydk::path::RestconfSession::get_root_schema, return_value_policy::reference)
         .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::RestconfSession::*)(ydk::path::Rpc& rpc) const) &ydk::path::RestconfSession::invoke, return_value_policy::reference)
-        .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::RestconfSession::*)(ydk::path::DataNode& rpc) const) &ydk::path::RestconfSession::invoke, return_value_policy::reference);
+        .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::RestconfSession::*)(ydk::path::DataNode& rpc) const) &ydk::path::RestconfSession::invoke, return_value_policy::reference)
+        .def("get_capabilities", (std::vector<std::string> (ydk::path::RestconfSession::*)() const) &ydk::path::RestconfSession::get_capabilities, return_value_policy::reference);
 
     class_<ydk::path::Statement>(path, "Statement")
         .def(init<const string &, const string &>(), arg("keyword"), arg("arg"))

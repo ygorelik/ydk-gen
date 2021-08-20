@@ -19,12 +19,15 @@ package test
 
 import (
 	"fmt"
+	"path/filepath"
+	"runtime"
+	"testing"
+
 	"github.com/CiscoDevNet/ydk-go/ydk"
 	"github.com/CiscoDevNet/ydk-go/ydk/path"
 	"github.com/CiscoDevNet/ydk-go/ydk/types"
 	encoding "github.com/CiscoDevNet/ydk-go/ydk/types/encoding_format"
 	"github.com/stretchr/testify/suite"
-	"testing"
 )
 
 type PathApiTestSuite struct {

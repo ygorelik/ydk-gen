@@ -119,8 +119,8 @@ NetconfSession
 
     .. cpp:function:: std::vector<std::string> get_capabilities() const
 
-        Returns a vector of the client's capabilities
+        Gets string representation of the Netconf server's capabilities.
 
-        :return: A vector of ``std::string`` representing the client/server capabilities
+        :return: A vector of ``std::string`` representing the Netconf server capabilities.
 
     .. cpp:function:: ~NetconfSession()

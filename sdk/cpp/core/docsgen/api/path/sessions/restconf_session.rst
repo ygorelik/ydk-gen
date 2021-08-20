@@ -57,4 +57,12 @@ RestconfSession
         :param rpc: Reference to the :cpp:class:`Rpc<Rpc>` node.
         :return: Pointer to the :cpp:class:`DataNode<DataNode>` representing the output.
 
+    .. cpp:function:: std::vector<std::string> get_capabilities() const
+
+        Gets string representation of the Restconf server's capabilities.
+
+        :return: A vector of ``std::string`` representing the Restconf server capabilities.
+
     .. cpp:function:: ~RestconfSession()
+
+	Class destructor.

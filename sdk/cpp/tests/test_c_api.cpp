@@ -44,7 +44,7 @@ TEST_CASE( "c_api_codec_encode"  )
 
     RootSchemaNode root_schema = ServiceProviderGetRootSchema(state, provider);
 
-    DataNode runner = RootSchemaNodeCreate(state, root_schema, "ydktest-sanity:runner");
+    DataNode runner = RootSchemaNodeCreate(state, root_schema, "ydktest-sanity:runner", "");
 
     DataNodeCreate(state, runner, "ytypes/built-in-t/number8", "2");
 
@@ -123,7 +123,7 @@ TEST_CASE( "c_api_rpc" )
 
     RootSchemaNode root_schema = ServiceProviderGetRootSchema(state, provider);
 
-    DataNode runner = RootSchemaNodeCreate(state, root_schema, "ydktest-sanity:runner");
+    DataNode runner = RootSchemaNodeCreate(state, root_schema, "ydktest-sanity:runner", "");
 
     DataNodeCreate(state, runner, "ytypes/built-in-t/number8", "2");
     const char* create_xml = CodecEncode(state, c, runner, XML, 0);
@@ -135,7 +135,7 @@ TEST_CASE( "c_api_rpc" )
 
     Rpc read_rpc = RootSchemaNodeRpc(state, root_schema, "ydk:read");
     input = RpcInput(state, read_rpc);
-    DataNode runner_filter = RootSchemaNodeCreate(state, root_schema, "ydktest-sanity:runner");
+    DataNode runner_filter = RootSchemaNodeCreate(state, root_schema, "ydktest-sanity:runner", "");
     const char* read_xml = CodecEncode(state, c, runner_filter, XML, 0);
 
     DataNodeCreate(state, input, "filter", read_xml);

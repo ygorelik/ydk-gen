@@ -19,4 +19,12 @@ Session
         :param rpc: Reference to the :cpp:class:`Rpc<Rpc>` node.
         :return: Pointer to the :cpp:class:`DataNode<DataNode>` representing the output.
 
+    .. cpp:function:: virtual std::vector<std::string> get_capabilities() const
+
+        Gets string representation of server's capabilities.
+
+        :return: A vector of ``std::string`` representing the server capabilities.
+
     .. cpp:function:: virtual ~Session()
+
+	Class destructor.
