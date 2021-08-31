@@ -100,7 +100,7 @@ class ClassConstructorPrinter(object):
                                 ('true' if has_list_ancestor(clazz) else 'false'),
                                 ('is_presence_container = true;' if clazz.stmt.search_one('presence') is not None else '')))
             for prop in leafs:
-                if prop.stmt.keyword == 'leaf' or prop.stmt.keyword == 'anydata' or prop.stmt.keyword == 'anyxml':
+                if prop.stmt.keyword in ['leaf', 'anydata', 'anyxml']:
                     if prop.stmt.i_module.arg != clazz.stmt.i_module.arg:
                         leaf_name = prop.stmt.i_module.arg + ':' + prop.stmt.arg
                     else:

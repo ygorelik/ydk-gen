@@ -685,7 +685,7 @@ class Bits(DataType):
         # the name of the enumeration is derived either from the typedef
         # or the leaf under which it is defined
         leaf_or_typedef = stmt
-        while leaf_or_typedef.parent is not None and leaf_or_typedef.keyword not in ('leaf', 'leaf-list', 'typedef'):
+        while leaf_or_typedef.parent and leaf_or_typedef.keyword not in ['leaf', 'leaf-list', 'typedef']:
             leaf_or_typedef = leaf_or_typedef.parent
 
         name = '%s' % camel_case(leaf_or_typedef.arg)
@@ -827,7 +827,7 @@ class Enum(DataType):
         if hasattr(self, 'goName'):
             return self.goName
 
-        while stmt.parent is not None and stmt.keyword not in ['leaf', 'leaf-list', 'typedef']:
+        while stmt.parent and stmt.keyword not in ['leaf', 'leaf-list', 'typedef']:
             stmt = stmt.parent
 
         name = stmt.arg
@@ -853,7 +853,7 @@ class Enum(DataType):
         # the name of the numeration is derived either from the typedef
         # or the leaf under which it is defined
         leaf_or_typedef = stmt
-        while leaf_or_typedef.parent is not None and leaf_or_typedef.keyword not in ('leaf', 'leaf-list', 'typedef'):
+        while leaf_or_typedef.parent and leaf_or_typedef.keyword not in ['leaf', 'leaf-list', 'typedef']:
             leaf_or_typedef = leaf_or_typedef.parent
 
         name = leaf_or_typedef.arg
@@ -1004,7 +1004,7 @@ def camel_case(input_text):
     result = ''.join([_capitalize(word) for word in input_text.split('-')])
     result = ''.join([_capitalize(word) for word in result.split('_')])
     if input_text.startswith('_'):
-        result = '_'+result
+        result = '_' + result
     return result
 
 

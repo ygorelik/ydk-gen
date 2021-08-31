@@ -30,7 +30,7 @@ from setuptools import setup, Extension, find_packages
 
 NAME = 'ydk-service-gnmi'
 
-VERSION = '0.4.0'
+VERSION = '0.4.0.5'
 
 INSTALL_REQUIREMENTS = ['ydk>=0.8.5', 'pybind11>=2.2.2']
 
