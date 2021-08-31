@@ -1,6 +1,4 @@
 /*  ----------------------------------------------------------------
- @file ydk.cpp
-
  YDK - YANG Development Kit
  Copyright 2017-2019 Cisco Systems. All rights reserved.
 
