@@ -79,7 +79,10 @@ func main() {
 	defer C.NetconfServiceProviderFree(provider)
 	root_schema := C.ServiceProviderGetRootSchema(cstate, provider)
 
-	runner := C.RootSchemaNodeCreate(cstate, root_schema, runner_path)
+	var cvalue *C.char = C.CString("")
+	defer C.free(unsafe.Pointer(cvalue))
+
+	runner := C.RootSchemaNodeCreate(cstate, root_schema, runner_path, cvalue)
 
 	C.DataNodeCreate(cstate, runner, number_path, number_value)
 	var create_xml *C.char = C.CodecEncode(cstate, codec, runner, C.XML, 0)
@@ -92,7 +95,7 @@ func main() {
 
 	read_rpc := C.RootSchemaNodeRpc(cstate, root_schema, read_path)
 	input = C.RpcInput(cstate, read_rpc)
-	runner_filter := C.RootSchemaNodeCreate(cstate, root_schema, runner_path)
+	runner_filter := C.RootSchemaNodeCreate(cstate, root_schema, runner_path, cvalue)
 	var read_xml *C.char = C.CodecEncode(cstate, codec, runner_filter, C.XML, 0)
 	defer C.free(unsafe.Pointer(read_xml))
 
