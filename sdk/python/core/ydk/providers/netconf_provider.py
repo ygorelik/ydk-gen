@@ -18,11 +18,10 @@
 NetconfServiceProvider Python wrapper.
 """
 
-from ydk.ext.providers import NetconfServiceProvider as _NetconfServiceProvider
-import sys
+from ydk.providers import NetconfServiceProvider as _NetconfServiceProvider
 
 
-class NetconfServiceProvider(_NetconfServiceProvider):
+class NetconfServiceProvider(object):
     """ Python wrapper for NetconfServiceProvider
     """
 
@@ -38,32 +37,28 @@ class NetconfServiceProvider(_NetconfServiceProvider):
         if public_key_path is None:
             public_key_path = ""
 
-        if sys.version_info > (3,):
-            self._super = super()
-        else:
-            self._super = super(NetconfServiceProvider, self)
         if repo is None:
             if len(public_key_path) == 0:
-                self._super.__init__(address, username, password, port,
-                                     protocol, on_demand, common_cache, timeout)
+                self.nsp = _NetconfServiceProvider(address, username, password, port,
+                                                   protocol, on_demand, common_cache, timeout)
             else:
-                self._super.__init__(address, username,
-                                     private_key_path, public_key_path,
-                                     port, on_demand, common_cache, timeout)
+                self.nsp = _NetconfServiceProvider(address, username,
+                                                   private_key_path, public_key_path,
+                                                   port, on_demand, common_cache, timeout)
         else:
             if len(public_key_path) == 0:
-                self._super.__init__(repo, address, username, password,
-                                     port, protocol, on_demand, timeout)
+                self.nsp = _NetconfServiceProvider(repo, address, username, password,
+                                                   port, protocol, on_demand, timeout)
             else:
-                self._super.__init__(repo, address, username,
-                                     private_key_path, public_key_path,
-                                     port, on_demand, timeout)
+                self.nsp = _NetconfServiceProvider(repo, address, username,
+                                                   private_key_path, public_key_path,
+                                                   port, on_demand, timeout)
 
     def get_encoding(self):
-        return self._super.get_encoding()
+        return self.nsp.get_encoding()
 
     def get_session(self):
-        return self._super.get_session()
+        return self.nsp.get_session()
 
     def get_capabilities(self):
-        return self._super.get_capabilities()
+        return self.nsp.get_capabilities()

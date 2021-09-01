@@ -19,7 +19,7 @@ test_fixture_printer.py
 
 Printer for test fixture.
 """
-import sys
+
 from .printer import Printer
 
 
@@ -32,10 +32,7 @@ class FixturePrinter(Printer):
     def __init__(self, ctx, lang,
                  address='localhost', username='admin',
                  password='admin', port=1222):
-        if sys.version_info > (3,):
-            super().__init__(ctx, lang)
-        else:
-            super(FixturePrinter, self).__init__(ctx, lang)
+        super().__init__(ctx, lang)
         self.address = address
         self.username = username
         self.password = password

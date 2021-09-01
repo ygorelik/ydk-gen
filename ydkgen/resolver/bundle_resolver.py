@@ -25,7 +25,6 @@
 """
 import re
 import os
-import sys
 import json
 import logging
 import tempfile
@@ -152,10 +151,7 @@ class BundleDependency(BundleDefinition):
     """
 
     def __init__(self, data):
-        if sys.version_info > (3,):
-            super().__init__(data)
-        else:
-            super(BundleDependency, self).__init__(data)
+        super().__init__(data)
         self.uri = parse_uri(data['uri'])
 
 
@@ -243,10 +239,7 @@ class Bundle(BundleDefinition):
 
         try:
             data['bundle']['name'] = data['bundle']['name'].replace('.', '_')
-            if sys.version_info > (3,):
-                super().__init__(data['bundle'])
-            else:
-                super(Bundle, self).__init__(data['bundle'])
+            super().__init__(data['bundle'])
             if 'modules' in data:
                 for m in data['modules']:
                     self.models.append(Model(m, self.iskeyword))

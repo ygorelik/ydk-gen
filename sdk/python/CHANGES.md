@@ -1,3 +1,9 @@
+### 2021-09-30 version 0.8.5.3
+
+#### Resolved GitHub issues
+  * Dropped Python2 support in the code
+
+
 ### 2021-05-30 version 0.8.5.2
 
 #### Resolved GitHub issues

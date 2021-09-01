@@ -410,12 +410,6 @@ if __name__ == '__main__':
         default=False,
         help="Install with sudo access")
 
-    # try:
-    #     arg = sys.argv[1]
-    # except IndexError:
-    #     parser.print_help()
-    #     sys.exit(1)
-
     options = parser.parse_args()
 
     if options.verbose:
