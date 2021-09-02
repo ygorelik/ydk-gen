@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016-2019 Cisco Systems
+# Copyright 2018-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,13 +37,14 @@ NAME = 'ydk-service-gnmi'
 
 VERSION = '0.4.0.5'
 
-INSTALL_REQUIREMENTS = ['ydk>=0.8.5', 'pybind11>=2.2.2']
+INSTALL_REQUIREMENTS = ['ydk>=0.8.5']
 
 LONG_DESCRIPTION = '''
                     This package provides extension for YDK core - gNMI services.
                    '''
 
 YDK_PACKAGES = ['ydk.gnmi', 'ydk.gnmi.services', 'ydk.gnmi.providers', 'ydk.gnmi.path']
+
 
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
@@ -70,7 +71,7 @@ class YdkBuildExtension(build_ext):
             import pybind11
         except ImportError:
             import pip
-            pip.main(['install', 'pybind11>=2.2.2'])
+            pip.main(['install', 'pybind11==2.2.2'])
             import pybind11
 
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
@@ -90,7 +91,7 @@ class YdkBuildExtension(build_ext):
             os.makedirs(self.build_temp)
 
         cmake3_installed = (0 == subprocess.call(['which', 'cmake3'], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
-        if(cmake3_installed):
+        if cmake3_installed:
             cmake_executable = 'cmake3'
         else:
             cmake_executable = 'cmake'

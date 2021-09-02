@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2018 Cisco Systems
+# Copyright 2018-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ gNMIServiceProvider Python wrapper.
 from ydk_gnmi_.providers import gNMIServiceProvider as _gNMIServiceProvider
 
 
-class gNMIServiceProvider(object):
+class gNMIServiceProvider(_gNMIServiceProvider):
     """
      Python wrapper for gNMIServiceProvider
     """
@@ -43,10 +43,10 @@ class gNMIServiceProvider(object):
         if private_key is None:
             private_key = ""
 
-        self.gsp = _gNMIServiceProvider(
-                             repo, address, port,
-                             username, password,
-                             server_certificate, private_key)
+        self.gsp = super()
+        self.gsp.__init__(repo, address, port,
+                          username, password,
+                          server_certificate, private_key)
 
     def get_encoding(self):
         return self.gsp.get_encoding()

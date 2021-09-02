@@ -25,10 +25,10 @@ RestconfSession Python wrapper.
 """
 
 from ydk.types import EncodingFormat as _EncodingFormat
-from ydk.path import RestconfSession as _RestconfSession
+from ydk_.path import RestconfSession as _RestconfSession
 
 
-class RestconfSession(object):
+class RestconfSession(_RestconfSession):
     """
      Python wrapper for RestconfSession.
     """
@@ -37,8 +37,9 @@ class RestconfSession(object):
                  port=80, encoding=_EncodingFormat.JSON,
                  config_url_root="/data", state_url_root="/data"):
 
-        self.rs = _RestconfSession(repo, address, username, password,
-                                   port, encoding, config_url_root, state_url_root)
+        self.rs = super()
+        self.rs.__init__(repo, address, username, password,
+                         port, encoding, config_url_root, state_url_root)
 
     def get_root_schema(self):
         return self.rs.get_root_schema()

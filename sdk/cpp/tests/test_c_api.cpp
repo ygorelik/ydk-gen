@@ -176,10 +176,10 @@ TEST_CASE( "c_api_restconf_session" )
     // Connect to Netconf server
     YDKStatePtr state = YDKStateCreate();
     Repository repo = RepositoryInitWithPath(state, TEST_HOME);
-    REQUIRE(repo!=NULL);
+    REQUIRE(repo);
     auto session = RestconfSessionInit(state, repo, "localhost", "admin", "admin", 12306,
                                        EncodingFormat::JSON, "/data", "/data");
-    REQUIRE(session!=NULL);
+    REQUIRE(session);
 
     // Get capabilities
     int len = 0;
