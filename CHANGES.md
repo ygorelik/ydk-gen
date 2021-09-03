@@ -8,6 +8,11 @@
 #### Resolved GitHub issues
   * Go function EntityEqual result depends on parameters order ([#1053](https://github.com/CiscoDevNet/ydk-gen/issues/1053))
 
+#### Bundle improvements
+  * Updated cisco-ios-xr bundle (profile cisco-ios-xr_6_7_3.json) to support Cisco IOS XR 6.7.3
+  * Updated openconfig bundle (profile openconfig_0_1_9.json) to support YANG models of revision "2020-05-06"
+  * Updated ietf bundle (profile ietf_0_1_6.json) to support YANG models of revision "2018-02-14"
+
 
 ### 2021-05-30 version 0.8.5.2
 
