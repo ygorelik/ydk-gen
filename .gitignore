@@ -28,6 +28,7 @@ sdk/cpp/gnmi/tests/main.cpp
 sdk/python/core/ydk/models/ydktest
 test/gnmi_client
 yang/nxos*
+yang-git
 profiles/test/ydk-nxos*
 confd*
 grpc
