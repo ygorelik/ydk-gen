@@ -124,6 +124,31 @@ Netconf
 
 		A Go ``string`` that represents protocol used to connect to the device
 
+	.. attribute:: OnDemand
+
+		A Go ``bool`` that defines how YANG modules are loaded from device to repository. Default value is `true`, meaning
+		the YANG modules are loaded to repository on-demand.
+
+	.. attribute:: CommonCache
+
+		A Go ``bool`` that defines how repositories are used for different devices. Default value is `false`, which means
+		different directories will be used for different connections. This attribute has meaning only when `Repo` is not defined.
+
+	.. attribute:: Timeout
+
+		A Go ``int`` that repesents allowed Netconf server response delay in microseconds. If not set
+		during initialization the value -1 is set by default, meaning the response delay is not limited.
+
+	.. attribute:: ServerCert
+
+		A Go ``string`` that represents full path to a file, which stores the Netconf server public key (server SSL certificate).
+		This attribute must be set for SSL connection.
+
+	.. attribute:: PrivateKey
+
+		A Go ``string`` that represents full path to a file, which stores application platform private key.
+		This attribute is optional and has meaning only when `ServerCert` is specified.
+
 .. method:: (provider *NetconfServiceProvider) Connect()
 	
 	Implementation of ServiceProvider interface. Connects to Netconf Server using Repo/Address/Username/Password/Port.

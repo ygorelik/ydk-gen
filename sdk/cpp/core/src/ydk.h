@@ -109,19 +109,20 @@ Repository RepositoryInit(void);
 RootSchemaWrapper RepositoryCreateRootSchemaWrapper(YDKStatePtr state, Repository, const char* keys[], const Capability values[], int size);
 void RepositoryFree(Repository);
 
-ServiceProvider NetconfServiceProviderInit(YDKStatePtr state, const char * address, const char * username, const char * password, int port, const char * protocol);
-ServiceProvider NetconfServiceProviderInitWithOnDemand(YDKStatePtr state, const char * address, const char * username, const char * password, int port, const char * protocol, boolean on_demand, boolean common_cache);
-ServiceProvider NetconfServiceProviderInitWithRepo(YDKStatePtr state, Repository repo, const char * address, const char * username, const char * password, int port, const char * protocol);
-ServiceProvider NetconfServiceProviderInitWithOnDemandRepo(YDKStatePtr state, Repository repo, const char * address, const char * username, const char * password, int port, const char * protocol, boolean on_demand);
 RootSchemaNode ServiceProviderGetRootSchema(YDKStatePtr, ServiceProvider);
 RootSchemaWrapper ServiceProviderGetRootSchemaNode(YDKStatePtr, ServiceProvider);
 EncodingFormat ServiceProviderGetEncoding(ServiceProvider);
 Session ServiceProviderGetSession(ServiceProvider);
 RootSchemaWrapper SessionGetRootSchemaNode(YDKStatePtr, Session);
-void NetconfServiceProviderFree(ServiceProvider);
-int NetconfServiceProviderGetNumCapabilities(ServiceProvider);
-const char* NetconfServiceProviderGetCapabilityByIndex(ServiceProvider, int);
 
+// Netconf Service Provider API
+ServiceProvider NetconfServiceProviderInit(YDKStatePtr state, Repository repo,
+                                           const char * address, const char * username, const char * password, int port,
+                                           const char * protocol, boolean on_demand, boolean common_cache, int timeout,
+                                           const char * server_certificate_path, const char * private_key_path);
+void NetconfServiceProviderFree(ServiceProvider);
+
+// Netconf Session API
 Session NetconfSessionInit(YDKStatePtr state, Repository repo,
                            const char * address, const char * username, const char * password, int port,
                            const char * protocol, boolean on_demand, boolean common_cache, int timeout,
@@ -129,6 +130,7 @@ Session NetconfSessionInit(YDKStatePtr state, Repository repo,
 void NetconfSessionFree(Session);
 char** SessionGetCapabilities(YDKStatePtr state, Session session, int* len);
 
+// Restconf Session API
 Session RestconfSessionInit(YDKStatePtr state, Repository repo,
                             const char * address, const char * username, const char * password, int port,
                             EncodingFormat encoding,

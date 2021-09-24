@@ -2,6 +2,7 @@
 
 #### New features and enhancements
   * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
+  * Added SSH support for NetconfServiceProvider in Go
   * Upgraded pyang version to 2.5.0
   * Dropped Python2 support in the code
 

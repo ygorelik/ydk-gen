@@ -145,13 +145,22 @@ func (ns *NetconfSession) GetState() *errors.State {
 
 // GetCapabilities returns list of capabilities supported by NetconfSession
 func (ns *NetconfSession) GetCapabilities() []string {
+    session := types.Session{Private: ns.Private}
+    return GetSessionCapabilities(session)
+}
 
-	csession := ns.Private.(C.Session)
-	cstate := GetCState(&ns.State)
+// GetSessionCapabilities returns list of capabilities supported by Session
+func GetSessionCapabilities(session types.Session) []string {
+
+	csession := session.Private.(C.Session)
+	var state errors.State
+	AddCState(&state)
+	cstate := GetCState(&state)
 	length := C.int(0)
 	var theCArray **C.char = C.SessionGetCapabilities(*cstate, csession, &length)
-	capLen := int(length)
+	PanicOnCStateError(cstate)
 
+	capLen := int(length)
 	slice := (*[1 << 30]*C.char)(unsafe.Pointer(theCArray))[:capLen:capLen]
 	capabilities := make([]string, capLen)
 	for i := range capabilities {
