@@ -439,7 +439,7 @@ func ConnectToNetconfProvider(
 	defer C.free(unsafe.Pointer(cprotocol))
 
 	var cOnDemand C.boolean = 1
-	if onDemand { cOnDemand = 0 }
+	if ! onDemand { cOnDemand = 0 }
 	var cCommonCache C.boolean = 0
 	if commonCache { cCommonCache = 1 }
 
