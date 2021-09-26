@@ -414,6 +414,70 @@ func ReadDatanode(filter types.Entity, readDataNode types.DataNode) types.Entity
 	}
 }
 
+// ConnectToNetconfProvider connects to NETCONF service provider by creating a
+// connection to the provider using given address, username, password, and port.
+// Returns the connected service provider (types.CServiceProvider).
+func ConnectToNetconfProvider(
+	state *errors.State,
+	repo types.Repository,
+	address, username, password string,
+	port int,
+	protocol string,
+	onDemand, commonCache bool,
+	timeout int,
+	serverCertPath, privateKeyPath string) types.CServiceProvider {
+
+	var caddress *C.char = C.CString(address)
+	defer C.free(unsafe.Pointer(caddress))
+	var cusername *C.char = C.CString(username)
+	defer C.free(unsafe.Pointer(cusername))
+	var cpassword *C.char = C.CString(password)
+	defer C.free(unsafe.Pointer(cpassword))
+	var cport C.int = C.int(port)
+
+	var cprotocol *C.char = C.CString(protocol)
+	defer C.free(unsafe.Pointer(cprotocol))
+
+	var cOnDemand C.boolean = 1
+	if onDemand { cOnDemand = 0 }
+	var cCommonCache C.boolean = 0
+	if commonCache { cCommonCache = 1 }
+
+	var ctimeout C.int = C.int(timeout)
+
+	var cserver *C.char = C.CString(serverCertPath)
+	defer C.free(unsafe.Pointer(cserver))
+	var cclient *C.char = C.CString(privateKeyPath)
+	defer C.free(unsafe.Pointer(cclient))
+
+	AddCState(state)
+	cstate := GetCState(state)
+
+	var p C.ServiceProvider
+
+	var crepo C.Repository
+	if len(repo.Path) > 0 {
+		var path *C.char = C.CString(repo.Path)
+		crepo = C.RepositoryInitWithPath(*cstate, path)
+		PanicOnCStateError(cstate)
+	}
+	p = C.NetconfServiceProviderInit(
+		*cstate, crepo, caddress, cusername, cpassword, cport,
+		cprotocol, cOnDemand, cCommonCache,
+		ctimeout, cserver, cclient)
+	PanicOnCStateError(cstate)
+
+	cprovider := types.CServiceProvider{Private: p}
+	return cprovider
+}
+
+// DisconnectFromNetconfProvider disconnects from NETCONF device and frees
+// the given service provider.
+func DisconnectFromNetconfProvider(provider types.CServiceProvider) {
+	realProvider := provider.Private.(C.ServiceProvider)
+	C.NetconfServiceProviderFree(realProvider)
+}
+
 // CleanUpErrorState cleans up memory for CState.
 func CleanUpErrorState(state *errors.State) {
 	realState := GetCState(state)
@@ -958,7 +1022,7 @@ func getEntityFromDataNode(node C.DataNode, entity types.Entity) {
 func dataNodeIsLeaf(dataNode C.DataNode) bool {
 	keyword := C.GoString(C.DataNodeGetKeyword(dataNode))
 	return keyword == "leaf" || keyword == "leaf-list" ||
-		   keyword == "anyxml" || keyword == "anydata"
+	       keyword == "anyxml" || keyword == "anydata"
 }
 
 func dataNodeIsList(dataNode C.DataNode) bool {
