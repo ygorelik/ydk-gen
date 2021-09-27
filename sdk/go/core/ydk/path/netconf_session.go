@@ -65,7 +65,7 @@ func (ns *NetconfSession) Connect() {
 	defer C.free(unsafe.Pointer(cprotocol))
 
 	var cOnDemand C.boolean = 1
-	if ns.OnDemand { cOnDemand = 0 }
+	if ! ns.OnDemand { cOnDemand = 0 }
 	var cCommonCache C.boolean = 0
 	if ns.CommonCache { cCommonCache = 1 }
 

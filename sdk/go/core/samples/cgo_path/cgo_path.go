@@ -81,7 +81,9 @@ func main() {
 	var ctimeout C.int = C.int(-1)
 
 	var cserver *C.char = C.CString("")
+	defer C.free(unsafe.Pointer(cserver))
 	var cclient *C.char = C.CString("")
+	defer C.free(unsafe.Pointer(cclient))
 
 	provider := C.NetconfServiceProviderInit(cstate, repo, address, username, password, 12022, protocol,
 		cOnDemand, cCommonCache, ctimeout, cserver, cclient)
