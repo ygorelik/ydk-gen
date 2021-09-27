@@ -344,89 +344,55 @@ const char * ServiceProviderType(ServiceProvider provider) {
 
 ServiceProvider NetconfServiceProviderInit(
     YDKStatePtr state,
-    const char * address,
-    const char * username,
-    const char * password,
-    int port,
-    const char * protocol)
-{
-    try
-    {
-        ydk::NetconfServiceProvider * real_provider = new ydk::NetconfServiceProvider(
-            address, username, password, port, protocol);
-        return static_cast<void*>(real_provider);
-    }
-    catch(...)
-    {
-        YDKState* real_state = static_cast<YDKState*>(state);
-        handle_error(real_state);
-        return NULL;
-    }
-}
-
-ServiceProvider NetconfServiceProviderInitWithOnDemand(
-    YDKStatePtr state,
+    Repository repo,
     const char * address,
     const char * username,
     const char * password,
     int port,
     const char * protocol,
     boolean on_demand,
-    boolean common_cache)
+    boolean common_cache,
+    int timeout,
+    const char * server_certificate_path, const char * private_key_path)
 {
     try
     {
-        ydk::NetconfServiceProvider * real_provider = new ydk::NetconfServiceProvider(
-            address, username, password, port, protocol, on_demand, common_cache);
-        return static_cast<void*>(real_provider);
-    }
-    catch(...)
-    {
-        YDKState* real_state = static_cast<YDKState*>(state);
-        handle_error(real_state);
-        return NULL;
-    }
-}
-
-ServiceProvider NetconfServiceProviderInitWithRepo(
-    YDKStatePtr state,
-    Repository repo,
-    const char * address,
-    const char * username,
-    const char * password,
-    int port,
-    const char * protocol)
-{
-    try
-    {
-        ydk::path::Repository* real_repo = static_cast<ydk::path::Repository*>(repo);
-        ydk::NetconfServiceProvider * real_provider = new ydk::NetconfServiceProvider(
-            *real_repo, address, username, password, port, protocol);
-        return static_cast<void*>(real_provider);
-    }
-    catch(...)
-    {
-        YDKState* real_state = static_cast<YDKState*>(state);
-        handle_error(real_state);
-        return NULL;
-    }
-}
-
-ServiceProvider NetconfServiceProviderInitWithOnDemandRepo(
-    YDKStatePtr state,
-    Repository repo,
-    const char * address,
-    const char * username,
-    const char * password,
-    int port,
-    const char * protocol,
-    boolean on_demand)
-{
-    try
-    {
-        ydk::path::Repository* real_repo = static_cast<ydk::path::Repository*>(repo);
-        ydk::NetconfServiceProvider * real_provider = new ydk::NetconfServiceProvider(
-            *real_repo, address, username, password, port, protocol, on_demand);
+        ydk::NetconfServiceProvider * real_provider;
+        if (repo)
+        {
+            ydk::path::Repository* real_repo = static_cast<ydk::path::Repository*>(repo);
+            if (server_certificate_path && *server_certificate_path)
+            {
+                real_provider = new ydk::NetconfServiceProvider(
+                    *real_repo,
+                    address, username,
+                    private_key_path, server_certificate_path,
+                    port, on_demand, timeout);
+            }
+            else
+            {
+                real_provider = new ydk::NetconfServiceProvider(
+                    *real_repo,
+                    address, username, password, port,
+                    protocol, on_demand, timeout);
+            }
+        }
+        else
+        {
+            if (server_certificate_path && *server_certificate_path)
+            {
+                real_provider = new ydk::NetconfServiceProvider(
+                    address, username,
+                    private_key_path, server_certificate_path,
+                    port, on_demand, common_cache, timeout);
+            }
+            else
+            {
+                real_provider = new ydk::NetconfServiceProvider(
+                    address, username, password, port,
+                    protocol, on_demand, common_cache, timeout);
+            }
+        }
         return static_cast<void*>(real_provider);
     }
     catch(...)
@@ -444,27 +410,6 @@ void NetconfServiceProviderFree(ServiceProvider provider)
     {
         delete real_provider;
     }
-}
-
-int NetconfServiceProviderGetNumCapabilities(ServiceProvider provider)
-{
-    ydk::NetconfServiceProvider * real_provider = static_cast<ydk::NetconfServiceProvider*>(provider);
-    if(real_provider != NULL)
-    {
-        return real_provider->get_capabilities().size();
-    }
-    return 0;
-}
-
-const char* NetconfServiceProviderGetCapabilityByIndex(ServiceProvider provider, int index)
-{
-    ydk::NetconfServiceProvider * real_provider = static_cast<ydk::NetconfServiceProvider*>(provider);
-    if(real_provider != NULL)
-    {
-        std::vector<std::string> capabilites = real_provider->get_capabilities();
-        return string_to_array(capabilites[index]);
-    }
-    return "";
 }
 
 ServiceProvider RestconfServiceProviderInitWithRepo(

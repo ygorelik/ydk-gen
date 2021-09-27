@@ -46,8 +46,8 @@ type NetconfSession struct {
 	ServerCert  string
 	PrivateKey  string
 
-	Private interface{}
-	State   errors.State
+	Private     interface{}
+	State       errors.State
 }
 
 // Connect to Netconf Session
@@ -66,7 +66,7 @@ func (ns *NetconfSession) Connect() {
 	defer C.free(unsafe.Pointer(cprotocol))
 
 	var cOnDemand C.boolean = 1
-	if ns.OnDemand {
+	if ! ns.OnDemand {
 		cOnDemand = 0
 	}
 	var cCommonCache C.boolean = 0
@@ -95,9 +95,9 @@ func (ns *NetconfSession) Connect() {
 		PanicOnCStateError(cstate)
 	}
 
-	ns.Private = C.NetconfSessionInit(*cstate, repo, caddress, cusername, cpassword, cport,
-		cprotocol, cOnDemand, cCommonCache, ctimeout,
-		cserver, cclient)
+	ns.Private = C.NetconfSessionInit( *cstate, repo, caddress, cusername, cpassword, cport,
+	                                   cprotocol, cOnDemand, cCommonCache, ctimeout,
+	                                   cserver, cclient);
 	PanicOnCStateError(cstate)
 }
 
@@ -150,13 +150,22 @@ func (ns *NetconfSession) GetState() *errors.State {
 
 // GetCapabilities returns list of capabilities supported by NetconfSession
 func (ns *NetconfSession) GetCapabilities() []string {
+    session := types.Session{Private: ns.Private}
+    return GetSessionCapabilities(session)
+}
 
-	csession := ns.Private.(C.Session)
-	cstate := GetCState(&ns.State)
+// GetSessionCapabilities returns list of capabilities supported by Session
+func GetSessionCapabilities(session types.Session) []string {
+
+	csession := session.Private.(C.Session)
+	var state errors.State
+	AddCState(&state)
+	cstate := GetCState(&state)
 	length := C.int(0)
 	var theCArray **C.char = C.SessionGetCapabilities(*cstate, csession, &length)
-	capLen := int(length)
+	PanicOnCStateError(cstate)
 
+	capLen := int(length)
 	slice := (*[1 << 30]*C.char)(unsafe.Pointer(theCArray))[:capLen:capLen]
 	capabilities := make([]string, capLen)
 	for i := range capabilities {

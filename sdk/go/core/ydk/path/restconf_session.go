@@ -148,17 +148,6 @@ func (rs *RestconfSession) GetState() *errors.State {
 // GetCapabilities returns list of capabilities supported by RestconfSession
 func (rs *RestconfSession) GetCapabilities() []string {
 
-	csession := rs.Private.(C.Session)
-	cstate := GetCState(&rs.State)
-	length := C.int(0)
-	var theCArray **C.char = C.SessionGetCapabilities(*cstate, csession, &length)
-	capLen := int(length)
-
-	slice := (*[1 << 30]*C.char)(unsafe.Pointer(theCArray))[:capLen:capLen]
-	capabilities := make([]string, capLen)
-	for i := range capabilities {
-		capabilities[i] = C.GoString(slice[i])
-	}
-	C.CapabilitiesArrayFree(theCArray, length)
-	return capabilities
+    session := types.Session{Private: rs.Private}
+    return GetSessionCapabilities(session)
 }

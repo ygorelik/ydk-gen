@@ -37,7 +37,10 @@ TEST_CASE( "c_api_codec_encode"  )
     Codec c = CodecInit();
     Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
     REQUIRE(repo!=NULL);
-    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
+    ServiceProvider provider = NetconfServiceProviderInit(
+        state, repo,
+        "localhost", "admin", "admin", 12022, "ssh",
+        true, false, -1, "", "");
     REQUIRE(provider!=NULL);
 
     RootSchemaNode root_schema = ServiceProviderGetRootSchema(state, provider);
@@ -63,7 +66,10 @@ TEST_CASE( "c_api_codec_decode"  )
     Codec c = CodecInit();
     Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
     REQUIRE(repo!=NULL);
-    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
+    ServiceProvider provider = NetconfServiceProviderInit(
+        state, repo,
+        "localhost", "admin", "admin", 12022, "ssh",
+        true, false, -1, "", "");
     REQUIRE(provider!=NULL);
 
     RootSchemaNode root_schema = ServiceProviderGetRootSchema(state, provider);
@@ -88,7 +94,10 @@ TEST_CASE( "c_api_provider_withpath"  )
     YDKStatePtr state = YDKStateCreate();
     Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
     REQUIRE(repo!=NULL);
-    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
+    ServiceProvider provider = NetconfServiceProviderInit(
+        state, repo,
+        "localhost", "admin", "admin", 12022, "ssh",
+        true, false, -1, "", "");
     REQUIRE(provider!=NULL);
 
     NetconfServiceProviderFree(provider);
@@ -101,7 +110,10 @@ TEST_CASE( "c_api_provider"  )
     YDKStatePtr state = YDKStateCreate();
     Repository repo = RepositoryInit();
     REQUIRE(repo!=NULL);
-    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
+    ServiceProvider provider = NetconfServiceProviderInit(
+        state, repo,
+        "localhost", "admin", "admin", 12022, "ssh",
+        true, false, -1, "", "");
     REQUIRE(provider!=NULL);
 
     NetconfServiceProviderFree(provider);
@@ -116,7 +128,10 @@ TEST_CASE( "c_api_rpc" )
 
     Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
     REQUIRE(repo!=NULL);
-    ServiceProvider provider = NetconfServiceProviderInitWithRepo(state, repo, "localhost", "admin", "admin", 12022, "ssh");
+    ServiceProvider provider = NetconfServiceProviderInit(
+        state, repo,
+        "localhost", "admin", "admin", 12022, "ssh",
+        true, false, -1, "", "");
     REQUIRE(provider!=NULL);
 
     RootSchemaNode root_schema = ServiceProviderGetRootSchema(state, provider);
@@ -176,10 +191,10 @@ TEST_CASE( "c_api_restconf_session" )
     // Connect to Netconf server
     YDKStatePtr state = YDKStateCreate();
     Repository repo = RepositoryInitWithPath(state, TEST_HOME);
-    REQUIRE(repo!=NULL);
+    REQUIRE(repo);
     auto session = RestconfSessionInit(state, repo, "localhost", "admin", "admin", 12306,
                                        EncodingFormat::JSON, "/data", "/data");
-    REQUIRE(session!=NULL);
+    REQUIRE(session);
 
     // Get capabilities
     int len = 0;

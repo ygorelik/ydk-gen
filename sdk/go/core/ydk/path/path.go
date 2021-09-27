@@ -424,7 +424,9 @@ func ConnectToNetconfProvider(
 	address, username, password string,
 	port int,
 	protocol string,
-	onDemand, commonCache bool) types.CServiceProvider {
+	onDemand, commonCache bool,
+	timeout int,
+	serverCertPath, privateKeyPath string) types.CServiceProvider {
 
 	var caddress *C.char = C.CString(address)
 	defer C.free(unsafe.Pointer(caddress))
@@ -438,7 +440,7 @@ func ConnectToNetconfProvider(
 	defer C.free(unsafe.Pointer(cprotocol))
 
 	var cOnDemand C.boolean = 1
-	if onDemand {
+	if ! onDemand {
 		cOnDemand = 0
 	}
 	var cCommonCache C.boolean = 0
@@ -446,23 +448,29 @@ func ConnectToNetconfProvider(
 		cCommonCache = 1
 	}
 
+	var ctimeout C.int = C.int(timeout)
+
+	var cserver *C.char = C.CString(serverCertPath)
+	defer C.free(unsafe.Pointer(cserver))
+	var cclient *C.char = C.CString(privateKeyPath)
+	defer C.free(unsafe.Pointer(cclient))
+
 	AddCState(state)
 	cstate := GetCState(state)
 
 	var p C.ServiceProvider
 
+	var crepo C.Repository
 	if len(repo.Path) > 0 {
 		var path *C.char = C.CString(repo.Path)
-		repo := C.RepositoryInitWithPath(*cstate, path)
-		PanicOnCStateError(cstate)
-		p = C.NetconfServiceProviderInitWithOnDemandRepo(
-			*cstate, repo, caddress, cusername, cpassword, cport, cprotocol, cOnDemand)
-		PanicOnCStateError(cstate)
-	} else {
-		p = C.NetconfServiceProviderInitWithOnDemand(
-			*cstate, caddress, cusername, cpassword, cport, cprotocol, cOnDemand, cCommonCache)
+		crepo = C.RepositoryInitWithPath(*cstate, path)
 		PanicOnCStateError(cstate)
 	}
+	p = C.NetconfServiceProviderInit(
+		*cstate, crepo, caddress, cusername, cpassword, cport,
+		cprotocol, cOnDemand, cCommonCache,
+		ctimeout, cserver, cclient)
+	PanicOnCStateError(cstate)
 
 	cprovider := types.CServiceProvider{Private: p}
 	return cprovider
@@ -473,19 +481,6 @@ func ConnectToNetconfProvider(
 func DisconnectFromNetconfProvider(provider types.CServiceProvider) {
 	realProvider := provider.Private.(C.ServiceProvider)
 	C.NetconfServiceProviderFree(realProvider)
-}
-
-// GetCapabilitesFromNetconfProvider gets the capabilities supported by the provider.
-// Returns the list of capabilities.
-func GetCapabilitesFromNetconfProvider(provider types.CServiceProvider) []string {
-	realProvider := provider.Private.(C.ServiceProvider)
-	size := C.NetconfServiceProviderGetNumCapabilities(realProvider)
-	capabilities := make([]string, size)
-	for i := range capabilities {
-		ccapability := C.NetconfServiceProviderGetCapabilityByIndex(realProvider, C.int(i))
-		capabilities[i] = C.GoString(ccapability)
-	}
-	return capabilities
 }
 
 // CleanUpErrorState cleans up memory for CState.
@@ -640,9 +635,9 @@ func CodecEncode(datanode types.DataNode, encoding encodingFormat.EncodingFormat
 
 // CodecDecode decodes XML or JSON encoded payload
 // Returns DanaNode.
-func CodecDecode(rootSchema types.RootSchemaNode,
-	payload string,
-	encoding encodingFormat.EncodingFormat) types.DataNode {
+func CodecDecode( rootSchema types.RootSchemaNode,
+                  payload string,
+                  encoding encodingFormat.EncodingFormat) types.DataNode {
 
 	rootSchemaWrapper := rootSchema.Private.(C.RootSchemaWrapper)
 	realRootSchema := C.RootSchemaWrapperUnwrap(rootSchemaWrapper)

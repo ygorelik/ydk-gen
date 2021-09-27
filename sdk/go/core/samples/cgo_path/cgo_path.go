@@ -75,7 +75,18 @@ func main() {
 	defer C.CodecFree(codec)
 	repo := C.RepositoryInit()
 	defer C.RepositoryFree(repo)
-	provider := C.NetconfServiceProviderInitWithRepo(cstate, repo, address, username, password, 12022, protocol)
+
+	var cOnDemand C.boolean = 1
+	var cCommonCache C.boolean = 0
+	var ctimeout C.int = C.int(-1)
+
+	var cserver *C.char = C.CString("")
+	defer C.free(unsafe.Pointer(cserver))
+	var cclient *C.char = C.CString("")
+	defer C.free(unsafe.Pointer(cclient))
+
+	provider := C.NetconfServiceProviderInit(cstate, repo, address, username, password, 12022, protocol,
+		cOnDemand, cCommonCache, ctimeout, cserver, cclient)
 	defer C.NetconfServiceProviderFree(provider)
 	root_schema := C.ServiceProviderGetRootSchema(cstate, provider)
 
