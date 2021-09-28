@@ -309,6 +309,9 @@ func (ec *EntityCollection) Append(entities []Entity) {
 }
 
 func (ec *EntityCollection) Len() int {
+    if ec.EcMap == nil {
+        return 0
+    }
     return ec.EcMap.Len()
 }
 
@@ -351,6 +354,9 @@ func (ec *EntityCollection) Keys() []string {
 
 func (ec *EntityCollection) Entities() []Entity {
 	entities := make([]Entity, ec.Len())
+	if ec.EcMap == nil {
+	    return entities
+	}
 	iEntities := ec.EcMap.Values()
 	for i:=0; i<ec.Len(); i++ {
 		entities[i] = iEntities[i].(Entity)
