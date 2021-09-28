@@ -111,7 +111,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../faq.html">Questions and Answers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../ydk.models.ydktest.html">ydktest bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
             
@@ -162,7 +163,7 @@
 <span id="netconfsession"></span><h1>NetconfSession<a class="headerlink" href="#module-ydk.path" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="ydk.path.NetconfSession">
-<em class="property">class </em><code class="descclassname">ydk.path.</code><code class="descname">NetconfSession</code><span class="sig-paren">(</span><em>address</em>, <em>username</em>, <em>password</em>, <em>port=830</em>, <em>protocol=&quot;ssh&quot;</em>, <em>on_demand=True</em>, <em>common_cache=False</em>, <em>int timeout=None</em>, <em>repo=None</em>, <em>private_key_path=&quot;&quot;</em>, <em>public_key_path=&quot;&quot;</em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.NetconfSession" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ydk.path.</code><code class="descname">NetconfSession</code><span class="sig-paren">(</span><em>repo</em>, <em>address</em>, <em>username</em>, <em>password</em>, <em>port=830</em>, <em>protocol=&quot;ssh&quot;</em>, <em>on_demand=True</em>, <em>common_cache=False</em>, <em>int timeout=None</em>, <em>repo=None</em>, <em>private_key_path=&quot;&quot;</em>, <em>public_key_path=&quot;&quot;</em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.NetconfSession" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs an instance of the <cite>NetconfSession</cite> class and connects to Netconf server, which <strong>must</strong> support model download.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -171,15 +172,16 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>address</strong> &#8211; (<code class="docutils literal"><span class="pre">str</span></code>) IP address or DNS name of device, which supports Netconf server; required parameter.</li>
 <li><strong>username</strong> &#8211; (<code class="docutils literal"><span class="pre">str</span></code>) Username to log in to the device; required parameter.</li>
-<li><strong>password</strong> &#8211; (<code class="docutils literal"><span class="pre">str</span></code>) Password to log in to the device.</li>
-<li><strong>port</strong> &#8211; (<code class="docutils literal"><span class="pre">int</span></code>) Device port used to access the Netconf interface. Default value is 830.</li>
-<li><strong>protocol</strong> &#8211; (<code class="docutils literal"><span class="pre">str</span></code>) Currently supported <cite>ssh</cite> for secure connection and <cite>tcp</cite> for insecure connection; default - <cite>ssh</cite>.</li>
+<li><strong>password</strong> &#8211; (<code class="docutils literal"><span class="pre">str</span></code>) Password to log in to the device; not required, if <cite>public_key_path</cite> specified.</li>
+<li><strong>port</strong> &#8211; (<code class="docutils literal"><span class="pre">int</span></code>) Device port number, which is used to access the Netconf interface; default value is 830.</li>
+<li><strong>protocol</strong> &#8211; (<code class="docutils literal"><span class="pre">str</span></code>) Currently supported &#8220;ssh&#8221; for secure connection and &#8220;tcp&#8221; for insecure connection; default - &#8220;ssh&#8221;.</li>
 <li><strong>on_demand</strong> &#8211; (<code class="docutils literal"><span class="pre">bool</span></code>) On demand model downloading by default.</li>
 <li><strong>common_cache</strong> &#8211; (<code class="docutils literal"><span class="pre">bool</span></code>) Use common cache directory, if enabled.</li>
-<li><strong>timeout</strong> &#8211; (<code class="docutils literal"><span class="pre">int</span></code>) The timeout in microseconds: None or -1 for infinite timeout, 0 - for non-blocking</li>
-<li><strong>repo</strong> &#8211; (<a class="reference internal" href="repository.html#ydk.path.Repository" title="ydk.path.Repository"><code class="xref py py-class docutils literal"><span class="pre">Repository</span></code></a>) User provided repository - directory, which stores cached Yang models.</li>
-<li><strong>private_key_path</strong> &#8211; (<code class="docutils literal"><span class="pre">str</span></code>) Path to private key file. Requires public_key_path field.</li>
-<li><strong>public_key_path</strong> &#8211; (<code class="docutils literal"><span class="pre">str</span></code>) Path to public key file. Does not allow <cite>password</cite> field, if specified.</li>
+<li><strong>timeout</strong> &#8211; (<code class="docutils literal"><span class="pre">int</span></code>) The timeout in microseconds: None or -1 for infinite timeout, 0 - for non-blocking.</li>
+<li><strong>repo</strong> &#8211; (<a class="reference internal" href="repository.html#ydk.path.Repository" title="ydk.path.Repository"><code class="xref py py-class docutils literal"><span class="pre">Repository</span></code></a>) User provided repository - directory, which stores cached YANG models.
+If not specified, the temporary repository at &#8220;~/.ydk/&lt;address&gt;&#8221; is created.</li>
+<li><strong>private_key_path</strong> &#8211; (<code class="docutils literal"><span class="pre">str</span></code>) Path to private key file. This is optional parameter, which requires <cite>public_key_path</cite> field.</li>
+<li><strong>public_key_path</strong> &#8211; (<code class="docutils literal"><span class="pre">str</span></code>) Path to public key file. This is optional parameter.</li>
 </ul>
 </td>
 </tr>
@@ -250,12 +252,12 @@
 <dl class="method">
 <dt id="ydk.path.NetconfSession.get_capabilities">
 <code class="descname">get_capabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.NetconfSession.get_capabilities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of capabilities of the client</p>
+<dd><p>Returns a list of capabilities for the Netconf server.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of <code class="docutils literal"><span class="pre">str</span></code> representing the client&#8217;s/server&#8217;s capabilities</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of <code class="docutils literal"><span class="pre">str</span></code> representing the Netconf server capabilities.</td>
 </tr>
 </tbody>
 </table>

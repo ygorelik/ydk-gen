@@ -112,7 +112,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_guide.html">API Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Questions and Answers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ydk.models.ydktest.html">ydktest bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
             
@@ -330,20 +331,20 @@
 <h2><a class="toc-backref" href="#id4">How do I work with YANG 1.1 actions?</a><a class="headerlink" href="#how-do-i-work-with-yang-1-1-actions" title="Permalink to this headline">¶</a></h2>
 <p>Path API can be used to work with a <code class="docutils literal"><span class="pre">action</span></code> as defined in the YANG 1.1 standard in <a class="reference external" href="https://tools.ietf.org/html/rfc7950">RFC 7950</a>.</p>
 <p>Consider the below snippet from an example <code class="docutils literal"><span class="pre">action-config.yang</span></code> model compliant with the YANG 1.1 standard.</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="n">container</span> <span class="n">data</span> <span class="p">{</span>
-  <span class="n">action</span> <span class="n">action</span><span class="o">-</span><span class="n">node</span> <span class="p">{</span>
-    <span class="n">input</span> <span class="p">{</span>
-        <span class="n">leaf</span> <span class="n">ip</span><span class="o">-</span><span class="n">test</span> <span class="p">{</span>
-            <span class="n">type</span> <span class="n">string</span><span class="p">;</span>
-        <span class="p">}</span>
-     <span class="p">}</span>
-     <span class="n">output</span> <span class="p">{</span>
-        <span class="n">leaf</span> <span class="n">op</span><span class="o">-</span><span class="n">test</span> <span class="p">{</span>
-            <span class="n">type</span> <span class="n">string</span><span class="p">;</span>
-        <span class="p">}</span>
-     <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="n">container</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">action</span><span class="w"> </span><span class="n">action</span><span class="o">-</span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">input</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">leaf</span><span class="w"> </span><span class="n">ip</span><span class="o">-</span><span class="n">test</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">type</span><span class="w"> </span><span class="n">string</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">     </span><span class="p">}</span><span class="w"></span>
+<span class="w">     </span><span class="n">output</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">leaf</span><span class="w"> </span><span class="n">op</span><span class="o">-</span><span class="n">test</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">type</span><span class="w"> </span><span class="n">string</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">     </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The below script can be used to work with the above model</p>

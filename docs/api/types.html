@@ -111,7 +111,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Questions and Answers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ydk.models.ydktest.html">ydktest bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
             
@@ -1037,7 +1038,7 @@ container absolute path and value of type <cite>tuple</cite> represents differen
 <div class="section" id="validation">
 <h2><a class="toc-backref" href="#id11">Validation</a><a class="headerlink" href="#validation" title="Permalink to this headline">¶</a></h2>
 <p>YDK performs local validation of leafs based on the model type definition. A few examples of validation are given below (assuming you have <code class="docutils literal"><span class="pre">openconfig</span></code> bundle installed, see <a class="reference internal" href="../getting_started.html#howto-install"><span class="std std-ref">Core Installation</span></a>).  Assigning an invalid type results in a local validation error.</p>
-<p>The <code class="xref py py-class docutils literal"><span class="pre">openconfig</span> <span class="pre">BGP</span></code> model defines the field <cite>as_</cite> as a <cite>int</cite> (specifically, unsigned 32 bit integer).</p>
+<p>The <a class="reference internal" href="../gen_doc_21a8719a0c77f96ec344aedfea8727b7f9bbe87a.html#ydk.models.openconfig.openconfig_bgp.Bgp.Global.Config" title="ydk.models.openconfig.openconfig_bgp.Bgp.Global.Config"><code class="xref py py-class docutils literal"><span class="pre">openconfig</span> <span class="pre">BGP</span></code></a> model defines the field <cite>as_</cite> as a <cite>int</cite> (specifically, unsigned 32 bit integer).</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
 <span class="normal">2</span>
 <span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Instantiate a bgp object representing the bgp container from the openconfig-bgp YANG model</span>
@@ -1049,7 +1050,7 @@ container absolute path and value of type <cite>tuple</cite> represents differen
 <div class="highlight-bash"><div class="highlight"><pre><span></span>YModelError: Invalid value Hello <span class="k">for</span> <span class="s1">&#39;as_&#39;</span>. Got type: <span class="s1">&#39;str&#39;</span>. Expected types: <span class="s1">&#39;int&#39;</span>
 </pre></div>
 </div>
-<p>The <code class="xref py py-class docutils literal"><span class="pre">openconfig</span> <span class="pre">BGP</span></code> model defines the field <cite>router_id</cite> as a <cite>str</cite> (specifically, with IP address pattern).</p>
+<p>The <a class="reference internal" href="../gen_doc_21a8719a0c77f96ec344aedfea8727b7f9bbe87a.html#ydk.models.openconfig.openconfig_bgp.Bgp.Global.Config" title="ydk.models.openconfig.openconfig_bgp.Bgp.Global.Config"><code class="xref py py-class docutils literal"><span class="pre">openconfig</span> <span class="pre">BGP</span></code></a> model defines the field <cite>router_id</cite> as a <cite>str</cite> (specifically, with IP address pattern).</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
 <span class="normal">2</span>
 <span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Instantiate a bgp object representing the bgp container from the openconfig-bgp YANG model</span>

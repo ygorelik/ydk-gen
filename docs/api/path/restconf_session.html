@@ -111,7 +111,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../faq.html">Questions and Answers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../ydk.models.ydktest.html">ydktest bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
             
@@ -168,7 +169,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">param repo:</th><td class="field-body">(<a class="reference internal" href="repository.html#ydk.path.Repository" title="ydk.path.Repository"><code class="xref py py-class docutils literal"><span class="pre">Repository</span></code></a>) Reference to an instance of <a class="reference internal" href="repository.html#ydk.path.Repository" title="ydk.path.Repository"><code class="xref py py-class docutils literal"><span class="pre">Repository</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">param repo:</th><td class="field-body">(<a class="reference internal" href="repository.html#ydk.path.Repository" title="ydk.path.Repository"><code class="xref py py-class docutils literal"><span class="pre">Repository</span></code></a>) Defines location of YANG model repository.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">param address:</th><td class="field-body">(<code class="docutils literal"><span class="pre">str</span></code>) IP address or DNC name of the device supporting Netconf interface.</td>
 </tr>
@@ -181,10 +182,10 @@
 <tr class="field-even field"><th class="field-name">param encoding:</th><td class="field-body">(<a class="reference internal" href="../types.html#ydk.types.EncodingFormat" title="ydk.types.EncodingFormat"><code class="xref py py-class docutils literal"><span class="pre">EncodingFormat</span></code></a>) Encoding Format, default is <a class="reference internal" href="../types.html#ydk.types.EncodingFormat.JSON" title="ydk.types.EncodingFormat.JSON"><code class="xref py py-attr docutils literal"><span class="pre">JSON</span></code></a>.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">param config_url_root:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">(<code class="docutils literal"><span class="pre">str</span></code>) To provider backwards compatibility with older drafts of Restconf RFC, this can be <code class="docutils literal"><span class="pre">/config</span></code> or <code class="docutils literal"><span class="pre">/data</span></code> (which is the default).</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">(<code class="docutils literal"><span class="pre">str</span></code>) To provider backwards compatibility with older drafts of Restconf RFC, this can be &#8220;/config&#8221; or &#8220;/data&#8221; (which is the default).</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">param state_url_root:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">(<code class="docutils literal"><span class="pre">str</span></code>) To provider backwards compatibility with older drafts of Restconf RFC, this can be <code class="docutils literal"><span class="pre">/operational</span></code> or <code class="docutils literal"><span class="pre">/data</span></code> (which is the default)</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">(<code class="docutils literal"><span class="pre">str</span></code>) To provider backwards compatibility with older drafts of Restconf RFC, this can be &#8220;/operational&#8221; or &#8220;/data&#8221; (which is the default)</td>
 </tr>
 </tbody>
 </table>
@@ -197,7 +198,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Pointer to the <a class="reference internal" href="root_schema_node.html#ydk.path.RootSchemaNode" title="ydk.path.RootSchemaNode"><code class="xref py py-class docutils literal"><span class="pre">RootSchemaNode</span></code></a> or <code class="docutils literal"><span class="pre">nullptr</span></code> if one could not be created.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Pointer to the <a class="reference internal" href="root_schema_node.html#ydk.path.RootSchemaNode" title="ydk.path.RootSchemaNode"><code class="xref py py-class docutils literal"><span class="pre">RootSchemaNode</span></code></a> or <code class="docutils literal"><span class="pre">None</span></code>, if one was not created.</td>
 </tr>
 </tbody>
 </table>
@@ -214,6 +215,20 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rpc</strong> &#8211; (<a class="reference internal" href="rpc.html#ydk.path.Rpc" title="ydk.path.Rpc"><code class="xref py py-class docutils literal"><span class="pre">Rpc</span></code></a>)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Pointer to the <a class="reference internal" href="data_node.html#ydk.path.DataNode" title="ydk.path.DataNode"><code class="xref py py-class docutils literal"><span class="pre">DataNode</span></code></a> representing the output.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ydk.path.RestconfSession.get_capabilities">
+<code class="descname">get_capabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.RestconfSession.get_capabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of capabilities for the Restconf server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of <code class="docutils literal"><span class="pre">str</span></code> representing the Restconf server capabilities.</td>
 </tr>
 </tbody>
 </table>
