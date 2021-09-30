@@ -97,11 +97,11 @@ This gives the developer an ability to customize scope of their bundle based on 
 
 # Backward Compatibility
 
-The YDK-0.8.5 core is backward compatible with all previously generated model bundles starting from release of YDK-0.7.3.
-However the YDK-0.8.5 generates different code and model API comparing to YDK-0.8.4.
-The YDK-0.8.5 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling of YList objects.
+The YDK-0.8.6 core is backward compatible with all previously generated model bundles starting from release of YDK-0.7.3.
+However the YDK-0.8.6 generates different code and model API comparing to YDK-0.8.4.
+The YDK-0.8.6 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling of YList objects.
 
-**NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
+**NOTE.** Starting from release 0.8.6 the YDK does not support Python2 interpreter as it was deprecated.
 
 # Docker
 
@@ -357,7 +357,7 @@ All other attributes, like `"author"` and `"copyright"`, are optional and will n
 {
     "name":"cisco-ios-xr",
     "version": "6.5.3",
-    "core_version": "0.8.5",
+    "core_version": "0.8.6",
     "author": "Cisco",
     "copyright": "Cisco",
     "description": "Cisco IOS-XR Native Models From Git",
@@ -427,7 +427,7 @@ Check Python packages installed:
 
 ```
 pip list | grep ydk
-ydk (0.8.5)
+ydk (0.8.6)
 ydk-models-<name-of-bundle> (0.5.1)
 ...
 ```
@@ -510,7 +510,7 @@ and easily let the user see if dependencies have been satisfied.
 
 ## Python requirements
 
-Starting from release 0.8.5 YDK supports only Python3 version.  At least Python 3.5 along with corresponding pip3 utility 
+Starting from release 0.8.6 YDK supports only Python3 version.  At least Python 3.5 along with corresponding pip3 utility 
 must be installed on your the system. It is also required for Python installation to include corresponding shared 
 library. As example:
 
@@ -648,10 +648,10 @@ Please refer [here](https://github.com/ygorelik/ydk-gen/blob/master/sdk/go/core/
 
 - Read the online [YDK documentation](http://ydk.cisco.com/py/docs) (release 0.8.3) for details on how to use the YDK and API for specific models
 - Check [GitHub Pages](https://ygorelik.github.io/ydk-gen/) for the latest YDK release documentation
-- Find hundreds of sample apps in the [YDK-PY samples repository](https://github.com/CiscoDevNet/ydk-py-samples)
+- Find hundreds of sample apps in the [ydk-py-samples](https://github.com/CiscoDevNet/ydk-py-samples) repository
 - Join the [YDK community](https://communities.cisco.com/community/developer/ydk) to connect with YDK users and developers
 
 # Release Notes
 
-The current YDK release version is 0.8.5.3.
+The current YDK release version is 0.8.6.
 YDK-Gen is licensed under the Apache 2.0 License.

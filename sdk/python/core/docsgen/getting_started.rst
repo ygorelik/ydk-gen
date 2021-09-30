@@ -41,9 +41,9 @@ plus one or more module bundles that are based on YANG models.
 Backward Compatibility
 ======================
 
-The Python YDK-0.8.5 core package is compatible with all model bundles generated previously with ydk-gen releases starting from 0.7.3.
-However the YDK-0.8.5 generates slightly different code and model API comparing to YDK-0.8.4.
-The YDK-0.8.5 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
+The Python YDK-0.8.6 core package is compatible with all model bundles generated previously with ydk-gen releases starting from 0.7.3.
+However the YDK-0.8.6 generates slightly different code and model API comparing to YDK-0.8.4.
+The YDK-0.8.6 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
 
 Docker
 ======
@@ -184,9 +184,6 @@ Installing core components
     # For Python programming language add
     ./generate.py -i --core
 
-    # For Go programming language add
-    ./generate.py -i --core --go
-
 
 Adding gNMI Service
 -------------------
@@ -200,7 +197,7 @@ gNMI Service installation
 Here is simple example, how gNMI service package for Python could be added::
 
     cd ydk-gen
-    ./install_ydk.sh -l py --service gnmi
+    ./install_ydk.sh --service gnmi
 
 
 gNMI runtime environment
@@ -340,7 +337,7 @@ All other attributes, like "author" and "copyright", are optional and will not a
 
     "name":"cisco-ios-xr",
     "version": "6.5.3",
-    "core_version": "0.8.5",
+    "core_version": "0.8.6",
     "author": "Cisco",
     "copyright": "Cisco",
     "description": "Cisco IOS-XR Native Models From Git",
@@ -401,7 +398,7 @@ Python virtual environment must be activated prior to these procedures::
 Check Python packages installed::
 
     pip list | grep ydk
-    ydk (0.8.5)
+    ydk (0.8.6)
     ydk-models-<name-of-bundle> (0.5.1)
     ...
 
@@ -446,17 +443,18 @@ the add-on documentation generation time can be reduced. Adding cisco-ios-xr doc
     ./generate.py --python --core --generate-doc --output-directory gen-api --cached-output-dir
 
 Pre-generated documentation for YDK-0.8.3 core and model API for most popular devices is available
-`online <http://ydk.cisco.com>`_.
+`online <https://ydk.cisco.com>`_. Please note, that some API can be different comparing with current release.
 
 Documentation and Support
 =========================
 
-- Application samples can be found under the `samples directory <https://github.com/CiscoDevNet/ydk-py/tree/master/core/samples>`_
-- Hundreds of Python application samples can be found in the `samples repository <https://github.com/CiscoDevNet/ydk-py-samples>`_
+- Pre-generated documentation for YDK-0.8.6 core and model API for IETF and OpenConfig can be found `here <https://ygorelik.github.io/ydk-gen/>`_
+- Application samples can be found under the `samples <https://github.com/ygorelik/ydk-gen/tree/master/sdk/python/core/samples>`_ directory
+- Hundreds of Python application samples can be found in the `samples <https://github.com/CiscoDevNet/ydk-py-samples>`_ repository
 - Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with YDK users and developers
 
 Release Notes
 =============
 
-The current YDK release version is 0.8.5.3.
+The current YDK release version is 0.8.6.
 YDK-Gen is licensed under the Apache 2.0 License.

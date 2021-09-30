@@ -1,6 +1,7 @@
-### 2021-09-30 version 0.8.5.3
+### 2021-09-30 version 0.8.6
 
-#### Resolved GitHub issues
+#### New features and enhancements
+  * Upgraded pyang version to 2.5.0
   * Dropped Python2 support in the code
 
 

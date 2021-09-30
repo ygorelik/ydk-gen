@@ -1,7 +1,7 @@
 {
    "name":"ietf",
    "version":"0.1.6",
-   "core_version":"0.8.5.3",
+   "core_version":"0.8.6",
    "author":"Cisco",
    "copyright":"Cisco",
    "description":"YDK bundle for IETF models revision 2018-02-14",

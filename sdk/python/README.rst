@@ -49,18 +49,21 @@ YDK is composed of a core package that defines services and providers, plus one 
 Backward Compatibility
 ======================
 
-The Python YDK-0.8.5 core package is compatible with all model bundles generated previously with ydk-gen releases starting from 0.7.3.
-However the YDK-0.8.5 generates slightly different code and model API comparing to YDK-0.8.4.
-The YDK-0.8.5 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
+The Python YDK-0.8.6 core package is compatible with all model bundles generated previously with ydk-gen releases starting from 0.7.3.
+However the YDK-0.8.6 generates slightly different code and model API comparing to YDK-0.8.4.
+The YDK-0.8.6 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling of YList objects.
 
 ..
-  Please see `the release notes <https://github.com/CiscoDevNet/ydk-py/releases/tag/0.8.5>`_ for details.
+  Please see `the release notes <https://github.com/ygorelik/ydk-gen/blob/master/README.md>`_ for details.
 
 Docker
 ======
 
-Currently the `docker image <https://docs.docker.com/engine/reference/run/>`_ for ydk-py has not been generated.
-Please use `ydk-gen <https://github.com/ygorelik/ydk-gen/tree/0.8.5#docker>`_ docker image, which has complete environment for Python based development.
+To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
+See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
+
+  docker run -it ydksolutions/ydk-gen
+
 
 ..
   A `docker image <https://docs.docker.com/engine/reference/run/>`_ is automatically built with the latest ydk-py commit to the GitHub.
@@ -330,4 +333,4 @@ Available resources:
 Release Notes
 =============
 
-The current YDK release version for Python is 0.8.5.3. The `ydk-py` GitHub repository is not maintained for this release.
+The current YDK release version for Python is 0.8.6. The `ydk-py` GitHub repository is not maintained for this release.

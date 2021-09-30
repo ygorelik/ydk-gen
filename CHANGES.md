@@ -1,9 +1,9 @@
-### 2021-09-30 version 0.8.5.3
+### 2021-09-30 version 0.8.6
 
 #### New features and enhancements
-  * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
-  * Added SSH support for NetconfServiceProvider in Go
   * Upgraded pyang version to 2.5.0
+  * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
+  * Added SSL support for NetconfServiceProvider in Go
   * Dropped Python2 support in the code
 
 #### Resolved GitHub issues

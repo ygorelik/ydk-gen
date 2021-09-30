@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Statistics &mdash; YANG Development Kit 0.8.6 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/icon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/width.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="YANG Development Kit 0.8.6 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> YANG Development Kit
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8.6
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="about_ydk.html">About YDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_guide.html">API Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Questions and Answers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.ietf.html">ietf bundle API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">YANG Development Kit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Statistics</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="statistics">
+<h1>Statistics<a class="headerlink" href="#statistics" title="Permalink to this headline">¶</a></h1>
+<p><strong>Leafs</strong></p>
+<ul class="simple">
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.discontinuity_time" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.discontinuity_time"><code class="xref py py-attr docutils literal"><span class="pre">discontinuity_time</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_broadcast_pkts" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_broadcast_pkts"><code class="xref py py-attr docutils literal"><span class="pre">in_broadcast_pkts</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_discards" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_discards"><code class="xref py py-attr docutils literal"><span class="pre">in_discards</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_errors" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_errors"><code class="xref py py-attr docutils literal"><span class="pre">in_errors</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_multicast_pkts" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_multicast_pkts"><code class="xref py py-attr docutils literal"><span class="pre">in_multicast_pkts</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_octets" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_octets"><code class="xref py py-attr docutils literal"><span class="pre">in_octets</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_pkts" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_pkts"><code class="xref py py-attr docutils literal"><span class="pre">in_pkts</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_unicast_pkts" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_unicast_pkts"><code class="xref py py-attr docutils literal"><span class="pre">in_unicast_pkts</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_unknown_protos" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_unknown_protos"><code class="xref py py-attr docutils literal"><span class="pre">in_unknown_protos</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_broadcast_pkts" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_broadcast_pkts"><code class="xref py py-attr docutils literal"><span class="pre">out_broadcast_pkts</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_discards" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_discards"><code class="xref py py-attr docutils literal"><span class="pre">out_discards</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_errors" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_errors"><code class="xref py py-attr docutils literal"><span class="pre">out_errors</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_multicast_pkts" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_multicast_pkts"><code class="xref py py-attr docutils literal"><span class="pre">out_multicast_pkts</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_octets" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_octets"><code class="xref py py-attr docutils literal"><span class="pre">out_octets</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_pkts" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_pkts"><code class="xref py py-attr docutils literal"><span class="pre">out_pkts</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_unicast_pkts" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_unicast_pkts"><code class="xref py py-attr docutils literal"><span class="pre">out_unicast_pkts</span></code></a></li>
+</ul>
+<dl class="class">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics">
+<em class="property">class </em><code class="descclassname">InterfacesState.Interface.</code><code class="descname">Statistics</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="api/types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal"><span class="pre">Entity</span></code></a></p>
+<p>Class Hierarchy : <a class="reference internal" href="gen_doc_95977ef2c94ffd07804edc9bf7c20c40011de078.html#ydk.models.ietf.ietf_interfaces.InterfacesState" title="ydk.models.ietf.ietf_interfaces.InterfacesState"><code class="xref py py-class docutils literal"><span class="pre">InterfacesState</span></code></a> <a class="reference internal" href="gen_doc_9e4898b13492ec2f4add501f51346f68891f4c40.html#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface"><code class="xref py py-class docutils literal"><span class="pre">Interface</span></code></a> <a class="reference internal" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics"><code class="xref py py-class docutils literal"><span class="pre">Statistics</span></code></a></p>
+<p>This class represents state data.</p>
+<p>A collection of interface-related statistics objects.</p>
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.discontinuity_time">
+<code class="descname">discontinuity_time</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.discontinuity_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time on the most recent occasion at which any one or more of this interface&#8217;s counters suffered a discontinuity.  If no such discontinuities have occurred since the last re-initialization of the local management subsystem, then this node contains the time the local management subsystem re-initialized itself</p>
+<p><strong>type</strong>: str</p>
+<blockquote>
+<div><strong>pattern:</strong> \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[\+\-]\d{2}:\d{2})</div></blockquote>
+<p><strong>mandatory</strong>: True</p>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_octets">
+<code class="descname">in_octets</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_octets" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of octets received on the interface, including framing characters.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..18446744073709551615</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_unicast_pkts">
+<code class="descname">in_unicast_pkts</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_unicast_pkts" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of packets, delivered by this sub-layer to a higher (sub-)layer, that were not addressed to a multicast or broadcast address at this sub-layer.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..18446744073709551615</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_broadcast_pkts">
+<code class="descname">in_broadcast_pkts</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_broadcast_pkts" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of packets, delivered by this sub-layer to a higher (sub-)layer, that were addressed to a broadcast address at this sub-layer.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..18446744073709551615</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_multicast_pkts">
+<code class="descname">in_multicast_pkts</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_multicast_pkts" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of packets, delivered by this sub-layer to a higher (sub-)layer, that were addressed to a multicast address at this sub-layer.  For a MAC-layer protocol, this includes both Group and Functional addresses.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..18446744073709551615</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_discards">
+<code class="descname">in_discards</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_discards" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of inbound packets that were chosen to be discarded even though no errors had been detected to prevent their being deliverable to a higher-layer protocol.  One possible reason for discarding such a packet could be to free up buffer space.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..4294967295</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_errors">
+<code class="descname">in_errors</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character- oriented or fixed-length interfaces, the number of inbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..4294967295</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_unknown_protos">
+<code class="descname">in_unknown_protos</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_unknown_protos" title="Permalink to this definition">¶</a></dt>
+<dd><p>For packet-oriented interfaces, the number of packets received via the interface that were discarded because of an unknown or unsupported protocol.  For character-oriented or fixed-length interfaces that support protocol multiplexing, the number of transmission units received via the interface that were discarded because of an unknown or unsupported protocol. For any interface that does not support protocol multiplexing, this counter is not present.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..4294967295</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_octets">
+<code class="descname">out_octets</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_octets" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of octets transmitted out of the interface, including framing characters.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..18446744073709551615</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_unicast_pkts">
+<code class="descname">out_unicast_pkts</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_unicast_pkts" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of packets that higher-level protocols requested be transmitted, and that were not addressed to a multicast or broadcast address at this sub-layer, including those that were discarded or not sent.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..18446744073709551615</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_broadcast_pkts">
+<code class="descname">out_broadcast_pkts</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_broadcast_pkts" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of packets that higher-level protocols requested be transmitted, and that were addressed to a broadcast address at this sub-layer, including those that were discarded or not sent.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..18446744073709551615</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_multicast_pkts">
+<code class="descname">out_multicast_pkts</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_multicast_pkts" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of packets that higher-level protocols requested be transmitted, and that were addressed to a multicast address at this sub-layer, including those that were discarded or not sent.  For a MAC-layer protocol, this includes both Group and Functional addresses.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..18446744073709551615</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_discards">
+<code class="descname">out_discards</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_discards" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of outbound packets that were chosen to be discarded even though no errors had been detected to prevent their being transmitted.  One possible reason for discarding such a packet could be to free up buffer space.  Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..4294967295</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_errors">
+<code class="descname">out_errors</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>For packet-oriented interfaces, the number of outbound packets that could not be transmitted because of errors. For character-oriented or fixed-length interfaces, the number of outbound transmission units that could not be transmitted because of errors.     Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of &#8216;discontinuity-time&#8217;</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..4294967295</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_pkts">
+<code class="descname">in_pkts</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.in_pkts" title="Permalink to this definition">¶</a></dt>
+<dd><p>total packets input</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..18446744073709551615</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_pkts">
+<code class="descname">out_pkts</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Statistics.out_pkts" title="Permalink to this definition">¶</a></dt>
+<dd><p>total packets output</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..18446744073709551615</div></blockquote>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.6',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

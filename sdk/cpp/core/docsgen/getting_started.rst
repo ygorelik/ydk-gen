@@ -32,222 +32,187 @@ Getting Started
 Overview
 ========
 
-The YANG Development Kit (YDK) is a Software Development Kit that provides API's that are modeled in YANG. The main goal of YDK is to reduce the learning curve of YANG data models by expressing the model semantics in an API and abstracting protocol/encoding details.  YDK is composed of a core package that defines services and providers, plus one or more module bundles that are based on YANG models.
+The YANG Development Kit (YDK) is a software development tool, which provides API for building applications based on YANG models.
+The main goal of YDK is to reduce the learning curve of YANG data models by expressing the model semantics in an API
+and abstracting protocol/encoding details.  YDK is composed of a core package that defines services and providers,
+plus one or more module bundles that are based on YANG models.
 
-How to Install
-==============
+Backward Compatibility
+======================
 
-You can install YDK-Cpp on Linux or MacOS.  It is currently not supported on Windows.
+The Python YDK-0.8.6 core package is compatible with all model bundles generated previously with ydk-gen releases starting from 0.7.3.
+However the YDK-0.8.6 generates slightly different code and model API comparing to YDK-0.8.4.
+The YDK-0.8.6 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
+
+Docker
+======
+
+A `docker image <https://docs.docker.com/engine/reference/run/>`_ is automatically built with the latest ydk-gen installed.
+This be used to run ydk-gen without installing anything natively on your platform.
+
+To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
+See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
+
+  docker run -it ydksolutions/ydk-gen
+
 
 System Requirements
+===================
+
+The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
+
+ - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
+ - Linux CentOS/RHEL versions 7 and 8
+ - MacOS up to 10.14.6 (Mojave)
+
+On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
+check `this <https://www.windowscentral.com/install-windows-subsystem-linux-windows-10>`_ for virtual machine installation procedure.
+The YDK has been tested in such environment on Ubuntu Bionic (18.04 LTS) and Focal (20.04 LTS) images obtained
+from Microsoft Store.
+
+On supported platforms the YDK can be installed using `Installation Script`_.
+On other platforms the YDK should be installed manually `Building from source`_.
+For both the methods the user must install `git` package prior to the installation procedure.
+
+All YDK core components are based on C and C++ code. These components compiled using default compilers for the supported platform.
+Corresponding binaries, libraries, and header files are installed in default locations,
+which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
+The user must have sudo access in order to install YDK core components to these locations.
+
+.. _howto-install:
+
+Core Installation
+=================
+
+Installation Script
 -------------------
 
-Linux
-~~~~~
+For YDK installation it is recommended to use script `install_ydk.sh` from `ydk-gen` git repository.
+The script detects platform OS, installs all the dependencies and builds complete set of YDK components for specified language.
+The user must have sudo access to these locations.
 
-**Ubuntu (Debian-based)**
+The YDK extensively uses Python scripts for building its components and model API packages (bundles).
+In order to isolate YDK Python environment from system installation, the script builds Python3 virtual environment.
+The user must manually activate virtual environment when generating model bundles and/or running YDK based application.
+By default the Python virtual environment is installed under `$HOME/venv` directory.
+If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
-The following packages must be present in your system before installing YDK-Cpp:
-
-.. code-block:: sh
-
-   # Linux dependencies
-   sudo apt-get install libcurl4-openssl-dev libpcre3-dev libssh-dev libxml2-dev libxslt1-dev libtool-bin cmake
-   sudo apt-get install python3-dev
-
-   # gcc-5 and g++5 for modern c++
-   sudo apt-get install gcc-5 g++-5 -y > /dev/null
-   sudo ln -f -s /usr/bin/g++-5 /usr/bin/g++
-   sudo ln -f -s /usr/bin/gcc-5 /usr/bin/gcc
-
-**CentOS-7 (Fedora-based)**
-
-The following packages must be present in your system before installing YDK-Cpp:
+Here is simple example of core YDK installation for C++ programming language:
 
 .. code-block:: sh
 
-   # Linux dependencies
-   sudo yum install epel-release
-   sudo yum install libxml2-devel libxslt-devel libssh-devel libtool pcre-devel cmake3 wget
-   sudo yum install gcc-g++ python36-devel
+    git clone https://github.com/ygorelik/ydk-gen.git
+    cd ydk-gen
+    export YDKGEN_HOME=`pwd`  # optional
+    export PYTHON_VENV=$HOME/ydk_vne  # optional
+    ./install_ydk.sh --core -l cpp
 
-If installed gcc compiler version is lowers than 4.8.1, upgrade the compiler to gcc-5
 
-.. code-block:: sh
+The script also allows to install individual components like dependencies, core, and service packages
+for specified programming language or for all supported languages.
+Full set of script capabilities could be viewed like this::
 
-   # gcc-5 and g++5 for modern c++
-   sudo yum install centos-release-scl -y > /dev/null
-   sudo yum install devtoolset-4-gcc* -y > /dev/null
-   sudo ln -sf /opt/rh/devtoolset-4/root/usr/bin/gcc /usr/bin/cc
-   sudo ln -sf /opt/rh/devtoolset-4/root/usr/bin/g++ /usr/bin/c++
-   sudo ln -sf /opt/rh/devtoolset-4/root/usr/bin/gcc /usr/bin/gcc
-   sudo ln -sf /opt/rh/devtoolset-4/root/usr/bin/g++ /usr/bin/g++
+    ./install_ydk.sh --help
+    usage: install_ydk [-l [cpp, py, go]] [-s gnmi] [-h] [-n]
+    Options and arguments:
+      -l [cpp, py, go, all] installation language; if not specified Python is assumed
+                            'all' corresponds to all available languages
+      -c|--core             install YDK core package
+      -s|--service gnmi     install gNMI service package
+      -n|--no-deps          skip installation of dependencies
+      -h|--help             print this help message and exit
 
-MacOS
-~~~~~
+    Environment variables:
+    YDKGEN_HOME         specifies location of ydk-gen git repository;
+                        if not set, $HOME/ydk-gen is assumed
+    PYTHON_VENV         specifies location of python virtual environment;
+                        if not set, /home/ygorelik/venv is assumed
+    GOROOT              specifies installation directory of go software;
+                        if not set, /usr/local/go is assumed
+    GOPATH              specifies location of go source directory;
+                        if not set, $HOME/go is assumed
+    C_INCLUDE_PATH      location of C include files;
+                        if not set, /usr/local/include is assumed
+    CPLUS_INCLUDE_PATH  location of C++ include files;
+                        if not set, /usr/local/include is assumed
 
-It is recommended to install `homebrew <http://brew.sh>`_ and Xcode command line tools on your system before installing YDK-Cpp:
 
-.. code-block:: sh
+If user environment is different from the default one (different Python installation or different
+location of libraries), then building from source method should be used.
 
-   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-   brew install curl libssh pcre xml2 cmake
-   xcode-select --install
+Building from source
+--------------------
 
-Libssh Installation
--------------------
+Installing third party dependencies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The libssh-0.8.0 `does not support <http://api.libssh.org/master/libssh_tutor_threads.html>`_ separate threading library,
-which is required for YDK. If after installation of libssh package the `libssh_threads.a` is missing, please downgrade the installation to libssh-0.7.6,
-or upgrade to libssh-0.8.1 or higher.
+If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
+The script will also install Python virtual environment in default or specified location::
 
-gNMI Requirements
------------------
+    # Clone ydk-gen from GitHub
+    git clone https://github.com/ygorelik/ydk-gen.git
+    cd ydk-gen
 
-In order to enable YDK support for gNMI protocol, which is optional, the following third party software must be installed prior to gNMI YDK component installation.
+    # Define optional environment variables and install dependencies
+    export YDKGEN_HOME=`pwd`
+    export PYTHON_VENV=$HOME/ydk_venv
+    ./install_ydk.sh   # also builds Python virtual environment
 
-Install Protobuf and Protoc
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
-.. code-block:: sh
+Environment variables
+~~~~~~~~~~~~~~~~~~~~~
 
-   wget https://github.com/google/protobuf/releases/download/v3.5.0/protobuf-cpp-3.5.0.zip
-   unzip protobuf-cpp-3.5.0.zip
-   cd protobuf-3.5.0
-   ./configure
-   make
-   sudo make install
-   sudo ldconfig
-   cd -
+In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
+In this case the header location must be specified explicitly (in below commands the default location is shown)::
 
-**Install gRPC**
+  export C_INCLUDE_PATH=/usr/local/include
+  export CPLUS_INCLUDE_PATH=/usr/local/include
 
-.. code-block:: sh
-
-   git clone -b v1.9.1 https://github.com/grpc/grpc
-   cd grpc
-   git submodule update --init
-   make
-   sudo make install
-   sudo ldconfig
-   cd -
-
-Quick YDK Installation
-----------------------
-
-Install prebuilt libraries
+Installing core components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**Ubuntu**
+::
 
-Download and install YDK core library - `libydk`. You can install the library using prebuilt debian packages for Xenial and Bionic LTS distributions.
-For other Ubuntu distributions it is recommended to build core library from source.
-The prebuilt libraries compiled with specific C/C++ compilers versions, which corresponds to default one for the Linux disribution.
-If your compiler is different from specified one, it is recommended to build the packages from source.
+    # Activate Python virtual environment
+    source $PYTHON_VENV/bin/activate
 
-For Xenial (Ubuntu 16.04.4, gcc-5.5.0):
+    # Generate and install YDK core library
+    ./generate.py -is --core --cpp
 
-.. code-block:: sh
+Adding gNMI Service
+-------------------
 
-   wget https://devhub.cisco.com/artifactory/debian-ydk/0.8.5/xenial/libydk-0.8.5-1.amd64.deb
-   sudo gdebi libydk-0.8.5-1.amd64.deb
+In order to enable YDK support for gNMI protocol, which is optional, the user need install third party software
+and YDK gNMI service package.
 
-For Bionic (Ubuntu 18.04.1, gcc-7.4.0):
+gNMI Service installation
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: sh
+Here is simple example, how gNMI service package for Python could be added::
 
-   wget https://devhub.cisco.com/artifactory/debian-ydk/0.8.5/bionic/libydk-0.8.5-1.amd64.deb
-   sudo gdebi libydk-0.8.5-1.amd64.deb
+    cd ydk-gen
+    ./install_ydk.sh -l cpp --service gnmi
 
-**CentOS**
 
-The prebuilt package compiled with default version - gcc-4.8.5.
-
-.. code-block:: sh
-
-   sudo yum install https://devhub.cisco.com/artifactory/rpm-ydk/0.8.5/libydk-0.8.5-1.x86_64.rpm
-
-**MacOS**
-
-The prebuilt packages compiled with C++ compiler Clang-8.0.0, which is default version for MacOS 10.12.
-
-.. code-block:: sh
-
-   curl -O https://devhub.cisco.com/artifactory/osx-ydk/0.8.5-beta/libydk-0.8.5-Darwin.pkg
-   sudo installer -pkg libydk-0.8.5-Darwin.pkg -target /
-
-gNMI Service Installation
--------------------------
-
-Installing YDK gNMI library
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-**Ubuntu**
-
-For Xenial (Ubuntu 16.04.4):
-
-.. code-block:: sh
-
-   wget https://devhub.cisco.com/artifactory/debian-ydk/0.8.5/xenial/libydk_gnmi-0.4.0-5.amd64.deb
-   sudo gdebi libydk_gnmi-0.4.0-5.amd64.deb
-
-For Bionic (Ubuntu 18.04.1):
-
-.. code-block:: sh
-
-   wget https://devhub.cisco.com/artifactory/debian-ydk/0.8.5/bionic/libydk_gnmi-0.4.0-5.amd64.deb
-   sudo gdebi libydk_gnmi-0.4.0-5.amd64.deb
-
-**CentOS**
-
-The prebuilt package compiled with default version - gcc-4.8.5.
-
-.. code-block:: sh
-
-   sudo yum install https://devhub.cisco.com/artifactory/rpm-ydk/0.8.5/libydk_gnmi-0.4.0-5.x86_64.rpm
-
-**MacOS**
-
-The prebuilt packages compiled with C++ compiler Clang-8.0.0.
-
-.. code-block:: sh
-
-   curl -O https://devhub.cisco.com/artifactory/osx-ydk/0.8.5/libydk_gnmi-0.4.0-5.Darwin.pkg
-   sudo installer -pkg libydk_gnmi-0.4.0-5.Darwin.pkg -target /
-
-Set runtime environment
-~~~~~~~~~~~~~~~~~~~~~~~
-
-The YDK based application runtime environment must include setting of **LD_LIBRARY_PATH** variable:
-
-.. code-block:: sh
-
-   PROTO="/Your-Protobuf-and-Grpc-installation-directory"
-   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5.0/src/.libs:/usr/local/lib64
-
-Installing from source
-----------------------
-
-In order to build YDK components from source, download or clone source files from `YDK-Cpp repository <https://github.com/CiscoDevNet/ydk-cpp>`_
-
-Installing YDK core library
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-YDK uses ``cmake`` as the build system of choice. To install the ``core`` package, execute:
-
-.. code-block:: sh
-
-  $ cd ydk-cpp/core/ydk
-  ydk$ mkdir build && cd build
-  build$ cmake .. && make
-  build$ sudo make install
-
-Installing model bundles
+gNMI runtime environment
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once you have installed the ``core`` package, you can install one or more model bundles.  Note that some bundles have dependencies on other bundles.  Those dependencies are captured in the bundle packages used for quick installation.
+There is an open issue with gRPC on Centos/RHEL, which requires an extra step before running any YDK gNMI application.
+See this issue on `GRPC GitHub <https://github.com/grpc/grpc/issues/10942#issuecomment-312565041>`_ for details.
+As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable::
 
-To install the ``ietf`` bundle, execute:
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/grpc/libs/opt:~/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+
+
+Installing model bundles
+------------------------
+
+Once you have installed the `core` package, you can install one or more model bundles.
+Note that some bundles have dependencies on other bundles.
+Those dependencies are captured in the bundle packages used for quick installation.
+
+To install the `ietf` bundle, execute:
 
 .. code-block:: sh
 
@@ -256,7 +221,7 @@ To install the ``ietf`` bundle, execute:
   build$ cmake .. && make
   build$ sudo make install
 
-To install the ``openconfig`` bundle, execute:
+To install the `openconfig` bundle, execute:
 
 .. code-block:: sh
 
@@ -265,7 +230,7 @@ To install the ``openconfig`` bundle, execute:
   build$ cmake .. && make
   build$ sudo make install
 
-To install the ``cisco-ios-xr`` bundle, execute:
+To install the `cisco-ios-xr` bundle, execute:
 
 .. code-block:: sh
 
@@ -274,24 +239,12 @@ To install the ``cisco-ios-xr`` bundle, execute:
   build$ cmake .. && make
   build$ sudo make install
 
-Installing YDK gNMI library
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Optionally the YDK gNMI Service library can be installed. Prior to this installation the YDK core library must be installed (see above).
-
-.. code-block:: sh
-
-  $ cd ydk-cpp/gnmi
-  gnmi$ mkdir -p build
-  gnmi$ cd build
-  build$ cmake ..
-  build$ make
-  build$ sudo make install
-
 Samples
 =======
 
-To get started using the YDK API, there are sample apps available in the `YDK-Cpp samples repository <https://github.com/CiscoDevNet/ydk-cpp/tree/master/core/ydk/samples>`_. For example, to run the ``bgp_create.cpp`` sample execute:
+To get started using the YDK API, there are sample apps available in the
+`YDK-Cpp samples repository <https://github.com/CiscoDevNet/ydk-cpp/tree/master/core/ydk/samples>`_.
+For example, to run the `bgp_create.cpp` sample execute:
 
 .. code-block:: sh
 

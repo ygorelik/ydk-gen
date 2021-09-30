@@ -1,7 +1,7 @@
 {
   "name": "openconfig",
   "version": "0.1.9",
-  "core_version": "0.8.5.3",
+  "core_version": "0.8.6",
   "author": "Yan Gorelik",
   "copyright": "Yan Gorelik, YDK Solution",
   "description": "YDK bundle for openconfig models revision 2020-05-06",
@@ -116,7 +116,7 @@
     {
       "name": "ietf",
       "version": "0.1.6",
-      "core_version": "0.8.5.3",
+      "core_version": "0.8.6",
       "uri": "file://profiles/bundles/ietf_0_1_6.json"
     }
   ]

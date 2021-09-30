@@ -1,7 +1,7 @@
 {
   "name": "cisco-ios-xr-701",
   "version": "7.0.1",
-  "core_version": "0.8.5.3",
+  "core_version": "0.8.6",
   "author": "YDK Solutions",
   "copyright": "YDK Solutions",
   "description": "YDK bundle for Cisco IOS XR 7.0.1 models",
@@ -1151,7 +1151,7 @@
     {
       "name": "ietf",
       "version": "0.1.6",
-      "core_version": "0.8.5.3",
+      "core_version": "0.8.6",
       "uri": "file://profiles/bundles/ietf_0_1_6.json"
     }
   ]
