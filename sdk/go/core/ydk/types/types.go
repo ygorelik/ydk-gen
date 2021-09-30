@@ -301,6 +301,7 @@ func (ec *EntityCollection) Add(entities ... Entity) {
 }
 
 func (ec *EntityCollection) Append(entities []Entity) {
+	if ec.EcMap == nil { ec.Clear() }
 	for i:=0; i<len(entities); i++ {
 		entity := entities[i]
 		key := GetSegmentPath(entity)
@@ -309,18 +310,17 @@ func (ec *EntityCollection) Append(entities []Entity) {
 }
 
 func (ec *EntityCollection) Len() int {
-    if ec.EcMap == nil {
-	ec.EcMap = NewOrderedMap()
-    }
-    return ec.EcMap.Len()
+	if ec.EcMap == nil { ec.Clear() }
+	return ec.EcMap.Len()
 }
 
 func (ec *EntityCollection) Get(key string) (Entity, bool) {
-    elem, exists := ec.EcMap.Get(key)
-    if exists {
-        return elem.(Entity), exists
-    }
-    return nil, exists
+	if ec.EcMap == nil { ec.Clear() }
+	elem, exists := ec.EcMap.Get(key)
+	if exists {
+		return elem.(Entity), exists
+	}
+	return nil, exists
 }
 
 func (ec *EntityCollection) GetItem(item int) Entity {
@@ -332,16 +332,18 @@ func (ec *EntityCollection) GetItem(item int) Entity {
 }
 
 func (ec *EntityCollection) HasKey(key string) bool {
-    _, exists := ec.EcMap.Get(key)
-    return exists
+	if ec.EcMap == nil { ec.Clear() }
+	_, exists := ec.EcMap.Get(key)
+	return exists
 }
 
 func (ec *EntityCollection) Pop(key string) (Entity, bool) {
-    iEntity, exists := ec.EcMap.Pop(key)
-    if !exists {
-        return nil, exists
-    }
-    return iEntity.(Entity), exists
+	if ec.EcMap == nil { ec.Clear() }
+	iEntity, exists := ec.EcMap.Pop(key)
+	if !exists {
+		return nil, exists
+	}
+	return iEntity.(Entity), exists
 }
 
 func (ec *EntityCollection) Clear() {
@@ -349,34 +351,34 @@ func (ec *EntityCollection) Clear() {
 }
 
 func (ec *EntityCollection) Keys() []string {
-    return ec.EcMap.Keys()
+	if ec.EcMap == nil { ec.Clear() }
+	return ec.EcMap.Keys()
 }
 
 func (ec *EntityCollection) Entities() []Entity {
+	if ec.EcMap == nil { ec.Clear() }
 	entities := make([]Entity, ec.Len())
-	if ec.EcMap == nil {
-	    ec.EcMap = NewOrderedMap()
-	}
 	iEntities := ec.EcMap.Values()
 	for i:=0; i<ec.Len(); i++ {
-	    entities[i] = iEntities[i].(Entity)
+		entities[i] = iEntities[i].(Entity)
 	}
 	return entities
 }
 
 func (ec *EntityCollection) String() string {
-    if ec.Len() == 0 {
-        return "EntityCollection is empty"
-    }
-    entities := ec.Entities()
-    entity_str := make([]string, ec.Len())
-    for i, entity := range entities {
-        entity_str[i] = EntityToString(entity)
-    }
-    return fmt.Sprintf("EntityCollection [%s]", strings.Join(entity_str, "; "))
+	if ec.Len() == 0 {
+		return "EntityCollection is empty"
+	}
+	entities := ec.Entities()
+	entity_str := make([]string, ec.Len())
+	for i, entity := range entities {
+		entity_str[i] = EntityToString(entity)
+	}
+	return fmt.Sprintf("EntityCollection [%s]", strings.Join(entity_str, "; "))
 }
 
 func (ec *EntityCollection) SetFilter(filter yfilter.YFilter) {
+	if ec.EcMap == nil { ec.Clear() }
 	iEntities := ec.EcMap.Values()
 	for i:=0; i<ec.Len(); i++ {
 		ent := iEntities[i].(Entity)
