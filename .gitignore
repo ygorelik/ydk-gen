@@ -1,6 +1,7 @@
 .vscode
 .idea/*
 *.log
+.env
 .settings/
 .pydevproject
 .project

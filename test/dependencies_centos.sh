@@ -120,7 +120,7 @@ function check_install_go {
     print_msg "The Go is not installed"
     minor=0
   fi
-  if (( $minor < 9 )); then
+  if [ $minor -lt 9 ]; then
     print_msg "Installing Golang version 1.13.1"
     $curr_dir/3d_party/go/goinstall.sh --version 1.13.1 > /dev/null
     sudo ln -sf $HOME/.go /usr/local/go

@@ -164,7 +164,7 @@ function check_install_go {
     print_msg "The Go is not installed"
     minor=0
   fi
-  if (( $minor < 9 )); then
+  if [ $minor -lt 9 ]; then
     print_msg "Installing Golang version 1.13.1 in /usr/local/go"
     run_cmd wget https://storage.googleapis.com/golang/go1.13.1.linux-amd64.tar.gz
     sudo tar -zxf  go1.13.1.linux-amd64.tar.gz -C /usr/local/

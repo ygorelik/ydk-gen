@@ -116,13 +116,18 @@ for specified programming language or for all supported languages.
 Full set of script capabilities could be viewed like this::
 
     ./install_ydk.sh --help
-    usage: install_ydk [-l [cpp, py, go]] [-s gnmi] [-h] [-n]
+    usage: install_ydk [--cpp] [--py] [--go] [--all] [-s gnmi] [-h] [-n] [-p path] [--no-py-venv]
     Options and arguments:
-      -l [cpp, py, go, all] installation language; if not specified Python is assumed
-                            'all' corresponds to all available languages
-      -c|--core             install YDK core package
+      --cpp                 install YDK for C++ programming language
+      --go                  install YDK for Go programming language
+      --py|--python         install YDK for Python programming language (default)
+      --all                 install YDK for all available programming languages
+      --no-py-venv          do not create python virtual environment
+      -c|--core             install YDK core packages
       -s|--service gnmi     install gNMI service package
       -n|--no-deps          skip installation of dependencies
+      -p|--python-dir path  set Python3 installation root directory;
+                            if not specified, system installation assumed
       -h|--help             print this help message and exit
 
     Environment variables:
@@ -201,7 +206,7 @@ gNMI Service installation
 Here is simple example, how gNMI service package for Python could be added::
 
     cd ydk-gen
-    ./install_ydk.sh -l py --service gnmi
+    ./install_ydk.sh --cpp --service gnmi
 
 
 gNMI runtime environment

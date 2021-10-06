@@ -1,6 +1,6 @@
 ..
   #  YDK - YANG Development Kit
-  #  Copyright 2016 Cisco Systems. All rights reserved
+  #  Copyright 2016-2019 Cisco Systems. All rights reserved
   # *************************************************************
   # Licensed to the Apache Software Foundation (ASF) under one
   # or more contributor license agreements.  See the NOTICE file
@@ -101,7 +101,7 @@ The user must manually activate virtual environment when generating model bundle
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for Python programming language:
+Here is simple example of core YDK installation for Go programming language:
 
 .. code-block:: sh
 
@@ -109,7 +109,7 @@ Here is simple example of core YDK installation for Python programming language:
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
-    ./install_ydk.sh --core
+    ./install_ydk.sh --core --go
 
 
 The script also allows to install individual components like dependencies, core, and service packages
@@ -117,13 +117,18 @@ for specified programming language or for all supported languages.
 Full set of script capabilities could be viewed like this::
 
     ./install_ydk.sh --help
-    usage: install_ydk [-l [cpp, py, go]] [-s gnmi] [-h] [-n]
+    usage: install_ydk [--cpp] [--py] [--go] [--all] [-s gnmi] [-h] [-n] [-p path] [--no-py-venv]
     Options and arguments:
-      -l [cpp, py, go, all] installation language; if not specified Python is assumed
-                            'all' corresponds to all available languages
-      -c|--core             install YDK core package
+      --cpp                 install YDK for C++ programming language
+      --go                  install YDK for Go programming language
+      --py|--python         install YDK for Python programming language (default)
+      --all                 install YDK for all available programming languages
+      --no-py-venv          do not create python virtual environment
+      -c|--core             install YDK core packages
       -s|--service gnmi     install gNMI service package
       -n|--no-deps          skip installation of dependencies
+      -p|--python-dir path  set Python3 installation root directory;
+                            if not specified, system installation assumed
       -h|--help             print this help message and exit
 
     Environment variables:
@@ -190,8 +195,8 @@ Please follow this procedure to install YDK core components for Python apps deve
     # Generate and install YDK core library
     ./generate.py -is --core --cpp
 
-    # Generate and install Python core package
-    ./generate.py -i --core --py
+    # Generate and install Go core package
+    ./generate.py -i --core --go
 
 Adding gNMI Service
 -------------------
@@ -202,10 +207,10 @@ and YDK gNMI service package.
 gNMI Service installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here is simple example, how gNMI service package for Python could be added::
+Here is simple example, how gNMI service package for Go could be added::
 
     cd ydk-gen
-    ./install_ydk.sh -l py --service gnmi
+    ./install_ydk.sh --go --service gnmi
 
 
 gNMI runtime environment
@@ -221,9 +226,8 @@ As a workaround, the YDK based application runtime environment must include sett
 Documentation and Support
 =========================
 
-- Read the `API documentation <http://ydk.cisco.com/go/docs>`_ for details on how to use the API and specific models
-- Samples can be found under the `samples directory <https://github.com/CiscoDevNet/ydk-go/tree/master/samples>`_
-- Additional samples can be found in the `YDK-Go samples repository <https://github.com/CiscoDevNet/ydk-go-samples>`_ (coming soon)
+- Read the `API documentation <http://ydk.cisco.com/go/docs>`_ for details on how to use the API and specific models (YDK-0.8.3)
+- Samples can be found under the `samples <https://github.com/CiscoDevNet/ydk-go/tree/master/samples>`_ directory
 - Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with other users and with the makers of YDK
 - Additional YDK information can be found at `ydk.io <http://ydk.io>`_
 

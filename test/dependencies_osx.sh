@@ -26,17 +26,17 @@
 # ------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date) *** dependencies_osx.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date) *** dependencies_osx.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
     local cmd=$@
     print_msg "Running: $cmd"
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
@@ -62,7 +62,7 @@ function install_libssh {
 
 function install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $os_version < "10.00" ]]
+    if [[ $os_version < "10.00." ]]; then
       print_msg "Installing confd-basic-6.2"
       wget https://github.com/CiscoDevNet/ydk-gen/files/562559/confd-basic-6.2.darwin.x86_64.zip &> /dev/null
       unzip confd-basic-6.2.darwin.x86_64.zip
@@ -92,7 +92,7 @@ function install_golang {
     print_msg "The Go is not installed"
     minor=0
   fi
-  if (( $minor < 9 )); then
+  if [ $minor -lt 9 ]; then
     print_msg "Installing Go1.9.2"
     bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
     source /Users/travis/.gvm/scripts/gvm
@@ -117,17 +117,17 @@ function check_python_installation {
     print_msg "Python3 is not installed"
     need_installation=1
   else
-    python_version = $(echo `python3 -V` | awk '{ print $2 }')
+    python_version=$(echo `python3 -V` | awk '{ print $2 }')
     print_msg "Installed Python3 version is $python_version"
-    if [ $python_version == "3.9"* ]; then
+    if [[ $python_version == "3.9."* ]]; then
       need_installation=1
     fi
   fi
-  if [ ! -z $need_installation ]; then
+  if [[ -n $need_installation ]]; then
     print_msg "Installing python3.7"
     brew install python@3.7
-    export PATH="/usr/local/opt/python@3.7/bin:$PATH"
-    echo 'export PATH="/usr/local/opt/python@3.7/bin:$PATH"' > ~/.profile.python
+    export PATH="/usr/local/opt/python@3.7/bin":$PATH
+    echo 'export PATH=/usr/local/opt/python@3.7/bin:$PATH' > ~/.profile.python
     echo 'if [ -z $CMAKE_LIBRARY_PATH ]; then' >> ~/.profile.python
     echo '  export CMAKE_LIBRARY_PATH=/usr/local/opt/python@3.7/Frameworks/Python.framework/Versions/3.7/lib' >> ~/.profile.python
     echo 'fi' >> ~/.profile.python
