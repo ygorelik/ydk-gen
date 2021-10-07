@@ -62,7 +62,7 @@ Docker
 To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
 See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-  docker run -it ydksolutions/ydk-gen
+  docker run -it ydksolutions/ydk-gen:0.8.6.2
 
 
 ..
@@ -333,4 +333,4 @@ Available resources:
 Release Notes
 =============
 
-The current YDK release version for Python is 0.8.6. The `ydk-py` GitHub repository is not maintained for this release.
+The current YDK release version for Python is 0.8.6.2. The `ydk-py` GitHub repository is not maintained for this release.

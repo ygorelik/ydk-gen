@@ -1,6 +1,6 @@
 /*  ----------------------------------------------------------------
  YDK - YANG Development Kit
- Copyright 2016 Cisco Systems. All rights reserved.
+ Copyright 2016-2019 Cisco Systems. All rights reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -931,6 +931,10 @@ func EntityEqual(x, y Entity) bool {
 
 func AddKeyToken(attr interface{}, attrName string) string {
     attrStr := fmt.Sprintf("%v", attr)
+    if attrStr == "{}" {
+        // correct key value for type Empty
+        attrStr = ""
+    }
     var token string
     if strings.Index(attrStr, "'") >= 0 {
         token = fmt.Sprintf("[%s=\"%s\"]", attrName, attrStr)

@@ -1,6 +1,6 @@
 #!/bin/bash
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,17 +27,17 @@
 # ------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date) *** dependencies_centos.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date) *** dependencies_centos.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    local cmd=$@
+    local cmd=$*
     print_msg "Running: $cmd"
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
@@ -86,7 +86,8 @@ function install_dependencies {
     run_cmd sudo yum update -y > /dev/null
     run_cmd sudo yum install epel-release -y > /dev/null
 #    run_cmd sudo yum install https://centos7.iuscommunity.org/ius-release.rpm -y > /dev/null
-    run_cmd sudo yum install which libxml2-devel libxslt-devel libssh-devel libtool gcc-c++ pcre-devel -y > /dev/null
+    run_cmd sudo yum install which libxml2-devel libxslt-devel libssh-devel libtool gcc-c++ -y > /dev/null
+    run_cmd sudo yum install pcre-devel pcre-static.x86_64 glibc-static libstdc++-static -y > /dev/null
     run_cmd sudo yum install cmake3 wget curl-devel unzip make java mlocate flex bison -y > /dev/null
     run_cmd sudo yum install python3-devel -y > /dev/null
     sudo yum install valgrind -y > /dev/null
@@ -119,7 +120,7 @@ function check_install_go {
     print_msg "The Go is not installed"
     minor=0
   fi
-  if (( $minor < 9 )); then
+  if [ $minor -lt 9 ]; then
     print_msg "Installing Golang version 1.13.1"
     $curr_dir/3d_party/go/goinstall.sh --version 1.13.1 > /dev/null
     sudo ln -sf $HOME/.go /usr/local/go
@@ -148,7 +149,7 @@ function check_install_libssh {
 
 function install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $centos_version > 7 ]]; then
+    if [[ $centos_version -gt 7 ]]; then
       print_msg "Installing confd basic 7.3"
       unzip $curr_dir/3d_party/linux/confd-basic-7.3.linux.x86_64.zip
       cd confd-basic-7.3.linux.x86_64

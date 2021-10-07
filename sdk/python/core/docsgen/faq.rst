@@ -70,7 +70,6 @@ For example, the below steps will generate & install the `cisco-ios-xr 6.5.1` bu
 .. code-block:: sh
 
     git clone https://github.com/ygorelik/ydk-gen.git
-    git checkout tags/0.8.6
     cd ydk-gen
     ./install_ydk.sh --core
 

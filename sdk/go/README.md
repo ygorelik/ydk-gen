@@ -80,7 +80,7 @@ To use the docker image, [install docker](https://docs.docker.com/install/) on y
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
 
 ```
-docker run -it ydksolutions/ydk-gen
+docker run -it ydksolutions/ydk-gen:0.8.6.2
 ```
 
 <!---
@@ -257,4 +257,4 @@ You can download the latest YDK Go source code, which include core, and model bu
 
 ## Release Notes
 
-The current YDK release version is 0.8.6. YDK-Go is licensed under the Apache 2.0 License.
+The current YDK release version is 0.8.6.2. YDK-Go is licensed under the Apache 2.0 License.
