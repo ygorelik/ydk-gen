@@ -230,7 +230,7 @@ function install_py_core {
 function install_py_gnmi {
     print_msg "Installing gNMI package for Python"
     cd $YDKGEN_HOME
-    run_cmd python3 generate.py -i$sudo_flag --service profiles/services/gnmi-0.4.0.json
+    run_cmd $PYTHON_BIN generate.py -i$sudo_flag --service profiles/services/gnmi-0.4.0.json
 
     print_msg "Verifying Python gNMI package installation"
     $PYTHON_BIN -c "from ydk.gnmi.path import gNMISession"
@@ -313,8 +313,8 @@ export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH
   elif [[ -n $python_location ]]; then
     echo "PATH=$python_location/bin:$PATH
 export PATH
-alias python=python3
-alias pip=pip3
+alias python=$PYTHON_BIN
+alias pip=$PIP_BIN
 " >> .env
   fi
   if [[ -n $sudo_cmd ]]; then
@@ -423,7 +423,7 @@ while [[ $# -gt 0 ]]; do
                     echo "Wrong Python installation directory specified!"
                     echo "System installation will be used"
                     unset python_location
-                else
+                elif [ $install_venv == "no" ]; then
                     PYTHON_BIN=$python_location/bin/python3
                     PIP_BIN=$python_location/bin/pip3
                 fi
@@ -535,13 +535,13 @@ fi
 init_py_env
 init_go_env
 
-install_ydk_cpp
+write_env_file
+
+#install_ydk_cpp
 
 install_ydk_py
 
 install_ydk_go
-
-write_env_file
 
 if [ ${install_venv} == "yes" ]; then
   deactivate

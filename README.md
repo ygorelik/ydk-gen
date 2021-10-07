@@ -112,7 +112,7 @@ To use the docker image, [install docker](https://docs.docker.com/install/) on y
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
 
 ```
-docker run -it ydksolutions/ydk:0.9.0.2
+docker run -it ydksolutions/ydk:0.9.1.1
 ```
 
 # System Requirements
@@ -166,7 +166,7 @@ Here is simple example of core YDK installation for Python programming language:
 ```
 git clone https://gitlab.com/yangorelik/ydk-gen.git
 cd ydk-gen
-git checkout tags/0.9.0.2 -b master
+git checkout tags/0.9.1.1 -b master
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
 ./install_ydk.sh --core
@@ -433,7 +433,7 @@ Check Python packages installed:
 
 ```
 $ pip list | grep ydk
-ydk (0.9.0.2)
+ydk (0.9.1.1)
 ydk-models-<name-of-bundle> (0.5.1)
 ...
 ```
@@ -613,6 +613,6 @@ The script will install core and bundle packages and then perform the unit tests
 
 # Release Notes
 
-The current YDK release version is 0.9.0.2.
+The current YDK release version is 0.9.1.1.
 
 The ydk-gen is licensed under the Apache 2.0 License.
