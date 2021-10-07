@@ -119,7 +119,7 @@ function check_python_installation {
       ext="$ver.dylib"
     fi
     lines=($(locate libpython$ext))
-    if [[ ${#lines[@]} -gt 0 && -x ${lines[0]} ]]; then
+    if [[ ${#lines[@]} -gt 0 ]] && [[ -x ${lines[0]} || -L ${lines[0]} ]]; then
       if [[ -z $CMAKE_LIBRARY_PATH ]]; then
         export CMAKE_LIBRARY_PATH=$(dirname ${lines[0]})
         print_msg "Setting CMAKE_LIBRARY_PATH to $CMAKE_LIBRARY_PATH"
