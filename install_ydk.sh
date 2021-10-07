@@ -95,7 +95,7 @@ function check_python_installation {
     exit $status
   fi
 
-  print_msg "Checking pip3 version and installation"
+  print_msg "Checking $PIP_BIN version and installation"
   $PIP_BIN --version
   status=$?
   if [ $status -ne 0 ]; then
@@ -537,7 +537,7 @@ init_go_env
 
 write_env_file
 
-#install_ydk_cpp
+install_ydk_cpp
 
 install_ydk_py
 
