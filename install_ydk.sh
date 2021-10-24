@@ -39,11 +39,14 @@ function run_cmd {
 
 function usage {
     MSG_COLOR=$NOCOLOR
-    echo "usage: install_ydk [-l [cpp, py, go]] [-s gnmi] [-h] [-n]"
+    echo "usage: install_ydk [--cpp] [--py] [--go] [--all] [-c] [-s gnmi] [-h] [-n] [--no-py-venv]"
     echo "Options and arguments:"
-    echo "  -l [cpp, py, go, all] installation language; if not specified Python is assumed"
-    echo "                        'all' corresponds to all available languages"
-    echo "  -c|--core             install YDK core package"
+    echo "  --cpp                 install YDK for C++ programming language"
+    echo "  --go                  install YDK for Go programming language"
+    echo "  --py|--python         install YDK for Python programming language (default)"
+    echo "  --all                 install YDK for all available programming languages"
+    echo "  --no-py-venv          do not create python virtual environment"
+    echo "  -c|--core             install YDK core packages"
     echo "  -s|--service gnmi     install gNMI service package"
     echo "  -n|--no-deps          skip installation of dependencies"
     echo "  -h|--help             print this help message and exit"
@@ -65,7 +68,7 @@ function usage {
     echo "                    if not set, default system library location is assumed"
 }
 
-function check_python_installation {
+function activate_python_venv() {
   if [[ -z ${PYTHON_VENV} ]]; then
     PYTHON_VENV=${HOME}/venv
     print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
@@ -75,7 +78,12 @@ function check_python_installation {
     run_cmd python3 -m venv ${PYTHON_VENV}
   fi
   run_cmd source ${PYTHON_VENV}/bin/activate
+}
 
+function check_python_installation {
+  if [ ${install_venv} == "yes" ]; then
+    activate_python_venv
+  fi
   print_msg "Checking python3 version and installation"
   python3 --version
   status=$?
@@ -108,7 +116,7 @@ function check_python_installation {
       ext="$ver.dylib"
     fi
     lines=($(locate libpython$ext))
-    if [[ ${#lines[@]} -gt 0 && -x ${lines[0]} ]]; then
+    if [[ ${#lines[@]} -gt 0 ]] && [[ -x ${lines[0]} || -L ${lines[0]} ]]; then
       if [[ -z $CMAKE_LIBRARY_PATH ]]; then
         export CMAKE_LIBRARY_PATH=$(dirname ${lines[0]})
         print_msg "Setting CMAKE_LIBRARY_PATH to $CMAKE_LIBRARY_PATH"
@@ -287,6 +295,9 @@ ydk_lang="py"
 service_pkg="no"
 core_package="no"
 dependencies="yes"
+install_venv="yes"
+sudo_flag=""
+sudo_cmd=""
 
 # As long as there is at least one more argument, keep looping
 while [[ $# -gt 0 ]]; do
@@ -301,6 +312,18 @@ while [[ $# -gt 0 ]]; do
                 usage
                 exit 1
             fi
+            ;;
+        --cpp)
+            ydk_lang="cpp"
+            ;;
+        --go)
+            ydk_lang="go"
+            ;;
+        --py|--python)
+            ydk_lang="py"
+            ;;
+        --all)
+            ydk_lang="all"
             ;;
         -n|--no-deps)
             dependencies="no"
@@ -319,6 +342,9 @@ while [[ $# -gt 0 ]]; do
                 echo "Unknown service package specified; gnmi assumed"
                 service_pkg="gnmi"
             fi
+            ;;
+        --no-py-venv)
+            install_venv="no"
             ;;
         *)
             echo "Unknown option '$key'"
@@ -432,5 +458,8 @@ install_ydk_py
 
 install_ydk_go
 
-deactivate
+if [ ${install_venv} == "yes" ]; then
+  deactivate
+fi
+
 cd ${curr_dir}
