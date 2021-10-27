@@ -1,3 +1,11 @@
+### 2021-12-30 version 0.8.6.2
+
+#### New features and enhancements
+  * Improved installation script to allow use Python system installation
+
+#### Resolved GitHub issues
+  * Fixed Python 3.5 code compatibility issue for Ubuntu:xenial
+
 ### 2021-09-30 version 0.8.6
 
 #### New features and enhancements

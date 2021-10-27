@@ -113,7 +113,7 @@ class EntityLookUpPrinter(FilePrinter):
         self.ctx.writeln('namespace %s' % self.bundle_name)
         self.ctx.writeln('{')
         self.ctx.bline()
-        self.ctx.writelns([f"void {snake_case(self.bundle_name)}_augment_lookup_tables()", "{"])
+        self.ctx.writelns(["void {}_augment_lookup_tables()".format(snake_case(self.bundle_name)), "{"])
 
         self.ctx.bline()
         self.ctx.lvl_inc()

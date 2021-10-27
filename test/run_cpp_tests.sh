@@ -23,7 +23,6 @@ function print_msg {
 }
 
 function run_cmd {
-    #echo $*
     $*
     local status=$?
     if [ $status -ne 0 ]; then
@@ -97,7 +96,6 @@ function cpp_sanity_ydktest_gen_install {
 
     generate_install_specified_cpp_bundle profiles/test/ydktest-cpp.json ydktest-bundle
 
-#    generate_install_specified_cpp_bundle profiles/test/ydktest-cpp-new.json ydktest_new-bundle
 }
 
 function cpp_sanity_ydktest_test {
@@ -136,7 +134,7 @@ function cpp_test_gen_test {
     os_type=$(uname)
     if [[ ${os_type} == "Linux" ]] ; then
         print_msg "Running tcp tests on linux"
-        run_cmd ./ydk_bundle_test *tcp*
+        run_cmd ./ydk_bundle_test *tcp* -d yes
     fi
 }
 
@@ -154,7 +152,7 @@ function cpp_test_gen {
 function init_gnmi_server {
     print_msg "Starting YDK gNMI server"
     mkdir -p $YDKGEN_HOME/test/gnmi_server/build && cd $YDKGEN_HOME/test/gnmi_server/build
-    cmake .. && make clean && make
+    ${CMAKE_BIN} .. && make clean && make
     ./gnmi_server &
     local status=$?
     if [ $status -ne 0 ]; then
@@ -175,7 +173,7 @@ function build_gnmi_core_library {
     cd $YDKGEN_HOME/sdk/cpp/gnmi
     mkdir -p build
     cd build
-    cmake .. && make clean && make
+    ${CMAKE_BIN} .. && make clean && make
     sudo make install
     cd $YDKGEN_HOME
 }
@@ -185,10 +183,10 @@ function build_and_run_tests {
     cd $YDKGEN_HOME/sdk/cpp/gnmi/tests
     mkdir -p build
     cd build
-    cmake .. && make clean && make
+    ${CMAKE_BIN} .. && make clean && make
 
     init_gnmi_server
-    ./ydk_gnmi_test
+    ./ydk_gnmi_test -d yes
     stop_gnmi_server
 }
 
@@ -202,7 +200,7 @@ function run_cpp_gnmi_memcheck_tests {
     cd $YDKGEN_HOME/sdk/cpp/gnmi/samples
     mkdir -p build
     cd build
-    cmake .. && make clean && make
+    ${CMAKE_BIN} .. && make clean && make
 
     init_gnmi_server
     print_msg "Running gnmi sample tests with memcheck"
@@ -231,14 +229,15 @@ fi
 print_msg "Running OS type: $os_type"
 print_msg "OS info: $os_info"
 
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
+
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
 CMAKE_BIN=cmake
-which cmake3
+command -v cmake3
 status=$?
 if [[ ${status} == 0 ]] ; then
     CMAKE_BIN=cmake3
@@ -251,22 +250,20 @@ if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
 fi
 
 curr_dir=$(pwd)
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 
 cd $YDKGEN_HOME
-
-if [[ -z ${PYTHON_VENV} ]]; then
-    export PYTHON_VENV=${HOME}/venv
-    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
-fi
-source $PYTHON_VENV/bin/activate
 
 install_test_cpp_core
 
 run_cpp_bundle_tests
 
 run_cpp_gnmi_tests
-run_cpp_gnmi_memcheck_tests
+
+command -v valgrind
+status=$?
+if [[ ${status} == 0 ]]; then
+    run_cpp_gnmi_memcheck_tests
+fi
 
 $script_dir/clean_test_env.sh
 

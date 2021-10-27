@@ -103,7 +103,7 @@ function check_python_installation {
 
   if [[ $ydk_lang == "py" || $ydk_lang == "all" ]]; then
     print_msg "Checking installation of python shared libraries"
-    ver=$(python3 -c "import sys;print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+    ver=$(python3 -c "import sys;print('{}.{}'.format(sys.version_info.major,sys.version_info.minor))")
     if [[ $ver. > "3.8." ]]; then
       print_msg "YDK for python currently is not supported with Python version $ver"
       print_msg "Please downgrade your Python installation to 3.8 or 3.7"
@@ -111,7 +111,11 @@ function check_python_installation {
     fi
     os_type=$(uname)
     if [[ ${os_type} == "Linux" ]]; then
-      ext="$ver.so"
+      if [[ $ver. > "3.7." ]]; then
+        ext="$ver.so"
+      else
+        ext="$ver"m.so
+      fi
     elif [[ ${os_type} == "Darwin" ]]; then
       ext="$ver.dylib"
     fi
@@ -180,13 +184,17 @@ function init_go_env {
 function install_cpp_core {
     print_msg "Installing C++ core library"
     cd $YDKGEN_HOME
-    run_cmd python3 generate.py -is --core --cpp
+    local cpp_sudo_flag
+    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    run_cmd python3 generate.py --core --cpp -i$cpp_sudo_flag
 }
 
 function install_cpp_gnmi {
     print_msg "Building C++ core gnmi library"
     cd $YDKGEN_HOME
-    run_cmd python3 generate.py -is --service profiles/services/gnmi-0.4.0.json --cpp
+    local cpp_sudo_flag
+    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    run_cmd python3 generate.py --service profiles/services/gnmi-0.4.0.json --cpp -i$cpp_sudo_flag
 }
 
 function install_go_core {
@@ -296,8 +304,8 @@ service_pkg="no"
 core_package="no"
 dependencies="yes"
 install_venv="yes"
-sudo_flag=""
-sudo_cmd=""
+sudo_flag=
+sudo_cmd=
 
 # As long as there is at least one more argument, keep looping
 while [[ $# -gt 0 ]]; do

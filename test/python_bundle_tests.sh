@@ -59,23 +59,24 @@ NOCOLOR='\033[0m'
 YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
+
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
-
-$script_dir/init_test_env.sh
-
-if [[ -z ${PYTHON_VENV} ]]; then
-    export PYTHON_VENV=${HOME}/venv
-    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
-fi
-source $PYTHON_VENV/bin/activate
 
 reset_yang_repository
 
+print_msg "Installing test bundles"
+cd $YDKGEN_HOME
+python generate.py --python --bundle profiles/test/ydktest-cpp.json -i
+cd -
+
+$script_dir/init_test_env.sh
+
 run_test test_ydk_types.py
+run_test test_sanity_codec.py
 run_test test_netconf_operations.py
 run_test test_opendaylight.py
 run_test test_restconf_provider.py

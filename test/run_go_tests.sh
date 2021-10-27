@@ -99,12 +99,10 @@ function install_go_core {
 
     mkdir -p $GOPATH/src/github.com/CiscoDevNet/ydk-go/ydk
     cp -r sdk/go/core/ydk/* $GOPATH/src/github.com/CiscoDevNet/ydk-go/ydk/
-
-    run_cmd ./generate.py --bundle profiles/test/ydktest-cpp.json --go -i
 }
 
 function install_go_bundle {
-    print_msg "Generating/installing go bundle tests"
+    print_msg "Generating/installing go bundles"
     cd $YDKGEN_HOME
     run_cmd ./generate.py --bundle profiles/test/ydktest-cpp.json --go -i
 }
@@ -144,7 +142,7 @@ function run_go_samples {
 function init_gnmi_server {
     print_msg "Starting YDK gNMI server"
     mkdir -p $YDKGEN_HOME/test/gnmi_server/build && cd $YDKGEN_HOME/test/gnmi_server/build
-    cmake .. && make clean && make
+    $CMAKE_BIN .. && make clean && make
     ./gnmi_server &
     local status=$?
     if [ $status -ne 0 ]; then
@@ -204,17 +202,18 @@ MSG_COLOR=$YELLOW
 
 os_type=$(uname)
 if [[ ${os_type} == "Linux" ]] ; then
-    os_info=$(cat /etc/*-release)
+  os_info=$(cat /etc/*-release)
 else
-    os_info=$(sw_vers)
+  os_info=$(sw_vers)
 fi
 print_msg "Running OS type: $os_type"
 print_msg "OS info: $os_info"
 
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
+
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
@@ -223,24 +222,16 @@ if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
     centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
 fi
 
+CMAKE_BIN=cmake
 command -v cmake3
 status=$?
 if [[ ${status} == 0 ]] ; then
     CMAKE_BIN=cmake3
-else
-    CMAKE_BIN=cmake
 fi
 
 curr_dir="$(pwd)"
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 
 cd $YDKGEN_HOME
-
-if [[ -z ${PYTHON_VENV} ]]; then
-    export PYTHON_VENV=${HOME}/venv
-    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
-fi
-source $PYTHON_VENV/bin/activate
 
 init_go_env
 install_go_core
