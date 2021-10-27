@@ -16,11 +16,10 @@
 # ------------------------------------------------------------------------
 #
 # Bash script to run basic YDK tests for Python
-#
 # ------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): python_bundle_tests.sh: $*${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): python_bundle_tests.sh: $* ${NOCOLOR}"
 }
 
 function run_test {
@@ -61,12 +60,6 @@ if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
   print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
-if [[ -z ${PYTHON_VENV} ]]; then
-    export PYTHON_VENV=${HOME}/venv
-    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
-fi
-source $PYTHON_VENV/bin/activate
-
 reset_yang_repository
 
 print_msg "Installing test bundles"
@@ -79,7 +72,6 @@ $script_dir/init_test_env.sh
 
 run_test test_ydk_types.py
 run_test test_sanity_codec.py
-run_test test_sanity_yang11.py
 run_test test_netconf_operations.py
 run_test test_opendaylight.py
 run_test test_restconf_provider.py

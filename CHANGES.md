@@ -9,6 +9,7 @@
 
 #### Resolved GitHub issues
   * Go function EntityEqual result depends on parameters order ([#1053](https://github.com/CiscoDevNet/ydk-gen/issues/1053))
+  * Fixed Python 3.5 code compatibility issue for Ubuntu:xenial
 
 #### Bundle improvements
   * Updated cisco-ios-xr bundle (profile cisco-ios-xr_6_7_3.json) to support Cisco IOS XR 6.7.3
