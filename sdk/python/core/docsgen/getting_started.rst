@@ -398,7 +398,7 @@ Python virtual environment must be activated prior to these procedures::
 Check Python packages installed::
 
     pip list | grep ydk
-    ydk (0.8.6.2)
+    ydk (0.8.6)
     ydk-models-<name-of-bundle> (0.5.1)
     ...
 
@@ -456,5 +456,5 @@ Documentation and Support
 Release Notes
 =============
 
-The current YDK release version is 0.8.6.2.
+The current YDK release version is 0.8.6.
 YDK-Gen is licensed under the Apache 2.0 License.

@@ -95,7 +95,7 @@ function check_python_installation {
 
   if [[ $ydk_lang == "py" || $ydk_lang == "all" ]]; then
     print_msg "Checking installation of python shared libraries"
-    ver=$(python3 -c "import sys;print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+    ver=$(python3 -c "import sys;print('{}.{}'.format(sys.version_info.major, sys.version_info.minor))")
     if [[ $ver. > "3.8." ]]; then
       print_msg "YDK for python currently is not supported with Python version $ver"
       print_msg "Please downgrade your Python installation to 3.8 or 3.7"
