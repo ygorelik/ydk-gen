@@ -91,7 +91,7 @@ or add-on service package like gNMI Service, or a module bundle, consisting of p
 Each module bundle is generated using a bundle profile and the ydk-gen tool.
 Developers can either use pre-packaged generated bundles (e.g. [ydk-py](http://cs.co/ydk-py)),
 or define their own bundle, consisting of a set of YANG models, using a bundle profile
-(e.g. [`ietf_0_1_1.json`](profiles/bundles/ietf_0_1_1.json)).
+(e.g. [`ietf_0_1_5.json`](profiles/bundles/ietf_0_1_5.json)).
 This gives the developer an ability to customize scope of their bundle based on their requirements.
 
 
@@ -344,7 +344,7 @@ The first step in using ydk-gen is either using one of the already built
 [bundle profiles](https://github.com/ygorelik/ydk-gen/tree/master/profiles/bundles) or constructing your own 
 bundle profile, consisting of the YANG models you are interested to include into the bundle:
 
-Construct a bundle profile file, such as [```ietf_0_1_1.json```](profiles/bundles/ietf_0_1_1.json)
+Construct a bundle profile file, such as [```ietf_0_1_5.json```](profiles/bundles/ietf_0_1_5.json)
 and specify its dependencies.
 
 A sample bundle profile file is described below. The file is in a JSON format. The profile must define the `"name"`, 
