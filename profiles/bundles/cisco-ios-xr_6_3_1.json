@@ -1,7 +1,7 @@
 {
   "name": "cisco-ios-xr",
   "version": "6.3.1",
-  "core_version": "0.6.1",
+  "core_version": "0.8.5",
   "author": "Cisco",
   "copyright": "Cisco",
   "description": "YDK bundle for Cisco IOS XR models",
@@ -13,6 +13,7 @@
         "url": "https://github.com/YangModels/yang.git",
         "commits": [
           {
+            "commitid": "6b6fb7e32894b08fc7d9392a519461463d9b1fb0",
             "file": [
                      "vendor/cisco/xr/631/Cisco-IOS-XR-aaa-aaacore-cfg.yang",
                      "vendor/cisco/xr/631/Cisco-IOS-XR-aaa-diameter-base-mib-cfg.yang",
@@ -778,7 +779,7 @@
     {
       "name": "ietf",
       "version": "0.1.5-post2",
-      "core_version": "0.7.3",
+      "core_version": "0.8.5",
       "uri": "file://profiles/bundles/ietf_0_1_5_post2.json"
     }
   ]

@@ -6,6 +6,10 @@
 #### Resolved GitHub issues
   * Fixed Python 3.5 code compatibility issue for Ubuntu:xenial
 
+#### Bundle improvements
+  * Cleaned up older profiles
+
+
 ### 2021-09-30 version 0.8.6
 
 #### New features and enhancements

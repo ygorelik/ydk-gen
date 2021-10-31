@@ -48,6 +48,10 @@
             "yang/ietf/ietf-netconf-with-defaults@2011-06-01.yang",
             "yang/ietf/ietf-netconf@2011-06-01.yang",
             "yang/ietf/ietf-system.yang"
+        ],
+
+        "dir": [
+            "yang/ydktest-augmentation"
         ]
     }
 }
