@@ -53,7 +53,7 @@ This be used to run ydk-gen without installing anything natively on your platfor
 To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
 See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-  docker run -it ydksolutions/ydk-gen
+  docker run -it ydksolutions/ydk-gen:0.8.6.2
 
 
 System Requirements
@@ -257,3 +257,8 @@ Documentation and Support
 =========================
 - Numerous additional samples can be found in the `YDK-Cpp samples repository <https://github.com/CiscoDevNet/ydk-cpp/tree/master/core/ydk/samples>`_
 - Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with other users and with the makers of YDK
+
+Release Notes
+=============
+
+The current YDK release version is 0.8.6.2. YDK-Go is licensed under the Apache 2.0 License.
