@@ -1,5 +1,5 @@
 
-### 2021-10-30 version 0.9.1.1
+### 2021-11-30 version 0.9.1.1
 
 #### New features and enhancements
   * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
@@ -15,6 +15,7 @@
   * Updated openconfig bundle (profile openconfig_0_1_9.json) to support YANG models of revision "2020-05-06"
   * Updated ietf bundle (profile ietf_0_1_6.json) to support YANG models of revision "2018-02-14"
   * Added bundle profiles to support Cisco IOS XR 7.0.1 and 7.0.2
+  * Refactored older bundle profiles
 
 
 ### 2021-05-30 version 0.9.0.1

@@ -39,13 +39,13 @@ function run_cmd {
 
 function usage {
     MSG_COLOR=$NOCOLOR
-    echo "usage: install_ydk [--cpp] [--py] [--go] [--all] [-s gnmi] [-h] [-n] [-p path] [--no-py-venv]"
+    echo "usage: install_ydk [--cpp] [--py] [--go] [--all] [-c] [-s gnmi] [-h] [-n] [-p path] [--no-venv]"
     echo "Options and arguments:"
     echo "  --cpp                 install YDK for C++ programming language"
     echo "  --go                  install YDK for Go programming language"
     echo "  --py|--python         install YDK for Python programming language (default)"
     echo "  --all                 install YDK for all available programming languages"
-    echo "  --no-py-venv          do not create python virtual environment"
+    echo "  --no-venv             do not create python virtual environment"
     echo "  -c|--core             install YDK core packages"
     echo "  -s|--service gnmi     install gNMI service package"
     echo "  -n|--no-deps          skip installation of dependencies"
@@ -412,7 +412,7 @@ while [[ $# -gt 0 ]]; do
                 service_pkg="gnmi"
             fi
             ;;
-        --no-py-venv)
+        --no-venv)
             install_venv="no"
             ;;
         -p|--python-dir)
