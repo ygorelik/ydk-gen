@@ -20,10 +20,9 @@
 # ------------------------------------------------------------------
 
 """
-entity_lookup_printer.py
+ entity_lookup_printer.py
 
  Prints top entity lookup map
-
 """
 
 from ydkgen.api_model import snake_case, Class

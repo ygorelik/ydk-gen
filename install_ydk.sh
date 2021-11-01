@@ -106,7 +106,7 @@ function check_python_installation {
 
   if [[ $ydk_lang == "py" || $ydk_lang == "all" ]]; then
     print_msg "Checking installation of python shared libraries"
-    ver=$($PYTHON_BIN -c "import sys;print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+    ver=$($PYTHON_BIN -c "import sys;print('{}.{}'.format(sys.version_info.major,sys.version_info.minor))")
     if [[ $ver. > "3.8." ]]; then
       print_msg "YDK for python currently is not supported with Python version $ver"
       print_msg "Please downgrade your Python installation to 3.8 or 3.7"
@@ -114,7 +114,11 @@ function check_python_installation {
     fi
     os_type=$(uname)
     if [[ ${os_type} == "Linux" ]]; then
-      ext="$ver.so"
+      if [[ $ver. > "3.7." ]]; then
+        ext="$ver.so"
+      else
+        ext="$ver"m.so
+      fi
     elif [[ ${os_type} == "Darwin" ]]; then
       ext="$ver.dylib"
     fi
@@ -135,15 +139,15 @@ function check_python_installation {
 function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
-  $PIP_BIN install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
+  $PIP_BIN install wheel==0.34.2
   status=$?
   if [ $status -ne 0 ]; then
     print_msg "Enabling sudo for Python components installation"
     sudo_cmd="sudo"
     sudo_flag="s"
-    $sudo_cmd $PIP_BIN install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
   fi
   $sudo_cmd $PIP_BIN install -r requirements.txt
+  $sudo_cmd $PIP_BIN install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
 }
 
 function init_go_env {
@@ -191,13 +195,17 @@ function init_go_env {
 function install_cpp_core {
     print_msg "Installing C++ core library"
     cd $YDKGEN_HOME
-    run_cmd $PYTHON_BIN generate.py -is --core --cpp
+    local cpp_sudo_flag
+    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    run_cmd $PYTHON_BIN generate.py --core --cpp -i$cpp_sudo_flag
 }
 
 function install_cpp_gnmi {
     print_msg "Building C++ core gnmi library"
     cd $YDKGEN_HOME
-    run_cmd $PYTHON_BIN generate.py -is --service profiles/services/gnmi-0.4.0.json --cpp
+    local cpp_sudo_flag
+    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    run_cmd $PYTHON_BIN generate.py --service profiles/services/gnmi-0.4.0.json --cpp -i$cpp_sudo_flag
 }
 
 function install_go_core {
@@ -309,6 +317,7 @@ export C_INCLUDE_PATH=$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH
 " > .env
   if [ $install_venv == "yes" ]; then
+    echo "export PYTHON_VENV=$PYTHON_VENV" >> .env
     echo "source $PYTHON_VENV/bin/activate" >> .env
   elif [[ -n $python_location ]]; then
     echo "PATH=$python_location/bin:$PATH
@@ -363,8 +372,8 @@ service_pkg="no"
 core_package="no"
 dependencies="yes"
 install_venv="yes"
-sudo_flag=""
-sudo_cmd=""
+sudo_flag=
+sudo_cmd=
 PYTHON_BIN=python3
 PIP_BIN=pip3
 

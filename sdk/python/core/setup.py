@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,9 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
 
 """
-Setup for YDK core package
+Setup for YDK core package for Python
 """
 
 from __future__ import print_function
@@ -32,7 +37,7 @@ NAME = 'ydk'
 
 VERSION = '0.9.1.1'
 
-INSTALL_REQUIREMENTS = ['pybind11>=2.2.2']
+INSTALL_REQUIREMENTS = ['pybind11==2.6.2']
 
 LONG_DESCRIPTION = '''
                    The YANG Development Kit (YDK) is a Software Development Kit
@@ -47,9 +52,10 @@ LONG_DESCRIPTION = '''
 YDK_PACKAGES = find_packages(exclude=['contrib', 'docs*', 'tests*',
                                       'ncclient', 'samples'])
 
+
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
-        Extension.__init__(self, name, sources=[])
+        super().__init__(name, sources=[])
         self.sourcedir = os.path.abspath(sourcedir)
 
 
@@ -57,7 +63,7 @@ class YdkBuildExtension(build_ext):
     def run(self):
         try:
             cmake3_installed = (
-            0 == subprocess.call(['which', 'cmake3'], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
+                0 == subprocess.call(['which', 'cmake3'], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
             if not cmake3_installed:
                 subprocess.check_output(['cmake', '--version'])
         except OSError:
@@ -72,7 +78,7 @@ class YdkBuildExtension(build_ext):
             import pybind11
         except ImportError:
             import pip
-            pip.main(['install', 'pybind11>=2.2.2'])
+            pip.main(['install', 'pybind11==2.6.2'])
             import pybind11
 
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
@@ -80,9 +86,8 @@ class YdkBuildExtension(build_ext):
         if 'YDK_COVERAGE' in os.environ:
             coverage_compiler_flag = '-DCOVERAGE=True'
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={0}'.format(extdir),
-                      '-DPYBIND11_INCLUDE={0};{1}'.format(
-                                      pybind11.get_include(),
-                                      pybind11.get_include(user=True)),
+                      '-DPYBIND11_INCLUDE={0}'.format(
+                                      pybind11.get_include()),
                       '-DPYTHON_VERSION={0}'.format(
                                       get_python_version()),
                       '-DCMAKE_BUILD_TYPE=Release',
@@ -92,7 +97,7 @@ class YdkBuildExtension(build_ext):
             os.makedirs(self.build_temp)
 
         cmake3_installed = (0 == subprocess.call(['which', 'cmake3'], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
-        if(cmake3_installed):
+        if cmake3_installed:
             cmake_executable = 'cmake3'
         else:
             cmake_executable = 'cmake'
@@ -127,12 +132,11 @@ setup(
         'Topic :: Software Development :: Build Tools',
         'Topic :: Software Development :: Libraries',
         'License :: OSI Approved :: Apache Software License',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: C++'
     ],
     keywords='yang, C++11, python bindings ',
@@ -140,7 +144,7 @@ setup(
     install_requires=INSTALL_REQUIREMENTS,
     ext_modules=[CMakeExtension('ydk_')],
     cmdclass={
-             'build_ext' :YdkBuildExtension
+             'build_ext': YdkBuildExtension
              },
     zip_safe=False,
 )

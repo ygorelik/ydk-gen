@@ -116,22 +116,8 @@ function init_test_env {
 # ------------------------------------------------------------------
 
 function init_python_env {
-  if [[ -z ${PYTHON_VENV} ]]; then
-    export PYTHON_VENV=${HOME}/venv
-    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
-  fi
-  if [[ ! -d ${PYTHON_VENV} ]]; then
-    print_msg "Creating Python3 virtual environment in ${PYTHON_VENV}"
-    run_cmd python3 -m venv ${PYTHON_VENV}
-    run_cmd source ${PYTHON_VENV}/bin/activate
-    pip install -r requirements.txt
-    pip install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
-  else
-    run_cmd source ${PYTHON_VENV}/bin/activate
-  fi
-
-  PYTHON_BIN=python
-  PIP_BIN=pip
+  PYTHON_BIN=python3
+  PIP_BIN=pip3
 
   print_msg "Checking python version and installation"
   $PYTHON_BIN --version
