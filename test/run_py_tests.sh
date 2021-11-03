@@ -190,8 +190,8 @@ function py_sanity_ydktest_gen {
     print_msg "Generating and installing YDK bundle ydk-models-ydktest"
     cd $YDKGEN_HOME
 
-    run_cmd ./generate.py --python --bundle profiles/test/ydktest-cpp.json -i
-    run_cmd ./generate.py --python --bundle profiles/test/ydktest-yang11.json -i
+    run_test generate.py --python --bundle profiles/test/ydktest-cpp.json -i
+    run_test generate.py --python --bundle profiles/test/ydktest-yang11.json -i
 }
 
 function py_sanity_ydktest_test {

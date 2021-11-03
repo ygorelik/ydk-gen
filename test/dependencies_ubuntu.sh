@@ -48,44 +48,44 @@ function install_dependencies {
 
     apt update -y
     apt install sudo -y
-    sudo apt-get install -y lsb-release
+    $sudo_cmd apt-get install -y lsb-release
     codename=$(lsb_release -c | awk '{ print $2 }')
     ubuntu_release=$(lsb_release -r | awk '{ print $2 }' | cut -d '.' -f 1)
     if [[ $codename == "focal" && ! -h /etc/localtime ]]; then
       # Fixing timezone setting issue in focal
       export DEBIAN_FRONTEND=noninteractive
-      sudo apt-get install -y tzdata
+      $sudo_cmd apt-get install -y tzdata
       ln -fs /usr/share/zoneinfo/US/Pacific /etc/localtime
       dpkg-reconfigure --frontend noninteractive tzdata
       unset DEBIAN_FRONTEND
     fi
-    run_cmd sudo apt-get install -y --no-install-recommends apt-utils
-    run_cmd sudo apt-get update -y
-    run_cmd sudo apt-get install libtool-bin -y > /dev/null
+    run_cmd $sudo_cmd apt-get install -y --no-install-recommends apt-utils
+    run_cmd $sudo_cmd apt-get update -y
+    run_cmd $sudo_cmd apt-get install libtool-bin -y > /dev/null
     local status=$?
     if [[ ${status} != 0 ]]; then
-        run_cmd sudo apt-get install libtool -y > /dev/null
+        run_cmd $sudo_cmd apt-get install libtool -y > /dev/null
     fi
     if [[ $codename == "focal" ]]; then
-        sudo apt-get install -y mlocate git > /dev/null
+        $sudo_cmd apt-get install -y mlocate git > /dev/null
         if [[ ! -h /usr/local/lib/libnettle.so.6 ]]; then
           cd /usr/local/lib/
-          sudo ln -s $curr_dir/3d_party/linux/ubuntu/lib/libnettle.so.6.4
-          sudo ln -s libnettle.so.6.4 libnettle.so.6
+          $sudo_cmd ln -s $curr_dir/3d_party/linux/ubuntu/lib/libnettle.so.6.4
+          $sudo_cmd ln -s libnettle.so.6.4 libnettle.so.6
           cd -
         fi
     else
-        run_cmd sudo apt-get install -y locate git > /dev/null
-        run_cmd sudo apt-get install -y curl libcurl4-openssl-dev > /dev/null
+        run_cmd $sudo_cmd apt-get install -y locate git > /dev/null
+        run_cmd $sudo_cmd apt-get install -y curl libcurl4-openssl-dev > /dev/null
     fi
-    run_cmd sudo apt-get install -y bison doxygen flex unzip wget cmake gdebi-core lcov > /dev/null
-    run_cmd sudo apt-get install -y libcmocka0 libpcre3-dev libpcre++-dev > /dev/null
-    run_cmd sudo apt-get install -y libssh-dev libxml2-dev libxslt1-dev > /dev/null
-    run_cmd sudo apt-get install -y python3-dev python3-lxml python3-pip python3-venv > /dev/null
-    run_cmd sudo apt-get install -y pkg-config software-properties-common zlib1g-dev openjdk-8-jre > /dev/null
-    run_cmd sudo apt-get install -y valgrind > /dev/null
+    run_cmd $sudo_cmd apt-get install -y bison doxygen flex unzip wget cmake gdebi-core lcov > /dev/null
+    run_cmd $sudo_cmd apt-get install -y libcmocka0 libpcre3-dev libpcre++-dev > /dev/null
+    run_cmd $sudo_cmd apt-get install -y libssh-dev libxml2-dev libxslt1-dev > /dev/null
+    run_cmd $sudo_cmd apt-get install -y python3-dev python3-lxml python3-pip python3-venv > /dev/null
+    run_cmd $sudo_cmd apt-get install -y pkg-config software-properties-common zlib1g-dev openjdk-8-jre > /dev/null
+    run_cmd $sudo_cmd apt-get install -y valgrind > /dev/null
     if [[ $codename == "focal" ]]; then
-        run_cmd sudo apt-get install -y python3-pybind11 > /dev/null
+        run_cmd $sudo_cmd apt-get install -y python3-pybind11 > /dev/null
     fi
 }
 
@@ -104,18 +104,18 @@ function check_install_gcc {
   if [[ $gcc_version < "4.8.1" || $major -gt 7 ]]
   then
     print_msg "Installing gcc/g++ version 7"
-    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-    sudo apt-get update -y > /dev/null
-    sudo apt-get install gcc-7 g++-7 -y > /dev/null
-    sudo ln -fs /usr/bin/g++-7 /usr/bin/c++
-    sudo ln -fs /usr/bin/gcc-7 /usr/bin/cc
-    sudo ln -fs /usr/bin/g++-7 /usr/bin/g++
-    sudo ln -fs /usr/bin/gcc-7 /usr/bin/gcc
+    $sudo_cmd add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    $sudo_cmd apt-get update -y > /dev/null
+    $sudo_cmd apt-get install gcc-7 g++-7 -y > /dev/null
+    $sudo_cmd ln -fs /usr/bin/g++-7 /usr/bin/c++
+    $sudo_cmd ln -fs /usr/bin/gcc-7 /usr/bin/cc
+    $sudo_cmd ln -fs /usr/bin/g++-7 /usr/bin/g++
+    $sudo_cmd ln -fs /usr/bin/gcc-7 /usr/bin/gcc
     gcc_version=$(echo $(gcc --version) | awk '{ print $3 }' | cut -d '-' -f 1)
     print_msg "Installed gcc/g++ version is $gcc_version"
   else
-    sudo ln -fs /usr/bin/g++ /usr/bin/c++
-    sudo ln -fs /usr/bin/gcc /usr/bin/cc
+    $sudo_cmd ln -fs /usr/bin/g++ /usr/bin/c++
+    $sudo_cmd ln -fs /usr/bin/gcc /usr/bin/cc
   fi
 }
 
@@ -127,13 +127,25 @@ function check_install_curl {
     ./buildconf
     ./configure --enable-versioned-symbols --with-openssl > /dev/null
     make > /dev/null
-    sudo make install
+    $sudo_cmd make install
     cd -
-    sudo rm -f /usr/lib/x86_64-linux-gnu/libcurl.so
-    sudo ln -sf /usr/local/lib/libcurl.so.4 /usr/lib/x86_64-linux-gnu/libcurl.so
+    $sudo_cmd rm -f /usr/lib/x86_64-linux-gnu/libcurl.so
+    $sudo_cmd ln -sf /usr/local/lib/libcurl.so.4 /usr/lib/x86_64-linux-gnu/libcurl.so
     rm -rf curl
     print_msg "Installed curl version: $(curl --version | sed 1q | awk '{print$2}')"
   fi
+}
+
+function set_libssh_threads_link {
+    lines=($(locate libssh.so))
+    if [[ ${#lines[@]} -gt 0 ]] && [[ -x ${lines[0]} || -L ${lines[0]} ]]; then
+      $sudo_cmd ln -s ${lines[0]} /usr/local/lib/libssh_threads.so
+      print_msg "Setting /usr/local/lib/libssh_threads.so soft link to ${lines[0]}"
+    else
+      print_msg "Could not locate libssh.so shared library"
+      print_msg "Try to update locate database, then repeat YDK installation"
+      exit 1
+    fi
 }
 
 function check_install_libssh {
@@ -147,6 +159,9 @@ function check_install_libssh {
     sudo ln -s libssh_threads.so.4.5.0 libssh_threads.so.4
     sudo ln -s libssh_threads.so.4 libssh_threads.so
     cd -
+
+# TBD
+# set_libssh_threads_link
   fi
 }
 
@@ -167,10 +182,10 @@ function check_install_go {
   if [ $minor -lt 9 ]; then
     print_msg "Installing Golang version 1.13.1 in /usr/local/go"
     run_cmd wget https://storage.googleapis.com/golang/go1.13.1.linux-amd64.tar.gz
-    sudo tar -zxf  go1.13.1.linux-amd64.tar.gz -C /usr/local/
+    $sudo_cmd tar -zxf  go1.13.1.linux-amd64.tar.gz -C /usr/local/
     rm -f go1.13.1.linux-amd64.tar.gz
     cd /usr/local/bin
-    sudo ln -sf /usr/local/go/bin/go
+    $sudo_cmd ln -sf /usr/local/go/bin/go
     cd -
   fi
 }
@@ -203,11 +218,15 @@ NOCOLOR="\033[0m"
 YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
+sudo_cmd=
+if [ $USER != "root" ]; then
+  sudo_cmd="sudo"
+fi
+
 curr_dir=$(pwd)
 
 install_dependencies
 check_install_gcc
-check_install_libssh
 
 check_install_go
 
@@ -216,5 +235,5 @@ if [[ $ubuntu_release -gt 19 ]]; then
 fi
 check_install_confd
 
-sudo updatedb
-
+$sudo_cmd updatedb
+check_install_libssh

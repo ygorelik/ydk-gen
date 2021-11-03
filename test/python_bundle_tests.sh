@@ -25,7 +25,7 @@ function print_msg {
 function run_test {
     test=$*
     print_msg "Running test $test"
-    python $YDKGEN_HOME/sdk/python/core/tests/$test
+    python3 $YDKGEN_HOME/sdk/python/core/tests/$test
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -64,8 +64,8 @@ reset_yang_repository
 
 print_msg "Installing test bundles"
 cd $YDKGEN_HOME
-python generate.py --python --bundle profiles/test/ydktest-cpp.json -i
-python generate.py --python --bundle profiles/test/ydktest-yang11.json -i
+run_test generate.py --python --bundle profiles/test/ydktest-cpp.json -i
+run_test generate.py --python --bundle profiles/test/ydktest-yang11.json -i
 cd -
 
 $script_dir/init_test_env.sh

@@ -84,7 +84,7 @@ function generate_install_specified_cpp_bundle {
    print_msg "Generating and installing C++ ydktest bundle $bundle_name"
    cd $YDKGEN_HOME
    sudo rm -rf ./gen-api/cpp/$bundle_name
-   run_cmd ./generate.py --bundle $bundle_profile --cpp -v
+   run_cmd python3 generate.py --bundle $bundle_profile --cpp -v
    cd gen-api/cpp/$2/build
    run_cmd make
    run_cmd sudo make install
@@ -142,7 +142,7 @@ function cpp_test_gen {
     print_msg "Running cpp_test_gen"
 
     cd $YDKGEN_HOME
-    run_cmd ./generate.py --bundle profiles/test/ydk-models-test.json --generate-tests --cpp &> /dev/null
+    run_cmd python3 generate.py --bundle profiles/test/ydk-models-test.json --generate-tests --cpp &> /dev/null
     cd gen-api/cpp/models_test-bundle/build/
     run_cmd sudo make install
 

@@ -23,7 +23,7 @@ function print_msg {
 }
 
 function run_cmd {
-    print_msg "Running $*"
+    print_msg "Running: $*"
     $*
     local status=$?
     if [ $status -ne 0 ]; then
@@ -91,8 +91,8 @@ function install_go_core {
 function install_go_bundle {
     print_msg "Generating/installing go bundles"
     cd $YDKGEN_HOME
-    run_cmd ./generate.py --bundle profiles/test/ydktest-cpp.json --go -i
-    run_cmd ./generate.py --bundle profiles/test/ydktest-yang11.json --go -i
+    run_cmd python3 generate.py --bundle profiles/test/ydktest-cpp.json --go -i
+    run_cmd python3 generate.py --bundle profiles/test/ydktest-yang11.json --go -i
 }
 
 function run_go_bundle_tests {
@@ -149,7 +149,7 @@ function install_go_gnmi {
     print_msg "Installing Go gNMI package"
     cd $YDKGEN_HOME
 
-    run_cmd python ./generate.py --service profiles/services/gnmi-0.4.0.json --go -i
+    run_cmd python3 generate.py --service profiles/services/gnmi-0.4.0.json --go -i
 }
 
 function run_go_gnmi_tests {
