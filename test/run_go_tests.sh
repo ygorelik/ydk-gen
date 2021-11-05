@@ -23,7 +23,7 @@ function print_msg {
 }
 
 function run_cmd {
-    print_msg "Running $*"
+    print_msg "Running: $*"
     $*
     local status=$?
     if [ $status -ne 0 ]; then
@@ -42,7 +42,7 @@ function reset_yang_repository {
     rm -f $HOME/.ydk/127.0.0.1/*
 
     # Correct issue with confd 7.3
-    if [[ $confd_version > 7.2 ]]; then
+    if [[ $confd_version. > "7.2." ]]; then
       cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
     fi
 }
@@ -104,7 +104,7 @@ function install_go_core {
 function install_go_bundle {
     print_msg "Generating/installing go bundles"
     cd $YDKGEN_HOME
-    run_cmd ./generate.py --bundle profiles/test/ydktest-cpp.json --go -i
+    run_cmd python3 generate.py --bundle profiles/test/ydktest-cpp.json --go -i
 }
 
 function run_go_bundle_tests {
@@ -162,7 +162,7 @@ function install_go_gnmi {
     print_msg "Installing Go gNMI package"
     cd $YDKGEN_HOME
 
-    run_cmd python ./generate.py --service profiles/services/gnmi-0.4.0.json --go -i
+    run_cmd python3 generate.py --service profiles/services/gnmi-0.4.0.json --go -i
 }
 
 function run_go_gnmi_tests {
@@ -217,9 +217,11 @@ if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
+  if [[ $LD_LIBRARY_PATH != *"protobuf-3.5.0"* ]]; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64:/usr/lib64
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
-    centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+  fi
+  centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
 fi
 
 CMAKE_BIN=cmake

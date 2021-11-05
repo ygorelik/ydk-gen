@@ -1,6 +1,6 @@
 #!/bin/bash
 #  ----------------------------------------------------------------
-# Copyright 2018 Cisco Systems
+# Copyright 2018-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 # ------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date) *** dependencies_linux_gnmi.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date) *** dependencies_linux_gnmi.sh | $* ${NOCOLOR}"
 }
 
 function install_protobuf {
@@ -96,10 +96,6 @@ fi
 if [[ -z ${CPLUS_INCLUDE_PATH} ]]; then
     export CPLUS_INCLUDE_PATH=/usr/local/include
 fi
-
-#if [[ $codename == "focal" ]]; then
-#  export LD_LIBRARY_PATH=/usr/local/lib:/usr/lib/x86_64-linux-gnu
-#fi
 
 install_protobuf
 install_grpc

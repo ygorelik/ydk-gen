@@ -25,7 +25,7 @@ function print_msg {
 function run_test {
     test=$*
     print_msg "Running test $test"
-    python $YDKGEN_HOME/sdk/python/core/tests/$test
+    python3 $YDKGEN_HOME/sdk/python/core/tests/$test
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -44,7 +44,7 @@ function reset_yang_repository {
 
     # Correct issue with confd 7.3
     confd_version=$($HOME/confd/bin/confd --version)
-    if [[ $confd_version > 7.2 ]]; then
+    if [[ $confd_version. > 7.2. ]]; then
       cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
     fi
 }
@@ -70,7 +70,7 @@ reset_yang_repository
 
 print_msg "Installing test bundles"
 cd $YDKGEN_HOME
-python generate.py --python --bundle profiles/test/ydktest-cpp.json -i
+python3 generate.py --python --bundle profiles/test/ydktest-cpp.json -i
 cd -
 
 $script_dir/init_test_env.sh
