@@ -444,10 +444,18 @@ function init_script_env {
         CMAKE_BIN=cmake3
     fi
 
+    script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
+    if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
+        export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
+        print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+    fi
+
     if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
+      if [[ $LD_LIBRARY_PATH != *"protobuf-3.5.0"* ]]; then
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64:/usr/lib64
         print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
-        centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+      fi
+      centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
     fi
 
     cd $YDKGEN_HOME
@@ -455,13 +463,6 @@ function init_script_env {
 
 ########################## EXECUTION STARTS HERE #############################
 #
-script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
-
-if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
-  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
-fi
-
 init_script_env
 init_python_env
 
