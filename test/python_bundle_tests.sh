@@ -64,8 +64,8 @@ reset_yang_repository
 
 print_msg "Installing test bundles"
 cd $YDKGEN_HOME
-run_test generate.py --python --bundle profiles/test/ydktest-cpp.json -i
-run_test generate.py --python --bundle profiles/test/ydktest-yang11.json -i
+python3 generate.py --python --bundle profiles/test/ydktest-cpp.json -i
+python3 generate.py --python --bundle profiles/test/ydktest-yang11.json -i
 cd -
 
 $script_dir/init_test_env.sh
@@ -91,3 +91,4 @@ run_test test_non_top_operations.py
 run_test test_sanity_yang11.py
 
 $script_dir/clean_test_env.sh
+
