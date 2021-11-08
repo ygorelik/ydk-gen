@@ -109,8 +109,9 @@ The script detects platform OS, installs all the dependencies and builds complet
 The user must have sudo access to these locations.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-In order to isolate YDK Python environment from system installation, the script builds Python3 virtual environment.
-The user must manually activate virtual environment when generating model bundles and/or running YDK based application.
+By default the YDK uses Python system installation.
+In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
+If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
@@ -130,10 +131,13 @@ for specified programming language or for all supported languages.
 Full set of script capabilities could be viewed like this::
 
     ./install_ydk.sh --help
-    usage: install_ydk [-l [cpp, py, go]] [-s gnmi] [-h] [-n]
+    usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v]
     Options and arguments:
-      -l [cpp, py, go, all] installation language; if not specified Python is assumed
-                            'all' corresponds to all available languages
+      --cpp                 install YDK for C++ programming language
+      --go                  install YDK for Go programming language
+      --py|--python         install YDK for Python programming language (default)
+      --all                 install YDK for all available programming languages
+      -v|--venv             create python virtual environment
       -c|--core             install YDK core package
       -s|--service gnmi     install gNMI service package
       -n|--no-deps          skip installation of dependencies
@@ -152,7 +156,8 @@ Full set of script capabilities could be viewed like this::
                         if not set, /usr/local/include is assumed
     CPLUS_INCLUDE_PATH  location of C++ include files;
                         if not set, /usr/local/include is assumed
-
+    CMAKE_LIBRARY_PATH  Location of Python shared libraries;
+                        if not set, default system library location is assumed
 
 If user environment is different from the default one (different Python installation or different
 location of libraries) then building from source method should be used.
@@ -164,7 +169,7 @@ Installing third party dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
-The script will also install Python virtual environment in default or specified location::
+The script will also install Python virtual environment in default or specified location, when '--venv' is specified::
 
     # Clone ydk-gen from GitHub
     git clone https://github.com/ygorelik/ydk-gen.git
@@ -173,7 +178,7 @@ The script will also install Python virtual environment in default or specified 
     # Define optional environment variables and install dependencies
     export YDKGEN_HOME=`pwd`
     export PYTHON_VENV=$HOME/ydk_venv
-    ./install_ydk.sh   # also builds Python virtual environment
+    ./install_ydk.sh -v   # also builds Python virtual environment
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
@@ -191,7 +196,7 @@ Installing core components
 
 ::
 
-    # Activate Python virtual environment
+    # If created, activate Python virtual environment
     source $PYTHON_VENV/bin/activate
 
     # Generate and install YDK core library
@@ -233,21 +238,14 @@ As a workaround, the YDK based application runtime environment must include sett
 Using Python virtual environment
 ================================
 
-You may want to perform the installation under Python virtual environment (`virtualenv <https://pypi.python.org/pypi/virtualenv/>`_/`virtualenvwrapper  <https://pypi.python.org/pypi/virtualenvwrapper>`_).
+You may want to perform the installation under Python `virtual environment <https://pypi.python.org/pypi/virtualenv/>`_.
 The virtual environment allows you to install multiple versions of YDK if needed.  In addition, it prevents any potential conflicts between package dependencies in your system.
 
-To install virtual environment support in your system, execute::
+To install virtual environment use parameter '-v' or '--venv' with the `Installation Script`_.
 
-  pip install virtualenv virtualenvwrapper
-  source /usr/local/bin/virtualenvwrapper.sh
+To activate virtual environment::
 
-To create and activate new virtual environment::
-
-  mkvirtualenv -p python2.7 ydk-py
-
-To activate existing virtual environment::
-
-  source ~/.virtualenvs/py2/bin/activate
+  source $PYTHON_VENV/bin/activate
 
 To exit virtual environment::
 
@@ -288,7 +286,7 @@ It is recommended to use `ydk-gen/install_ydk.sh` script in order to install the
   # Define optional environment variables and install dependencies
   export YDKGEN_HOME=`pwd`
   export PYTHON_VENV=$HOME/ydk_venv
-  ./install_ydk.sh   # also builds Python virtual environment
+  ./install_ydk.sh -v   # also builds Python virtual environment
 
 
 Once you have installed the `ydk` core package, you can install one or more model bundles.  Note that some bundles have dependencies on other bundles.
