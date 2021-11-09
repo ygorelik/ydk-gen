@@ -63,17 +63,20 @@ Hence all model bundles located in `Python Package Index <https://pypi.org/searc
 Docker
 ======
 
-Currently the `docker image <https://docs.docker.com/engine/reference/run/>`_ for ydk-py is not been generated.
-Please use docker image below, which has complete environment for ydk-py based development.
-
-A `docker image <https://docs.docker.com/engine/reference/run/>`_ is automatically built with the latest ydk-gen commit
-to the git repository.
-The docker image is used to run YDK based apps without installing anything natively on your machine.
-
 To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
 See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-    docker run -it ydksolutions/ydk:0.9.1.1
+  docker run -it ydksolutions/ydk:0.9.1.1
+
+
+..
+  A `docker image <https://docs.docker.com/engine/reference/run/>`_ is automatically built with the latest ydk-py commit to the GitHub.
+  The docker image is used to run ydk-py without installing anything natively on your machine.
+
+  To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
+  See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
+
+    docker run -it ydkdev/ydk-py
 
 
 System Requirements
@@ -121,9 +124,9 @@ To activate YDK runtime environment simply run this command once in bash shell:
     source .env
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-In order to isolate YDK Python environment from system installation, it is recommended to use Python virtual environment,
-which is created by the installation script as part of default behavior. However the user can alter the default behavior
-and force the YDK to use system or customer Python installation.
+By default the YDK uses Python system installation.
+In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
+If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
@@ -131,9 +134,8 @@ Here is simple example of core YDK installation for Python programming language:
 
 .. code-block:: sh
 
-    git clone https://gitlab.com/yangorelik/ydk-gen.git
+    git clone https://gitlab.com/yangorelik/ydk-gen.git -b yang11
     cd ydk-gen
-    git checkout tags/0.9.1.1 -b master
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
     ./install_ydk.sh --core
@@ -144,14 +146,14 @@ for specified programming language or for all supported languages.
 Full set of script capabilities could be viewed like this::
 
     ./install_ydk.sh --help
-    usage: install_ydk [--cpp] [--py] [--go] [--all] [-s gnmi] [-h] [-n] [-p path] [--no-py-venv]
+    usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v] [-p path]
     Options and arguments:
       --cpp                 install YDK for C++ programming language
       --go                  install YDK for Go programming language
       --py|--python         install YDK for Python programming language (default)
       --all                 install YDK for all available programming languages
-      --no-py-venv          do not create python virtual environment
-      -c|--core             install YDK core packages
+      -v|--venv             create python virtual environment
+      -c|--core             install YDK core package
       -s|--service gnmi     install gNMI service package
       -n|--no-deps          skip installation of dependencies
       -p|--python-dir path  set Python3 installation root directory;
@@ -198,16 +200,16 @@ Installing third party dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
-The script will also install Python virtual environment in default or specified location::
+The script will also install Python virtual environment in default or specified location, when '--venv' is specified::
 
     # Clone ydk-gen from GitHub
-    git clone https://github.com/ygorelik/ydk-gen.git -b yang11
+    git clone https://gitlab.com/yangorelik/ydk-gen.git -b yang11
     cd ydk-gen
 
     # Define optional environment variables and install dependencies
     export YDKGEN_HOME=`pwd`
     export PYTHON_VENV=$HOME/ydk_venv
-    ./install_ydk.sh   # also builds Python virtual environment
+    ./install_ydk.sh -v   # also builds Python virtual environment
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
@@ -220,10 +222,10 @@ Please follow this procedure to install YDK core components for Python apps deve
     source .env
 
     # Generate and install YDK core library
-    ./generate.py -is --core --cpp
+    python3 generate.py -is --core --cpp
 
     # Generate and install Python core package
-    ./generate.py -i --core  # python is default programming language
+    python3 generate.py -i --py --core -v
 
 Adding gNMI Service
 -------------------
@@ -237,7 +239,7 @@ gNMI service installation
 Here is simple example, how gNMI service package for Python could be added::
 
     cd ydk-gen
-    ./install_ydk.sh --service gnmi
+    ./install_ydk.sh --py --service gnmi -v
 
 
 gNMI runtime environment
@@ -266,17 +268,17 @@ To install the `ietf` bundle from `ydk-gen` execute::
   source .env  # if not ran previously
 
   # Generate and install the bundle
-  ./generate.py --bundle profiles/bundles/ietf_0_1_6.json -i
+  python3 generate.py -i --bundle profiles/bundles/ietf_0_1_6.json
 
 To install the `openconfig` bundle, execute::
 
-  # Navigate to ydk-gen directory and activate runtime environment
+  # Navigate to ydk-gen directory and activate runtime environment, if applicable
   source $PYTHON_VENV/bin/activate
   cd ydk-gen
   source .env  # if not ran previously
 
   # Generate and install the bundle
-  ./generate.py --bundle profiles/bundles/openconfig_0_1_9.json -i
+  python3 generate.py --bundle profiles/bundles/openconfig_0_1_9.json -i
 
 To install the `cisco-ios-xr` bundle, execute::
 
@@ -285,7 +287,7 @@ To install the `cisco-ios-xr` bundle, execute::
   source .env  # if not ran previously
 
   # Generate and install the bundle
-  ./generate.py --bundle profiles/bundles/cisco-ios-xr-6_7_4.json -i
+  python3 generate.py --bundle profiles/bundles/cisco-ios-xr-6_7_4.json -i
 
 
 Documentation and Support

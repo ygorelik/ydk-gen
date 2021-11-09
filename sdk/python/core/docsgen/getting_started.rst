@@ -107,13 +107,13 @@ To activate YDK runtime environment simply run this command once in bash shell:
     source .env
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-In order to isolate YDK Python environment from system installation, it is recommended to use Python virtual environment,
-which is created by the installation script as part of default behavior. However the user can alter the default behavior
-and force the YDK to use system or customer Python installation.
+By default the YDK uses Python system installation.
+In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
+If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for Python programming language:
+Here is simple example of core YDK installation for Python programming language with no virtual environment:
 
 .. code-block:: sh
 
@@ -129,14 +129,14 @@ for specified programming language or for all supported languages.
 Full set of script capabilities could be viewed like this::
 
     ./install_ydk.sh --help
-    usage: install_ydk [--cpp] [--py] [--go] [--all] [-s gnmi] [-h] [-n] [-p path] [--no-py-venv]
+    usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v] [-p path]
     Options and arguments:
       --cpp                 install YDK for C++ programming language
       --go                  install YDK for Go programming language
       --py|--python         install YDK for Python programming language (default)
       --all                 install YDK for all available programming languages
-      --no-py-venv          do not create python virtual environment
-      -c|--core             install YDK core packages
+      -v|--venv             create python virtual environment
+      -c|--core             install YDK core package
       -s|--service gnmi     install gNMI service package
       -n|--no-deps          skip installation of dependencies
       -p|--python-dir path  set Python3 installation root directory;
@@ -158,7 +158,6 @@ Full set of script capabilities could be viewed like this::
                         if not set, /usr/local/include is assumed
     CMAKE_LIBRARY_PATH  Location of Python shared libraries;
                         if not set, default system library location is assumed
-
 
 If user environment is different from the default one (different Python installation or different
 location of libraries), then building from source method should be used.
@@ -186,13 +185,13 @@ If user platform is supported one, it is recommended to use `ydk-gen/install_ydk
 The script will also install Python virtual environment in default or specified location::
 
     # Clone ydk-gen from GitHub
-    git clone https://github.com/ygorelik/ydk-gen.git -b yang11
+    git clone https://gitlab.com/yangorelik/ydk-gen.git -b yang11
     cd ydk-gen
 
     # Define optional environment variables and install dependencies
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_venv  # optional
-    ./install_ydk.sh   # also builds Python virtual environment and .env file
+    ./install_ydk.sh -v   # also builds Python virtual environment and .env file
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
@@ -205,10 +204,11 @@ Please follow this procedure to install YDK core components for Python apps deve
     source .env
 
     # Generate and install YDK core library
-    ./generate.py -is --core --cpp
+    python3 generate.py -is --core --cpp
 
     # Generate and install Python core package
-    ./generate.py -i --core --py
+    python3 generate.py -i --core
+
 
 Adding gNMI Service
 -------------------
@@ -222,7 +222,7 @@ gNMI Service installation
 Here is simple example, how gNMI service package for Python could be added::
 
     cd ydk-gen
-    ./install_ydk.sh --service gnmi
+    ./install_ydk.sh --service gnmi -v
 
 
 gNMI runtime environment
@@ -250,7 +250,7 @@ To install the `ietf` bundle from `ydk-gen` execute::
   source .env  # if not ran previously
 
   # Generate and install the bundle
-  ./generate.py --bundle profiles/bundles/ietf_0_1_6.json -i
+  python3 generate.py --bundle profiles/bundles/ietf_0_1_6.json -i
 
 To install the `openconfig` bundle, execute::
 
@@ -259,7 +259,7 @@ To install the `openconfig` bundle, execute::
   source .env  # if not ran previously
 
   # Generate and install the bundle
-  ./generate.py --bundle profiles/bundles/openconfig_0_1_9.json -i
+  python3 generate.py --bundle profiles/bundles/openconfig_0_1_9.json -i
 
 
 To install the `cisco-ios-xr` bundle, execute::
@@ -269,7 +269,7 @@ To install the `cisco-ios-xr` bundle, execute::
   source .env  # if not ran previously
 
   # Generate and install the bundle
-  ./generate.py --bundle profiles/bundles/cisco-ios-xr-6_7_4_post1.json -i
+  python3 generate.py --bundle profiles/bundles/cisco-ios-xr-6_7_4_post1.json -i
 
 
 Generate YDK components
@@ -391,7 +391,7 @@ Generate and install model bundle
 Generate model bundle using a bundle profile and install it.
 YDK Runtime environment must be activated prior to these procedures::
 
-    ./generate.py --python --bundle profiles/bundles/<name-of-profile>.json -i
+    python3 generate.py -i --bundle profiles/bundles/<name-of-profile>.json
 
 Check Python packages installed::
 
@@ -407,7 +407,7 @@ When YANG models available on the hard drive, there is capability to generate sm
 just few models. It is called an "adhoc" bundle. Such a bundle generated without profile directly from command line.
 Here is simple example::
 
-    ./generate.py --adhoc-bundle-name test --adhoc-bundle \
+    python3 generate.py -i --adhoc-bundle-name test --adhoc-bundle \
         /opt/git-repos/clean-yang/vendor/cisco/xr/621/Cisco-IOS-XR-ipv4-bgp-oper*.yang \
         /opt/git-repos/clean-yang/vendor/cisco/xr/621/Cisco-IOS-XR-types.yang
         /opt/git-repos/clean-yang/vendor/cisco/xr/621/Cisco-IOS-XR-ipv4-bgp-datatypes.yang
@@ -425,10 +425,10 @@ In order to generate YDK core and bundles documentation, the `--generate-doc` op
 Therefore the user should generate all the bundles without the `--generate-doc` option prior to the documentation generation.
 For example, the below sequence of commands will generate the documentation for the three python bundles and the python core::
 
-    ./generate.py --python --bundle profiles/bundles/ietf_0_1_1.json
-    ./generate.py --python --bundle profiles/bundles/openconfig_0_1_1.json
-    ./generate.py --python --bundle profiles/bundles/cisco_ios_xr_6_1_1.json
-    ./generate.py --python --core --generate-doc
+    python3 generate.py --bundle profiles/bundles/ietf_0_1_6.json
+    python3 generate.py --bundle profiles/bundles/openconfig_0_1_9.json
+    python3 generate.py --bundle profiles/bundles/cisco_ios_xr_6_3_1.json
+    python3 generate.py --core --generate-doc
 
 **NOTE.** The documentation generation for bundles can take few hours due to their sizes.
 If you have previously generated documentation using the `--cached-output-dir --output-directory <dir>` option,
@@ -437,11 +437,11 @@ the add-on documentation generation time can be reduced. Adding cisco-ios-xr doc
     mkdir gen-api/cache
     mv gen-api/python gen-api/cache
 
-    ./generate.py --python --bundle profiles/bundles/cisco_ios_xr_6_6_3.json
-    ./generate.py --python --core --generate-doc --output-directory gen-api --cached-output-dir
+    python3 generate.py --bundle profiles/bundles/cisco_ios_xr_6_6_3.json
+    python3 generate.py --core --generate-doc --output-directory gen-api --cached-output-dir
 
 Pre-generated documentation for YDK-0.8.3 core and model API for most popular devices is available
-`online <http://ydk.cisco.com>`_.
+`online <https://ydk.cisco.com>`_. Please note, that some API can be different comparing with current release.
 
 Documentation and Support
 =========================

@@ -142,8 +142,6 @@ The user must have sudo access in order to install YDK core components to these 
 
 For YDK installation it is recommended to use script `install_ydk.sh` from `ydk-gen` git repository.
 The script detects platform OS, installs all the dependencies and builds complete set of YDK components for specified language.
-Some of the third party software components are installed to default location, which is '/usr/loca/bin', '/usr/local/lib',
-and '/usr/local/include'. Therefore the user must have sudo access to these locations.
 
 If the script installs any YDK component, it also creates an environment activation file '.env' in the 'ydk-gen'
 directory, which can be used to activate YDK runtime environment identical to the installation environment.
@@ -178,13 +176,13 @@ Full set of script capabilities could be viewed like this:
 
 ```
 ./install_ydk.sh --help
-usage: install_ydk [--cpp] [--py] [--go] [--all] [-s gnmi] [-h] [-n] [-p path] [--no-py-venv]
+usage: install_ydk [ {--cpp|--py|--go|--all} ] [-s gnmi] [-h] [-n] [-v] [-p path]
 Options and arguments:
   --cpp                 install YDK for C++ programming language
   --go                  install YDK for Go programming language
   --py|--python         install YDK for Python programming language (default)
   --all                 install YDK for all available programming languages
-  --no-py-venv          do not create python virtual environment
+  -v|--venv             create python virtual environment
   -c|--core             install YDK core packages
   -s|--service gnmi     install gNMI service package
   -n|--no-deps          skip installation of dependencies
@@ -231,7 +229,7 @@ to pick up correct Python binaries and shared libraries.
 ### Installing third party dependencies
 
 If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script. 
-The script will also install Python virtual environment in default or specified location.
+The script will also install Python virtual environment in default or specified location, when '--venv' is specified.
 
 ```
 # Clone ydk-gen from GitHub
@@ -241,7 +239,7 @@ cd ydk-gen
 # Define optional environment variables and install dependencies
 export YDKGEN_HOME=`pwd`  
 export PYTHON_VENV=$HOME/ydk_venv
-./install_ydk.sh   # also builds Python virtual environment
+./install_ydk.sh -v   # also builds Python virtual environment
 ```
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
@@ -249,7 +247,7 @@ For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dep
 ### Installing core components
 
 ```
-# Activate YDK runtime environment
+# If created, activate YDK runtime environment
 source .env
 
 # Generate and install YDK core library
@@ -273,7 +271,7 @@ Here is simple example how gNMI service package for Python could be added:
 
 ```
 cd ydk-gen
-./install_ydk.sh --py --service gnmi
+./install_ydk.sh --py --service gnmi -v
 ```
 
 ### Runtime environment

@@ -1,15 +1,17 @@
 
-### 2021-11-30 version 0.9.1.1
+### 2021-12-30 version 0.9.1.1
 
 #### New features and enhancements
   * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
   * Upgraded pyang to modified version 2.5.0.m1
   * Added SSL support for NetconfServiceProvider in Go
+  * Improved installation script to allow use Python system installation
   * Allow custom Python installation in YDK installation script
 
 #### Resolved GitHub issues
   * Go function EntityEqual result depends on parameters order ([#1053](https://github.com/CiscoDevNet/ydk-gen/issues/1053))
   * Fixed Python 3.5 code compatibility issue for Ubuntu:xenial
+  * install_ydk.sh tries to create a new venv ([#1034](https://github.com/CiscoDevNet/ydk-gen/issues/1034))
 
 #### Bundle improvements
   * Updated cisco-ios-xr bundle (profile cisco-ios-xr_6_7_3.json) to support Cisco IOS XR 6.7.3

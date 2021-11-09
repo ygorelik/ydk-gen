@@ -95,12 +95,13 @@ The script detects platform OS, installs all the dependencies and builds complet
 The user must have sudo access to these locations.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-In order to isolate YDK Python environment from system installation, the script builds Python3 virtual environment.
-The user must manually activate virtual environment when generating model bundles and/or running YDK based application.
+By default the YDK uses Python system installation.
+In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
+If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for Python programming language:
+Here is simple example of core YDK installation for C++ programming language:
 
 .. code-block:: sh
 
@@ -108,7 +109,7 @@ Here is simple example of core YDK installation for Python programming language:
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
-    ./install_ydk.sh --core
+    ./install_ydk.sh --core --cpp
 
 
 The script also allows to install individual components like dependencies, core, and service packages
@@ -116,14 +117,14 @@ for specified programming language or for all supported languages.
 Full set of script capabilities could be viewed like this::
 
     ./install_ydk.sh --help
-    usage: install_ydk [--cpp] [--py] [--go] [--all] [-s gnmi] [-h] [-n] [-p path] [--no-py-venv]
+    usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v] [-p path]
     Options and arguments:
       --cpp                 install YDK for C++ programming language
       --go                  install YDK for Go programming language
       --py|--python         install YDK for Python programming language (default)
       --all                 install YDK for all available programming languages
-      --no-py-venv          do not create python virtual environment
-      -c|--core             install YDK core packages
+      -v|--venv             create python virtual environment
+      -c|--core             install YDK core package
       -s|--service gnmi     install gNMI service package
       -n|--no-deps          skip installation of dependencies
       -p|--python-dir path  set Python3 installation root directory;
@@ -170,7 +171,6 @@ Installing third party dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
-The script will also install Python virtual environment in default or specified location::
 
     # Clone ydk-gen from GitHub
     git clone https://github.com/ygorelik/ydk-gen.git
@@ -179,20 +179,20 @@ The script will also install Python virtual environment in default or specified 
     # Define optional environment variables and install dependencies
     export YDKGEN_HOME=`pwd`
     export PYTHON_VENV=$HOME/ydk_venv
-    ./install_ydk.sh   # also builds Python virtual environment
+    ./install_ydk.sh
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
 Installing core components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please follow this procedure to install YDK core components for Python apps development::
+Please follow this procedure to install YDK core components for C++ apps development::
 
-    # Activate Python virtual environment
+    # If created, activate Python virtual environment
     source $PYTHON_VENV/bin/activate
 
     # Generate and install YDK core library
-    ./generate.py -is --core --cpp
+    python3 generate.py -is --core --cpp
 
 Adding gNMI Service
 -------------------
@@ -220,11 +220,13 @@ As a workaround, the YDK based application runtime environment must include sett
 
 
 Installing model bundles
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
-Once you have installed the ``core`` package, you can install one or more model bundles.  Note that some bundles have dependencies on other bundles.  Those dependencies are captured in the bundle packages used for quick installation.
+Once you have installed the `core` package, you can install one or more model bundles.
+Note that some bundles have dependencies on other bundles.
+Those dependencies are captured in the bundle packages used for quick installation.
 
-To install the ``ietf`` bundle, execute:
+To install the `ietf` bundle, execute:
 
 .. code-block:: sh
 
@@ -233,7 +235,7 @@ To install the ``ietf`` bundle, execute:
   build$ cmake .. && make
   build$ sudo make install
 
-To install the ``openconfig`` bundle, execute:
+To install the `openconfig` bundle, execute:
 
 .. code-block:: sh
 
@@ -242,7 +244,7 @@ To install the ``openconfig`` bundle, execute:
   build$ cmake .. && make
   build$ sudo make install
 
-To install the ``cisco-ios-xr`` bundle, execute:
+To install the `cisco-ios-xr` bundle, execute:
 
 .. code-block:: sh
 
@@ -252,7 +254,7 @@ To install the ``cisco-ios-xr`` bundle, execute:
   build$ sudo make install
 
 Installing YDK gNMI library
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
 
 Optionally the YDK gNMI Service library can be installed. Prior to this installation the YDK core library must be installed (see above).
 
@@ -268,7 +270,9 @@ Optionally the YDK gNMI Service library can be installed. Prior to this installa
 Samples
 =======
 
-To get started using the YDK API, there are sample apps available in the `YDK-Cpp samples repository <https://github.com/CiscoDevNet/ydk-cpp/tree/master/core/ydk/samples>`_. For example, to run the ``bgp_create.cpp`` sample execute:
+To get started using the YDK API, there are sample apps available in the
+`YDK-Cpp samples repository <https://github.com/CiscoDevNet/ydk-cpp/tree/master/core/ydk/samples>`_.
+For example, to run the `bgp_create.cpp` sample execute:
 
 .. code-block:: sh
 
@@ -287,4 +291,4 @@ Release Notes
 
 The current YDK release version is 0.9.1.1.
 
-YDK-Go is licensed under the Apache 2.0 License.
+YDK is licensed under the Apache 2.0 License.

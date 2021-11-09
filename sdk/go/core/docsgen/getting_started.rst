@@ -96,8 +96,9 @@ The script detects platform OS, installs all the dependencies and builds complet
 The user must have sudo access to these locations.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-In order to isolate YDK Python environment from system installation, the script builds Python3 virtual environment.
-The user must manually activate virtual environment when generating model bundles and/or running YDK based application.
+By default the YDK uses Python system installation.
+In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
+If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
@@ -105,7 +106,7 @@ Here is simple example of core YDK installation for Go programming language:
 
 .. code-block:: sh
 
-    git clone https://github.com/ygorelik/ydk-gen.git
+    git clone https://gitlab.com/yangorelik/ydk-gen.git -b yang11
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
@@ -117,14 +118,14 @@ for specified programming language or for all supported languages.
 Full set of script capabilities could be viewed like this::
 
     ./install_ydk.sh --help
-    usage: install_ydk [--cpp] [--py] [--go] [--all] [-s gnmi] [-h] [-n] [-p path] [--no-py-venv]
+    usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v] [-p path]
     Options and arguments:
       --cpp                 install YDK for C++ programming language
       --go                  install YDK for Go programming language
       --py|--python         install YDK for Python programming language (default)
       --all                 install YDK for all available programming languages
-      --no-py-venv          do not create python virtual environment
-      -c|--core             install YDK core packages
+      -v|--venv             create python virtual environment
+      -c|--core             install YDK core package
       -s|--service gnmi     install gNMI service package
       -n|--no-deps          skip installation of dependencies
       -p|--python-dir path  set Python3 installation root directory;
@@ -146,7 +147,6 @@ Full set of script capabilities could be viewed like this::
                         if not set, /usr/local/include is assumed
     CMAKE_LIBRARY_PATH  Location of Python shared libraries;
                         if not set, default system library location is assumed
-
 
 If user environment is different from the default one (different Python installation or different
 location of libraries), then building from source method should be used.
@@ -171,7 +171,7 @@ Installing third party dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
-The script will also install Python virtual environment in default or specified location::
+The script will also install Python virtual environment in default or specified location, when '--venv' is specified::
 
     # Clone ydk-gen from GitHub
     git clone https://github.com/ygorelik/ydk-gen.git
@@ -180,7 +180,7 @@ The script will also install Python virtual environment in default or specified 
     # Define optional environment variables and install dependencies
     export YDKGEN_HOME=`pwd`
     export PYTHON_VENV=$HOME/ydk_venv
-    ./install_ydk.sh   # also builds Python virtual environment
+    ./install_ydk.sh
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
@@ -189,14 +189,14 @@ Installing core components
 
 Please follow this procedure to install YDK core components for Python apps development::
 
-    # Activate Python virtual environment
+    # If created, activate Python virtual environment
     source $PYTHON_VENV/bin/activate
 
     # Generate and install YDK core library
-    ./generate.py -is --core --cpp
+    python3 generate.py -is --core --cpp
 
-    # Generate and install Go core package
-    ./generate.py -i --core --go
+    # For Python programming language add
+    python3 generate.py -i --core --go
 
 Adding gNMI Service
 -------------------
@@ -229,11 +229,11 @@ Documentation and Support
 - Read the `API documentation <http://ydk.cisco.com/go/docs>`_ for details on how to use the API and specific models (YDK-0.8.3)
 - Samples can be found under the `samples <https://github.com/CiscoDevNet/ydk-go/tree/master/samples>`_ directory
 - Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with other users and with the makers of YDK
-- Additional YDK information can be found at `ydk.io <http://ydk.io>`_
+
 
 Release Notes
 =============
 
 The current YDK release version is 0.9.1.1.
 
-YDK-Go is licensed under the Apache 2.0 License.
+YDK is licensed under the Apache 2.0 License.

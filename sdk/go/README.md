@@ -31,7 +31,8 @@
 
 ![ydk-logo-128](https://cloud.githubusercontent.com/assets/16885441/24175899/2010f51e-0e56-11e7-8fb7-30a9f70fbb86.png)
 
-# YANG Development Kit (Go)
+YANG Development Kit (Go)
+=========================
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -40,6 +41,7 @@
 - [Overview](#overview)
 - [Backward Compatibility](#backward-compatibility)
 - [Docker](#docker)
+- [System Requirements](#system-requirements)
 - [Core Installation](#core-installation)
   - [Installation script](#installation-script)
   - [Building from source](#building-from-source)
@@ -51,9 +53,12 @@
 
 ## Overview
 
-The YANG Development Kit (YDK) is a software development tool, which provides API for building applications based on YANG models.
-The main goal of YDK is to reduce the learning curve of YANG data models by expressing the model semantics in an API and abstracting protocol/encoding details.
-YDK is composed of a core package that defines services and providers, plus one or more module bundles that are based on YANG models.
+**YDK** is a developer tool that allows generate YANG model API's in multiple languages and provides services
+to apply generated API over multiple communication protocols.
+Currently supported languages are: Python, Go and C++.
+Currently implemented protocols are: Netconf, Restconf, OpenDaylight and gNMI.
+YDK provides CRUD and protocol specific service over above protocols.
+YDK also provides Codec service to translate API models to/from XML and JSON encoded strings.
 
 ## Backward Compatibility
 
@@ -66,11 +71,11 @@ The Go generated API starting from YDK-0.7.3 is fully compatible with YDK-0.9.0.
 Currently the [docker image](https://docs.docker.com/engine/reference/run/) for ydk-go is not been generated.
 Please use docker image below, which has complete environment for ydk-go based development.
 
-A [docker image](https://docs.docker.com/engine/reference/run/) is automatically built with the latest ydk-gen
+The [docker image](https://docs.docker.com/engine/reference/run/) is automatically built with the latest ydk-gen
 commit to git repository. 
 The docker image is used to run YDK based apps without installing anything natively on your machine.
 
-To use the docker image, [install docker](https://docs.docker.com/install/) on your system and run the below command. 
+To use the docker image, [install docker](https://docs.docker.com/install/) on your system and run the below command.
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
 
 ```
@@ -107,12 +112,13 @@ The script detects platform OS, installs all the dependencies and builds complet
 The user must have sudo access to these locations.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-In order to isolate YDK Python environment from system installation, the script builds Python virtual environment.
-The user must manually activate virtual environment when generating model bundles and/or running YDK based application.
+By default the YDK uses Python system installation.
+In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
+If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 For different location the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for Python programming language:
+Here is simple example of core YDK installation for Go programming language:
 
 ```
 git clone https://github.com/ygorelik/ydk-gen.git
@@ -128,13 +134,13 @@ Full set of script capabilities could be viewed like this:
 
 ```
 ./install_ydk.sh --help
-usage: install_ydk [--cpp] [--py] [--go] [--all] [-s gnmi] [-h] [-n] [-p path] [--no-py-venv]
+usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v] [-p path]
 Options and arguments:
   --cpp                 install YDK for C++ programming language
   --go                  install YDK for Go programming language
   --py|--python         install YDK for Python programming language (default)
   --all                 install YDK for all available programming languages
-  --no-py-venv          do not create python virtual environment
+  -v|--venv             create python virtual environment
   -c|--core             install YDK core packages
   -s|--service gnmi     install gNMI service package
   -n|--no-deps          skip installation of dependencies
@@ -146,7 +152,7 @@ Environment variables:
 YDKGEN_HOME         specifies location of ydk-gen git repository;
                     if not set, $HOME/ydk-gen is assumed
 PYTHON_VENV         specifies location of python virtual environment;
-                    if not set, /home/ygorelik/venv is assumed
+                    if not set, $HOME/venv is assumed
 GOROOT              specifies installation directory of go software;
                     if not set, /usr/local/go is assumed
 GOPATH              specifies location of go source directory;
@@ -155,6 +161,8 @@ C_INCLUDE_PATH      location of C include files;
                     if not set, /usr/local/include is assumed
 CPLUS_INCLUDE_PATH  location of C++ include files;
                     if not set, /usr/local/include is assumed
+CMAKE_LIBRARY_PATH  Location of Python shared libraries;
+                    if not set, default system library location is assumed
 ```
 
 If user environment is different from the default one (different Python installation or different
@@ -179,17 +187,17 @@ to pick up correct Python binaries and shared libraries.
 #### Installing third party dependencies
 
 If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script. 
-The script will also install Python virtual environment in default or specified location.
+The script will also install Python virtual environment in default or specified location, when '--venv' is specified.
 
 ```
 # Clone ydk-gen from GitHub
-git clone https://github.com/ygorelik/ydk-gen.git -b yang11
+git clone https://gitlab.com/yangorelik/ydk-gen.git -b yang11
 cd ydk-gen
 
 # Define optional environment variables and install dependencies
 export YDKGEN_HOME=`pwd`  
 export PYTHON_VENV=$HOME/ydk_venv
-./install_ydk.sh   # also builds Python virtual environment
+./install_ydk.sh
 ```
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
@@ -199,14 +207,15 @@ For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dep
 Please follow this procedure to install YDK core components for Go apps development:
 
 ```
-# Activate Python virtual environment
+# If created, activate Python virtual environment
 source $PYTHON_VENV/bin/activate
 
 # Generate and install YDK core library
-./generate.py -is --core --cpp
+python3 generate.py -is --core --cpp
 
-# Generate and install Go core packages
-./generate.py -i --core --go
+# Generate and install YDK-Go core package
+python3 generate.py -i --core --go
+
 ```
 
 ## Adding gNMI Service
@@ -216,7 +225,7 @@ and YDK gNMI service package.
 
 ### gNMI service installation
 
-Here is simple example how gNMI service package for Python could be added:
+Here is simple example how gNMI service package for Go programming language could be added:
 
 ```
 cd ydk-gen

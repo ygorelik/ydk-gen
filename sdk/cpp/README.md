@@ -113,12 +113,13 @@ The script detects platform OS, installs all the dependencies and builds complet
 The user must have sudo access to these locations.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-In order to isolate YDK Python environment from system installation, the script builds Python virtual environment.
-The user must manually activate virtual environment when generating model bundles and/or running YDK based application.
+By default the YDK uses Python system installation.
+In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
+If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 For different location the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for Python programming language:
+Here is simple example of core YDK installation for C++ programming language:
 
 ```
 git clone https://github.com/ygorelik/ydk-gen.git
@@ -134,13 +135,13 @@ Full set of script capabilities could be viewed like this:
 
 ```
 ./install_ydk.sh --help
-usage: install_ydk [--cpp] [--py] [--go] [--all] [-s gnmi] [-h] [-n] [-p path] [--no-py-venv]
+usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v] [-p path]
 Options and arguments:
   --cpp                 install YDK for C++ programming language
   --go                  install YDK for Go programming language
   --py|--python         install YDK for Python programming language (default)
   --all                 install YDK for all available programming languages
-  --no-py-venv          do not create python virtual environment
+  -v|--venv             create python virtual environment
   -c|--core             install YDK core packages
   -s|--service gnmi     install gNMI service package
   -n|--no-deps          skip installation of dependencies
@@ -168,9 +169,9 @@ CMAKE_LIBRARY_PATH  Location of Python shared libraries;
 If user environment is different from the default one (different Python installation or different
 location of libraries) then building from source method should be used.
 
-### Building from source
+## Building from source
 
-#### Environment variables
+### Environment variables
 
 In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
 In this case the header location must be specified explicitly (in below commands the default location is shown):
@@ -182,10 +183,10 @@ When non-standard Python installation is used or there are multiple installation
 the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
 to pick up correct Python binaries and shared libraries.
 
-#### Installing third party dependencies
+### Installing third party dependencies
 
 If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script. 
-The script will also install Python virtual environment in default or specified location.
+The script will also install Python virtual environment in default or specified location, when '--venv' is specified.
 
 ```
 # Clone ydk-gen from GitHub
@@ -200,10 +201,10 @@ export PYTHON_VENV=$HOME/ydk_venv
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
  
-#### Installing core components
+### Installing core components
 
 ```
-# Activate Python virtual environment
+# If created, activate Python virtual environment
 source $PYTHON_VENV/bin/activate
 
 # Generate and install YDK core library
