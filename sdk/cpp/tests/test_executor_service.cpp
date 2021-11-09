@@ -1,7 +1,7 @@
 /*  ----------------------------------------------------------------
  YDK - YANG Development Kit
- Copyright 2016 Cisco Systems, All rights reserved.
-
+ Copyright 2016-2019 Cisco Systems, All rights reserved.
+ -------------------------------------------------------------------
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
@@ -125,6 +125,7 @@ TEST_CASE("es_copy_config_rpc")
 }
 
 // issues in netsim
+// If-feature 'url' is not enabled in confd-7.3, hence expected failure execute RPC
 TEST_CASE("es_delete_config_rpc")
 {
     // provider

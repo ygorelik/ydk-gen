@@ -202,12 +202,13 @@ class SanityTest(unittest.TestCase):
             self.assertIsInstance(e, YError)
             # self.assertEqual(e.code, YErrorCode.INVALID_RPC)
 
-    def test_execute_get_schema(self):
+    def test_execute_get_config(self):
         get_rpc = ietf_netconf.Get()
         get_rpc.input.filter = '<bgp xmlns="http://openconfig.net/yang/bgp"/>'
-        self.es.execute_rpc(self.ncc, get_rpc, openconfig_bgp.Bgp())
+        reply = self.es.execute_rpc(self.ncc, get_rpc, openconfig_bgp.Bgp())
+        self.assertIsNotNone(reply)
 
-    def test_es_get_schema_rpc(self):
+    def test_execute_get_schema(self):
         rpc_entity = ietf_netconf_monitoring.GetSchema()
         rpc_entity.input.identifier = "main"
         return_output_entity = ietf_netconf_monitoring.GetSchema.Output()
