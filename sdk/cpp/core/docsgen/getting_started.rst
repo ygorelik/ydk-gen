@@ -79,6 +79,8 @@ Corresponding binaries, libraries, and header files are installed in default loc
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
 
+**NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
+
 .. _howto-install:
 
 Core Installation
@@ -106,7 +108,7 @@ Here is simple example of core YDK installation for C++ programming language:
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
-    ./install_ydk.sh --core -l cpp
+    ./install_ydk.sh --core --cpp
 
 
 The script also allows to install individual components like dependencies, core, and service packages
@@ -149,23 +151,6 @@ location of libraries), then building from source method should be used.
 Building from source
 --------------------
 
-Installing third party dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
-The script will also install Python virtual environment in default or specified location, when '--venv' is specified::
-
-    # Clone ydk-gen from GitHub
-    git clone https://github.com/ygorelik/ydk-gen.git
-    cd ydk-gen
-
-    # Define optional environment variables and install dependencies
-    export YDKGEN_HOME=`pwd`
-    export PYTHON_VENV=$HOME/ydk_venv
-    ./install_ydk.sh -v   # also builds Python virtual environment
-
-For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
-
 Environment variables
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -175,16 +160,36 @@ In this case the header location must be specified explicitly (in below commands
   export C_INCLUDE_PATH=/usr/local/include
   export CPLUS_INCLUDE_PATH=/usr/local/include
 
+When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.
+
+Installing third party dependencies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
+
+    # Clone ydk-gen from GitHub
+    git clone https://github.com/ygorelik/ydk-gen.git
+    cd ydk-gen
+
+    # Define optional environment variables and install dependencies
+    export YDKGEN_HOME=`pwd`
+    export PYTHON_VENV=$HOME/ydk_venv
+    ./install_ydk.sh
+
+For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
+
 Installing core components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-::
+Please follow this procedure to install YDK core components for C++ apps development::
 
     # If created, activate Python virtual environment
     source $PYTHON_VENV/bin/activate
 
     # Generate and install YDK core library
-    ./generate.py -is --core --cpp
+    python3 generate.py -is --core --cpp
 
 Adding gNMI Service
 -------------------
@@ -198,7 +203,7 @@ gNMI Service installation
 Here is simple example, how gNMI service package for Python could be added::
 
     cd ydk-gen
-    ./install_ydk.sh -l cpp --service gnmi
+    ./install_ydk.sh --cpp --service gnmi
 
 
 gNMI runtime environment
@@ -245,6 +250,20 @@ To install the `cisco-ios-xr` bundle, execute:
   build$ cmake .. && make
   build$ sudo make install
 
+Installing YDK gNMI library
+---------------------------
+
+Optionally the YDK gNMI Service library can be installed. Prior to this installation the YDK core library must be installed (see above).
+
+.. code-block:: sh
+
+  $ cd ydk-cpp/gnmi
+  gnmi$ mkdir -p build
+  gnmi$ cd build
+  build$ cmake ..
+  build$ make
+  build$ sudo make install
+
 Samples
 =======
 
@@ -267,4 +286,6 @@ Documentation and Support
 Release Notes
 =============
 
-The current YDK release version is 0.8.6.2. YDK-Go is licensed under the Apache 2.0 License.
+The current YDK release version is 0.8.6.2.
+
+YDK is licensed under the Apache 2.0 License.

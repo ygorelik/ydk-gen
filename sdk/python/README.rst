@@ -53,8 +53,8 @@ The Python YDK-0.8.6 core package is compatible with all model bundles generated
 However the YDK-0.8.6 generates slightly different code and model API comparing to YDK-0.8.4.
 The YDK-0.8.6 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling of YList objects.
 
-..
-  Please see `the release notes <https://github.com/ygorelik/ydk-gen/blob/master/README.md>`_ for details.
+**NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
+
 
 Docker
 ======
@@ -95,8 +95,10 @@ For both the methods the user must install `git` package prior to the installati
 
 All YDK core components are based on C and C++ code. These components compiled using default compilers for the supported platform.
 Corresponding binaries, libraries, and header files are installed in default locations,
-which are `/usr/local/bin` ,`/usr/local/lib`, and `/usr/local/include`.
+which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
+
+**NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
 
 Core Installation
 =================
@@ -165,6 +167,19 @@ location of libraries) then building from source method should be used.
 Building from source
 --------------------
 
+Environment variables
+~~~~~~~~~~~~~~~~~~~~~
+
+In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
+In this case the headers file location must be specified explicitly (in below commands the default location is shown)::
+
+    export C_INCLUDE_PATH=/usr/local/include
+    export CPLUS_INCLUDE_PATH=/usr/local/include
+
+When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.
+
 Installing third party dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -182,32 +197,19 @@ The script will also install Python virtual environment in default or specified 
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
-Environment variables
-~~~~~~~~~~~~~~~~~~~~~
-
-In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
-In this case the header location must be specified explicitly (in below commands the default location is shown)::
-
-  export C_INCLUDE_PATH=/usr/local/include
-  export CPLUS_INCLUDE_PATH=/usr/local/include
-
 Installing core components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-::
+Please follow this procedure to install YDK core components for Python apps development::
 
     # If created, activate Python virtual environment
     source $PYTHON_VENV/bin/activate
 
     # Generate and install YDK core library
-    ./generate.py -is --core --cpp
+    python3 generate.py -is --core --cpp
 
-    # For Python programming language add
-    ./generate.py -i --core
-
-    # For Go programming language add
-    ./generate.py -i --core --go
-
+    # Generate and install Python core package
+    python3 generate.py -i --py --core -v
 
 Adding gNMI Service
 -------------------
@@ -215,13 +217,13 @@ Adding gNMI Service
 In order to enable YDK support for gNMI protocol, which is optional, the user need install third party software
 and YDK gNMI service package.
 
-gNMI Service installation
+gNMI service installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Here is simple example, how gNMI service package for Python could be added::
 
     cd ydk-gen
-    ./install_ydk.sh -l py --service gnmi
+    ./install_ydk.sh --py --service gnmi -v
 
 
 gNMI runtime environment
@@ -297,15 +299,15 @@ To install the `ietf` bundle from `ydk-gen` execute::
   source $PYTHON_VENV/bin/activate
   cd ydk-gen
   # Generate and install the bundle
-  ./generate.py --python --bundle profiles/bundles/ietf_0_1_5_post2.json -i
+  python3 generate.py -i --bundle profiles/bundles/ietf_0_1_5_post2.json
 
 To install the `openconfig` bundle, execute::
 
-  # Activate Python virtual environment and navigate to ydk-gen directory
+  # Navigate to ydk-gen directory and activate runtime environment, if applicable
   source $PYTHON_VENV/bin/activate
   cd ydk-gen
   # Generate and install the bundle
-  ./generate.py --python --bundle profiles/bundles/openconfig_0_1_8.json -i
+  python3 generate.py -i --bundle profiles/bundles/openconfig_0_1_8.json
 
 
 To install the `cisco-ios-xr` bundle, execute::
@@ -314,7 +316,7 @@ To install the `cisco-ios-xr` bundle, execute::
   source $PYTHON_VENV/bin/activate
   cd ydk-gen
   # Generate and install the bundle
-  ./generate.py --python --bundle profiles/bundles/cisco-ios-xr-6_6_3_post1.json -i
+  python3 generate.py -i --bundle profiles/bundles/cisco-ios-xr-6_6_3_post1.json
 
 
 Documentation and Support
@@ -331,4 +333,6 @@ Available resources:
 Release Notes
 =============
 
-The current YDK release version for Python is 0.8.6.2. The `ydk-py` GitHub repository is not maintained for this release.
+The current YDK release version is 0.8.6.2.
+
+YDK is licensed under the Apache 2.0 License.
