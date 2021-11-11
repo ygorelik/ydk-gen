@@ -1,7 +1,7 @@
-/// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// YANG Development Kit
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -23,8 +23,7 @@
 // All modifications in original under CiscoDevNet domain
 // introduced since October 2019 are copyrighted.
 // All rights reserved under Apache License, Version 2.0.
-//////////////////////////////////////////////////////////////////
-
+// -------------------------------------------------------------
 
 #include "path_private.hpp"
 #include "../logger.hpp"
@@ -269,6 +268,8 @@ ydk::path::SchemaNodeImpl::get_statement() const
         s.keyword = "extension";
         break;
     case LYS_ANYDATA:
+        s.keyword = "anydata";
+        break;
     case LYS_UNKNOWN:
         break;
     }

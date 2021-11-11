@@ -1,6 +1,6 @@
 ..
   #  YDK - YANG Development Kit
-  #  Copyright 2016 Cisco Systems. All rights reserved
+  #  Copyright 2016-2019 Cisco Systems. All rights reserved
   # *************************************************************
   # Licensed to the Apache Software Foundation (ASF) under one
   # or more contributor license agreements.  See the NOTICE file
@@ -41,9 +41,10 @@ plus one or more module bundles that are based on YANG models.
 Backward Compatibility
 ======================
 
-The Python YDK-0.8.6 core package is compatible with all model bundles generated previously with ydk-gen releases starting from 0.7.3.
-However the YDK-0.8.6 generates slightly different code and model API comparing to YDK-0.8.4.
-The YDK-0.8.6 generated code is not compatible with YDK-0.7.2 and earlier bundle packages due to changes in modeling and handling YList objects.
+The Go generated API starting from YDK-0.7.3 is fully compatible with YDK-0.9.0.
+
+**NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
+
 
 Docker
 ======
@@ -54,7 +55,7 @@ This be used to run ydk-gen without installing anything natively on your platfor
 To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
 See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-  docker run -it ydksolutions/ydk-gen:0.8.6
+  docker run -it ydksolutions/ydk-gen:0.8.6.2
 
 
 System Requirements
@@ -80,6 +81,8 @@ Corresponding binaries, libraries, and header files are installed in default loc
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
 
+**NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
+
 .. _howto-install:
 
 Core Installation
@@ -93,8 +96,9 @@ The script detects platform OS, installs all the dependencies and builds complet
 The user must have sudo access to these locations.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-In order to isolate YDK Python environment from system installation, the script builds Python3 virtual environment.
-The user must manually activate virtual environment when generating model bundles and/or running YDK based application.
+By default the YDK uses Python system installation.
+In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
+If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
@@ -106,7 +110,7 @@ Here is simple example of core YDK installation for Go programming language:
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
-    ./install_ydk.sh -l go --core
+    ./install_ydk.sh --core --go
 
 
 The script also allows to install individual components like dependencies, core, and service packages
@@ -114,10 +118,13 @@ for specified programming language or for all supported languages.
 Full set of script capabilities could be viewed like this::
 
     ./install_ydk.sh --help
-    usage: install_ydk [-l [cpp, py, go]] [-s gnmi] [-h] [-n]
+    usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v]
     Options and arguments:
-      -l [cpp, py, go, all] installation language; if not specified Python is assumed
-                            'all' corresponds to all available languages
+      --cpp                 install YDK for C++ programming language
+      --go                  install YDK for Go programming language
+      --py|--python         install YDK for Python programming language (default)
+      --all                 install YDK for all available programming languages
+      -v|--venv             create python virtual environment
       -c|--core             install YDK core package
       -s|--service gnmi     install gNMI service package
       -n|--no-deps          skip installation of dependencies
@@ -136,30 +143,14 @@ Full set of script capabilities could be viewed like this::
                         if not set, /usr/local/include is assumed
     CPLUS_INCLUDE_PATH  location of C++ include files;
                         if not set, /usr/local/include is assumed
-
+    CMAKE_LIBRARY_PATH  Location of Python shared libraries;
+                        if not set, default system library location is assumed
 
 If user environment is different from the default one (different Python installation or different
 location of libraries), then building from source method should be used.
 
 Building from source
 --------------------
-
-Installing third party dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
-The script will also install Python virtual environment in default or specified location::
-
-    # Clone ydk-gen from GitHub
-    git clone https://github.com/ygorelik/ydk-gen.git
-    cd ydk-gen
-
-    # Define optional environment variables and install dependencies
-    export YDKGEN_HOME=`pwd`
-    export PYTHON_VENV=$HOME/ydk_venv
-    ./install_ydk.sh   # also builds Python virtual environment
-
-For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
 Environment variables
 ~~~~~~~~~~~~~~~~~~~~~
@@ -170,20 +161,40 @@ In this case the header location must be specified explicitly (in below commands
   export C_INCLUDE_PATH=/usr/local/include
   export CPLUS_INCLUDE_PATH=/usr/local/include
 
+When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.
+
+Installing third party dependencies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
+The script will also install Python virtual environment in default or specified location, when '--venv' is specified::
+
+    # Clone ydk-gen from GitHub
+    git clone https://github.com/ygorelik/ydk-gen.git
+    cd ydk-gen
+
+    # Define optional environment variables and install dependencies
+    export YDKGEN_HOME=`pwd`
+    export PYTHON_VENV=$HOME/ydk_venv
+    ./install_ydk.sh
+
+For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
+
 Installing core components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-::
+Please follow this procedure to install YDK core components for Python apps development::
 
-    # Activate Python virtual environment
+    # If created, activate Python virtual environment
     source $PYTHON_VENV/bin/activate
 
     # Generate and install YDK core library
-    ./generate.py -is --core --cpp
+    python3 generate.py -is --core --cpp
 
     # For Python programming language add
-    ./generate.py -l go -i --core
-
+    python3 generate.py -i --core --go
 
 Adding gNMI Service
 -------------------
@@ -194,10 +205,10 @@ and YDK gNMI service package.
 gNMI Service installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here is simple example, how gNMI service package for Python could be added::
+Here is simple example, how gNMI service package for Go could be added::
 
     cd ydk-gen
-    ./install_ydk.sh -l go --service gnmi
+    ./install_ydk.sh --go --service gnmi
 
 
 gNMI runtime environment
@@ -213,7 +224,7 @@ As a workaround, the YDK based application runtime environment must include sett
 Documentation and Support
 =========================
 
-- Read the `API documentation <http://ydk.cisco.com/go/docs>`_ for details on how to use the API and specific models
+- Read the `API documentation <http://ydk.cisco.com/go/docs>`_ for details on how to use the API and specific models (YDK-0.8.3)
 - Samples can be found under the `samples <https://github.com/CiscoDevNet/ydk-go/tree/master/samples>`_ directory
 - Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with other users and with the makers of YDK
 - Additional YDK information can be found on `GitHub Pages <https://ygorelik.github.io/ydk-gen/>`_
@@ -221,4 +232,6 @@ Documentation and Support
 Release Notes
 =============
 
-The current YDK release version is 0.8.6. YDK-Go is licensed under the Apache 2.0 License.
+The current YDK release version is 0.8.6.2.
+
+YDK is licensed under the Apache 2.0 License.

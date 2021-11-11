@@ -1,6 +1,6 @@
 #!/bin/bash
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,17 +27,17 @@
 # ------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date) *** dependencies_ubuntu.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date) *** dependencies_ubuntu.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
     local cmd=$@
     print_msg "Running: $cmd"
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
@@ -101,7 +101,7 @@ function check_install_gcc {
     gcc_version="4.0.0"
   fi
   local major=$(echo $gcc_version | cut -d '.' -f 1)
-  if [[ $gcc_version < "4.8.1" || $major > 7 ]]
+  if [[ $gcc_version < "4.8.1" || $major -gt 7 ]]
   then
     print_msg "Installing gcc/g++ version 7"
     sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
@@ -164,7 +164,7 @@ function check_install_go {
     print_msg "The Go is not installed"
     minor=0
   fi
-  if (( $minor < 9 )); then
+  if [ $minor -lt 9 ]; then
     print_msg "Installing Golang version 1.13.1 in /usr/local/go"
     run_cmd wget https://storage.googleapis.com/golang/go1.13.1.linux-amd64.tar.gz
     sudo tar -zxf  go1.13.1.linux-amd64.tar.gz -C /usr/local/
@@ -177,7 +177,7 @@ function check_install_go {
 
 function check_install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $ubuntu_release < 20 ]]; then
+    if [[ $ubuntu_release -lt 20 ]]; then
       print_msg "Installing confd-basic-6.2"
       run_cmd wget https://github.com/CiscoDevNet/ydk-gen/files/562538/confd-basic-6.2.linux.x86_64.zip &> /dev/null
       unzip confd-basic-6.2.linux.x86_64.zip
@@ -207,14 +207,13 @@ curr_dir=$(pwd)
 
 install_dependencies
 check_install_gcc
-check_install_libssh
 
 check_install_go
 
-if [[ $ubuntu_release > 19 ]]; then
+if [[ $ubuntu_release -gt 19 ]]; then
   check_install_curl
 fi
 check_install_confd
 
-sudo updatedb
-
+$sudo_cmd updatedb
+check_install_libssh

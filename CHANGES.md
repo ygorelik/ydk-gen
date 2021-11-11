@@ -1,3 +1,16 @@
+### 2021-12-30 version 0.8.6.2
+
+#### New features and enhancements
+  * Improved installation script to allow use Python system installation
+
+#### Resolved GitHub issues
+  * Fixed Python 3.5 code compatibility issue for Ubuntu:xenial
+  * install_ydk.sh tries to create a new venv ([#1034](https://github.com/CiscoDevNet/ydk-gen/issues/1034))
+
+#### Bundle improvements
+  * Cleaned up older profiles
+
+
 ### 2021-09-30 version 0.8.6
 
 #### New features and enhancements
@@ -8,6 +21,8 @@
 
 #### Resolved GitHub issues
   * Go function EntityEqual result depends on parameters order ([#1053](https://github.com/CiscoDevNet/ydk-gen/issues/1053))
+  * Failed to get "ietf-netconf" module with Executor Service and get-schema RPC ([#1047](https://github.com/CiscoDevNet/ydk-gen/issues/1047))
+  * The Executor Service fails to return module content back to user ([#1048](https://github.com/CiscoDevNet/ydk-gen/issues/1048))
 
 #### Bundle improvements
   * Updated cisco-ios-xr bundle (profile cisco-ios-xr_6_7_3.json) to support Cisco IOS XR 6.7.3
