@@ -400,6 +400,7 @@ struct YCodecError : public YCoreError
 
         XML_MISS,     ///  missing XML object
         XML_INVAL,    ///  invalid XML object
+        JSON_INVAL,   ///  invalid JSON object
         XML_INCHAR,   /// invalid XML character
 
         EOF_ERR,      /// unexpected end of input data

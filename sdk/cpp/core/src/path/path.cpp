@@ -1,7 +1,7 @@
-/// YANG Development Kit
-// Copyright 2016 Cisco Systems. All rights reserved
+// YANG Development Kit
+// Copyright 2016-2019 Cisco Systems. All rights reserved
 //
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -23,7 +23,7 @@
 // All modifications in original under CiscoDevNet domain
 // introduced since October 2019 are copyrighted.
 // All rights reserved under Apache License, Version 2.0.
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 
 #include <pcre.h>
 #include <fstream>
@@ -215,9 +215,15 @@ static std::shared_ptr<ydk::path::DataNode> perform_decode(ydk::path::RootSchema
 static struct lyd_node* create_lyd_node_for_rpc(ydk::path::RootSchemaNodeImpl & rs_impl, const std::string & rpc_path)
 {
     struct lyd_node* rpc = lyd_new_path(NULL, rs_impl.m_ctx, rpc_path.c_str(), NULL, LYD_ANYDATA_SXML, 0);
-    if( rpc == nullptr || ly_errno )
+    if (rpc == nullptr)
     {
-        ydk::YLOG_ERROR( "Parsing failed with message {}", ly_errmsg());
+        if (ly_errno)
+        {
+            ydk::YLOG_ERROR( "RPC parsing failed with message {}", ly_errmsg());
+        }
+        else {
+            ydk::YLOG_ERROR( "RPC parsing failed. Please enable logging for more details.");
+        }
         throw(ydk::path::YCodecError{ydk::path::YCodecError::Error::XML_INVAL});
     }
     return rpc;
@@ -304,12 +310,19 @@ ydk::path::Codec::decode(RootSchemaNode & root_schema, const std::string& buffer
     rs_impl.populate_new_schemas_from_payload(buffer, format);
 
     struct lyd_node *root = lyd_parse_mem(rs_impl.m_ctx, buffer.c_str(),
-                get_ly_format(format), LYD_OPT_TRUSTED |  LYD_OPT_GET);
+                                          get_ly_format(format), LYD_OPT_TRUSTED |  LYD_OPT_GET);
 
-    if( root == nullptr || ly_errno )
+    if (root == nullptr)
     {
-        YLOG_ERROR( "Parsing failed with message {}", ly_errmsg());
-        throw(YCodecError{YCodecError::Error::XML_INVAL});
+        if (ly_errno)
+        {
+            YLOG_ERROR( "Decoding failed with message: {}", ly_errmsg());
+        }
+        else {
+            YLOG_ERROR( "Decoding failed. Please enable logging for more details.");
+        }
+        auto error_code = (format==ydk::EncodingFormat::JSON) ? YCodecError::Error::JSON_INVAL : YCodecError::Error::XML_INVAL;
+        throw(YCodecError{error_code});
     }
     return perform_decode(rs_impl, root);
 }
@@ -326,9 +339,15 @@ ydk::path::Codec::decode_rpc_output(RootSchemaNode & root_schema, const std::str
 
     struct lyd_node* root = lyd_parse_mem(rs_impl.m_ctx, buffer.c_str(),
                 get_ly_format(format), LYD_OPT_TRUSTED |  LYD_OPT_RPCREPLY, rpc, NULL);
-    if( root == nullptr || ly_errno )
+    if (root == nullptr)
     {
-        YLOG_ERROR( "Parsing failed with message {}", ly_errmsg());
+        if (ly_errno)
+        {
+            YLOG_ERROR( "Decoding failed with message: {}", ly_errmsg());
+        }
+        else {
+            YLOG_ERROR( "Decoding for RPC output failed. Please enable logging for more details.");
+        }
         throw(YCodecError{YCodecError::Error::XML_INVAL});
     }
     auto dn = perform_decode(rs_impl, root);
@@ -351,9 +370,16 @@ ydk::path::Codec::decode_json_output(RootSchemaNode & root_schema, const std::ve
         rs_impl.populate_new_schemas_from_payload(buffer, ydk::EncodingFormat::JSON);
 
         struct lyd_node *dnode = lyd_parse_mem(rs_impl.m_ctx, buffer.c_str(), LYD_JSON, LYD_OPT_TRUSTED | LYD_OPT_GET);
-        if (dnode == nullptr || ly_errno) {
-            YLOG_ERROR( "Parsing failed with message {}", ly_errmsg());
-            throw(YCodecError{YCodecError::Error::XML_INVAL});
+        if (dnode == nullptr)
+        {
+            if (ly_errno)
+            {
+                YLOG_ERROR( "Decoding failed with message: {}", ly_errmsg());
+            }
+            else {
+                YLOG_ERROR( "Decoding failed. Please enable logging for more details");
+            }
+            throw(YCodecError{YCodecError::Error::JSON_INVAL});
         }
 
         // Attach first node to the root
