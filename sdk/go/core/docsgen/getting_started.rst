@@ -123,7 +123,7 @@ Full set of script capabilities could be viewed like this::
       --cpp                 install YDK for C++ programming language
       --go                  install YDK for Go programming language
       --py|--python         install YDK for Python programming language (default)
-      --all                 install YDK for all available programming languages
+      --all                 install YDK for all supported programming languages
       -v|--venv             create python virtual environment
       -c|--core             install YDK core package
       -s|--service gnmi     install gNMI service package

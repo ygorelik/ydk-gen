@@ -2,6 +2,7 @@
 
 #### New features and enhancements
   * Improved installation script to allow use Python system installation
+  * Corrected few Codacy issues
 
 #### Resolved GitHub issues
   * Fixed Python 3.5 code compatibility issue for Ubuntu:xenial
