@@ -147,6 +147,9 @@ function init_go_env {
         if [[ $GOPATH. == "." ]]; then
             export GOPATH=$HOME/go
         fi
+        if [[ $GOROOT. == "." ]]; then
+            export GOROOT=/usr/local/go
+        fi
         print_msg "GOROOT: $GOROOT"
         print_msg "GOPATH: $GOPATH"
     else
