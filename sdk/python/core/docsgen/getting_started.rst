@@ -67,7 +67,7 @@ The YDK is currently supported on the following platforms including native insta
 
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
  - Linux CentOS/RHEL versions 7 and 8
- - MacOS up to 10.14.6 (Mojave)
+ - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
 check `this <https://www.windowscentral.com/install-windows-subsystem-linux-windows-10>`_ for virtual machine installation procedure.
