@@ -6229,6 +6229,10 @@ namespace Catch {
 
 #include <signal.h>
 
+#ifndef SIGSTKSZ
+    #define SIGSTKSZ 32768
+#endif
+
 namespace Catch {
 
     struct SignalDefs {
