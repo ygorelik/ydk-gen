@@ -1,3 +1,14 @@
+### 2022-02-28 version 0.8.6.2
+
+#### New features and enhancements
+  * Added support for MacOS Big Sur
+
+#### Resolved non-HitHub issues
+  * Corrected few Codacy issues
+  * Addressed segmentation fault error when required modules are not loaded.
+  * Provided patch for catch.hpp, which ensures definition of constant SIGSTKSZ
+
+
 ### 2021-05-30 version 0.8.5.2
 
 #### Resolved GitHub issues

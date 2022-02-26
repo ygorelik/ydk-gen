@@ -1,4 +1,4 @@
-### 2022-02-30 version 0.8.6.2
+### 2022-02-28 version 0.8.6.2
 
 #### New features and enhancements
   * Improved installation script to allow use of Python system installation
