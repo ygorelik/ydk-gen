@@ -442,11 +442,21 @@ module ydktest-sanity {
         // identityref
         // instance-indentifier
         //
+
+        leaf-list bool-leaf-list {
+          type boolean;
+        }
+
+        list bool-list {
+          key "bool-leaf";
+          leaf bool-leaf {
+            type boolean;
+          }
+        }
       }
 
       container derived-t {
         description "config for one_level derived data types";
-
       }
     }
   }
