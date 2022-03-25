@@ -1,4 +1,4 @@
-### 2022-02-28 version 0.8.6.2
+### 2022-03-31 version 0.8.6.2
 
 #### New features and enhancements
   * Improved installation script to allow use of Python system installation
@@ -8,6 +8,7 @@
 #### Resolved GitHub issues
   * Fixed Python 3.5 code compatibility issue for Ubuntu:xenial
   * install_ydk.sh tries to create a new venv ([#1034](https://github.com/CiscoDevNet/ydk-gen/issues/1034))
+  * vrf route-target leaf stitching(bool) fails as invalid ([#1059](https://github.com/CiscoDevNet/ydk-gen/issues/1059))
   
 ### Resolved non-GitHub issues
   * Addressed segmentation fault error when required modules are not loaded.

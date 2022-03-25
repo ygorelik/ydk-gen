@@ -1,9 +1,12 @@
-### 2022-02-28 version 0.8.6.2
+### 2022-03-31 version 0.8.6.2
 
 #### New features and enhancements
   * Added support for MacOS Big Sur
 
-#### Resolved non-HitHub issues
+#### Resolved GitHub issues
+  * vrf route-target leaf stitching(bool) fails as invalid ([#1059](https://github.com/CiscoDevNet/ydk-gen/issues/1059))
+
+#### Resolved non-GitHub issues
   * Corrected few Codacy issues
   * Addressed segmentation fault error when required modules are not loaded.
   * Provided patch for catch.hpp, which ensures definition of constant SIGSTKSZ

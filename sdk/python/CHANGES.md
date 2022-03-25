@@ -1,8 +1,11 @@
-### 2021-09-30 version 0.8.6
+### 2022-03-31 version 0.8.6.2
 
 #### New features and enhancements
   * Upgraded pyang version to 2.5.0
   * Dropped Python2 support in the code
+
+#### Resolved GitHub issues
+  * vrf route-target leaf stitching(bool) fails as invalid ([#1059](https://github.com/CiscoDevNet/ydk-gen/issues/1059))
 
 
 ### 2021-05-30 version 0.8.5.2
