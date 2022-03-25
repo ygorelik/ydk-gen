@@ -1,6 +1,6 @@
 {
     "name": "cisco-iosxr-demo",
-    "version": "0.1.1",
+    "version": "6.7.3",
     "core_version":"0.8.5",
     "author": "Yan",
     "copyright": "Cisco Systems",

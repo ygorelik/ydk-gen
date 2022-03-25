@@ -256,19 +256,14 @@ std::vector<std::pair<std::string, LeafData> > YLeafList::get_name_leafdata() co
     {
         auto leaf_name_data = value.get_name_leafdata();
         auto val = value.get();
-        if (value.type == YType::boolean ||
-            (value.type == YType::union_ &&
-             std::find(value.union_types.begin(), value.union_types.end(), YType::boolean) != value.union_types.end()))
+        if (value.type == YType::boolean)
         {
-            auto v = get_bool_string(val);
-            if (v == "true" || v == "false")
-                val = v;
+            val = get_bool_string(val);
         }
-
         name_values.push_back(
                             {
                                 (leaf_name_data.first+"[.=\""+val+"\"]"),
-                                {"", leaf_name_data.second.type, yfilter, value.is_set, value.value_namespace, value.value_namespace_prefix}
+                                {"", yfilter, value.is_set, value.value_namespace, value.value_namespace_prefix}
                             }
                             );
     }
