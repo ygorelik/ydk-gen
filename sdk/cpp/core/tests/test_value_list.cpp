@@ -214,3 +214,18 @@ TEST_CASE("test_value_list_duplicate")
     CHECK(leafs.size() == 3);
     CHECK(test_value[0].get() == test_value[2].get());
 }
+
+TEST_CASE("test_value_list_boolean")
+{
+    YLeafList test_value{YType::boolean, "value"};
+    test_value.append(true);
+    test_value.append(false);
+    auto leafs = test_value.getYLeafs();
+    CHECK(leafs.size() == 2);
+    CHECK(test_value[0].get() == "true");
+    CHECK(test_value[1].get() == "false");
+
+    auto leaf_data = test_value.get_name_leafdata();
+    CHECK(leaf_data[0].first == "value[.=\"true\"]");
+    CHECK(leaf_data[1].first == "value[.=\"false\"]");
+}

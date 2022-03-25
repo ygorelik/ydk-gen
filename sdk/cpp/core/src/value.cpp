@@ -30,8 +30,6 @@
 
 namespace ydk {
 
-static std::string get_bool_string(const std::string & value);
-
 std::string to_str(YType t)
 {
 #define TOSTRING(t) case YType::t: return #t
@@ -114,7 +112,7 @@ const std::string  YLeaf::get() const
 std::pair<std::string, LeafData> YLeaf::get_name_leafdata() const
 {
     auto leaf_type = (type == YType::union_) ? value_type : type;
-	return {name, { get(), leaf_type, yfilter, is_set, value_namespace, value_namespace_prefix }};
+    return {name, { get(), leaf_type, yfilter, is_set, value_namespace, value_namespace_prefix }};
 }
 
 void YLeaf::operator = (uint8 val)

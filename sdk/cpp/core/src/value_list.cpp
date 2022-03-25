@@ -257,9 +257,19 @@ std::vector<std::pair<std::string, LeafData> > YLeafList::get_name_leafdata() co
     for (auto value : values)
     {
         auto leaf_name_data = value.get_name_leafdata();
+        auto val = value.get();
+        if (value.type == YType::boolean ||
+            (value.type == YType::union_ &&
+             std::find(value.union_types.begin(), value.union_types.end(), YType::boolean) != value.union_types.end()))
+        {
+            auto v = get_bool_string(val);
+            if (v == "true" || v == "false")
+                val = v;
+        }
+
         name_values.push_back(
                             {
-                                (leaf_name_data.first+"[.=\""+value.get()+"\"]"),
+                                (leaf_name_data.first+"[.=\""+val+"\"]"),
                                 {"", leaf_name_data.second.type, yfilter, value.is_set, value.value_namespace, value.value_namespace_prefix}
                             }
                             );

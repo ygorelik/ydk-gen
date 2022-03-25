@@ -403,6 +403,8 @@ std::ostream& operator<< (std::ostream& stream, const EntityPath& value);
 std::ostream& operator<< (std::ostream& stream, Entity& value);
 std::ostream& operator<< (std::ostream& stream, const LeafData& value);
 
+std::string get_bool_string(const std::string & value);
+
 enum class EncodingFormat {
     XML,
     JSON
