@@ -289,3 +289,35 @@ TEST_CASE( "decode_rpc_with_attribute" )
 </interfaces>)";
     REQUIRE(reply_xml == rpc_reply_extracted);
 }
+
+TEST_CASE("test_url_path_value") {
+    std::string searchdir{TEST_HOME};
+    mock::MockSession sp{searchdir, test_openconfig, EncodingFormat::XML};
+    auto & schema = sp.get_root_schema();
+    ydk::path::Codec codec{};
+
+    auto & runner = schema.create_datanode("ydktest-sanity:runner", "");
+    runner.create_datanode("no-key-list[1]/test",
+        "sftp://root@5.12.17.1:/auto/cafy-ott/cafy_log/cafy3/22-1/cafy3-run-1213418/67/7_5_2_13I_NCS5500");
+    runner.create_datanode("no-key-list[2]/test", "tftp://10.105.227.199/ops/exec");
+
+    auto xml = codec.encode(runner, ydk::EncodingFormat::XML, true);
+    auto expected = R"(<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <no-key-list>
+    <test>sftp://root@5.12.17.1:/auto/cafy-ott/cafy_log/cafy3/22-1/cafy3-run-1213418/67/7_5_2_13I_NCS5500</test>
+  </no-key-list>
+  <no-key-list>
+    <test>tftp://10.105.227.199/ops/exec</test>
+  </no-key-list>
+</runner>
+)";
+    REQUIRE(xml== expected);
+
+    auto dn = codec.decode(schema, xml, ydk::EncodingFormat::XML);
+    REQUIRE(dn != nullptr);
+    auto real_dn = dn->get_children()[0];
+    REQUIRE(real_dn != nullptr);
+
+    auto xml_rt = codec.encode(*real_dn, ydk::EncodingFormat::XML, true);
+    REQUIRE(xml == xml_rt);
+}

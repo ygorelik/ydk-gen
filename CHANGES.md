@@ -13,6 +13,8 @@
   * Fixed Python 3.5 code compatibility issue for Ubuntu:xenial
   * install_ydk.sh tries to create a new venv ([#1034](https://github.com/CiscoDevNet/ydk-gen/issues/1034))
   * Addressed segmentation fault error when required modules are not loaded.
+  * getting YCodecError when leaf value has string 'sftp://' ([#1056](https://github.com/CiscoDevNet/ydk-gen/issues/1056))
+  * vrf route-target leaf stitching(bool) fails as invalid ([#1059](https://github.com/CiscoDevNet/ydk-gen/issues/1059))
 
 #### Bundle improvements
   * Updated cisco-ios-xr bundle (profile cisco-ios-xr_6_7_3.json) to support Cisco IOS XR 6.7.3

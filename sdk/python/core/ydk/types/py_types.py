@@ -53,8 +53,8 @@ from ydk.errors.error_handler import handle_type_error as _handle_type_error
 
 
 class YLeafList(_YLeafList):
-    """ Wrapper class for YLeafList, add __repr__ and get list slice
-    functionalities.
+    """
+     Wrapper class for YLeafList, add __repr__ and get list slice functionalities.
     """
     def __init__(self, ytype, leaf_name):
         super().__init__(ytype, leaf_name)
