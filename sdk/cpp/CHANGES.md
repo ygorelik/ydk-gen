@@ -4,6 +4,7 @@
   * Added support for MacOS Big Sur
 
 #### Resolved GitHub issues
+  * getting YCodecError when leaf value has string 'sftp://' ([#1056](https://github.com/CiscoDevNet/ydk-gen/issues/1056))
   * vrf route-target leaf stitching(bool) fails as invalid ([#1059](https://github.com/CiscoDevNet/ydk-gen/issues/1059))
 
 #### Resolved non-GitHub issues
