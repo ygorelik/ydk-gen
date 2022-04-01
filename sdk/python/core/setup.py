@@ -20,7 +20,7 @@
 # ------------------------------------------------------------------
 
 """
-Setup for YDK core package
+Setup for YDK core package for Python
 """
 
 from __future__ import print_function
@@ -35,9 +35,9 @@ from setuptools import setup, Extension, find_packages
 
 NAME = 'ydk'
 
-VERSION = '0.8.6'
+VERSION = '0.8.6.2'
 
-# INSTALL_REQUIREMENTS = ['pybind11==2.6.2']
+INSTALL_REQUIREMENTS = ['pybind11==2.6.2']
 
 LONG_DESCRIPTION = '''
                    The YANG Development Kit (YDK) is a Software Development Kit
@@ -55,7 +55,7 @@ YDK_PACKAGES = find_packages(exclude=['contrib', 'docs*', 'tests*',
 
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
-        Extension.__init__(self, name, sources=[])
+        super().__init__(name, sources=[])
         self.sourcedir = os.path.abspath(sourcedir)
 
 
@@ -132,17 +132,16 @@ setup(
         'Topic :: Software Development :: Build Tools',
         'Topic :: Software Development :: Libraries',
         'License :: OSI Approved :: Apache Software License',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: C++'
     ],
     keywords='yang, C++11, python bindings ',
     packages=YDK_PACKAGES,
-    # install_requires=INSTALL_REQUIREMENTS,
+    install_requires=INSTALL_REQUIREMENTS,
     ext_modules=[CMakeExtension('ydk_')],
     cmdclass={
              'build_ext': YdkBuildExtension

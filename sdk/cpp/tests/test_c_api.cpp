@@ -35,7 +35,7 @@ TEST_CASE( "c_api_codec_encode"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
-    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
+    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
     REQUIRE(repo!=NULL);
     ServiceProvider provider = NetconfServiceProviderInit(
         state, repo,
@@ -64,7 +64,7 @@ TEST_CASE( "c_api_codec_decode"  )
 {
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
-    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
+    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
     REQUIRE(repo!=NULL);
     ServiceProvider provider = NetconfServiceProviderInit(
         state, repo,
@@ -92,7 +92,7 @@ TEST_CASE( "c_api_codec_decode"  )
 TEST_CASE( "c_api_provider_withpath"  )
 {
     YDKStatePtr state = YDKStateCreate();
-    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
+    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
     REQUIRE(repo!=NULL);
     ServiceProvider provider = NetconfServiceProviderInit(
         state, repo,
@@ -126,7 +126,7 @@ TEST_CASE( "c_api_rpc" )
     YDKStatePtr state = YDKStateCreate();
     Codec c = CodecInit();
 
-    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.0");
+    Repository repo = RepositoryInitWithPath(state, "/usr/local/share/ydktest@0.1.1");
     REQUIRE(repo!=NULL);
     ServiceProvider provider = NetconfServiceProviderInit(
         state, repo,

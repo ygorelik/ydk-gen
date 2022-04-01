@@ -23,7 +23,7 @@ function print_msg {
 }
 
 function run_cmd {
-    print_msg "Running $*"
+    print_msg "Running: $*"
     $*
     local status=$?
     if [ $status -ne 0 ]; then
@@ -42,7 +42,7 @@ function reset_yang_repository {
     rm -f $HOME/.ydk/127.0.0.1/*
 
     # Correct issue with confd 7.3
-    if [[ $confd_version > 7.2 ]]; then
+    if [[ $confd_version. > "7.2." ]]; then
       cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
     fi
 }
@@ -99,14 +99,12 @@ function install_go_core {
 
     mkdir -p $GOPATH/src/github.com/CiscoDevNet/ydk-go/ydk
     cp -r sdk/go/core/ydk/* $GOPATH/src/github.com/CiscoDevNet/ydk-go/ydk/
-
-    run_cmd ./generate.py --bundle profiles/test/ydktest-cpp.json --go -i
 }
 
 function install_go_bundle {
-    print_msg "Generating/installing go bundle tests"
+    print_msg "Generating/installing go bundles"
     cd $YDKGEN_HOME
-    run_cmd ./generate.py --bundle profiles/test/ydktest-cpp.json --go -i
+    run_cmd python3 generate.py --bundle profiles/test/ydktest-cpp.json --go -i
 }
 
 function run_go_bundle_tests {
@@ -144,7 +142,7 @@ function run_go_samples {
 function init_gnmi_server {
     print_msg "Starting YDK gNMI server"
     mkdir -p $YDKGEN_HOME/test/gnmi_server/build && cd $YDKGEN_HOME/test/gnmi_server/build
-    cmake .. && make clean && make
+    $CMAKE_BIN .. && make clean && make
     ./gnmi_server &
     local status=$?
     if [ $status -ne 0 ]; then
@@ -164,7 +162,7 @@ function install_go_gnmi {
     print_msg "Installing Go gNMI package"
     cd $YDKGEN_HOME
 
-    run_cmd python ./generate.py --service profiles/services/gnmi-0.4.0.json --go -i
+    run_cmd python3 generate.py --service profiles/services/gnmi-0.4.0.json --go -i
 }
 
 function run_go_gnmi_tests {
@@ -204,43 +202,38 @@ MSG_COLOR=$YELLOW
 
 os_type=$(uname)
 if [[ ${os_type} == "Linux" ]] ; then
-    os_info=$(cat /etc/*-release)
+  os_info=$(cat /etc/*-release)
 else
-    os_info=$(sw_vers)
+  os_info=$(sw_vers)
 fi
 print_msg "Running OS type: $os_type"
 print_msg "OS info: $os_info"
 
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
+
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
+  if [[ $LD_LIBRARY_PATH != *"protobuf-3.5.0"* ]]; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64:/usr/lib64
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
-    centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+  fi
+  centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
 fi
 
+CMAKE_BIN=cmake
 command -v cmake3
 status=$?
 if [[ ${status} == 0 ]] ; then
     CMAKE_BIN=cmake3
-else
-    CMAKE_BIN=cmake
 fi
 
 curr_dir="$(pwd)"
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
 
 cd $YDKGEN_HOME
-
-if [[ -z ${PYTHON_VENV} ]]; then
-    export PYTHON_VENV=${HOME}/venv
-    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
-fi
-source $PYTHON_VENV/bin/activate
 
 init_go_env
 install_go_core

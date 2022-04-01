@@ -655,3 +655,59 @@ TEST_CASE("test_codec_augment_subtree_json")
     auto entity = codec_service.decode(codec_provider, json, make_shared<ydktest_sanity::Runner::Passive>(), true);
     CHECK(*passive == *entity);
 }
+
+TEST_CASE("test_codec_bool_list")
+{
+    CodecServiceProvider codec_provider{EncodingFormat::XML};
+    CodecService codec_service{};
+
+    auto runner = make_unique<ydktest_sanity::Runner>();
+
+    auto bool_list_elem = make_shared<ydktest_sanity::Runner::Ytypes::BuiltInT::BoolList>();
+    bool_list_elem->bool_leaf = true;
+    runner->ytypes->built_in_t->bool_list.append(bool_list_elem);
+
+    auto xml = codec_service.encode(codec_provider, *runner, true);
+
+    auto expected = R"(<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <ytypes>
+    <built-in-t>
+      <bool-list>
+        <bool-leaf>true</bool-leaf>
+      </bool-list>
+    </built-in-t>
+  </ytypes>
+</runner>
+)";
+    CHECK(expected == xml);
+
+    auto entity = codec_service.decode(codec_provider, xml, make_shared<ydktest_sanity::Runner>(), true);
+    CHECK(*runner == *entity);
+}
+
+TEST_CASE("test_codec_bool_leaf_list")
+{
+    CodecServiceProvider codec_provider{EncodingFormat::XML};
+    CodecService codec_service{};
+
+    auto runner = make_unique<ydktest_sanity::Runner>();
+
+    runner->ytypes->built_in_t->bool_leaf_list.append(true);
+    runner->ytypes->built_in_t->bool_leaf_list.append(false);
+
+    auto xml = codec_service.encode(codec_provider, *runner, true);
+
+    auto expected = R"(<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <ytypes>
+    <built-in-t>
+      <bool-leaf-list>true</bool-leaf-list>
+      <bool-leaf-list>false</bool-leaf-list>
+    </built-in-t>
+  </ytypes>
+</runner>
+)";
+    CHECK(expected == xml);
+
+    auto entity = codec_service.decode(codec_provider, xml, make_shared<ydktest_sanity::Runner>(), true);
+    CHECK(*runner == *entity);
+}

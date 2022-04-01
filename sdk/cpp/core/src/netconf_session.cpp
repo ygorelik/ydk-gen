@@ -1,7 +1,6 @@
 // YANG Development Kit
 // Copyright 2016 Cisco Systems. All rights reserved
-//
-////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -18,14 +17,15 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// -------------------------------------------------------------------
+// -------------------------------------------------------------
 // This file has been modified by Yan Gorelik, YDK Solutions.
 // All modifications in original under CiscoDevNet domain
 // introduced since October 2019 are copyrighted.
 // All rights reserved under Apache License, Version 2.0.
-//////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------
 
 #include <libyang/libyang.h>
+#include <stdexcept>
 
 #include "common_utilities.hpp"
 #include "entity_data_node_walker.hpp"
@@ -227,7 +227,21 @@ void NetconfSession::initialize_repo(path::Repository & repo, bool on_demand)
     auto lookup_table = capabilities_parser.get_lookup_table(server_capabilities);
 
     if (on_demand)
-        yang_caps = capabilities_parser.parse(empty_caps);
+    {
+        // Load ietf-netconf module features from server capabilities
+    	auto empty_caps_copy = capabilities_parser.parse(empty_caps);
+        for (auto cap : empty_caps_copy)
+        {
+            try {
+                auto server_cap = lookup_table.at(cap.module);
+                yang_caps.push_back(server_cap);
+                continue;
+            }
+            catch (const std::exception& e) {
+            	yang_caps.push_back(cap);
+            }
+        }
+    }
     else
         yang_caps = all_caps;
 
