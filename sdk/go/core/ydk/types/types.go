@@ -1,6 +1,6 @@
 /*  ----------------------------------------------------------------
  YDK - YANG Development Kit
- Copyright 2016 Cisco Systems. All rights reserved.
+ Copyright 2016-2019 Cisco Systems. All rights reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -301,6 +301,7 @@ func (ec *EntityCollection) Add(entities ... Entity) {
 }
 
 func (ec *EntityCollection) Append(entities []Entity) {
+	if ec.EcMap == nil { ec.Clear() }
 	for i:=0; i<len(entities); i++ {
 		entity := entities[i]
 		key := GetSegmentPath(entity)
@@ -309,15 +310,17 @@ func (ec *EntityCollection) Append(entities []Entity) {
 }
 
 func (ec *EntityCollection) Len() int {
-    return ec.EcMap.Len()
+	if ec.EcMap == nil { ec.Clear() }
+	return ec.EcMap.Len()
 }
 
 func (ec *EntityCollection) Get(key string) (Entity, bool) {
-    elem, exists := ec.EcMap.Get(key)
-    if exists {
-        return elem.(Entity), exists
-    }
-    return nil, exists
+	if ec.EcMap == nil { ec.Clear() }
+	elem, exists := ec.EcMap.Get(key)
+	if exists {
+		return elem.(Entity), exists
+	}
+	return nil, exists
 }
 
 func (ec *EntityCollection) GetItem(item int) Entity {
@@ -329,16 +332,18 @@ func (ec *EntityCollection) GetItem(item int) Entity {
 }
 
 func (ec *EntityCollection) HasKey(key string) bool {
-    _, exists := ec.EcMap.Get(key)
-    return exists
+	if ec.EcMap == nil { ec.Clear() }
+	_, exists := ec.EcMap.Get(key)
+	return exists
 }
 
 func (ec *EntityCollection) Pop(key string) (Entity, bool) {
-    iEntity, exists := ec.EcMap.Pop(key)
-    if !exists {
-        return nil, exists
-    }
-    return iEntity.(Entity), exists
+	if ec.EcMap == nil { ec.Clear() }
+	iEntity, exists := ec.EcMap.Pop(key)
+	if !exists {
+		return nil, exists
+	}
+	return iEntity.(Entity), exists
 }
 
 func (ec *EntityCollection) Clear() {
@@ -346,10 +351,12 @@ func (ec *EntityCollection) Clear() {
 }
 
 func (ec *EntityCollection) Keys() []string {
-    return ec.EcMap.Keys()
+	if ec.EcMap == nil { ec.Clear() }
+	return ec.EcMap.Keys()
 }
 
 func (ec *EntityCollection) Entities() []Entity {
+	if ec.EcMap == nil { ec.Clear() }
 	entities := make([]Entity, ec.Len())
 	iEntities := ec.EcMap.Values()
 	for i:=0; i<ec.Len(); i++ {
@@ -359,18 +366,19 @@ func (ec *EntityCollection) Entities() []Entity {
 }
 
 func (ec *EntityCollection) String() string {
-    if ec.Len() == 0 {
-        return "EntityCollection is empty"
-    }
-    entities := ec.Entities()
-    entity_str := make([]string, ec.Len())
-    for i, entity := range entities {
-        entity_str[i] = EntityToString(entity)
-    }
-    return fmt.Sprintf("EntityCollection [%s]", strings.Join(entity_str, "; "))
+	if ec.Len() == 0 {
+		return "EntityCollection is empty"
+	}
+	entities := ec.Entities()
+	entity_str := make([]string, ec.Len())
+	for i, entity := range entities {
+		entity_str[i] = EntityToString(entity)
+	}
+	return fmt.Sprintf("EntityCollection [%s]", strings.Join(entity_str, "; "))
 }
 
 func (ec *EntityCollection) SetFilter(filter yfilter.YFilter) {
+	if ec.EcMap == nil { ec.Clear() }
 	iEntities := ec.EcMap.Values()
 	for i:=0; i<ec.Len(); i++ {
 		ent := iEntities[i].(Entity)
@@ -535,7 +543,7 @@ func HasData(entity Entity) bool {
 	return false
 }
 
-func getLeafValue(value interface{}) LeafData {
+func GetLeafValue(value interface{}) LeafData {
 	var leafData LeafData
 	switch value.(type) {
 	case yfilter.YFilter:
@@ -579,7 +587,7 @@ func GetEntityPath(entity Entity) EntityPath {
 			continue
 		}
 		if field.Kind() != reflect.Slice {
-			leafData = getLeafValue(leaf.Value)
+			leafData = GetLeafValue(leaf.Value)
             //fmt.Printf("Adding leaf: name: %s, data: %v\n", name, leafData)
 			entityPath.ValuePaths = append(
 				entityPath.ValuePaths,
@@ -588,7 +596,7 @@ func GetEntityPath(entity Entity) EntityPath {
 		    // leaf-list
 		    sliceInt := leaf.Value.([]interface{})
 			for i := range sliceInt {
-				leafData = getLeafValue(sliceInt[i])
+				leafData = GetLeafValue(sliceInt[i])
 				path := name
 				if len(leafData.Value) > 0 {
 				    path = fmt.Sprintf("%s[.=\"%v\"]", name, leafData.Value)
@@ -889,33 +897,28 @@ func deepValueEqual(e1, e2 Entity) bool {
 
 	marker := make(map[string]bool)
 
-	ret := true
 	for k, c1 := range children1 {
 		if c1.Value != nil {
 			marker[k] = true
-			if HasDataOrFilter(c1.Value) {
-				c2, ok := children2[k]
-				if ok && deepValueEqual(c1.Value, c2.Value) {
-					ret = ret && nameValuesEqual(c1.Value, c2.Value)
-				} else {
-					ret = false
-					break
-				}
+			c2, ok := children2[k]
+			if ok && deepValueEqual(c1.Value, c2.Value) {
+				continue
+			} else {
+				return false
 			}
 		}
 	}
 
 	for k := range children2 {
-		if children2[k].Value != nil{
+		if children2[k].Value != nil {
 			_, ok := marker[k]
 			if !ok {
-				ret = false
-				break
+				return false
 			}
 		}
 	}
 
-	return ret
+	return nameValuesEqual(e1, e2)
 }
 
 // EntityEqual returns whether the entities x and y and their children are equal in value
@@ -928,6 +931,10 @@ func EntityEqual(x, y Entity) bool {
 
 func AddKeyToken(attr interface{}, attrName string) string {
     attrStr := fmt.Sprintf("%v", attr)
+    if attrStr == "{}" {
+        // correct key value for type Empty
+        attrStr = ""
+    }
     var token string
     if strings.Index(attrStr, "'") >= 0 {
         token = fmt.Sprintf("[%s=\"%s\"]", attrName, attrStr)

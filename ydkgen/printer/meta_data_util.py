@@ -1,5 +1,6 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# YDK - YANG Development Kit
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,28 +14,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------
+# This file has been modified by Yan Gorelik, YDK Solutions.
+# All modifications in original under CiscoDevNet domain
+# introduced since October 2019 are copyrighted.
+# All rights reserved under Apache License, Version 2.0.
+# ------------------------------------------------------------------
 
 """
   meta_data_util.py
 
   YANG model driven API, python emitter.
 """
-from ydkgen.api_model import Bits, Class, Enum, Package
+
+from ydkgen.api_model import Bits, Class, Enum, Package, Deviation
 from ydkgen.builder import TypesExtractor
 from ydkgen.common import convert_to_reStructuredText, get_module_name, is_config_stmt
 from pyang import types
 from pyang.error import EmitError
 from pyang.types import BinaryTypeSpec, BooleanTypeSpec, Decimal64TypeSpec, EmptyTypeSpec, \
     IntTypeSpec, LengthTypeSpec, PatternTypeSpec, RangeTypeSpec, StringTypeSpec, PathTypeSpec, \
-    BitsTypeSpec, IdentityrefTypeSpec, UnionTypeSpec, TypeSpec
+    BitTypeSpec, IdentityrefTypeSpec, UnionTypeSpec, TypeSpec
 
 
 class MetaInfoData:
-
-    '''
+    """
     Meta info for a property
-    '''
-
+    """
     def __init__(self, prop):
         self.name = prop.stmt.arg
         self.mtype = ''
@@ -82,7 +87,7 @@ def get_class_docstring(clazz, language, identity_subclasses=None):
 
         id_subclasses = None
         if (hasattr(prop.property_type, 'is_identity') and
-            prop.property_type.is_identity() and identity_subclasses is not None):
+                prop.property_type.is_identity() and identity_subclasses is not None):
             id_subclasses = identity_subclasses
 
         meta_info_data = get_meta_info_data(
@@ -98,26 +103,26 @@ def get_class_docstring(clazz, language, identity_subclasses=None):
             attribute_title = prop.go_name()
         if prop in keys:
             attribute_title = '%s  (key)' % attribute_title
-        properties_description.append('.. attribute:: %s\n\n' % (attribute_title))
+        properties_description.append('.. attribute:: %s\n\n' % attribute_title)
 
-        properties_description.append('\t%s\n' % (
-            convert_to_reStructuredText(prop_comment)))
+        if prop_comment:
+            properties_description.append('    %s\n\n' % convert_to_reStructuredText(prop_comment))
 
-        properties_description.extend(get_type_doc(meta_info_data, 1, ''))
+        properties_description.extend(get_type_doc(meta_info_data, 1, '    '))
         if len(meta_info_data.target_of_leafref) > 0:
-            properties_description.append('\t**refers to**\: %s\n\n' % (meta_info_data.target_of_leafref))
+            properties_description.append('    **refers to**: %s\n\n' % meta_info_data.target_of_leafref)
         if meta_info_data.mandatory:
-            properties_description.append('\t**mandatory**\: True\n\n')
+            properties_description.append('    **mandatory**: True\n\n')
         if meta_info_data.is_presence:
-            properties_description.append('\t**presence node**\: True\n\n')
+            properties_description.append('    **presence node**: True\n\n')
         if not meta_info_data.is_config:
-            properties_description.append('\t**config**\: False\n\n')
+            properties_description.append('    **config**: False\n\n')
         if len(meta_info_data.units) > 0:
-            properties_description.append('\t**units**\: %s\n\n' % meta_info_data.units)
+            properties_description.append('    **units**: %s\n\n' % meta_info_data.units)
         if len(meta_info_data.default_value) > 0:
-            properties_description.append('\t**default value**\: %s\n\n' % meta_info_data.default_value)
+            properties_description.append('    **default value**: %s\n\n' % meta_info_data.default_value)
         if len(meta_info_data.status) > 0:
-            properties_description.append('\t**status**\: %s\n\n' % meta_info_data.status)
+            properties_description.append('    **status**: %s\n\n' % meta_info_data.status)
 
     return convert_to_reStructuredText(class_description) + '\n\n' + ''.join(properties_description)
 
@@ -128,33 +133,29 @@ def get_type_doc(meta_info_data, type_depth, ident):
     if len(meta_info_data.children) > 0:
         if type_depth == 1:
             if hasattr(meta_info_data, 'property_type') and isinstance(meta_info_data.property_type, UnionTypeSpec):
-                properties_description.append('\t**type**\: union of the below types:\n\n')
+                properties_description.append(ident+'**type**: union of the below types:\n\n')
         for child in meta_info_data.children:
-            properties_description.extend(get_type_doc(child, type_depth+1, '\t'))
+            properties_description.extend(get_type_doc(child, type_depth+1, ident+'    '))
 
     else:
         target = meta_info_data.doc_link
         if isinstance(meta_info_data.doc_link, list):
             doc_link = map(lambda l: '\n\n'+ident+'\t\t%s' % l, meta_info_data.doc_link)
             target = ''.join(doc_link)
-        while target[0]=='\n' or target[0]=='\t':
+        while target[0] == '\n' or target[0] == '\t':
             target = target[1:]
 
-        if len(meta_info_data.doc_link_description)==0:
-            properties_description.append(ident+'\t**type**\: %s\n\n' % target)
+        if len(meta_info_data.doc_link_description) == 0:
+            properties_description.append(ident+'**type**: %s\n\n' % target)
         else:
-            if not meta_info_data.doc_link_description.startswith('list of'):
-                if not meta_info_data.doc_link_description.endswith('\n'):
-                    meta_info_data.doc_link_description += '\n\n'
-            properties_description.append(ident+'\t**type**\: %s' % meta_info_data.doc_link_description)
-            properties_description.append(ident+'\t\t%s\n\n' % target)
+            # if not meta_info_data.doc_link_description.startswith('list of'):
+            #     if not meta_info_data.doc_link_description.endswith('\n'):
+            #         meta_info_data.doc_link_description += '\n\n'
+            properties_description.append(ident+'**type**: %s %s\n\n' % (meta_info_data.doc_link_description, target))
 
         prop_restriction = get_property_restriction(meta_info_data)
         if prop_restriction is not None and len(prop_restriction) > 0:
-            if ident=='':
-                properties_description.append('\t%s\n\n' % (prop_restriction))
-            else:
-                properties_description.append(ident+'\t\t%s\n\n' % (prop_restriction))
+            properties_description.append(ident+'    %s\n\n' % prop_restriction)
 
     return properties_description
 
@@ -164,7 +165,7 @@ def get_enum_class_docstring(enumz, language):
     if enumz.comment is not None:
         enumz_description = enumz.comment
 
-    enumz_description = "%s (Enum Class)\n\n\n" % (enumz.name) + enumz_description
+    enumz_description = "%s (Enum Class)\n\n\n" % enumz.name + enumz_description
 
     literals_description = []
     for enum_literal in enumz.literals:
@@ -176,7 +177,7 @@ def get_enum_class_docstring(enumz, language):
             literals_description.append(".. data:: %s = %s\n" % (enum_literal.name, enum_literal.value))
         if enum_literal.comment is not None:
             for line in enum_literal.comment.split("\n"):
-                literals_description.append("\t%s\n\n" % line)
+                literals_description.append("    %s\n\n" % line)
 
     return ''.join([convert_to_reStructuredText(enumz_description)] + ['\n\n'] + literals_description)
 
@@ -337,7 +338,7 @@ def get_meta_info_data(prop, property_type, type_stmt, language, identity_subcla
         if isinstance(type_spec, BinaryTypeSpec):
             meta_info_data.ptype = 'str'
             meta_info_data.doc_link += get_primitive_type_tag('str', language)
-        elif isinstance(type_spec, BitsTypeSpec):
+        elif isinstance(type_spec, BitTypeSpec):
             # This can happen in a Union
             raise EmitError('Illegal Code path')
         elif isinstance(type_spec, BooleanTypeSpec):
@@ -418,11 +419,11 @@ def get_meta_info_data(prop, property_type, type_stmt, language, identity_subcla
 
 
 def _set_mtype_docstring(meta_info_data, prop, leaftype, language):
-        meta_info_data.mtype = leaftype
-        if prop.is_many:
-            meta_info_data.mtype = 'REFERENCE_LEAFLIST'
-            meta_info_data.doc_link = _get_list_doc_link_tag(
-                meta_info_data, 'doc_link', language, meta_info_data.mtype)
+    meta_info_data.mtype = leaftype
+    if prop.is_many:
+        meta_info_data.mtype = 'REFERENCE_LEAFLIST'
+        meta_info_data.doc_link = _get_list_doc_link_tag(
+            meta_info_data, 'doc_link', language, meta_info_data.mtype)
 
 
 def add_pattern_docstring(meta_info_data, target_type_stmt):
@@ -454,8 +455,6 @@ def get_length_limits(length_type):
         raise AssertionError
     prange = []
     for m_min, m_max in length_type.lengths:
-        pmin = None
-        pmax = None
         if m_min == 'min':
             pmin = '0'
         else:
@@ -476,7 +475,6 @@ def get_range_limits(range_type):
     if isinstance(base_type, IntTypeSpec):
         for m_min, m_max in range_type.ranges:
             pmin = None
-            pmax = None
             if m_min == 'min':
                 pmin = range_type.base.min
             else:
@@ -495,7 +493,6 @@ def get_range_limits(range_type):
     elif isinstance(base_type, Decimal64TypeSpec):
         for m_min, m_max in range_type.ranges:
             pmin = None
-            pmax = None
             if m_min == 'min':
                 pmin = range_type.base.min.s
             else:
@@ -564,15 +561,15 @@ def get_primitive_type_tag(typ, language):
 def get_tag_template(language, domain, crossref):
     templates = {
         ('py', 'class', False): '.. py:class:: %s\n',
-        ('py', 'class', True): ' :py:class:`%s <%s.%s>`',
+        ('py', 'class', True): ' :py:class:`%s<%s.%s>`',
         ('py', 'module', False): '.. py:module:: %s.%s\n',
         ('py', 'currentmodule', False): '.. py:currentmodule:: %s\n',
 
         ('cpp', 'class', False): '.. cpp:class:: %s\n',
-        ('cpp', 'class', True): ' :cpp:class:`%s <%s>`',
+        ('cpp', 'class', True): ' :cpp:class:`%s<%s>`',
 
         ('go', 'class', False): '.. go:struct:: %s()\n',
-        ('go', 'class', True): ' :go:struct:`%s <%s>`',
+        ('go', 'class', True): ' :go:struct:`%s<%s>`',
         ('go', 'module', False): '.. go:package:: %s.%s\n',
         ('go', 'currentmodule', False): '.. go:package:: %s\n',
     }
@@ -645,6 +642,17 @@ def get_class_tag(named_element, language):
         raise Exception('Language {0} not yet supported'.format(language))
 
 
+def reference_cpp_name(element):
+    """ get the C++ doc reference name"""
+    names = []
+    while element is not None:
+        if isinstance(element, Deviation):
+            element = element.owner
+        names.append(element.name)
+        element = element.owner
+    return '::'.join(reversed(names))
+
+
 def get_class_crossref_tag(name, named_element, language):
     if language == 'py':
         template = get_tag_template('py', 'class', True)
@@ -653,8 +661,7 @@ def get_class_crossref_tag(name, named_element, language):
                            named_element.qn())
     elif language == 'cpp':
         template = get_tag_template('cpp', 'class', True)
-        return template % (name,
-                           named_element.fully_qualified_cpp_name())
+        return template % (name, reference_cpp_name(named_element))
     elif language == 'go':
         template = get_tag_template('go', 'class', True)
         link = '%s/%s' % (named_element.get_py_mod_name().replace('.', '/'),
@@ -669,9 +676,9 @@ def get_bits_class_docstring(bitz):
     if bitz.comment is not None:
         for line in bitz.comment.split('\n'):
             bitz_description.append(convert_to_reStructuredText(line))
-    bitz_description.append('\n\t**Bits positions\:**\n')
+    bitz_description.append('\n    **Bits positions:**\n')
     for pos, name in enumerate(bitz._dictionary):
-        bitz_description.append("\t\t%s\: %s\n" % (name, pos))
+        bitz_description.append("        %s: %s\n" % (name, pos))
 
     return ''.join(bitz_description)
 
@@ -680,7 +687,7 @@ def get_bits_doc_link(bitz, language):
     if language == 'py':
         return get_class_crossref_tag(bitz.name, bitz, language)
     elif language == 'cpp':
-        return ':cpp:class:`Bits<ydk::Bits>`\n\t%s' % get_bits_class_docstring(bitz)
+        return ':cpp:class:`Bits<ydk::Bits>`\n    %s' % get_bits_class_docstring(bitz)
     elif language == 'go':
         return get_class_crossref_tag(bitz.name, bitz, language)
     else:
@@ -699,11 +706,10 @@ def get_langage_spec_tags(named_element, language):
 
 
 def get_class_bases(clazz, language):
-    bases = []
-
     if language not in ('py', 'cpp', 'go'):
         raise Exception('Language {0} not yet supported'.format(language))
 
+    bases = []
     if language == 'py':
         bases.append(':py:class:`Entity<ydk.types.Entity>`')
     if isinstance(clazz, Enum):
@@ -736,9 +742,9 @@ def get_default_value_object(ptype, property_type, clazz_name, default_value, id
     elif isinstance(property_type, Bits):
         default_value_object = "'%s'" % default_value
     elif isinstance(property_type, Enum):
-        for l in property_type.literals:
-            if l.stmt.arg == default_value:
-                default_value_object = "'%s.%s'" % (property_type.fqn(), l.name)
+        for lit in property_type.literals:
+            if lit.stmt.arg == default_value:
+                default_value_object = "'%s.%s'" % (property_type.fqn(), lit.name)
                 break
     elif isinstance(property_type, Class):
         if identity_subclasses is not None:

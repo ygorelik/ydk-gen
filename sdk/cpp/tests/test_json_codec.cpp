@@ -90,7 +90,8 @@ TEST_CASE("json_codec_leaf_list")
 
 TEST_CASE("json_codec_identity")
 {
-    NetconfServiceProvider provider("127.0.0.1", "admin", "admin", 12022);
+    ydk::path::Repository repo{TEST_HOME};
+    NetconfServiceProvider provider(repo, "127.0.0.1", "admin", "admin", 12022);
     auto & session = provider.get_session();
     JsonSubtreeCodec jcodec{};
 
@@ -136,7 +137,8 @@ TEST_CASE("json_codec_identity")
 
 TEST_CASE("json_codec_identity_subtree")
 {
-    NetconfServiceProvider provider("127.0.0.1", "admin", "admin", 12022);
+    ydk::path::Repository repo{TEST_HOME};
+    NetconfServiceProvider provider(repo, "127.0.0.1", "admin", "admin", 12022);
     auto & session = provider.get_session();
     JsonSubtreeCodec jcodec{};
 

@@ -113,13 +113,14 @@ func main() {
 // 	ydk.EnableLogging(ydk.Info)
 
 	// Connect to the device
-	var provider = providers.NetconfServiceProvider{
+	provider := providers.NetconfServiceProvider{
 				Address:  "127.0.0.1",
 				Username: "admin",
 				Password: "admin",
-				Port:     12022}
+				Port:     12022,
+				OnDemand: true}
 	provider.Connect()
-	var CRUD = services.CrudService{}
+	CRUD := services.CrudService{}
 
 	// Build routing policies list
 	routingPolicy := ysanity_rp.RoutingPolicy{}

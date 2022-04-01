@@ -6229,6 +6229,11 @@ namespace Catch {
 
 #include <signal.h>
 
+#ifndef SIGSTKSZ
+  // Patch for Linux distributions that do not define stack size environment variable
+  #define SIGSTKSZ 131072
+#endif
+
 namespace Catch {
 
     struct SignalDefs {

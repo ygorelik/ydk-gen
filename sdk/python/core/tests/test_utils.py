@@ -23,12 +23,7 @@ import unittest
 import logging
 
 from argparse import ArgumentParser
-
-import sys
-if sys.version_info > (3,):
-    from urllib.parse import urlparse
-else:
-    from urlparse import urlparse
+from urllib.parse import urlparse
 
 from ydk.entity_utils import get_data_node_from_entity
 from ydk.errors       import YCoreError
@@ -40,8 +35,11 @@ def assert_with_error(pattern, ErrorClass):
             try:
                 func(self)
             except ErrorClass as error:
-                res = re.match(pattern, error.message.strip())
-                self.assertEqual(res is not None, True)
+                if hasattr(error, 'message'):
+                    res = re.match(pattern, error.message.strip())
+                elif hasattr(error, 'args'):
+                    res = pattern in error.args[0]
+                self.assertTrue(res)
         return helper
     return assert_with_pattern
 
@@ -51,10 +49,7 @@ class ParametrizedTestCase(unittest.TestCase):
         inherit from this class.
     """
     def __init__(self, method_name='runTest'):
-        if sys.version_info > (3,):
-            super().__init__(method_name)
-        else:
-            super(ParametrizedTestCase, self).__init__(method_name)
+        super().__init__(method_name)
 
     @staticmethod
     def parametrize(testcase_klass, device, non_demand, common_cache, timeout):

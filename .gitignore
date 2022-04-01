@@ -16,9 +16,6 @@ coverage.xml
 debug.log
 netconf.log
 protocol.log
-myenv
-py2env
-py3env
 gittmp*/
 .DS_Store
 gen-api/
@@ -31,7 +28,9 @@ sdk/cpp/gnmi/tests/main.cpp
 sdk/python/core/ydk/models/ydktest
 test/gnmi_client
 yang/nxos*
+yang-git
 profiles/test/ydk-nxos*
+confd*
 grpc
 protobuf-3.5.0
 sdk/python/gnmi/build
@@ -39,4 +38,3 @@ sdk/python/gnmi/dist
 sdk/python/gnmi/ydk_service_gnmi.egg-info
 venv
 temp
-bundles

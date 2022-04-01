@@ -520,6 +520,7 @@ TEST_CASE("test_ylist_race")
     auto keys = ylist.keys();
     REQUIRE(vector_to_string(keys) == R"("test1")");
 
+    REQUIRE(ylist.has_key("test1"));
     auto ep = ylist["test1"];
     REQUIRE(ep != nullptr);
 

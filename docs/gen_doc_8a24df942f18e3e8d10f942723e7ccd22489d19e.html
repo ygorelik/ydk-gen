@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>GetSchema &mdash; YANG Development Kit 0.8.6.2 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/icon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/width.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="YANG Development Kit 0.8.6.2 documentation" href="index.html"/>
+        <link rel="up" title="ietf_netconf_monitoring module" href="gen_doc_e267bd0fb3e5d568161fc1da80fbbf6eb8c8d2c2.html"/>
+        <link rel="next" title="NetconfDatastoreType" href="gen_doc_b197ec8b3113dcd2209299ec648b9414b024c23c.html"/>
+        <link rel="prev" title="NetconfState" href="gen_doc_b8d6355728c9fa5a236deebed500d0b6c617dc7d.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> YANG Development Kit
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8.6.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about_ydk.html">About YDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_guide.html">API Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Questions and Answers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.ydktest.html">ydktest bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ydk.models.ietf.html">ietf bundle API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_145063920e89d1add696f25f91303b3be9be9cf6.html">iana_if_type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_12aa6d5aa85b3a410e4628c37cfd269c894638ae.html">ietf_datastores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_41781aca0039a2af95d166f76c914a4fca470348.html">ietf_diffserv_action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_86a967a5a67e69956df36ddc257eec67ce3fceb1.html">ietf_diffserv_classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_12bdfb275c40824cff6adfa1ab22696674ad5326.html">ietf_diffserv_policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_a0b866a075455ac61c3e1e9052dce38a8977d7e8.html">ietf_diffserv_target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_0ab057b8e405683fcf3d5b671c928bf6ef8e902d.html">ietf_event_notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_c9bdb5ebd8edd251499e59bba530931da35e868d.html">ietf_inet_types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_228fde0a8227e85674676e0f5e45533af05be362.html">ietf_interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_6088d78b089e80a97a63baf08b434eb978d15987.html">ietf_ip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_062272ecc7411dca42cba1058ecf790daab9cc72.html">ietf_ipv4_unicast_routing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_b869b86cdea4e2786038a6867a3016499e653958.html">ietf_ipv6_unicast_routing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_004952c0b51a59b33c99359d92e3323ca14d41eb.html">ietf_key_chain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_a7517ec3f2c9e37817d13aad0dc81254f9677c14.html">ietf_netconf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_b8e1ac21ed547674ed5f4f0190609b6136531c53.html">ietf_netconf_acm</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="gen_doc_e267bd0fb3e5d568161fc1da80fbbf6eb8c8d2c2.html">ietf_netconf_monitoring</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_b8d6355728c9fa5a236deebed500d0b6c617dc7d.html">NetconfState</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">GetSchema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_b197ec8b3113dcd2209299ec648b9414b024c23c.html">NetconfDatastoreType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_b16fc1219507ec102f7704f7d5cf9c5d1e188f54.html">NetconfBeep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_fb17e1120a82b433fe8bf83d3d447db0b2c44c79.html">NetconfSoapOverBeep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_cb9cfe7125936ad18c02cb494a734b6ec3c1463f.html">NetconfSoapOverHttps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_3dbba19cc45afb7f1fc3568f7a6bfcc661ff9506.html">NetconfSsh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_5a354ab4e7d6a8554589d0f08728713d942b2518.html">NetconfTls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_153c405c4c569772a330728597d40c9b99203147.html">Rnc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_b52f19f7e21d5a3804cd8d318ff8cb398c187243.html">Rng</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_a24ef7da1f1173f524e03c6ad1d1c6cf62781d8a.html">SchemaFormat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_d4813bb4146048283016396849d5ddf7c700d843.html">Transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_71309b29e371c68ca22fc4f0d9898ceea377f09f.html">Xsd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_4fa3b8094431f621933deffbb1997ae68de274d9.html">Yang</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gen_doc_fb0e9c714858e3c28741ff873f20194b96c5d29e.html">Yin</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_5e2a69923776476da1e44d90782bf9f2c00a31f1.html">ietf_netconf_with_defaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_f17d059a920f80e3beb6a45499ab5cb4307f607b.html">ietf_ospf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_c255a6340cfe79a6894313dcfcaf457bb489f6d8.html">ietf_restconf_monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_a1f617a68a2ce426502ff82d4b1165abb19592c8.html">ietf_routing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_a2beb3f7749347277f7e7e6b6f37f57d4b69cc6e.html">ietf_syslog_types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_bdf2c0367bc686c542563378874d102037506285.html">ietf_yang_library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_3fe610e70d4cd9990f809a2769b3a1cf2616a683.html">ietf_yang_push</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_832c73e87bf194c7aef5d19f7be6de93077448ee.html">ietf_yang_smiv2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_doc_d588a86ff8e2f0ce7d576c7a80ed46b2ed5579f3.html">policy_types</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">YANG Development Kit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="ydk.models.ietf.html">ietf bundle API</a> &raquo;</li>
+      
+          <li><a href="gen_doc_e267bd0fb3e5d568161fc1da80fbbf6eb8c8d2c2.html">ietf_netconf_monitoring module</a> &raquo;</li>
+      
+    <li>GetSchema</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getschema">
+<h1>GetSchema<a class="headerlink" href="#getschema" title="Permalink to this headline">¶</a></h1>
+<p><strong>Children</strong></p>
+<ul class="simple">
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_netconf_monitoring.GetSchema.input" title="ydk.models.ietf.ietf_netconf_monitoring.GetSchema.input"><code class="xref py py-attr docutils literal"><span class="pre">input</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ietf.ietf_netconf_monitoring.GetSchema.output" title="ydk.models.ietf.ietf_netconf_monitoring.GetSchema.output"><code class="xref py py-attr docutils literal"><span class="pre">output</span></code></a></li>
+</ul>
+<dl class="class">
+<dt id="ydk.models.ietf.ietf_netconf_monitoring.GetSchema">
+<em class="property">class </em><code class="descclassname">ydk.models.ietf.ietf_netconf_monitoring.</code><code class="descname">GetSchema</code><a class="headerlink" href="#ydk.models.ietf.ietf_netconf_monitoring.GetSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="api/types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal"><span class="pre">Entity</span></code></a></p>
+<p>Class Hierarchy : <a class="reference internal" href="#ydk.models.ietf.ietf_netconf_monitoring.GetSchema" title="ydk.models.ietf.ietf_netconf_monitoring.GetSchema"><code class="xref py py-class docutils literal"><span class="pre">GetSchema</span></code></a></p>
+<p>This class defines parameters to the RPC operation</p>
+<p>This operation is used to retrieve a schema from the</p>
+<p>NETCONF server.</p>
+<p>Positive Response:</p>
+<blockquote>
+<div>The NETCONF server returns the requested schema.</div></blockquote>
+<p>Negative Response:</p>
+<blockquote>
+<div><p>If requested schema does not exist, the &lt;error-tag&gt; is</p>
+<p>&#8216;invalid-value&#8217;.</p>
+<p>If more than one schema matches the requested parameters, the</p>
+<p>&lt;error-tag&gt; is &#8216;operation-failed&#8217;, and &lt;error-app-tag&gt; is</p>
+<p>&#8216;data-not-unique&#8217;.</p>
+</div></blockquote>
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_netconf_monitoring.GetSchema.input">
+<code class="descname">input</code><a class="headerlink" href="#ydk.models.ietf.ietf_netconf_monitoring.GetSchema.input" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>type</strong>:  <a class="reference internal" href="gen_doc_10cc9f6949e63a53fec6ffdf0338df0b63f725ad.html#ydk.models.ietf.ietf_netconf_monitoring.GetSchema.Input" title="ydk.models.ietf.ietf_netconf_monitoring.GetSchema.Input"><code class="xref py py-class docutils literal"><span class="pre">Input</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_netconf_monitoring.GetSchema.output">
+<code class="descname">output</code><a class="headerlink" href="#ydk.models.ietf.ietf_netconf_monitoring.GetSchema.output" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>type</strong>:  <a class="reference internal" href="gen_doc_e17673a52035a6a6ec326e6e6f31b67c5d749b27.html#ydk.models.ietf.ietf_netconf_monitoring.GetSchema.Output" title="ydk.models.ietf.ietf_netconf_monitoring.GetSchema.Output"><code class="xref py py-class docutils literal"><span class="pre">Output</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gen_doc_b197ec8b3113dcd2209299ec648b9414b024c23c.html" class="btn btn-neutral float-right" title="NetconfDatastoreType" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gen_doc_b8d6355728c9fa5a236deebed500d0b6c617dc7d.html" class="btn btn-neutral" title="NetconfState" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.6.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

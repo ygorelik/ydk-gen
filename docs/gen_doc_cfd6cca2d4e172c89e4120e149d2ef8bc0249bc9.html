@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tunnel &mdash; YANG Development Kit 0.8.6.2 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/icon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/width.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="YANG Development Kit 0.8.6.2 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> YANG Development Kit
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8.6.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="about_ydk.html">About YDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_guide.html">API Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Questions and Answers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.ydktest.html">ydktest bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.ietf.html">ietf bundle API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">YANG Development Kit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Tunnel</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tunnel">
+<h1>Tunnel<a class="headerlink" href="#tunnel" title="Permalink to this headline">¶</a></h1>
+<p><strong>Keys</strong></p>
+<ul class="simple">
+<li><a class="reference internal" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.name" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.name"><code class="xref py py-attr docutils literal"><span class="pre">name</span></code></a></li>
+</ul>
+<p><strong>Leafs</strong></p>
+<ul class="simple">
+<li><a class="reference internal" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.description" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.description"><code class="xref py py-attr docutils literal"><span class="pre">description</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.mtu" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.mtu"><code class="xref py py-attr docutils literal"><span class="pre">mtu</span></code></a></li>
+</ul>
+<p><strong>Children</strong></p>
+<ul class="simple">
+<li><a class="reference internal" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.ipsec" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.ipsec"><code class="xref py py-attr docutils literal"><span class="pre">ipsec</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.ipv4" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.ipv4"><code class="xref py py-attr docutils literal"><span class="pre">ipv4</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.nhrp" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.nhrp"><code class="xref py py-attr docutils literal"><span class="pre">nhrp</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.tunnel" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.tunnel"><code class="xref py py-attr docutils literal"><span class="pre">tunnel</span></code></a></li>
+</ul>
+<dl class="class">
+<dt id="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel">
+<em class="property">class </em><code class="descclassname">Native.Interface.</code><code class="descname">Tunnel</code><a class="headerlink" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="api/types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal"><span class="pre">Entity</span></code></a></p>
+<p>Class Hierarchy : <a class="reference internal" href="gen_doc_49300f799d7215326dd925412ed97438b6504f7c.html#ydk.models.ydktest.ydktest_sanity.Native" title="ydk.models.ydktest.ydktest_sanity.Native"><code class="xref py py-class docutils literal"><span class="pre">Native</span></code></a> <a class="reference internal" href="gen_doc_0cf99ff545b973afc3dd188130c2155ef45366cd.html#ydk.models.ydktest.ydktest_sanity.Native.Interface" title="ydk.models.ydktest.ydktest_sanity.Native.Interface"><code class="xref py py-class docutils literal"><span class="pre">Interface</span></code></a> <a class="reference internal" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel"><code class="xref py py-class docutils literal"><span class="pre">Tunnel</span></code></a></p>
+<p>This class represents configuration data.</p>
+<p>Tunnel interface</p>
+<dl class="attribute">
+<dt id="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.name">
+<code class="descname">name</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..4294967295</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.description">
+<code class="descname">description</code><a class="headerlink" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface specific description</p>
+<p><strong>type</strong>: str</p>
+<blockquote>
+<div><strong>length:</strong> 0..240</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.mtu">
+<code class="descname">mtu</code><a class="headerlink" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.mtu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the interface Maximum Transmission Unit (MTU)</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 64..18000</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.ipv4">
+<code class="descname">ipv4</code><a class="headerlink" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.ipv4" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>type</strong>:  <a class="reference internal" href="gen_doc_de2ec1895607542221ab04bb74bf75da278296b3.html#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.Ipv4" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.Ipv4"><code class="xref py py-class docutils literal"><span class="pre">Ipv4</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.ipsec">
+<code class="descname">ipsec</code><a class="headerlink" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.ipsec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use ipsec to protect this tunnel interface</p>
+<p><strong>type</strong>:  <a class="reference internal" href="gen_doc_44cbde63b2444766dafa32d9058e0e7022da334f.html#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.Ipsec" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.Ipsec"><code class="xref py py-class docutils literal"><span class="pre">Ipsec</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.nhrp">
+<code class="descname">nhrp</code><a class="headerlink" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.nhrp" title="Permalink to this definition">¶</a></dt>
+<dd><p>NHRP Interface commands</p>
+<p><strong>type</strong>:  <a class="reference internal" href="gen_doc_30967b057e8718950424dd5342ca96e21f0c0859.html#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.Nhrp" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.Nhrp"><code class="xref py py-class docutils literal"><span class="pre">Nhrp</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.tunnel">
+<code class="descname">tunnel</code><a class="headerlink" href="#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.tunnel" title="Permalink to this definition">¶</a></dt>
+<dd><p>protocol-over-protocol tunneling</p>
+<p><strong>type</strong>:  <a class="reference internal" href="gen_doc_6334895d31487fe7a954a0bb755ed4db524b5350.html#ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.Tunnel_" title="ydk.models.ydktest.ydktest_sanity.Native.Interface.Tunnel.Tunnel_"><code class="xref py py-class docutils literal"><span class="pre">Tunnel_</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.6.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

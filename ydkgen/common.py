@@ -122,26 +122,30 @@ def merge_file_path_segments(segs):
 
     for seg in segs:
         if not seg.length() == 0 and not return_seg.endswith('/'):
-            return_seg = '%s/' % (return_seg)
+            return_seg = '%s/' % return_seg
         return_seg = '%s%s' % (return_seg, seg)
     return return_seg
 
+
 def ispythonkeyword(word):
     return keyword.iskeyword(word) or \
-        word in ['False', 'None', 'True', 'async', 'await', 'nonlocal', 'parent', 'print', 'children', 'operation', 'exec', 'entity', 'yfilter']
+        word in ['False', 'None', 'True', 'async', 'await', 'nonlocal', 'parent', 'print',
+                 'children', 'operation', 'exec', 'entity', 'yfilter']
+
 
 def iscppkeyword(word):
     return word in ('parent', 'operator', 'inline', 'default', 'virtual',
                     'children', 'value', 'auto', 'entity', 'int', 'signed',
                     'final', 'template', 'index', 'protected', 'true', 'false',
-                    'default' , 'auto', 'static', 'or', 'do', 'new', 'delete',
-                    'private', 'public', 'export' , 'virtual', 'for', 'and',
+                    'default', 'auto', 'static', 'or', 'do', 'new', 'delete',
+                    'private', 'public', 'export', 'virtual', 'for', 'and',
                     'break', 'case', 'catch', 'float', 'long', 'return',
                     'explicit', 'class', 'if', 'try', 'while', 'and', 'or',
                     'const', 'continue', 'double', 'else', 'value', 'namespace',
                     'operation', 'volatile', 'register', 'short', 'extern',
                     'mutable', 'unsigned', 'struct', 'switch', 'void', 'typedef', 'typename',
-                    'typeid', 'using', 'char', 'goto', 'not','clock', 'major', 'INFINITY')
+                    'typeid', 'using', 'char', 'goto', 'not', 'clock', 'major', 'minor', 'INFINITY')
+
 
 def isgokeyword(word):
     return word in (
@@ -442,6 +446,7 @@ def _get_element_seg(element):
                 seg = prop.name
     return seg.lower()
 
+
 def get_path_sep(lang):
     sep = ''
     if lang == 'py':
@@ -455,7 +460,7 @@ def has_list_ancestor(clazz):
     c = clazz.owner
     parents = []
 
-    while c is not None and not isinstance(c,atypes.Package):
+    while c is not None and not isinstance(c, atypes.Package):
         parents.append(c)
         c = c.owner
 

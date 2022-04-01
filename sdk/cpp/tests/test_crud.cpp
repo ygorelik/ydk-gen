@@ -361,7 +361,8 @@ TEST_CASE("oc_platform")
 
 TEST_CASE( "crud_entity_list_bgp" )
 {
-    ydk::NetconfServiceProvider provider{"127.0.0.1", "admin", "admin", 12022};
+    ydk::path::Repository repo{TEST_HOME};
+    ydk::NetconfServiceProvider provider{repo, "127.0.0.1", "admin", "admin", 12022};
     ydk::CrudService crud{};
 
     // Create 'native' configuration

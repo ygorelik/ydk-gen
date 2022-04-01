@@ -21,17 +21,17 @@
 # ------------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date) *** install_ydk.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date) *** install_ydk.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
-    local cmd=$@
+    local cmd=$*
     print_msg "Running: $cmd"
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
@@ -39,11 +39,14 @@ function run_cmd {
 
 function usage {
     MSG_COLOR=$NOCOLOR
-    echo "usage: install_ydk [-l [cpp, py, go]] [-s gnmi] [-h] [-n]"
+    echo "usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v]"
     echo "Options and arguments:"
-    echo "  -l [cpp, py, go, all] installation language; if not specified Python is assumed"
-    echo "                        'all' corresponds to all available languages"
-    echo "  -c|--core             install YDK core package"
+    echo "  --cpp                 install YDK for C++ programming language"
+    echo "  --go                  install YDK for Go programming language"
+    echo "  --py|--python         install YDK for Python programming language (default)"
+    echo "  --all                 install YDK for all available programming languages"
+    echo "  -v|--venv             create python virtual environment"
+    echo "  -c|--core             install YDK core packages"
     echo "  -s|--service gnmi     install gNMI service package"
     echo "  -n|--no-deps          skip installation of dependencies"
     echo "  -h|--help             print this help message and exit"
@@ -51,58 +54,101 @@ function usage {
     echo "Environment variables:"
     echo "YDKGEN_HOME         specifies location of ydk-gen git repository;"
     echo "                    if not set, $HOME/ydk-gen is assumed"
+    echo "PYTHON_VENV         specifies location of python virtual environment;"
+    echo "                    if not set, $HOME/venv is assumed"
     echo "GOROOT              specifies installation directory of go software;"
     echo "                    if not set, /usr/local/go is assumed"
     echo "GOPATH              specifies location of golang directory;"
-    echo "                    if not set, $HOME/golang is assumed"
+    echo "                    if not set, $HOME/go is assumed"
     echo "C_INCLUDE_PATH      location of C include files;"
     echo "                    if not set, /usr/local/include is assumed"
     echo "CPLUS_INCLUDE_PATH  location of C++ include files;"
     echo "                    if not set, /usr/local/include is assumed"
+    echo "CMAKE_LIBRARY_PATH  Location of Python shared libraries;"
+    echo "                    if not set, default system library location is assumed"
+}
+
+function activate_python_venv() {
+  if [[ -z ${PYTHON_VENV} ]]; then
+    PYTHON_VENV=${HOME}/venv
+    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
+  fi
+  if [[ ! -d ${PYTHON_VENV} ]]; then
+    print_msg "Creating Python3 virtual environment in ${PYTHON_VENV}"
+    run_cmd python3 -m venv ${PYTHON_VENV}
+  fi
+  run_cmd source ${PYTHON_VENV}/bin/activate
 }
 
 function check_python_installation {
-  if [[ ! -d ${YDKGEN_HOME}/venv ]]; then
-    print_msg "Creating Python3 virtual environment in ${YDKGEN_HOME}/venv"
-    run_cmd python3 -m venv ${HOME}/venv
+  if [ ${install_venv} == "yes" ]; then
+    activate_python_venv
   fi
-  run_cmd source ${HOME}/venv/bin/activate
-
-  print_msg "Checking python version and installation"
-  python --version
+  print_msg "Checking python3 version and installation"
+  python3 --version
   status=$?
   if [ $status -ne 0 ]; then
     MSG_COLOR=$RED
     print_msg "Could not locate python3 interpretor"
     exit $status
   fi
-  print_msg "Checking pip version and installation"
-  pip -V
+  print_msg "Checking pip3 version and installation"
+  pip3 -V
   status=$?
   if [ $status -ne 0 ]; then
     MSG_COLOR=$RED
-    print_msg "Could not locate ${PIP_BIN}"
+    print_msg "Could not locate pip3"
     exit $status
   fi
-  print_msg "Python location: $(which ${PYTHON_BIN})"
-  print_msg "Pip location: $(which ${PIP_BIN})"
+
+  if [[ $ydk_lang == "py" || $ydk_lang == "all" ]]; then
+    print_msg "Checking installation of python shared libraries"
+    ver=$(python3 -c "import sys;print('{}.{}'.format(sys.version_info.major,sys.version_info.minor))")
+    if [[ $ver. > "3.8." ]]; then
+      print_msg "YDK for python currently is not supported with Python version $ver"
+      print_msg "Please downgrade your Python installation to 3.8 or 3.7"
+      exit 1
+    fi
+    os_type=$(uname)
+    if [[ ${os_type} == "Linux" ]]; then
+      if [[ $ver. > "3.7." ]]; then
+        ext="$ver.so"
+      else
+        ext="$ver"m.so
+      fi
+    elif [[ ${os_type} == "Darwin" ]]; then
+      ext="$ver.dylib"
+    fi
+    lines=($(locate libpython$ext))
+    if [[ ${#lines[@]} -gt 0 ]] && [[ -x ${lines[0]} || -L ${lines[0]} ]]; then
+      if [[ -z $CMAKE_LIBRARY_PATH ]]; then
+        export CMAKE_LIBRARY_PATH=$(dirname ${lines[0]})
+        print_msg "Setting CMAKE_LIBRARY_PATH to $CMAKE_LIBRARY_PATH"
+      fi
+    else
+      print_msg "Could not locate python shared library libpython$ext"
+      print_msg "Try to update locate database, then repeat YDK installation"
+      exit 1
+    fi
+  fi
 }
 
 function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
   pip install -r requirements.txt
-  if [[ ${ydk_lang} == "py" || ${ydk_lang} == "all" ]]; then
-    pip install pybind11
-  fi
 }
 
 function init_go_env {
+  if [[ ${ydk_lang} == "go" || ${ydk_lang} == "all" ]]; then
     print_msg "Initializing Go environment"
 
     if [[ $(uname) == "Darwin" ]]; then
         if [[ $GOPATH. == "." ]]; then
-            export GOPATH=$HOME/golang
+            export GOPATH=$HOME/go
+        fi
+        if [[ $GOROOT. == "." ]]; then
+            export GOROOT=/usr/local/go
         fi
         print_msg "GOROOT: $GOROOT"
         print_msg "GOPATH: $GOPATH"
@@ -116,7 +162,7 @@ function init_go_env {
         export PATH=$GOROOT/bin:$PATH
 
         if [[ $GOPATH. == "." ]]; then
-            export GOPATH="$HOME/golang"
+            export GOPATH=$HOME/go
             mkdir -p $GOPATH
             print_msg "Setting GOPATH to $GOPATH"
         else
@@ -126,43 +172,53 @@ function init_go_env {
     go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
     print_msg "Current Go version is $go_version"
 
-    go get github.com/stretchr/testify
+    if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
+        go get github.com/stretchr/testify
+        cd $GOPATH/src/github.com/stretchr/testify
+        git checkout tags/v1.6.1
+        cd -
+    fi
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
+  fi
 }
 
 function install_cpp_core {
     print_msg "Installing C++ core library"
     cd $YDKGEN_HOME
-    run_cmd ./generate.py -is --core --cpp
+    local cpp_sudo_flag
+    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    run_cmd python3 generate.py --core --cpp -i$cpp_sudo_flag
 }
 
 function install_cpp_gnmi {
     print_msg "Building C++ core gnmi library"
     cd $YDKGEN_HOME
-    run_cmd ./generate.py -is --service profiles/services/gnmi-0.4.0.json --cpp
+    local cpp_sudo_flag
+    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    run_cmd python3 generate.py --service profiles/services/gnmi-0.4.0.json --cpp -i$cpp_sudo_flag
 }
 
 function install_go_core {
     print_msg "Installing Go core packages"
     cd $YDKGEN_HOME
-    run_cmd ./generate.py -i --core --go
+    run_cmd python3 generate.py -i --core --go
 }
 
 function install_go_gnmi {
     print_msg "Installing Go gNMI package"
     cd $YDKGEN_HOME
-    run_cmd ./generate.py -i --service profiles/services/gnmi-0.4.0.json --go
+    run_cmd python3 generate.py -i --service profiles/services/gnmi-0.4.0.json --go
 }
 
 function install_py_core {
     print_msg "Building and installing Python core package"
     cd $YDKGEN_HOME
-    run_cmd ./generate.py -i --core
+    run_cmd python3 generate.py -i --core
 
     print_msg "Verifying Python YDK core package installation"
-    python -c "from ydk.path import NetconfSession"
+    python3 -c "from ydk.path import NetconfSession"
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -174,10 +230,10 @@ function install_py_core {
 function install_py_gnmi {
     print_msg "Installing gNMI package for Python"
     cd $YDKGEN_HOME
-    run_cmd ./generate.py -i --service profiles/services/gnmi-0.4.0.json
+    run_cmd python3 generate.py -i --service profiles/services/gnmi-0.4.0.json
 
     print_msg "Verifying Python gNMI package installation"
-    python -c "from ydk.gnmi.path import gNMISession"
+    python3 -c "from ydk.gnmi.path import gNMISession"
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -226,7 +282,6 @@ function install_ydk_py {
 
 function install_ydk_go {
     if [[ ${ydk_lang} == "go" || ${ydk_lang} == "all" ]]; then
-        init_go_env
         if [[ ${core_package} == "yes" ]]; then
             install_go_core
         fi
@@ -251,6 +306,9 @@ ydk_lang="py"
 service_pkg="no"
 core_package="no"
 dependencies="yes"
+install_venv="no"
+sudo_flag=
+sudo_cmd=
 
 # As long as there is at least one more argument, keep looping
 while [[ $# -gt 0 ]]; do
@@ -265,6 +323,18 @@ while [[ $# -gt 0 ]]; do
                 usage
                 exit 1
             fi
+            ;;
+        --cpp)
+            ydk_lang="cpp"
+            ;;
+        --go)
+            ydk_lang="go"
+            ;;
+        --py|--python)
+            ydk_lang="py"
+            ;;
+        --all)
+            ydk_lang="all"
             ;;
         -n|--no-deps)
             dependencies="no"
@@ -284,6 +354,9 @@ while [[ $# -gt 0 ]]; do
                 service_pkg="gnmi"
             fi
             ;;
+        -v|--venv)
+            install_venv="yes"
+            ;;
         *)
             echo "Unknown option '$key'"
             usage
@@ -294,7 +367,29 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-echo "YDK installation options: language=${ydk_lang}, core_package=${core_package}, service_package=${service_pkg}, dependencies=${dependencies}"
+curr_dir=$(pwd)
+script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
+if [[ -z ${YDKGEN_HOME} || ! -d ${YDKGEN_HOME} ]]; then
+    YDKGEN_HOME=$script_dir
+    print_msg "YDKGEN_HOME is set to $script_dir"
+fi
+cd ${YDKGEN_HOME}
+
+ydk_version=$(grep core sdk/version.json | awk '{print($2)'} | tr -d '"' | tr -d ',')
+echo "YDK-$ydk_version installation options:"
+if [ ${install_venv} == "no" ]; then
+  if [[ -n $python_location ]]; then
+    echo " - use custom Python installation in ${python_location}"
+  else
+    echo " - use system Python installation"
+  fi
+else
+  echo " - create Python virtual environment = ${install_venv}"
+fi
+echo " - programming language = ${ydk_lang}"
+echo " - install dependencies = ${dependencies}"
+echo " - install core package = ${core_package}"
+echo " - install service package = ${service_pkg}"
 if [[ ${core_package} == "no" && ${service_pkg} == "no" && ${dependencies} == "no" ]]; then
     echo "There are no components to install"
     exit 0
@@ -317,19 +412,19 @@ print_msg "Running OS type: $os_type"
 print_msg "OS info: $os_info"
 if [[ ${os_type} == "Linux" ]]; then
   if [[ ${os_info} == *"Ubuntu"* ]]; then
-    if [[ ${os_info} != *"xenial"* && ${os_info} != *"bionic"* ]]; then
+    if [[ ${os_info} != *"xenial"* && ${os_info} != *"bionic"* && ${os_info} != *"focal"* ]]; then
         print_msg "WARNING! Unsupported Ubuntu distribution found. Will try the best efforts."
     fi
-  elif [[ ${os_info} != *"fedora"* ]]; then
+  elif [[ ${os_info} == *"fedora"* ]]; then
+    rhel_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+    if [[ $rhel_version != 7 && $rhel_version != 8 ]]; then
+        print_msg "WARNING! Unsupported Centos/RHEL version. Will try the best efforts."
+    fi
+  else
     MSG_COLOR=${RED}
     print_msg "Unsupported Linux distribution detected"
     exit 1
   fi
-fi
-
-if [[ -z ${YDKGEN_HOME} || ! -d ${YDKGEN_HOME} ]]; then
-    YDKGEN_HOME=${HOME}/ydk-gen
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
 if [[ -z ${C_INCLUDE_PATH} ]]; then
@@ -342,22 +437,21 @@ fi
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64:/usr/lib64
     if [ ${service_pkg} == "gnmi" ]; then
-        export LD_LIBRARY_PATH=$YDKGEN_HOME/grpc/libs/opt:$YDKGEN_HOME/protobuf-3.5.0/src/.libs:$LD_LIBRARY_PATH
+        export LD_LIBRARY_PATH=$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:$LD_LIBRARY_PATH
     fi
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
 fi
 
-curr_dir=$(pwd)
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
-
-cd ${YDKGEN_HOME}
-
 if [ ${dependencies} == "yes" ]; then
     instal_dependencies
 fi
+if [ -f ~/.profile.python ]; then
+  print_msg "Reading python profile ~/.profile.python"
+  source ~/.profile.python
+fi
 
 CMAKE_BIN=cmake
-which cmake3 > /dev/null
+command -v cmake3 > /dev/null
 status=$?
 if [[ ${status} == 0 ]]; then
     CMAKE_BIN=cmake3
@@ -367,6 +461,7 @@ fi
 # Start installation
 
 init_py_env
+init_go_env
 
 install_ydk_cpp
 
@@ -374,5 +469,8 @@ install_ydk_py
 
 install_ydk_go
 
-deactivate
+if [ ${install_venv} == "yes" ]; then
+  deactivate
+fi
+
 cd ${curr_dir}
