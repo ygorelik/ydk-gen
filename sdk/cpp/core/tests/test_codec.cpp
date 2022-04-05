@@ -343,26 +343,3 @@ TEST_CASE("test_empty_string_value_json") {
     auto xml_rt = codec.encode(*real_dn, ydk::EncodingFormat::JSON, false);
     REQUIRE(payload == xml_rt);
 }
-
-TEST_CASE("test_empty_string_value_xml") {
-    std::string searchdir{TEST_HOME};
-    mock::MockSession sp{searchdir, test_openconfig, EncodingFormat::XML};
-    auto & schema = sp.get_root_schema();
-    ydk::path::Codec codec{};
-
-    auto & runner = schema.create_datanode("ydktest-sanity:runner", "");
-    runner.create_datanode("ytypes/built-in-t/name", "");
-
-    auto payload = codec.encode(runner, ydk::EncodingFormat::XML, false);
-    cout << payload << endl;
-    auto expected = R"(<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity"><ytypes><built-in-t><name/></built-in-t></ytypes></runner>)";
-    CHECK(payload == expected);
-
-    auto dn = codec.decode(schema, payload, ydk::EncodingFormat::XML);
-    REQUIRE(dn != nullptr);
-    auto real_dn = dn->get_children()[0];
-    REQUIRE(real_dn != nullptr);
-
-    auto xml_rt = codec.encode(*real_dn, ydk::EncodingFormat::XML, false);
-    REQUIRE(payload == xml_rt);
-}

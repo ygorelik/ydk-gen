@@ -22,7 +22,6 @@
 //////////////////////////////////////////////////////////////////
 
 #include <unordered_set>
-#include <typeinfo>
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -106,11 +105,9 @@ using json = nlohmann::json;
                 // extract module name from primitive type value
                 if (it->is_primitive())
                 {
-                    auto val = it.value();
-                    if (typeid(val) == typeid(std::string) and val.empty())
-                        continue;
                     auto v = it->dump();
-                    if (v.find("\"") == 0 && v.rfind("\"") == v.length()-1) {
+                    if (v.length() > 2 &&
+                        v.find("\"") == 0 && v.rfind("\"") == v.length()-1) {
                         v = v.substr(1, v.length()-2);
                     }
                     auto ns = path::segmentalize_module_names(v);
