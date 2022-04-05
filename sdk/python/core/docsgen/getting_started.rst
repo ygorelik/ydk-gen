@@ -57,7 +57,7 @@ This be used to run ydk-gen without installing anything natively on your platfor
 To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
 See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-  docker run -it ydksolutions/ydk-gen:0.8.6.2
+  docker run -it ydksolutions/ydk-gen:0.8.6.3
 
 
 System Requirements
@@ -415,7 +415,7 @@ If applicable, Python virtual environment must be activated prior to these proce
 Check Python packages installed::
 
     pip list | grep ydk
-    ydk (0.8.6.2)
+    ydk (0.8.6.3)
     ydk-models-<name-of-bundle> (0.5.1)
     ...
 
@@ -473,6 +473,6 @@ Documentation and Support
 Release Notes
 =============
 
-The current YDK release version is 0.8.6.2.
+The current YDK release version is 0.8.6.3.
 
 YDK is licensed under the Apache 2.0 License.
