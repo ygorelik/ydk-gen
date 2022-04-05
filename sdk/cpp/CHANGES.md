@@ -1,3 +1,9 @@
+### 2022-07-31 version 0.8.6.3
+
+#### Resolved non-GitHub issues
+  * IndexError on decoding empty string value in JSON payload 
+
+
 ### 2022-03-31 version 0.8.6.2
 
 #### New features and enhancements
