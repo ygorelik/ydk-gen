@@ -105,6 +105,8 @@ using json = nlohmann::json;
                 // extract module name from primitive type value
                 if (it->is_primitive())
                 {
+                    std::string val = it.value();
+                    if (val.empty()) continue;
                     auto v = it->dump();
                     if (v.find("\"") == 0 && v.rfind("\"") == v.length()-1) {
                         v = v.substr(1, v.length()-2);
