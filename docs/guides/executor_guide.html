@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How do I execute RPCs? &mdash; YANG Development Kit 0.8.6.2 documentation</title>
+  <title>How do I execute RPCs? &mdash; YANG Development Kit 0.8.6.3 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.6.2 documentation" href="../index.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.6.3 documentation" href="../index.html"/>
         <link rel="up" title="Developer Guide" href="../developer_guide.html"/>
         <link rel="next" title="How to Disable Validation" href="validation.html"/>
         <link rel="prev" title="How do I work with instances of YANG data?" href="codec_guide.html"/> 
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                0.8.6.2
+                0.8.6.3
               </div>
             
           
@@ -94,7 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="crud_guide.html">How do I create, update, read and delete?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="codec_guide.html">How do I work with instances of YANG data?</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">How do I execute RPCs?</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">How do I execute RPCs?</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#executing-a-rollback-rpc">Executing a rollback RPC</a></li>
 </ul>
 </li>
@@ -111,6 +112,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Questions and Answers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ydk.models.ydktest.html">ydktest bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ydk.models.cisco_iosxr_demo.html">cisco_iosxr_demo bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
@@ -157,12 +159,12 @@
            <div itemprop="articleBody">
             
   <div class="section" id="how-do-i-execute-rpcs">
-<h1><a class="toc-backref" href="#id1">How do I execute RPCs?</a><a class="headerlink" href="#how-do-i-execute-rpcs" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#toc-entry-1">How do I execute RPCs?</a><a class="headerlink" href="#how-do-i-execute-rpcs" title="Permalink to this headline">¶</a></h1>
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#how-do-i-execute-rpcs" id="id1">How do I execute RPCs?</a><ul>
-<li><a class="reference internal" href="#executing-a-rollback-rpc" id="id2">Executing a rollback RPC</a></li>
+<li><a class="reference internal" href="#how-do-i-execute-rpcs" id="toc-entry-1">How do I execute RPCs?</a><ul>
+<li><a class="reference internal" href="#executing-a-rollback-rpc" id="toc-entry-2">Executing a rollback RPC</a></li>
 </ul>
 </li>
 </ul>
@@ -170,7 +172,7 @@
 <p>This document contains some examples of executing RPCs defined in yang. To perform these operations, the <a class="reference internal" href="../api/services/executor_service.html#ydk.services.ExecutorService" title="ydk.services.ExecutorService"><code class="xref py py-class docutils literal"><span class="pre">ExecutorService</span></code></a> is used.</p>
 <p>The below approach can be used to execute a rollback RPC.</p>
 <div class="section" id="executing-a-rollback-rpc">
-<h2><a class="toc-backref" href="#id2">Executing a rollback RPC</a><a class="headerlink" href="#executing-a-rollback-rpc" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-2">Executing a rollback RPC</a><a class="headerlink" href="#executing-a-rollback-rpc" title="Permalink to this headline">¶</a></h2>
 <p>For this example, the <code class="xref py py-class docutils literal"><span class="pre">Cisco_IOS_XR_cfgmgr_rollback_act.RollBackConfigurationLast</span></code> class is used. Note that the <code class="docutils literal"><span class="pre">ydk</span></code> and <code class="docutils literal"><span class="pre">ydk-models-cisco-ios-xr</span></code> python packages need to be installed for this example.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -270,7 +272,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.8.6.2',
+            VERSION:'0.8.6.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false

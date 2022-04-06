@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Interface &mdash; YANG Development Kit 0.8.6.2 documentation</title>
+  <title>Interface &mdash; YANG Development Kit 0.8.6.3 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.6.2 documentation" href="index.html"/> 
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.6.3 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.8.6.2
+                0.8.6.3
               </div>
             
           
@@ -92,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Questions and Answers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ydk.models.ydktest.html">ydktest bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.cisco_iosxr_demo.html">cisco_iosxr_demo bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
@@ -481,7 +483,7 @@
 <dl class="attribute">
 <dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.oper_status">
 <code class="descname">oper_status</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.oper_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>The current operational state of the interface.  This leaf has the same semantics as ifOperStatus</p>
+<dd><p>The current operational state of the interface. This leaf has the same semantics as ifOperStatus</p>
 <p><strong>type</strong>:  <a class="reference internal" href="gen_doc_8e92da5a118d91c3ccfb7056ccad53470a04e696.html#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.OperStatus" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.OperStatus"><code class="xref py py-class docutils literal"><span class="pre">OperStatus</span></code></a></p>
 <p><strong>mandatory</strong>: True</p>
 <p><strong>config</strong>: False</p>
@@ -511,7 +513,7 @@
 <dl class="attribute">
 <dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.phys_address">
 <code class="descname">phys_address</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.phys_address" title="Permalink to this definition">¶</a></dt>
-<dd><p>The interface&#8217;s address at its protocol sub-layer.  For example, for an 802.x interface, this object normally contains a Media Access Control (MAC) address.  The interface&#8217;s media-specific modules must define the bit   and byte ordering and the format of the value of this object.  For interfaces that do not have such an address (e.g., a serial line), this node is not present</p>
+<dd><p>The interface&#8217;s address at its protocol sub-layer.  For example, for an 802.x interface, this object normally contains a Media Access Control (MAC) address.  The interface&#8217;s media-specific modules must define the bit and byte ordering and the format of the value of this object.  For interfaces that do not have such an address (e.g., a serial line), this node is not present</p>
 <p><strong>type</strong>: str</p>
 <blockquote>
 <div><strong>pattern:</strong> ([0-9a-fA-F]{2}(:[0-9a-fA-F]{2})*)?</div></blockquote>
@@ -556,14 +558,6 @@
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.routing_instance">
-<code class="descname">routing_instance</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.routing_instance" title="Permalink to this definition">¶</a></dt>
-<dd><p>The name of the routing instance to which the interface is assigned</p>
-<p><strong>type</strong>: str</p>
-<p><strong>config</strong>: False</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.diffserv_target_entry">
 <code class="descname">diffserv_target_entry</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.diffserv_target_entry" title="Permalink to this definition">¶</a></dt>
 <dd><p>policy target for inbound or outbound direction</p>
@@ -586,6 +580,14 @@
 <dd><p>Parameters for the IPv6 address family</p>
 <p><strong>type</strong>:  <a class="reference internal" href="gen_doc_62cb460191cdac6d1d24da7cbb44fbcc07a9fb28.html#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Ipv6" title="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.Ipv6"><code class="xref py py-class docutils literal"><span class="pre">Ipv6</span></code></a></p>
 <p><strong>presence node</strong>: True</p>
+<p><strong>config</strong>: False</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.routing_instance">
+<code class="descname">routing_instance</code><a class="headerlink" href="#ydk.models.ietf.ietf_interfaces.InterfacesState.Interface.routing_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the routing instance to which the interface is assigned</p>
+<p><strong>type</strong>: str</p>
 <p><strong>config</strong>: False</p>
 </dd></dl>
 
@@ -624,7 +626,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6.2',
+            VERSION:'0.8.6.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false

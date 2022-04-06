@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ConformanceType &mdash; YANG Development Kit 0.8.6.2 documentation</title>
+  <title>ConformanceType &mdash; YANG Development Kit 0.8.6.3 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.6.2 documentation" href="index.html"/> 
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.6.3 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.8.6.2
+                0.8.6.3
               </div>
             
           
@@ -92,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Questions and Answers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ydk.models.ydktest.html">ydktest bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.cisco_iosxr_demo.html">cisco_iosxr_demo bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
@@ -149,12 +151,11 @@
 <p>identified in this entry.  This includes deviation</p>
 <p>statements defined in the module.</p>
 <p>For YANG version 1.1 modules, there is at most one</p>
-<p>&#8216;module&#8217; entry with conformance type &#8216;implement&#8217; for a</p>
-<p>particular module name, since YANG 1.1 requires that</p>
-<p>at most one revision of a module is implemented.</p>
+<p>module entry with conformance type &#8216;implement&#8217; for a</p>
+<p>particular module name, since YANG 1.1 requires that,</p>
+<p>at most, one revision of a module is implemented.</p>
 <p>For YANG version 1 modules, there SHOULD NOT be more</p>
-<p>than one &#8216;module&#8217; entry for a particular module</p>
-<p>name.</p>
+<p>than one module entry for a particular module name.</p>
 </dd></dl>
 
 <dl class="data">
@@ -164,7 +165,7 @@
 <p>from the specified revision of the module but does</p>
 <p>not implement any protocol-accessible objects from</p>
 <p>this revision.</p>
-<p>Multiple &#8216;module&#8217; entries for the same module name MAY</p>
+<p>Multiple module entries for the same module name MAY</p>
 <p>exist.  This can occur if multiple modules import the</p>
 <p>same module but specify different revision dates in</p>
 <p>the import statements.</p>
@@ -205,7 +206,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6.2',
+            VERSION:'0.8.6.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false

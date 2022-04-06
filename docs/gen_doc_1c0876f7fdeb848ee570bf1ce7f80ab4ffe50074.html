@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Module &mdash; YANG Development Kit 0.8.6.2 documentation</title>
+  <title>Module &mdash; YANG Development Kit 0.8.6.3 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.6.2 documentation" href="index.html"/> 
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.6.3 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.8.6.2
+                0.8.6.3
               </div>
             
           
@@ -92,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Questions and Answers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ydk.models.ydktest.html">ydktest bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.cisco_iosxr_demo.html">cisco_iosxr_demo bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
@@ -176,7 +178,6 @@
 <blockquote>
 <div><strong>pattern:</strong> [a-zA-Z_][a-zA-Z0-9\-_.]*</div></blockquote>
 <p><strong>config</strong>: False</p>
-<p><strong>status</strong>: deprecated</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -193,13 +194,12 @@
 <div><strong>length:</strong> 0..0</div></blockquote>
 </div></blockquote>
 <p><strong>config</strong>: False</p>
-<p><strong>status</strong>: deprecated</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ydk.models.ietf.ietf_yang_library.ModulesState.Module.schema">
 <code class="descname">schema</code><a class="headerlink" href="#ydk.models.ietf.ietf_yang_library.ModulesState.Module.schema" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains a URL that represents the YANG schema resource for this module or submodule.  This leaf will only be present if there is a URL available for retrieval of the schema for this entry</p>
+<dd><p>Contains a URL that represents the YANG schema resource for this module or submodule. This leaf will only be present if there is a URL available for retrieval of the schema for this entry</p>
 <p><strong>type</strong>: str</p>
 <p><strong>config</strong>: False</p>
 </dd></dl>
@@ -211,7 +211,6 @@
 <p><strong>type</strong>: str</p>
 <p><strong>mandatory</strong>: True</p>
 <p><strong>config</strong>: False</p>
-<p><strong>status</strong>: deprecated</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -222,16 +221,14 @@
 <blockquote>
 <div><strong>pattern:</strong> [a-zA-Z_][a-zA-Z0-9\-_.]*</div></blockquote>
 <p><strong>config</strong>: False</p>
-<p><strong>status</strong>: deprecated</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ydk.models.ietf.ietf_yang_library.ModulesState.Module.deviation">
 <code class="descname">deviation</code><a class="headerlink" href="#ydk.models.ietf.ietf_yang_library.ModulesState.Module.deviation" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of YANG deviation module names and revisions used by this server to modify the conformance of the module associated with this entry.  Note that the same module can be used for deviations for multiple modules, so the same entry MAY appear within multiple &#8216;module&#8217; entries.  The deviation module MUST be present in the &#8216;module&#8217; list, with the same name and revision values. The &#8216;conformance-type&#8217; value will be &#8216;implement&#8217; for the deviation module</p>
+<dd><p>List of YANG deviation module names and revisions used by this server to modify the conformance of the module associated with this entry.  Note that the same module can be used for deviations for multiple modules, so the same entry MAY appear within multiple &#8216;module&#8217; entries. The deviation module MUST be present in the &#8216;module&#8217; list, with the same name and revision values. The &#8216;conformance-type&#8217; value will be &#8216;implement&#8217; for the deviation module</p>
 <p><strong>type</strong>: list of    <a class="reference internal" href="gen_doc_9bd75ed506ee457d48a6a089e4b824085a388bc1.html#ydk.models.ietf.ietf_yang_library.ModulesState.Module.Deviation" title="ydk.models.ietf.ietf_yang_library.ModulesState.Module.Deviation"><code class="xref py py-class docutils literal"><span class="pre">Deviation</span></code></a></p>
 <p><strong>config</strong>: False</p>
-<p><strong>status</strong>: deprecated</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -241,7 +238,6 @@
 <p><strong>type</strong>:  <a class="reference internal" href="gen_doc_56417d40397147bb1c97c97110b5843b6c5da67f.html#ydk.models.ietf.ietf_yang_library.ModulesState.Module.ConformanceType" title="ydk.models.ietf.ietf_yang_library.ModulesState.Module.ConformanceType"><code class="xref py py-class docutils literal"><span class="pre">ConformanceType</span></code></a></p>
 <p><strong>mandatory</strong>: True</p>
 <p><strong>config</strong>: False</p>
-<p><strong>status</strong>: deprecated</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -250,7 +246,6 @@
 <dd><p>Each entry represents one submodule within the parent module</p>
 <p><strong>type</strong>: list of    <a class="reference internal" href="gen_doc_9ab2582961cde2b6dc0d652d052e726ed8ec4ea8.html#ydk.models.ietf.ietf_yang_library.ModulesState.Module.Submodule" title="ydk.models.ietf.ietf_yang_library.ModulesState.Module.Submodule"><code class="xref py py-class docutils literal"><span class="pre">Submodule</span></code></a></p>
 <p><strong>config</strong>: False</p>
-<p><strong>status</strong>: deprecated</p>
 </dd></dl>
 
 </dd></dl>
@@ -288,7 +283,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.8.6.2',
+            VERSION:'0.8.6.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How do I create, update, read and delete? &mdash; YANG Development Kit 0.8.6.2 documentation</title>
+  <title>How do I create, update, read and delete? &mdash; YANG Development Kit 0.8.6.3 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.6.2 documentation" href="../index.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.6.3 documentation" href="../index.html"/>
         <link rel="up" title="Developer Guide" href="../developer_guide.html"/>
         <link rel="next" title="How do I work with instances of YANG data?" href="codec_guide.html"/>
         <link rel="prev" title="Introduction" href="introduction.html"/> 
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                0.8.6.2
+                0.8.6.3
               </div>
             
           
@@ -92,7 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../developer_guide.html">Developer Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">How do I create, update, read and delete?</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">How do I create, update, read and delete?</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#creating-a-configuration-with-a-list-and-a-presence-class">Creating a configuration with a list and a presence class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#creating-and-replacing-a-configuration">Creating and replacing a configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#creating-and-reading-a-list">Creating and reading a list</a></li>
@@ -118,6 +119,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Questions and Answers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ydk.models.ydktest.html">ydktest bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ydk.models.cisco_iosxr_demo.html">cisco_iosxr_demo bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
@@ -164,26 +166,26 @@
            <div itemprop="articleBody">
             
   <div class="section" id="how-do-i-create-update-read-and-delete">
-<span id="netconf-operations"></span><h1><a class="toc-backref" href="#id1">How do I create, update, read and delete?</a><a class="headerlink" href="#how-do-i-create-update-read-and-delete" title="Permalink to this headline">¶</a></h1>
+<span id="netconf-operations"></span><h1><a class="toc-backref" href="#toc-entry-1">How do I create, update, read and delete?</a><a class="headerlink" href="#how-do-i-create-update-read-and-delete" title="Permalink to this headline">¶</a></h1>
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#how-do-i-create-update-read-and-delete" id="id1">How do I create, update, read and delete?</a><ul>
-<li><a class="reference internal" href="#creating-a-configuration-with-a-list-and-a-presence-class" id="id2">Creating a configuration with a list and a presence class</a></li>
-<li><a class="reference internal" href="#creating-and-replacing-a-configuration" id="id3">Creating and replacing a configuration</a></li>
-<li><a class="reference internal" href="#creating-and-reading-a-list" id="id4">Creating and reading a list</a></li>
-<li><a class="reference internal" href="#reading-a-leaf" id="id5">Reading a leaf</a></li>
-<li><a class="reference internal" href="#deleting-a-list-element" id="id6">Deleting a list element</a></li>
-<li><a class="reference internal" href="#deleting-entire-list" id="id7">Deleting entire list</a></li>
-<li><a class="reference internal" href="#deleting-a-leaf" id="id8">Deleting a leaf</a></li>
-<li><a class="reference internal" href="#applying-crud-to-multiple-entities" id="id9">Applying CRUD to multiple entities</a></li>
+<li><a class="reference internal" href="#how-do-i-create-update-read-and-delete" id="toc-entry-1">How do I create, update, read and delete?</a><ul>
+<li><a class="reference internal" href="#creating-a-configuration-with-a-list-and-a-presence-class" id="toc-entry-2">Creating a configuration with a list and a presence class</a></li>
+<li><a class="reference internal" href="#creating-and-replacing-a-configuration" id="toc-entry-3">Creating and replacing a configuration</a></li>
+<li><a class="reference internal" href="#creating-and-reading-a-list" id="toc-entry-4">Creating and reading a list</a></li>
+<li><a class="reference internal" href="#reading-a-leaf" id="toc-entry-5">Reading a leaf</a></li>
+<li><a class="reference internal" href="#deleting-a-list-element" id="toc-entry-6">Deleting a list element</a></li>
+<li><a class="reference internal" href="#deleting-entire-list" id="toc-entry-7">Deleting entire list</a></li>
+<li><a class="reference internal" href="#deleting-a-leaf" id="toc-entry-8">Deleting a leaf</a></li>
+<li><a class="reference internal" href="#applying-crud-to-multiple-entities" id="toc-entry-9">Applying CRUD to multiple entities</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <p>This document contains some examples of creating, reading and deleting yang data using YDK. To perform these operations, the <a class="reference internal" href="../api/services/crud_service.html#ydk.services.CRUDService" title="ydk.services.CRUDService"><code class="xref py py-class docutils literal"><span class="pre">CRUDService</span></code></a> is used. Also, in these examples, <a class="reference internal" href="../api/filters.html#ydk.filters.YFilter" title="ydk.filters.YFilter"><code class="xref py py-class docutils literal"><span class="pre">YFilter</span></code></a> is used to mark parts of the data for particular operations.</p>
 <div class="section" id="creating-a-configuration-with-a-list-and-a-presence-class">
-<h2><a class="toc-backref" href="#id2">Creating a configuration with a list and a presence class</a><a class="headerlink" href="#creating-a-configuration-with-a-list-and-a-presence-class" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-2">Creating a configuration with a list and a presence class</a><a class="headerlink" href="#creating-a-configuration-with-a-list-and-a-presence-class" title="Permalink to this headline">¶</a></h2>
 <p>To configure a rule in the SNMP trap correlator, the below approach can be used.</p>
 <p>Note that the <code class="xref py py-class docutils literal"><span class="pre">Cisco_IOS_XR_snmp_agent_cfg.Snmp.Correlator.Rules.Rule</span></code> class is a <a class="reference internal" href="../api/types.html#ydk.types.YList" title="ydk.types.YList"><code class="xref py py-class docutils literal"><span class="pre">YList</span></code></a>. So it needs to be instantiated and appended to its parent.</p>
 <p>Also, the attribute <code class="docutils literal"><span class="pre">non_stateful</span></code> is an instance of a <a class="reference internal" href="presence_class.html#presence-class"><span class="std std-ref">presence class</span></a>, which is set to <code class="docutils literal"><span class="pre">None</span></code> by default. So it needs to be assigned to a new instance of its class.</p>
@@ -230,7 +232,7 @@
 </td></tr></table></div>
 </div>
 <div class="section" id="creating-and-replacing-a-configuration">
-<h2><a class="toc-backref" href="#id3">Creating and replacing a configuration</a><a class="headerlink" href="#creating-and-replacing-a-configuration" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-3">Creating and replacing a configuration</a><a class="headerlink" href="#creating-and-replacing-a-configuration" title="Permalink to this headline">¶</a></h2>
 <p>First, let us create a configuration for the <code class="xref py py-class docutils literal"><span class="pre">openconfig_bgp.Bgp.Global_.Config</span></code> class. Here, we set the leaf <code class="docutils literal"><span class="pre">as_</span></code>, which represents the autonomous system number, to <code class="docutils literal"><span class="pre">65001</span></code> and the leaf <code class="docutils literal"><span class="pre">router_id</span></code> to <code class="docutils literal"><span class="pre">'10.0.0.1'</span></code>.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -295,7 +297,7 @@
 </td></tr></table></div>
 </div>
 <div class="section" id="creating-and-reading-a-list">
-<h2><a class="toc-backref" href="#id4">Creating and reading a list</a><a class="headerlink" href="#creating-and-reading-a-list" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-4">Creating and reading a list</a><a class="headerlink" href="#creating-and-reading-a-list" title="Permalink to this headline">¶</a></h2>
 <p>For example, to read the instances of a deeply nested <a class="reference internal" href="../api/types.html#ydk.types.YList" title="ydk.types.YList"><code class="xref py py-class docutils literal"><span class="pre">YList</span></code></a> called <code class="xref py py-class docutils literal"><span class="pre">Cisco_IOS_XR_ip_rib_ipv4_oper.Rib.Vrfs.Vrf.Afs.Af.Safs.Saf.IpRibRouteTableNames.IpRibRouteTableName.Routes.Route</span></code>  in the <code class="docutils literal"><span class="pre">Cisco_IOS_XR_ip_rib_ipv4_oper</span></code> module using YDK&#8217;s <a class="reference internal" href="../api/services/crud_service.html#ydk.services.CRUDService" title="ydk.services.CRUDService"><code class="xref py py-class docutils literal"><span class="pre">CRUDService</span></code></a>, the below approach can be used.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -432,7 +434,7 @@
 </td></tr></table></div>
 </div>
 <div class="section" id="reading-a-leaf">
-<h2><a class="toc-backref" href="#id5">Reading a leaf</a><a class="headerlink" href="#reading-a-leaf" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-5">Reading a leaf</a><a class="headerlink" href="#reading-a-leaf" title="Permalink to this headline">¶</a></h2>
 <p>For example, to read a <a class="reference internal" href="../api/types.html#ydk.types.YLeaf" title="ydk.types.YLeaf"><code class="xref py py-class docutils literal"><span class="pre">YLeaf</span></code></a> called <code class="docutils literal"><span class="pre">running</span></code> in the <code class="xref py py-class docutils literal"><span class="pre">Cisco_IOS_XR_clns_isis_cfg.Isis.Instances.Instance</span></code> class in the <code class="docutils literal"><span class="pre">Cisco_IOS_XR_clns_isis_cfg</span></code> module using YDK&#8217;s <a class="reference internal" href="../api/services/crud_service.html#ydk.services.CRUDService" title="ydk.services.CRUDService"><code class="xref py py-class docutils literal"><span class="pre">CRUDService</span></code></a>, the below approach can be used.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -477,7 +479,7 @@
 </td></tr></table></div>
 </div>
 <div class="section" id="deleting-a-list-element">
-<h2><a class="toc-backref" href="#id6">Deleting a list element</a><a class="headerlink" href="#deleting-a-list-element" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-6">Deleting a list element</a><a class="headerlink" href="#deleting-a-list-element" title="Permalink to this headline">¶</a></h2>
 <p>For example, to delete a <a class="reference internal" href="../api/types.html#ydk.types.YList" title="ydk.types.YList"><code class="xref py py-class docutils literal"><span class="pre">YList</span></code></a> called <code class="xref py py-class docutils literal"><span class="pre">Instance</span></code> in the <code class="docutils literal"><span class="pre">Cisco_IOS_XR_clns_isis_cfg</span></code> module using YDK&#8217;s <a class="reference internal" href="../api/services/crud_service.html#ydk.services.CRUDService" title="ydk.services.CRUDService"><code class="xref py py-class docutils literal"><span class="pre">CRUDService</span></code></a>, the below approach can be used.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -522,7 +524,7 @@
 </td></tr></table></div>
 </div>
 <div class="section" id="deleting-entire-list">
-<h2><a class="toc-backref" href="#id7">Deleting entire list</a><a class="headerlink" href="#deleting-entire-list" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-7">Deleting entire list</a><a class="headerlink" href="#deleting-entire-list" title="Permalink to this headline">¶</a></h2>
 <p>In order to delete entire list, all its elements must be deleted.
 It could be done like in example above. The issue here is that user have to know all the keys of the <a class="reference internal" href="../api/types.html#ydk.types.YList" title="ydk.types.YList"><code class="xref py py-class docutils literal"><span class="pre">YList</span></code></a> elements.
 To address this issue YDK offers a shortcut, which allows user to delete all list elements in one operation.</p>
@@ -553,7 +555,7 @@ To address this issue YDK offers a shortcut, which allows user to delete all lis
 </td></tr></table></div>
 </div>
 <div class="section" id="deleting-a-leaf">
-<h2><a class="toc-backref" href="#id8">Deleting a leaf</a><a class="headerlink" href="#deleting-a-leaf" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-8">Deleting a leaf</a><a class="headerlink" href="#deleting-a-leaf" title="Permalink to this headline">¶</a></h2>
 <p>For example, to delete a <a class="reference internal" href="../api/types.html#ydk.types.YLeaf" title="ydk.types.YLeaf"><code class="xref py py-class docutils literal"><span class="pre">YLeaf</span></code></a> called <code class="docutils literal"><span class="pre">timer</span></code> of type <code class="docutils literal"><span class="pre">int</span></code> in the <code class="xref py py-class docutils literal"><span class="pre">Cdp</span></code> class in the <code class="docutils literal"><span class="pre">Cisco_IOS_XR_cdp_cfg</span></code> module using YDK&#8217;s <a class="reference internal" href="../api/services/crud_service.html#ydk.services.CRUDService" title="ydk.services.CRUDService"><code class="xref py py-class docutils literal"><span class="pre">CRUDService</span></code></a>, the below approach can be used.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -628,7 +630,7 @@ To address this issue YDK offers a shortcut, which allows user to delete all lis
 </td></tr></table></div>
 </div>
 <div class="section" id="applying-crud-to-multiple-entities">
-<h2><a class="toc-backref" href="#id9">Applying CRUD to multiple entities</a><a class="headerlink" href="#applying-crud-to-multiple-entities" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-9">Applying CRUD to multiple entities</a><a class="headerlink" href="#applying-crud-to-multiple-entities" title="Permalink to this headline">¶</a></h2>
 <p>You can apply CRUD operations on multiple entities in one CRUD service call. For example, you want to &#8216;read&#8217; BGP and Interfaces configuration together.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -722,7 +724,7 @@ To address this issue YDK offers a shortcut, which allows user to delete all lis
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.8.6.2',
+            VERSION:'0.8.6.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false

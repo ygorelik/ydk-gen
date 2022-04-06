@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gNMI Service API &mdash; YANG Development Kit 0.8.6.2 documentation</title>
+  <title>gNMI Service API &mdash; YANG Development Kit 0.8.6.3 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.6.2 documentation" href="../../index.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.6.3 documentation" href="../../index.html"/>
         <link rel="up" title="Services" href="services.html"/>
         <link rel="next" title="Service Providers" href="../providers/providers.html"/>
         <link rel="prev" title="NETCONF Service" href="netconf_service.html"/> 
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                0.8.6.2
+                0.8.6.3
               </div>
             
           
@@ -98,7 +99,7 @@
 <li class="toctree-l4"><a class="reference internal" href="crud_service.html">CRUD Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="executor_service.html">Executor Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="netconf_service.html">NETCONF Service</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="">gNMI Service API</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">gNMI Service API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#gnmi-service-examples">gNMI Service Examples</a></li>
 </ul>
 </li>
@@ -114,6 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../faq.html">Questions and Answers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ydk.models.ydktest.html">ydktest bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ydk.models.cisco_iosxr_demo.html">cisco_iosxr_demo bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
@@ -164,15 +166,15 @@
            <div itemprop="articleBody">
             
   <div class="section" id="gnmi-service-api">
-<span id="gnmi-service"></span><h1><a class="toc-backref" href="#id1">gNMI Service API</a><a class="headerlink" href="#gnmi-service-api" title="Permalink to this headline">¶</a></h1>
+<span id="gnmi-service"></span><h1><a class="toc-backref" href="#toc-entry-1">gNMI Service API</a><a class="headerlink" href="#gnmi-service-api" title="Permalink to this headline">¶</a></h1>
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#gnmi-service-api" id="id1">gNMI Service API</a></li>
-<li><a class="reference internal" href="#gnmi-service-examples" id="id2">gNMI Service Examples</a><ul>
-<li><a class="reference internal" href="#gnmi-set-example" id="id3">gNMI &#8216;set&#8217; example</a></li>
-<li><a class="reference internal" href="#gnmi-get-example" id="id4">gNMI &#8216;get&#8217; example</a></li>
-<li><a class="reference internal" href="#gnmi-subscribe-example" id="id5">gNMI &#8216;subscribe&#8217; example</a></li>
+<li><a class="reference internal" href="#gnmi-service-api" id="toc-entry-1">gNMI Service API</a></li>
+<li><a class="reference internal" href="#gnmi-service-examples" id="toc-entry-2">gNMI Service Examples</a><ul>
+<li><a class="reference internal" href="#gnmi-set-example" id="toc-entry-3">gNMI &#8216;set&#8217; example</a></li>
+<li><a class="reference internal" href="#gnmi-get-example" id="toc-entry-4">gNMI &#8216;get&#8217; example</a></li>
+<li><a class="reference internal" href="#gnmi-subscribe-example" id="toc-entry-5">gNMI &#8216;subscribe&#8217; example</a></li>
 </ul>
 </li>
 </ul>
@@ -302,7 +304,7 @@ If not specified, the response is printed to system stdout.</li>
 
 </div>
 <div class="section" id="gnmi-service-examples">
-<h1><a class="toc-backref" href="#id2">gNMI Service Examples</a><a class="headerlink" href="#gnmi-service-examples" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#toc-entry-2">gNMI Service Examples</a><a class="headerlink" href="#gnmi-service-examples" title="Permalink to this headline">¶</a></h1>
 <p>To enable YDK logging include the following code:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
 <span class="normal">2</span>
@@ -326,7 +328,7 @@ If not specified, the response is printed to system stdout.</li>
 </pre></div>
 </td></tr></table></div>
 <div class="section" id="gnmi-set-example">
-<h2><a class="toc-backref" href="#id3">gNMI &#8216;set&#8217; example</a><a class="headerlink" href="#gnmi-set-example" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-3">gNMI &#8216;set&#8217; example</a><a class="headerlink" href="#gnmi-set-example" title="Permalink to this headline">¶</a></h2>
 <p>Example of instantiating and using objects of <code class="docutils literal"><span class="pre">gNMIServiceProvider</span></code> with <code class="docutils literal"><span class="pre">gNMIService</span></code> is shown below (assuming you have <code class="docutils literal"><span class="pre">openconfig</span></code> bundle installed).</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -393,7 +395,7 @@ If not specified, the response is printed to system stdout.</li>
 </td></tr></table></div>
 </div>
 <div class="section" id="gnmi-get-example">
-<h2><a class="toc-backref" href="#id4">gNMI &#8216;get&#8217; example</a><a class="headerlink" href="#gnmi-get-example" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-4">gNMI &#8216;get&#8217; example</a><a class="headerlink" href="#gnmi-get-example" title="Permalink to this headline">¶</a></h2>
 <p>Example of instantiating and using objects of <code class="docutils literal"><span class="pre">gNMIServiceProvider</span></code> with <code class="docutils literal"><span class="pre">gNMIService</span></code> is shown below (assuming you have <code class="docutils literal"><span class="pre">openconfig</span></code> bundle installed).</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -426,7 +428,7 @@ If not specified, the response is printed to system stdout.</li>
 </td></tr></table></div>
 </div>
 <div class="section" id="gnmi-subscribe-example">
-<h2><a class="toc-backref" href="#id5">gNMI &#8216;subscribe&#8217; example</a><a class="headerlink" href="#gnmi-subscribe-example" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-5">gNMI &#8216;subscribe&#8217; example</a><a class="headerlink" href="#gnmi-subscribe-example" title="Permalink to this headline">¶</a></h2>
 <p>Example of subscribing to telemetry using <code class="docutils literal"><span class="pre">gNMIServiceProvider</span></code> with <code class="docutils literal"><span class="pre">gNMIService</span></code> is shown below (assuming you have <code class="docutils literal"><span class="pre">openconfig</span></code> bundle installed).</p>
 <p><strong>NOTE:</strong> The <code class="docutils literal"><span class="pre">gNMIService</span></code> class <strong>can be</strong> used with <code class="docutils literal"><span class="pre">multiprocessing.Pool</span></code> for the <code class="docutils literal"><span class="pre">subscribe</span></code> operation as shown below as the subcription is a long-lived connection.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
@@ -555,7 +557,7 @@ If not specified, the response is printed to system stdout.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.8.6.2',
+            VERSION:'0.8.6.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false

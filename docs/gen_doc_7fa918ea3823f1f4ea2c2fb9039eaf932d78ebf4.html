@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Dampening &mdash; YANG Development Kit 0.8.6.3 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/icon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/width.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.6.3 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> YANG Development Kit
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8.6.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="about_ydk.html">About YDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_guide.html">API Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Questions and Answers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.ydktest.html">ydktest bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.cisco_iosxr_demo.html">cisco_iosxr_demo bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ydk.models.ietf.html">ietf bundle API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">YANG Development Kit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Dampening</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dampening">
+<h1>Dampening<a class="headerlink" href="#dampening" title="Permalink to this headline">¶</a></h1>
+<p><strong>Leafs</strong></p>
+<ul class="simple">
+<li><a class="reference internal" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.args" title="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.args"><code class="xref py py-attr docutils literal"><span class="pre">args</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.half_life" title="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.half_life"><code class="xref py py-attr docutils literal"><span class="pre">half_life</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.restart_penalty" title="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.restart_penalty"><code class="xref py py-attr docutils literal"><span class="pre">restart_penalty</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.reuse_threshold" title="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.reuse_threshold"><code class="xref py py-attr docutils literal"><span class="pre">reuse_threshold</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.suppress_threshold" title="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.suppress_threshold"><code class="xref py py-attr docutils literal"><span class="pre">suppress_threshold</span></code></a></li>
+<li><a class="reference internal" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.suppress_time" title="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.suppress_time"><code class="xref py py-attr docutils literal"><span class="pre">suppress_time</span></code></a></li>
+</ul>
+<p><strong>Enum Classes</strong></p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gen_doc_ea5dc97eb37a24a45074392ea637285039d55e99.html">Args</a></li>
+</ul>
+</div>
+<dl class="class">
+<dt id="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening">
+<em class="property">class </em><code class="descclassname">InterfaceConfigurations.InterfaceConfiguration.</code><code class="descname">Dampening</code><a class="headerlink" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="api/types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal"><span class="pre">Entity</span></code></a></p>
+<p>Class Hierarchy : <a class="reference internal" href="gen_doc_85b19f1ac304aecd8a31bca93673eea7b0a14ac3.html#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations" title="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations"><code class="xref py py-class docutils literal"><span class="pre">InterfaceConfigurations</span></code></a> <a class="reference internal" href="gen_doc_4ace2498d8d2aba233705eaa92fb2dc660a77d7d.html#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration" title="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration"><code class="xref py py-class docutils literal"><span class="pre">InterfaceConfiguration</span></code></a> <a class="reference internal" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening" title="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening"><code class="xref py py-class docutils literal"><span class="pre">Dampening</span></code></a></p>
+<p>This class represents configuration data.</p>
+<p>Whether this interface&#8217;s state changes are</p>
+<p>dampened or not</p>
+<dl class="attribute">
+<dt id="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.args">
+<code class="descname">args</code><a class="headerlink" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dampening Arguments</p>
+<p><strong>type</strong>:  <a class="reference internal" href="gen_doc_ea5dc97eb37a24a45074392ea637285039d55e99.html#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.Args" title="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.Args"><code class="xref py py-class docutils literal"><span class="pre">Args</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.half_life">
+<code class="descname">half_life</code><a class="headerlink" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.half_life" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decay half life (in minutes)</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 1..45</div></blockquote>
+<p><strong>units</strong>: minute</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.reuse_threshold">
+<code class="descname">reuse_threshold</code><a class="headerlink" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.reuse_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reuse threshold</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 1..20000</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.suppress_threshold">
+<code class="descname">suppress_threshold</code><a class="headerlink" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.suppress_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress threshold</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 1..20000</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.suppress_time">
+<code class="descname">suppress_time</code><a class="headerlink" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.suppress_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Max suppress time (in minutes)</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 1..255</div></blockquote>
+<p><strong>units</strong>: minute</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.restart_penalty">
+<code class="descname">restart_penalty</code><a class="headerlink" href="#ydk.models.cisco_iosxr_demo.Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations.InterfaceConfiguration.Dampening.restart_penalty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restart penalty</p>
+<p><strong>type</strong>: int</p>
+<blockquote>
+<div><strong>range:</strong> 0..20000</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.8.6.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

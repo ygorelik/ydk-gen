@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Introduction &mdash; YANG Development Kit 0.8.6.2 documentation</title>
+  <title>Introduction &mdash; YANG Development Kit 0.8.6.3 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.6.2 documentation" href="../index.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.6.3 documentation" href="../index.html"/>
         <link rel="up" title="Developer Guide" href="../developer_guide.html"/>
         <link rel="next" title="How do I create, update, read and delete?" href="crud_guide.html"/>
         <link rel="prev" title="Developer Guide" href="../developer_guide.html"/> 
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                0.8.6.2
+                0.8.6.3
               </div>
             
           
@@ -91,7 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../about_ydk.html">About YDK</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../developer_guide.html">Developer Guide</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">Introduction</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Introduction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#writing-an-app">Writing an app</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#what-happens-underneath">What happens underneath</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#service-providers">Service providers</a></li>
@@ -123,6 +124,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Questions and Answers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ydk.models.ydktest.html">ydktest bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ydk.models.openconfig.html">openconfig bundle API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ydk.models.cisco_iosxr_demo.html">cisco_iosxr_demo bundle API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
@@ -169,24 +171,24 @@
            <div itemprop="articleBody">
             
   <div class="section" id="introduction">
-<h1><a class="toc-backref" href="#id1">Introduction</a><a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#toc-entry-1">Introduction</a><a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#introduction" id="id1">Introduction</a><ul>
-<li><a class="reference internal" href="#writing-an-app" id="id2">Writing an app</a></li>
-<li><a class="reference internal" href="#what-happens-underneath" id="id3">What happens underneath</a></li>
-<li><a class="reference internal" href="#service-providers" id="id4">Service providers</a></li>
-<li><a class="reference internal" href="#using-the-model-apis" id="id5">Using the model APIs</a></li>
-<li><a class="reference internal" href="#invoking-the-crud-service" id="id6">Invoking the CRUD Service</a></li>
-<li><a class="reference internal" href="#using-non-top-level-objects" id="id7">Using non-top level objects</a><ul>
-<li><a class="reference internal" href="#top-level-object-vs-non-top" id="id8">Top level object vs. non-top</a></li>
-<li><a class="reference internal" href="#how-to-use-non-top-level-objects" id="id9">How to use non-top level objects</a></li>
-<li><a class="reference internal" href="#limitations" id="id10">Limitations</a></li>
-<li><a class="reference internal" href="#under-the-hood" id="id11">Under the hood</a></li>
+<li><a class="reference internal" href="#introduction" id="toc-entry-1">Introduction</a><ul>
+<li><a class="reference internal" href="#writing-an-app" id="toc-entry-2">Writing an app</a></li>
+<li><a class="reference internal" href="#what-happens-underneath" id="toc-entry-3">What happens underneath</a></li>
+<li><a class="reference internal" href="#service-providers" id="toc-entry-4">Service providers</a></li>
+<li><a class="reference internal" href="#using-the-model-apis" id="toc-entry-5">Using the model APIs</a></li>
+<li><a class="reference internal" href="#invoking-the-crud-service" id="toc-entry-6">Invoking the CRUD Service</a></li>
+<li><a class="reference internal" href="#using-non-top-level-objects" id="toc-entry-7">Using non-top level objects</a><ul>
+<li><a class="reference internal" href="#top-level-object-vs-non-top" id="toc-entry-8">Top level object vs. non-top</a></li>
+<li><a class="reference internal" href="#how-to-use-non-top-level-objects" id="toc-entry-9">How to use non-top level objects</a></li>
+<li><a class="reference internal" href="#limitations" id="toc-entry-10">Limitations</a></li>
+<li><a class="reference internal" href="#under-the-hood" id="toc-entry-11">Under the hood</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#logging" id="id12">Logging</a></li>
+<li><a class="reference internal" href="#logging" id="toc-entry-12">Logging</a></li>
 </ul>
 </li>
 </ul>
@@ -201,7 +203,7 @@
 </div></blockquote>
 <p>Applications can be written using the python model API in conjunction with a service and a provider.</p>
 <div class="section" id="writing-an-app">
-<h2><a class="toc-backref" href="#id2">Writing an app</a><a class="headerlink" href="#writing-an-app" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-2">Writing an app</a><a class="headerlink" href="#writing-an-app" title="Permalink to this headline">¶</a></h2>
 <p>In this example, we set some BGP configuration using the OpenConfig model, the CRUD (Create/Read/Update/Delete) service and the NETCONF service provider. The example in this document is a simplified version of the more complete sample that is available in <code class="docutils literal"><span class="pre">samples/bgp.py</span></code>. The more complete sample can be run with the below steps:</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span><span class="o">(</span>ydk-py<span class="o">)</span>ydk-py$ <span class="nb">cd</span> core/samples
 <span class="o">(</span>ydk-py<span class="o">)</span>samples$ ./bgp.py -h
@@ -223,7 +225,7 @@ Options:
 </div>
 </div>
 <div class="section" id="what-happens-underneath">
-<h2><a class="toc-backref" href="#id3">What happens underneath</a><a class="headerlink" href="#what-happens-underneath" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-3">What happens underneath</a><a class="headerlink" href="#what-happens-underneath" title="Permalink to this headline">¶</a></h2>
 <p>YDK performs the below actions when running this application:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -236,7 +238,7 @@ Options:
 </div></blockquote>
 </div>
 <div class="section" id="service-providers">
-<h2><a class="toc-backref" href="#id4">Service providers</a><a class="headerlink" href="#service-providers" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-4">Service providers</a><a class="headerlink" href="#service-providers" title="Permalink to this headline">¶</a></h2>
 <p>The first step in any application is to create a service provider instance. In this case, the NETCONF service provider (defined in <a class="reference internal" href="../api/providers/netconf_provider.html#ydk.providers.NetconfServiceProvider" title="ydk.providers.NetconfServiceProvider"><code class="xref py py-class docutils literal"><span class="pre">NetconfServiceProvider</span></code></a>) is responsible for mapping between the CRUD service API and the underlying manageability protocol (NETCONF RPCs).</p>
 <p>We instantiate an instance of the service provider that creates a NETCONF session to the machine with address 10.0.0.1:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
@@ -256,7 +258,7 @@ Options:
 </td></tr></table></div>
 </div>
 <div class="section" id="using-the-model-apis">
-<h2><a class="toc-backref" href="#id5">Using the model APIs</a><a class="headerlink" href="#using-the-model-apis" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-5">Using the model APIs</a><a class="headerlink" href="#using-the-model-apis" title="Permalink to this headline">¶</a></h2>
 <p>After establishing the connection, we instantiate the entities and set some data. First, we import the types from the OpenConfig BGP module:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">8</span>
 <span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.openconfig</span> <span class="kn">import</span> <span class="n">openconfig_bgp</span>
@@ -295,7 +297,7 @@ Options:
 </td></tr></table></div>
 </div>
 <div class="section" id="invoking-the-crud-service">
-<h2><a class="toc-backref" href="#id6">Invoking the CRUD Service</a><a class="headerlink" href="#invoking-the-crud-service" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-6">Invoking the CRUD Service</a><a class="headerlink" href="#invoking-the-crud-service" title="Permalink to this headline">¶</a></h2>
 <p>The CRUD service provides methods to create, read, update and delete entities on a device making use of the session provided by a service provider (NETCONF in this case).  In order to use the CRUD service, we need to import the <a class="reference internal" href="../api/services/crud_service.html#ydk.services.CRUDService" title="ydk.services.CRUDService"><code class="xref py py-class docutils literal"><span class="pre">CRUDService</span></code></a> class:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">24</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.services</span> <span class="kn">import</span> <span class="n">CRUDService</span>
 </pre></div>
@@ -316,11 +318,11 @@ service provider instance and our entity (<code class="docutils literal"><span c
 <p>Note if there were any errors the above API will raise a YError exception.</p>
 </div>
 <div class="section" id="using-non-top-level-objects">
-<h2><a class="toc-backref" href="#id7">Using non-top level objects</a><a class="headerlink" href="#using-non-top-level-objects" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-7">Using non-top level objects</a><a class="headerlink" href="#using-non-top-level-objects" title="Permalink to this headline">¶</a></h2>
 <p>In the example above you noticed that we started building model from top-level object - <a class="reference internal" href="../gen_doc_742dd189500873e4672d344c5442a974b1c87694.html#ydk.models.openconfig.openconfig_bgp.Bgp" title="ydk.models.openconfig.openconfig_bgp.Bgp"><code class="xref py py-class docutils literal"><span class="pre">Bgp</span></code></a> and then built the object tree down the hierarchy.
 However in certain conditions we can build independently non-top level objects and still be able to do all the CRUD operations.</p>
 <div class="section" id="top-level-object-vs-non-top">
-<h3><a class="toc-backref" href="#id8">Top level object vs. non-top</a><a class="headerlink" href="#top-level-object-vs-non-top" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-8">Top level object vs. non-top</a><a class="headerlink" href="#top-level-object-vs-non-top" title="Permalink to this headline">¶</a></h3>
 <p>The top level object represents top-level container in the Yang model. Examples of top-level objects:</p>
 <blockquote>
 <div><ul class="simple">
@@ -341,7 +343,7 @@ Examples of non-top level objects:</p>
 </div></blockquote>
 </div>
 <div class="section" id="how-to-use-non-top-level-objects">
-<h3><a class="toc-backref" href="#id9">How to use non-top level objects</a><a class="headerlink" href="#how-to-use-non-top-level-objects" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-9">How to use non-top level objects</a><a class="headerlink" href="#how-to-use-non-top-level-objects" title="Permalink to this headline">¶</a></h3>
 <p>You should be able to work with non-top level objects similarly as with top level.
 Your program will look more simple and straight to the point.
 The above example will look now like this:</p>
@@ -382,14 +384,14 @@ The above example will look now like this:</p>
 </td></tr></table></div>
 </div>
 <div class="section" id="limitations">
-<h3><a class="toc-backref" href="#id10">Limitations</a><a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-10">Limitations</a><a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
 <p>Not all non-top level objects can be used independently. Here is the rule:</p>
 <blockquote>
 <div>When building non-top level object, we have to define all the list keys on the way up to the top level object.
 In the example above the object <cite>ipv4_afsf</cite> is a member of the list. We can use it as long as its key <cite>afi_safi_name</cite> is defined.</div></blockquote>
 </div>
 <div class="section" id="under-the-hood">
-<h3><a class="toc-backref" href="#id11">Under the hood</a><a class="headerlink" href="#under-the-hood" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-11">Under the hood</a><a class="headerlink" href="#under-the-hood" title="Permalink to this headline">¶</a></h3>
 <p>The programmability protocols like Netconf, gNMI, etc. are always working with top level model objects.
 When non-top level object is presented to <cite>CRUDService</cite> or <cite>NetconfService</cite>, the YDK creates corresponding top-level object and perform the requested operation.
 In case of read/get operation the protocol returns always top-level objects.
@@ -397,7 +399,7 @@ When specified filter is a non-top level object, the YDK traverses the response 
 </div>
 </div>
 <div class="section" id="logging">
-<span id="howto-logging"></span><h2><a class="toc-backref" href="#id12">Logging</a><a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h2>
+<span id="howto-logging"></span><h2><a class="toc-backref" href="#toc-entry-12">Logging</a><a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h2>
 <p>YDK uses common Python logging.  All modules are based on the <code class="docutils literal"><span class="pre">ydk</span></code> log. The below code snippet shows how to enable basic logging with the <code class="docutils literal"><span class="pre">INFO</span></code> level, which is useful for most <cite>users</cite> of YDK. Using the <code class="docutils literal"><span class="pre">DEBUG</span></code> level will produces a lot more detailed logs, which may be useful for <cite>developers</cite> working on YDK.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
 <span class="normal">2</span>
@@ -469,7 +471,7 @@ When specified filter is a non-top level object, the YDK traverses the response 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.8.6.2',
+            VERSION:'0.8.6.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false
