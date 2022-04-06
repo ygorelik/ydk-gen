@@ -1,7 +1,7 @@
 ### 2022-07-31 version 0.8.6.3
 
-#### Resolved non-GitHub issues
-  * IndexError on decoding empty string value in JSON payload 
+#### Resolved GitHub issues
+  * IndexError on decoding empty string value in JSON payload ([#1061](https://github.com/CiscoDevNet/ydk-gen/issues/1061))
 
 
 ### 2022-03-31 version 0.8.6.2
