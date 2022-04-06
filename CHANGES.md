@@ -6,6 +6,7 @@
 ### Resolved non-GitHub issues
   * Upgraded third party packages Sphinx (1.5.6) and wheel (0.37.1) due to documentation
 generation issues on Mac Big Sur
+  * Fixed installation script for the case, when virtual environment is not used
 
 
 ### 2022-03-31 version 0.8.6.2

@@ -136,7 +136,7 @@ function check_python_installation {
 function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
-  pip install -r requirements.txt
+  pip3 install -r requirements.txt
 }
 
 function init_go_env {
