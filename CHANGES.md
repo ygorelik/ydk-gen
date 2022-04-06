@@ -3,6 +3,10 @@
 #### Resolved GitHub issues
   * IndexError on decoding empty string value in JSON payload ([#1061](https://github.com/CiscoDevNet/ydk-gen/issues/1061))
 
+### Resolved non-GitHub issues
+  * Upgraded third party packages Sphinx (1.5.6) and wheel (0.37.1) due to documentation
+generation issues on Mac Big Sur
+
 
 ### 2022-03-31 version 0.8.6.2
 
