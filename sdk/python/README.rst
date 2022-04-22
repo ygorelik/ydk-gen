@@ -72,7 +72,7 @@ See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ 
   To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
   See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-    docker run -it ydkdev/ydk-py
+    docker run -it ydksolutions/ydk-gen:0.8.6.3
 
 
 System Requirements
@@ -81,7 +81,7 @@ System Requirements
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
 
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
- - Linux CentOS/RHEL versions 7 and 8
+ - Linux CentOS/RHEL versions 7 and 8.2
  - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
@@ -99,6 +99,8 @@ which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
 
 **NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
+
+**NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
 
 Core Installation
 =================

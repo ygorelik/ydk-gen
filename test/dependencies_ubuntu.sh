@@ -104,8 +104,8 @@ function check_install_gcc {
   if [[ $gcc_version < "4.8.1" || $major -gt 7 ]]
   then
     print_msg "Installing gcc/g++ version 7"
-    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-    sudo apt-get update -y > /dev/null
+#    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+#    sudo apt-get update -y > /dev/null
     sudo apt-get install gcc-7 g++-7 -y > /dev/null
     sudo ln -fs /usr/bin/g++-7 /usr/bin/c++
     sudo ln -fs /usr/bin/gcc-7 /usr/bin/cc

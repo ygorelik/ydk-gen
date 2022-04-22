@@ -96,7 +96,7 @@ docker run -it ydkdev/ydk-go
 
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
- - Linux CentOS/RHEL versions 7 and 8
+ - Linux CentOS/RHEL versions 7 and 8.2
  - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
@@ -127,6 +127,8 @@ In order to isolate YDK Python environment from system installation, the script 
 If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 For different location the PYTHON_VENV environment variable should be set to that location.
+
+**NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
 
 Here is simple example of core YDK installation for Go programming language:
 
