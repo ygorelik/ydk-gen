@@ -16,18 +16,19 @@
 # ------------------------------------------------------------------------
 #
 # Bash script to stop all dumb servers and clean test environment
+#
 # ------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): clean_test_env.sh: $* ${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): clean_test_env.sh: $1${NOCOLOR}"
 }
 
 function run_cmd {
-    $*
+    $@
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Command '$*' FAILED with status=$status"
+        print_msg "Command '$@' FAILED with status=$status"
         exit $status
     fi
     return $status
@@ -115,8 +116,8 @@ stop_confd
 
 if [ -d ${HOME}/.ydk ]; then
     print_msg "Deleting YDK cache in ${HOME}/.ydk"
-    rm -rf ${HOME}/.ydk/127.0.0.1
-    rm -rf ${HOME}/.ydk/localhost
+    rm -rf ${HOME}/.ydk/127.0.0.1/*
+    rm -rf ${HOME}/.ydk/localhost/*
     rm -rf ${HOME}/.ydk/common_cache
 fi
 

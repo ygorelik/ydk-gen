@@ -102,7 +102,7 @@ function install_go_core {
 }
 
 function install_go_bundle {
-    print_msg "Generating/installing go bundles"
+    print_msg "Generating/installing go bundles ydktest"
     cd $YDKGEN_HOME
     run_cmd python3 generate.py --bundle profiles/test/ydktest-cpp.json --go -i
 }

@@ -46,8 +46,8 @@ function install_protobuf {
     print_msg "Compiling protobuf and protoc"
     make > /dev/null
     print_msg "Installing protobuf and protoc"
-    sudo make install
-    sudo ldconfig
+    $sudo_cmd make install
+    $sudo_cmd ldconfig
     cd -
   fi
 }
@@ -73,8 +73,8 @@ function install_grpc {
        print_msg "Failed to compile grpc code; exiting"
        exit $status
     fi
-    sudo make install
-    sudo ldconfig
+    $sudo_cmd make install
+    $sudo_cmd ldconfig
     cd -
   fi
 }
@@ -85,6 +85,11 @@ function install_grpc {
 NOCOLOR="\033[0m"
 YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
+
+sudo_cmd=
+if [ $USER != "root" ]; then
+  sudo_cmd="sudo"
+fi
 
 curr_dir=$(pwd)
 os_info=$(cat /etc/*-release)
