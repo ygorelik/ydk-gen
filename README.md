@@ -119,8 +119,8 @@ docker run -it ydksolutions/ydk:0.9.1.1
 
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
- - Linux CentOS/RHEL versions 7 and 8
- - MacOS up to 10.14.6 (Mojave)
+ - Linux CentOS/RHEL versions 7 and 8.2
+ - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
 check [this](https://www.windowscentral.com/install-windows-subsystem-linux-windows-10) for virtual machine installation procedure.
@@ -159,6 +159,8 @@ and force the YDK to use system or customer Python installation.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 For different location the PYTHON_VENV environment variable should be set to that location.
 
+**NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
+
 Here is simple example of core YDK installation for Python programming language:
 
 ```
@@ -176,12 +178,12 @@ Full set of script capabilities could be viewed like this:
 
 ```
 ./install_ydk.sh --help
-usage: install_ydk [ {--cpp|--py|--go|--all} ] [-s gnmi] [-h] [-n] [-v] [-p path]
+usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v] [-p path]
 Options and arguments:
   --cpp                 install YDK for C++ programming language
   --go                  install YDK for Go programming language
   --py|--python         install YDK for Python programming language (default)
-  --all                 install YDK for all available programming languages
+  --all                 install YDK for all supported programming languages
   -v|--venv             create python virtual environment
   -c|--core             install YDK core packages
   -s|--service gnmi     install gNMI service package

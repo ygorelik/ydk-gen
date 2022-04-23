@@ -102,5 +102,8 @@ if [[ -z ${CPLUS_INCLUDE_PATH} ]]; then
     export CPLUS_INCLUDE_PATH=/usr/local/include
 fi
 
+export CFLAGS="${CFLAGS} -Wno-error"
+export CXXFLAGS="${CXXFLAGS} -Wno-error"
+
 install_protobuf
 install_grpc

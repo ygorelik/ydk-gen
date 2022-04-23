@@ -15,6 +15,9 @@
   * Addressed segmentation fault error when required modules are not loaded.
   * getting YCodecError when leaf value has string 'sftp://' ([#1056](https://github.com/CiscoDevNet/ydk-gen/issues/1056))
   * vrf route-target leaf stitching(bool) fails as invalid ([#1059](https://github.com/CiscoDevNet/ydk-gen/issues/1059))
+  * IndexError on decoding empty string value in JSON payload ([#1061](https://github.com/CiscoDevNet/ydk-gen/issues/1061))
+  * gNMI service installation on Centos 8.2 fails due to C++ compiler error
+([#1062](https://github.com/CiscoDevNet/ydk-gen/issues/1062))
 
 #### Bundle improvements
   * Updated cisco-ios-xr bundle (profile cisco-ios-xr_6_7_3.json) to support Cisco IOS XR 6.7.3

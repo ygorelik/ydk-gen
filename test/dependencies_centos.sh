@@ -84,12 +84,13 @@ function install_dependencies {
     run_cmd $sudo_cmd yum install epel-release -y > /dev/null
 #    run_cmd $sudo_cmd yum install https://centos7.iuscommunity.org/ius-release.rpm -y > /dev/null
     run_cmd $sudo_cmd yum install which libxml2-devel libxslt-devel libssh-devel libtool gcc-c++ -y > /dev/null
-    run_cmd $sudo_cmd yum install pcre-devel pcre-static.x86_64 glibc-static libstdc++-static -y > /dev/null
+    run_cmd $sudo_cmd yum install pcre-devel -y > /dev/null
+#    run_cmd $sudo_cmd yum install pcre-static.x86_64 glibc-static libstdc++-static -y > /dev/null
     run_cmd $sudo_cmd yum install cmake3 wget curl-devel unzip make java mlocate flex bison -y > /dev/null
     run_cmd $sudo_cmd yum install python3-devel -y > /dev/null
     $sudo_cmd yum install valgrind -y > /dev/null
     $sudo_cmd yum install rpm-build redhat-lsb redhat-lsb-core -y > /dev/null
-    $sudo_cmd yum install python3-venv -y
+#    sudo yum install python3-venv -y
     centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
     print_msg "Running Centos/RHEL version $centos_version"
     if [[ $centos_version == 8 ]]; then
@@ -97,10 +98,7 @@ function install_dependencies {
       $sudo_cmd yum config-manager --set-enabled powertools
     fi
     $sudo_cmd yum install doxygen -y
-    if [[ $centos_version < 8 ]]; then
-      # TODO: to be resolved for Centos-8
-      $sudo_cmd yum install lcov -y
-    fi
+    $sudo_cmd yum install lcov -y
 }
 
 function check_install_go {

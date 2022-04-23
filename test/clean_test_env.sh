@@ -119,6 +119,7 @@ if [ -d ${HOME}/.ydk ]; then
     print_msg "Deleting YDK cache in ${HOME}/.ydk"
     rm -rf ${HOME}/.ydk/127.0.0.1/*
     rm -rf ${HOME}/.ydk/localhost/*
+    rm -rf ${HOME}/.ydk/common_cache
 fi
 
 cd $curr_dir
