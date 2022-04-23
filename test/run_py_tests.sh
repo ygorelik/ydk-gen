@@ -215,7 +215,7 @@ function py_sanity_ydktest_test {
 
     py_sanity_ydktest_test_netconf_ssh
 
-    if [ ! [ -f /.dockerenv ] ]; then
+    if [ ! -f /.dockerenv ]; then
       py_sanity_ydktest_test_tcp	# This test fails in docker
     fi
 }

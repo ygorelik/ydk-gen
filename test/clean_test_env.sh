@@ -20,15 +20,15 @@
 # ------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): clean_test_env.sh: $1${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): clean_test_env.sh: $*${NOCOLOR}"
 }
 
 function run_cmd {
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Command '$@' FAILED with status=$status"
+        print_msg "Command '$*' FAILED with status=$status"
         exit $status
     fi
     return $status
@@ -100,10 +100,11 @@ MSG_COLOR=$YELLOW
 os_type=$(uname)
 print_msg "Running OS type: $os_type"
 
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
+
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
 curr_dir="$(pwd)"
