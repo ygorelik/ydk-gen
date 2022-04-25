@@ -61,7 +61,7 @@ In general, we try to maintain backward compatibility between the releases of th
 Check the `Backward Compatibility <https://ygorelik.github.io/ydk-gen/getting_started.html#backward-compatibility>`_ notes
 for more information.
 
-Also, we use the `ydk-gen/generate.py <https://github.com/ygorelik/ydk-gen>`_ script to generate and install the bundles.
+Also, we use the `ydk-gen/generate.py <https://github.com/CiscoDevNet/ydk-gen>`_ script to generate and install the bundles.
 This tool is available for anyone to use in order to generate the bundle version in combination with YDK core version of their choice.
 For example, the below steps will generate & install the `cisco-ios-xr 6.5.1` bundle compatible with `ydk core 0.8.6`:
 
@@ -69,7 +69,7 @@ For example, the below steps will generate & install the `cisco-ios-xr 6.5.1` bu
 
 .. code-block:: sh
 
-    git clone https://github.com/ygorelik/ydk-gen.git
+    git clone https://github.com/CiscoDevNet/ydk-gen.git
     cd ydk-gen
     ./install_ydk.sh --core
 

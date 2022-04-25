@@ -81,7 +81,8 @@ System Requirements
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
 
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
- - Linux CentOS/RHEL versions 7 and 8.2
+ - Linux CentOS versions 7 and Centos Stream 8 (Centos 8.x has been EOL as of December 31 of 2021)
+ - Linux RHEL version 7.x and 8.x
  - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
@@ -123,7 +124,7 @@ Here is simple example of core YDK installation for Python programming language:
 
 .. code-block:: sh
 
-    git clone https://github.com/ygorelik/ydk-gen.git
+    git clone https://github.com/CiscoDevNet/ydk-gen.git
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
@@ -189,7 +190,7 @@ If user platform is supported one, it is recommended to use `ydk-gen/install_ydk
 The script will also install Python virtual environment in default or specified location, when '--venv' is specified::
 
     # Clone ydk-gen from GitHub
-    git clone https://github.com/ygorelik/ydk-gen.git
+    git clone https://github.com/CiscoDevNet/ydk-gen.git
     cd ydk-gen
 
     # Define optional environment variables and install dependencies
@@ -284,7 +285,7 @@ you have to install manually the `ydk` core package first, and then the model bu
 It is recommended to use `ydk-gen/install_ydk.sh` script in order to install the core components::
 
   # Clone ydk-gen from GitHub
-  git clone https://github.com/ygorelik/ydk-gen.git
+  git clone https://github.com/CiscoDevNet/ydk-gen.git
   cd ydk-gen
 
   # Define optional environment variables and install dependencies

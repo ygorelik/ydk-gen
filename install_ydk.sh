@@ -420,6 +420,11 @@ if [[ ${os_type} == "Linux" ]]; then
     if [[ $rhel_version != 7 && $rhel_version != 8 ]]; then
         print_msg "WARNING! Unsupported Centos/RHEL version. Will try the best efforts."
     fi
+    if [[ rhel_version == 8 && ${os_info} == *"CentOS"* ]]; then
+      if [ $(echo `lsb_release -i` | awk '{ print $3 }')  != "CentOSStream" ]; then
+        print_msg "Unsupported CentOS version 8 (EOL). Will try the best efforts."
+      fi
+    fi
   else
     MSG_COLOR=${RED}
     print_msg "Unsupported Linux distribution detected"

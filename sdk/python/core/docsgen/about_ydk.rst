@@ -60,7 +60,7 @@ Version
 Version : version-id
 
 This YDK for Python documentation is generated using
-`ydk-gen/generate.py <https://github.com/ygorelik/ydk-gen/blob/master/generate.py>`_ script.
+`ydk-gen/generate.py <https://github.com/CiscoDevNet/ydk-gen/blob/master/generate.py>`_ script.
 
 To check out this version of ydk-gen use the below commands:
 
@@ -76,4 +76,4 @@ To check out this version of ydk-gen use the below commands:
 
 Release Changes
 ---------------
- - `Changelog <https://github.com/ygorelik/ydk-gen/blob/master/CHANGES.md>`_
+ - `Changelog <https://github.com/CiscoDevNet/ydk-gen/blob/master/CHANGES.md>`_
