@@ -249,7 +249,8 @@ See the <a class="reference external" href="https://docs.docker.com/engine/refer
 <blockquote>
 <div><ul class="simple">
 <li>Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)</li>
-<li>Linux CentOS/RHEL versions 7 and 8</li>
+<li>Linux CentOS versions 7 and Centos Stream 8 (Centos 8.x has been EOL as of December 31 of 2021)</li>
+<li>Linux RHEL version 7.x and 8.x</li>
 <li>MacOS up to 11.6.2 (Big Sur)</li>
 </ul>
 </div></blockquote>
@@ -280,7 +281,7 @@ If built, the user must manually activate virtual environment when generating mo
 By default the Python virtual environment is installed under <cite>$HOME/venv</cite> directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.</p>
 <p>Here is simple example of core YDK installation for Python programming language with no virtual environment:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span></span>git clone https://github.com/ygorelik/ydk-gen.git
+<div class="highlight-sh"><div class="highlight"><pre><span></span>git clone https://github.com/CiscoDevNet/ydk-gen.git
 <span class="nb">cd</span> ydk-gen
 <span class="nb">export</span> <span class="nv">YDKGEN_HOME</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>  <span class="c1"># optional</span>
 <span class="nb">export</span> <span class="nv">PYTHON_VENV</span><span class="o">=</span><span class="nv">$HOME</span>/ydk_vne  <span class="c1"># optional</span>
@@ -342,7 +343,7 @@ to pick up correct Python binaries and shared libraries.</p>
 <p>If user platform is supported one, it is recommended to use <cite>ydk-gen/install_ydk.sh</cite> script.
 The script will also install Python virtual environment in default or specified location:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span># Clone ydk-gen from GitHub
-git clone https://github.com/ygorelik/ydk-gen.git
+git clone https://github.com/CiscoDevNet/ydk-gen.git
 cd ydk-gen
 
 # Define optional environment variables and install dependencies
@@ -502,13 +503,13 @@ python3 generate.py --bundle profiles/bundles/cisco-ios-xr-6_6_3_post1.json -i
 </div>
 <div class="section" id="build-model-bundle-profile">
 <h3><a class="toc-backref" href="#toc-entry-20">Build model bundle profile</a><a class="headerlink" href="#build-model-bundle-profile" title="Permalink to this headline">¶</a></h3>
-<p>The first step in using ydk-gen is either using one of the already built <a class="reference external" href="https://github.com/ygorelik/ydk-gen/tree/master/profiles/bundles">bundle profiles</a>
+<p>The first step in using ydk-gen is either using one of the already built <a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen/tree/master/profiles/bundles">bundle profiles</a>
 or constructing your own bundle profile, consisting of the YANG models you are interested to include into the bundle.</p>
-<p>Construct a bundle profile file, such as <a class="reference external" href="https://github.com/ygorelik/ydk-gen/blob/master/profiles/bundles/cisco-ios-xr_6_5_3.json">cisco-ios-xr_6_5_3</a>
+<p>Construct a bundle profile file, such as <a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen/blob/master/profiles/bundles/cisco-ios-xr_6_5_3.json">cisco-ios-xr_6_5_3</a>
 and specify its dependencies.</p>
 <p>A sample bundle profile file is described below. The file is in a JSON format. The profile must define the &#8220;name&#8221;,
 &#8220;version&#8221; and &#8220;description&#8221; of the bundle, and then the &#8220;core_version&#8221;, which refers to
-<a class="reference external" href="https://github.com/ygorelik/ydk-gen/releases">the version</a> of the YDK core package that you want to use with this bundle.
+<a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen/releases">the version</a> of the YDK core package that you want to use with this bundle.
 The &#8220;name&#8221; of the bundle will form part of the installation path of the bundle.
 All other attributes, like &#8220;author&#8221; and &#8220;copyright&#8221;, are optional and will not affect the bundle generation:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;cisco-ios-xr&quot;</span><span class="p">,</span>
@@ -625,7 +626,7 @@ the add-on documentation generation time can be reduced. Adding cisco-ios-xr doc
 <h2><a class="toc-backref" href="#toc-entry-24">Documentation and Support</a><a class="headerlink" href="#documentation-and-support" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Pre-generated documentation for YDK-0.8.6 core and model API for IETF and OpenConfig can be found <a class="reference external" href="https://ygorelik.github.io/ydk-gen/">here</a></li>
-<li>Application samples can be found under the <a class="reference external" href="https://github.com/ygorelik/ydk-gen/tree/master/sdk/python/core/samples">samples</a> directory</li>
+<li>Application samples can be found under the <a class="reference external" href="https://github.com/CiscoDevNet/ydk-gen/tree/master/sdk/python/core/samples">samples</a> directory</li>
 <li>Hundreds of Python application samples can be found in the <a class="reference external" href="https://github.com/CiscoDevNet/ydk-py-samples">samples</a> repository</li>
 <li>Join the <a class="reference external" href="https://communities.cisco.com/community/developer/ydk">YDK community</a> to connect with YDK users and developers</li>
 </ul>
