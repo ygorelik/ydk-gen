@@ -408,7 +408,7 @@ Generate model bundle using a bundle profile and install it.
 
 ### For Python
 
-Python virtual environment must be activated prior to these procedures
+If applicable, the Python virtual environment must be activated prior to these procedures
 
 ```
 ./generate.py --python --bundle profiles/bundles/<name-of-profile>.json -i
@@ -418,7 +418,7 @@ Check Python packages installed:
 
 ```
 pip list | grep ydk
-ydk (0.8.6)
+ydk (0.8.6.3)
 ydk-models-<name-of-bundle> (0.5.1)
 ...
 ```

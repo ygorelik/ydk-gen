@@ -16,10 +16,11 @@
 # ------------------------------------------------------------------------
 #
 # Bash script to stop all dumb servers and clean test environment
+#
 # ------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): clean_test_env.sh: $* ${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): clean_test_env.sh: $*${NOCOLOR}"
 }
 
 function run_cmd {
@@ -99,10 +100,11 @@ MSG_COLOR=$YELLOW
 os_type=$(uname)
 print_msg "Running OS type: $os_type"
 
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
+
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    export YDKGEN_HOME=$(cd $script_dir/.. && pwd)
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
 curr_dir="$(pwd)"
@@ -115,8 +117,8 @@ stop_confd
 
 if [ -d ${HOME}/.ydk ]; then
     print_msg "Deleting YDK cache in ${HOME}/.ydk"
-    rm -rf ${HOME}/.ydk/127.0.0.1
-    rm -rf ${HOME}/.ydk/localhost
+    rm -rf ${HOME}/.ydk/127.0.0.1/*
+    rm -rf ${HOME}/.ydk/localhost/*
     rm -rf ${HOME}/.ydk/common_cache
 fi
 

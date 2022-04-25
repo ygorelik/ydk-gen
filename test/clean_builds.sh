@@ -30,12 +30,12 @@ NOCOLOR='\033[0m'
 YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
-if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
-    YDKGEN_HOME=$(pwd)
-    print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
-fi
+script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
 
-script_dir=$(cd $(dirname ${BASH_SOURCE}) && pwd)
+if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
+  YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
+  print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
+fi
 
 $script_dir/clean_test_env.sh
 
@@ -76,5 +76,5 @@ pip uninstall -y ydk-models-deviation
 pip uninstall -y ydk-service-gnmi
 
 print_msg "Deleting C++ packages..."
-sudo rm -rf /usr/local/lib/libydk* /usr/local/lib/libyang 
+sudo rm -rf /usr/local/lib/libydk* /usr/local/lib/libyang*
 sudo rm -rf /usr/local/include/ydk /usr/local/include/libyang /usr/local/include/libnetconf

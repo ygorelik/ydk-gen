@@ -127,7 +127,7 @@ function init_confd {
     rm -f $HOME/.ydk/127.0.0.1/*
 
     # Correct issue with confd 7.3
-    if [[ $confd_version > 7.2 ]]; then
+    if [[ $confd_version > "7.2." ]]; then
       cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
     fi
 }
@@ -600,7 +600,7 @@ function py_sanity_ydktest_test {
     fi
 
     cd $YDKGEN_HOME/sdk/python/core/
-    rm -f *.so
+    rm -rf *.so ydk/models/*
 
     print_msg "Restoring YDK core installation"
     ${PYTHON_BIN} setup.py sdist
@@ -616,7 +616,7 @@ function run_py_sanity_ydktest_tests {
 
     py_sanity_ydktest_test_netconf_ssh
 
-    if [ ! [ -f /.dockerenv ] ]; then
+    if [ ! -f /.dockerenv ]; then
       py_sanity_ydktest_test_tcp	# This test fails in docker
     fi
 
@@ -671,7 +671,7 @@ function py_sanity_deviation {
 
 function py_sanity_deviation_ydktest_test {
     print_msg "Running py_sanity_deviation_ydktest_test"
-
+    cd $YDKGEN_HOME
     run_test generate.py --bundle profiles/test/ydktest-cpp.json -i
     run_test sdk/python/core/tests/test_sanity_deviation.py
 #    run_test sdk/python/core/tests/test_sanity_deviation.py --non-demand
@@ -679,7 +679,7 @@ function py_sanity_deviation_ydktest_test {
 
 function py_sanity_deviation_bgp_test {
     print_msg "Running py_sanity_deviation_bgp_test"
-
+    cd $YDKGEN_HOME
     run_test generate.py --bundle profiles/test/deviation.json --verbose -i
     run_test sdk/python/core/tests/test_sanity_deviation_bgp.py
 #    run_test sdk/python/core/tests/test_sanity_deviation_bgp.py --non-demand
@@ -690,7 +690,7 @@ function py_sanity_deviation_bgp_test {
 #--------------------------
 function py_sanity_augmentation {
     print_msg "Running py_sanity_augmentation_test"
-
+    cd $YDKGEN_HOME
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/augmentation
     run_test generate.py --bundle profiles/test/ydktest-augmentation.json -i
     run_test sdk/python/core/tests/test_sanity_augmentation.py
@@ -732,18 +732,6 @@ function py_sanity_one_class_per_module {
     run_test generate.py --bundle profiles/test/ydktest-cpp.json -o
     init_confd_ydktest
     py_sanity_run_limited_tests
-}
-
-function run_py_backward_compatibility {
-    print_msg "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    print_msg "Running YDK-0.7.3 BUNDLE BACKWARD COMPATIBILITY TESTS"
-    cd $YDKGEN_HOME
-    CURRENT_GIT_REV=$(git rev-parse HEAD)
-    git checkout 454ffc06ec79995832538642638e03259e622b53
-    run_test generate.py --bundle profiles/test/ydktest-cpp.json
-    init_confd_ydktest
-    py_sanity_run_limited_tests
-    git checkout ${CURRENT_GIT_REV}
 }
 
 #-------------------------------------
@@ -884,6 +872,7 @@ if [[ ${os_info} != *"focal"* ]]; then
   # TODO: issue running go tests on ubuntu:focal
   # execution unexpectedly stalls.
   # The tests are passing well on platform and docker
+  # GitHub issue #1028
   init_go_env
   install_go_core
   run_go_bundle_tests
