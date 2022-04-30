@@ -98,6 +98,15 @@ For YDK installation it is recommended to use script `install_ydk.sh` from `ydk-
 The script detects platform OS, installs all the dependencies and builds complete set of YDK components for specified language.
 The user must have sudo access to these locations.
 
+If the script installs any YDK component, it also creates an environment activation file '.env' in the 'ydk-gen'
+directory, which can be used to activate YDK runtime environment identical to the installation environment.
+To activate YDK runtime environment simply run this command once in bash shell:
+
+.. code-block:: sh
+
+    cd ydk-gen
+    source .env
+
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
 By default the YDK uses Python system installation.
 In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
@@ -190,13 +199,13 @@ Installing core components
 
 Please follow this procedure to install YDK core components for Python apps development::
 
-    # Activate Python virtual environment, if applicable
-    source $PYTHON_VENV/bin/activate
+    # Activate runtime environment
+    source .env
 
     # Generate and install YDK core library
     python3 generate.py -is --core --cpp
 
-    # For Python programming language add
+    # Generate and install Python core package
     python3 generate.py -i --core
 
 
@@ -217,6 +226,9 @@ Here is simple example, how gNMI service package for Python could be added::
 
 gNMI runtime environment
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+When YDK is installed using 'install_ydk.sh' script, the runtime environment is set by running 'source .env' in bash shell.
+The below information is applicable only when YDK is installed manually, which is not recommended.
 
 There is an open issue with gRPC on Centos/RHEL, which requires an extra step before running any YDK gNMI application.
 See this issue on `GRPC GitHub <https://github.com/grpc/grpc/issues/10942#issuecomment-312565041>`_ for details.
@@ -265,31 +277,31 @@ Once you have installed the `ydk` core package, you can install one or more mode
 Those dependencies are already captured in the bundle package.  Make sure you install the desired bundles in the order below.
 To install the `ietf` bundle from `ydk-gen` execute::
 
-  # Activate Python virtual environment, if applicable, and navigate to ydk-gen directory
-  source $PYTHON_VENV/bin/activate
+  # Navigate to ydk-gen directory and activate runtime environment
   cd ydk-gen
+  source .env  # if not ran previously
 
   # Generate and install the bundle
-  python3 generate.py --bundle profiles/bundles/ietf_0_1_5_post2.json -i
+  python3 generate.py --bundle profiles/bundles/ietf_0_1_6.json -i
 
 To install the `openconfig` bundle, execute::
 
-  # Activate Python virtual environment, if applicable, and navigate to ydk-gen directory
-  source $PYTHON_VENV/bin/activate
+  # Navigate to ydk-gen directory and activate runtime environment
   cd ydk-gen
+  source .env  # if not ran previously
 
   # Generate and install the bundle
-  python3 generate.py --bundle profiles/bundles/openconfig_0_1_8.json -i
+  python3 generate.py --bundle profiles/bundles/openconfig_0_1_9.json -i
 
 
 To install the `cisco-ios-xr` bundle, execute::
 
-  # Activate Python virtual environment, if applicable, and navigate to ydk-gen directory
-  source $PYTHON_VENV/bin/activate
+  # Navigate to ydk-gen directory and activate runtime environment
   cd ydk-gen
+  source .env  # if not ran previously
 
   # Generate and install the bundle
-  python3 generate.py --bundle profiles/bundles/cisco-ios-xr-6_6_3_post1.json -i
+  python3 generate.py --bundle profiles/bundles/cisco-ios-xr-6_7_4_post1.json -i
 
 
 Generate YDK components
@@ -409,7 +421,7 @@ Generate and install model bundle
 ---------------------------------
 
 Generate model bundle using a bundle profile and install it.
-If applicable, Python virtual environment must be activated prior to these procedures::
+YDK Runtime environment must be activated prior to these procedures::
 
     python3 generate.py -i --bundle profiles/bundles/<name-of-profile>.json
 
@@ -417,7 +429,7 @@ Check Python packages installed::
 
     pip list | grep ydk
     ydk (0.8.6.3)
-    ydk-models-<name-of-bundle> (0.5.1)
+    ydk-models-<name-of-bundle> (0.1.1)
     ...
 
 Generate "adhoc" bundle
@@ -445,8 +457,8 @@ In order to generate YDK core and bundles documentation, the `--generate-doc` op
 Therefore the user should generate all the bundles without the `--generate-doc` option prior to the documentation generation.
 For example, the below sequence of commands will generate the documentation for the three python bundles and the python core::
 
-    python3 generate.py --bundle profiles/bundles/ietf_0_1_5.json
-    python3 generate.py --bundle profiles/bundles/openconfig_0_1_8.json
+    python3 generate.py --bundle profiles/bundles/ietf_0_1_6.json
+    python3 generate.py --bundle profiles/bundles/openconfig_0_1_9.json
     python3 generate.py --bundle profiles/bundles/cisco_ios_xr_6_3_1.json
     python3 generate.py --core --generate-doc
 

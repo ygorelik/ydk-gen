@@ -92,6 +92,7 @@ function check_python_installation {
     print_msg "Could not locate python3 interpretor"
     exit $status
   fi
+
   print_msg "Checking pip3 version and installation"
   pip3 -V
   status=$?
@@ -291,6 +292,66 @@ function install_ydk_go {
     fi
 }
 
+function write_env_file {
+  print_msg "Writing .env file"
+  cd ${YDKGEN_HOME}
+  rm -f .env
+  echo "# ------------------------------------------------------------------
+# This file has been auto-generated during YDK-$ydk_version installation.
+# PLEASE, DO NOT CHANGE THIS FILE MANUALLY!
+# ------------------------------------------------------------------
+# Run this command once when entering YDK-GEN environment in bash:
+#     source .env
+# ------------------------------------------------------------------
+
+YDKGEN_HOME=${YDKGEN_HOME}
+export YDKGEN_HOME
+
+export C_INCLUDE_PATH=$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH
+" > .env
+  if [ $install_venv == "yes" ]; then
+    echo "export PYTHON_VENV=$PYTHON_VENV" >> .env
+    echo "source $PYTHON_VENV/bin/activate" >> .env
+  elif [[ -n $python_location ]]; then
+    echo "PATH=$python_location/bin:$PATH
+export PATH
+alias python=$PYTHON_BIN
+alias pip=$PIP_BIN
+" >> .env
+  fi
+  if [[ -n $sudo_cmd ]]; then
+    echo "export SUDO_CMD=$sudo_cmd" >> .env
+  fi
+  if [[ $ydk_lang == "go" || $ydk_lang == "all" ]]; then
+    if [[ ${os_type} == "Linux" ]]; then
+      echo "if [ -z \$GOROOT ]; then
+    export GOROOT=$GOROOT
+    PATH=$GOROOT/bin:$PATH
+    export PATH
+fi"
+>> .env
+    fi
+    echo "
+if [ -z \$GOPATH ]; then
+    export GOPATH=$HOME/go
+fi
+export CXX=/usr/bin/c++
+export CC=/usr/bin/cc
+" >> .env
+  fi
+  if [[ $service_pkg == "gnmi" && $LD_LIBRARY_PATH != *"protobuf"* ]]; then
+    echo "export LD_LIBRARY_PATH=\$HOME/grpc/libs/opt:\$HOME/protobuf-3.5.0/src/.libs:\$LD_LIBRARY_PATH
+" >> .env
+  fi
+  if [[ -n $CMAKE_LIBRARY_PATH ]]; then
+    echo "export CMAKE_LIBRARY_PATH=$CMAKE_LIBRARY_PATH
+" >> .env
+  fi
+#  cat .env
+  cd - >& /dev/null
+}
+
 ########################## EXECUTION STARTS HERE #############################
 
 # Terminal colors
@@ -467,6 +528,8 @@ fi
 
 init_py_env
 init_go_env
+
+write_env_file
 
 install_ydk_cpp
 

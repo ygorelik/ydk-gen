@@ -113,6 +113,15 @@ For YDK installation it is recommended to use script `install_ydk.sh` from `ydk-
 The script detects platform OS, installs all the dependencies and builds complete set of YDK components for specified language.
 The user must have sudo access to these locations.
 
+If the script installs any YDK component, it also creates an environment activation file '.env' in the 'ydk-gen'
+directory, which can be used to activate YDK runtime environment identical to the installation environment.
+To activate YDK runtime environment simply run this command once in bash shell:
+
+.. code-block:: sh
+
+    cd ydk-gen
+    source .env
+
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
 By default the YDK uses Python system installation.
 In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
@@ -205,8 +214,8 @@ Installing core components
 
 Please follow this procedure to install YDK core components for Python apps development::
 
-    # If created, activate Python virtual environment
-    source $PYTHON_VENV/bin/activate
+    # Activate YDK runtime environment
+    source .env
 
     # Generate and install YDK core library
     python3 generate.py -is --core --cpp
@@ -231,6 +240,9 @@ Here is simple example, how gNMI service package for Python could be added::
 
 gNMI runtime environment
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+When YDK is installed using 'install_ydk.sh' script, the runtime environment is set by running 'source .env' in bash shell.
+The below information is applicable only when YDK is installed manually, which is not recommended.
 
 There is an open issue with gRPC on Centos/RHEL, which requires an extra step before running any YDK gNMI application.
 See this issue on `GRPC GitHub <https://github.com/grpc/grpc/issues/10942#issuecomment-312565041>`_ for details.
@@ -298,28 +310,31 @@ Once you have installed the `ydk` core package, you can install one or more mode
 Those dependencies are already captured in the bundle package.  Make sure you install the desired bundles in the order below.
 To install the `ietf` bundle from `ydk-gen` execute::
 
-  # Activate Python virtual environment and navigate to ydk-gen directory
-  source $PYTHON_VENV/bin/activate
+  # Navigate to ydk-gen directory and activate runtime environment
   cd ydk-gen
+  source .env  # if not ran previously
+
   # Generate and install the bundle
-  python3 generate.py -i --bundle profiles/bundles/ietf_0_1_5_post2.json
+  python3 generate.py -i --bundle profiles/bundles/ietf_0_1_6.json
 
 To install the `openconfig` bundle, execute::
 
   # Navigate to ydk-gen directory and activate runtime environment, if applicable
   source $PYTHON_VENV/bin/activate
   cd ydk-gen
-  # Generate and install the bundle
-  python3 generate.py -i --bundle profiles/bundles/openconfig_0_1_8.json
+  source .env  # if not ran previously
 
+  # Generate and install the bundle
+  python3 generate.py --bundle profiles/bundles/openconfig_0_1_9.json -i
 
 To install the `cisco-ios-xr` bundle, execute::
 
-  # Activate Python virtual environment and navigate to ydk-gen directory
-  source $PYTHON_VENV/bin/activate
+  # Navigate to ydk-gen directory and activate runtime environment
   cd ydk-gen
+  source .env  # if not ran previously
+
   # Generate and install the bundle
-  python3 generate.py -i --bundle profiles/bundles/cisco-ios-xr-6_6_3_post1.json
+  python3 generate.py --bundle profiles/bundles/cisco-ios-xr-6_7_4.json -i
 
 
 Documentation and Support
@@ -327,7 +342,9 @@ Documentation and Support
 
 Available resources:
 
-- Read the `API documentation <http://ydk.cisco.com/py/docs>`_ (release 0.8.3) for details on how to use the API and specific models
+..
+  - Read the `API documentation <http://ydk.cisco.com/py/docs>`_ (release 0.8.3) for details on how to use the API and specific models
+
 - Check `GitHub Pages <https://ygorelik.github.io/ydk-gen>`_ for the latest YDK release documentation
 - Find some app samples in the `samples directory <https://github.com/CiscoDevNet/ydk-py/tree/master/core/samples>`_
 - Find hundreds of additional samples in the `YDK-PY samples repository <https://github.com/CiscoDevNet/ydk-py-samples>`_

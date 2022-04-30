@@ -82,16 +82,6 @@ See the [docker documentation](https://docs.docker.com/engine/reference/run/) fo
 docker run -it ydksolutions/ydk-gen:0.8.6.3
 ```
 
-<!---
-A [docker image](https://docs.docker.com/engine/reference/run/) is automatically built with the latest ydk-go installed. This be used to run ydk-go without installing anything natively on your machine.
-
-To use the docker image, [install docker](https://docs.docker.com/install/) on your system and run the below command. See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
-
-```
-docker run -it ydkdev/ydk-go
-```
--->
-
 ## System Requirements
 
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:

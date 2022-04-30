@@ -1,5 +1,8 @@
 ### 2022-07-31 version 0.8.6.3
 
+#### New features and enhancements
+  * Added automatic build of environment setup file .env by the installation script
+
 #### Resolved GitHub issues
   * IndexError on decoding empty string value in JSON payload ([#1061](https://github.com/CiscoDevNet/ydk-gen/issues/1061))
   * gNMI service installation on Centos 8.2 fails due to C++ compiler error
