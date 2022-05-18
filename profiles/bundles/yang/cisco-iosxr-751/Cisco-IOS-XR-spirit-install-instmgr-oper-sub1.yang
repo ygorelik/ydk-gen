@@ -3,6 +3,9 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
     prefix Cisco-IOS-XR-spirit-install-instmgr-oper;
   }
 
+  import Cisco-IOS-XR-types {
+    prefix xr;
+  }
   import cisco-semver {
     prefix semver;
   }
@@ -23,13 +26,30 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
     "This submodule contains a collection of YANG definitions
      for Cisco IOS-XR spirit-install-instmgr package operational data.
      
-     Copyright (c) 2013-2019 by Cisco Systems, Inc.
+     Copyright (c) 2013-2021 by Cisco Systems, Inc.
      All rights reserved.";
 
+  revision 2021-01-08 {
+    description
+      "Deprecating ISSU show commands in Install code as the information is already provided by the ISSU infra.";
+    semver:module-version "3.1.0";
+  }
+  revision 2020-10-06 {
+    description
+      "Fixing backward compatible addition of new leafs.";
+    semver:module-version "3.0.0";
+  }
+  revision 2020-03-03 {
+    description
+      "Fixing schema-describe support.
+       2019-06-28
+        Common yang action model between lindt and eXR install.";
+    semver:module-version "2.1.0";
+  }
   revision 2019-04-05 {
     description
       "Establish semantic version baseline.";
-    semver:module-version "2.1.0";
+    semver:module-version "2.0.0";
   }
   revision 2018-11-29 {
     description
@@ -74,10 +94,93 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
       "Install request state type";
   }
 
+  typedef Inst-fp-request-status {
+    type enumeration {
+      enum "generation-up-to-date" {
+        value 0;
+        description
+          "Runtime fingerprint generation up to date.";
+      }
+      enum "generation-in-progress" {
+        value 1;
+        description
+          "Runtime fingerprint generation in progress";
+      }
+      enum "to-be-regenerated-at-apply" {
+        value 2;
+        description
+          "Runtime fingerprints will be regenerated on
+           apply";
+      }
+    }
+    description
+      "package Fingerprint request status";
+  }
+
   typedef Install-opt-string {
     type string;
     description
       "Install opt string";
+  }
+
+  grouping INST-STRING-PTR {
+    description
+      "inst string ptr";
+    leaf package {
+      type string;
+      description
+        "package";
+    }
+  }
+
+  grouping INSTMGR-SHOW-INSTALL-PREPARE {
+    description
+      "show install prepare";
+    leaf no-prepare-done {
+      type string;
+      description
+        "NoPrepareDone";
+    }
+    leaf prepared-boot-image {
+      type string;
+      description
+        "PreparedBootImage";
+    }
+    leaf prepared-boot-partition {
+      type string;
+      description
+        "PreparedBootPartition";
+    }
+    leaf restart-type {
+      type string;
+      description
+        "RestartType";
+    }
+    leaf activate-message {
+      type string;
+      description
+        "ActivateMessage";
+    }
+    leaf prepare-clean-message {
+      type string;
+      description
+        "PrepareCleanMessage";
+    }
+    leaf error-message {
+      type string;
+      description
+        "ErrorMessage";
+    }
+    list rpm {
+      description
+        "rpm";
+      uses INST-STRING-PTR;
+    }
+    list package {
+      description
+        "package";
+      uses INST-STRING-PTR;
+    }
   }
 
   grouping INST-ALL-PKG-TYPE {
@@ -176,7 +279,9 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
     leaf state {
       type Inst-req-state;
       description
-        "The state of the last user request";
+        "The state of the last user request. Added
+         telemetry event for operation state";
+      xr:event-telemetry "Subscribe Telemetry Event";
     }
     leaf timestamp {
       type string;
@@ -192,7 +297,9 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
       type Install-opt-string;
       description
         "Operation ID of the ongoing or  previous
-         completed install operation";
+         completed install operation.            Added
+         telemetry event for install operation id";
+      xr:event-telemetry "Subscribe Telemetry Event";
     }
   }
 
@@ -277,7 +384,8 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
     leaf label {
       type string;
       description
-        "Label";
+        "Added telemetry event on Label field";
+      xr:event-telemetry "Subscribe Telemetry Event";
     }
     leaf copyright-info {
       type string;
@@ -305,6 +413,26 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
       description
         "Processor";
     }
+    leaf chassis-pid {
+      type Install-opt-string;
+      description
+        "Chassis PID";
+    }
+    leaf chassis-description {
+      type Install-opt-string;
+      description
+        "Chassis Unique Device Identifier description";
+    }
+    leaf xr-host-name {
+      type Install-opt-string;
+      description
+        "Configured XR hostname";
+    }
+    leaf total-ram {
+      type uint64;
+      description
+        "Total physical memory in GB";
+    }
     list package {
       description
         "Packages";
@@ -315,6 +443,11 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
   grouping INST-TOP-LEVEL-PKG-TYPE {
     description
       "Install user-installable package type";
+    container rpm-fingerprint {
+      description
+        "RPM Fingerprint at install and run time";
+      uses INST-RPM-FINGER-PRINT;
+    }
     leaf name {
       type string;
       description
@@ -366,9 +499,24 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
       description
         "Hash of XR packages";
     }
+    leaf label {
+      type Install-opt-string;
+      description
+        "Label of image";
+    }
+    leaf rpm-fingerprint-status {
+      type Inst-fp-request-status;
+      description
+        "Package Fingerprint request status";
+    }
+    leaf rpm-fingerprint-timestamp {
+      type Install-opt-string;
+      description
+        "Package run time fingerprint collection time";
+    }
     list package {
       description
-        "Packages";
+        "Added telemetry event at packages level";
       uses INST-TOP-LEVEL-PKG-TYPE;
     }
   }
@@ -376,10 +524,80 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
   grouping INST-PACKAGES-BAG {
     description
       "Package result bag";
+    leaf rpm-fingerprint-status {
+      type Inst-fp-request-status;
+      description
+        "Package Fingerprint request status";
+    }
+    leaf rpm-fingerprint-timestamp {
+      type Install-opt-string;
+      description
+        "Package run time fingerprint collection time";
+    }
+    leaf label {
+      type Install-opt-string;
+      description
+        "Label of image";
+    }
+    leaf xr-packages-hash {
+      type Install-opt-string;
+      description
+        "Hash of XR packages in this bag";
+    }
     list package {
       description
         "Packages";
       uses INST-PKG-TYPE;
+    }
+  }
+
+  grouping INSTMGR-CALV-SHOW-INST-ACT-ROW {
+    description
+      "calvados show install active";
+    leaf error-message {
+      type string;
+      description
+        "ErrorMessage";
+    }
+    leaf location {
+      type string;
+      description
+        "Location";
+    }
+    leaf node-type {
+      type string;
+      description
+        "NodeType";
+    }
+    leaf boot-partition-name {
+      type string;
+      description
+        "BootPartitionName";
+    }
+    leaf number-of-active-packages {
+      type uint32;
+      description
+        "NumberOfActivePackages";
+    }
+    leaf active-packages {
+      type string;
+      description
+        "ActivePackages";
+    }
+  }
+
+  grouping INSTMGR-CALV-SHOW-INST-ACT {
+    description
+      "Calvados show install active info";
+    leaf label {
+      type string;
+      description
+        "Label";
+    }
+    list active-package-info {
+      description
+        "active package info";
+      uses INSTMGR-CALV-SHOW-INST-ACT-ROW;
     }
   }
 
@@ -410,6 +628,56 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
       type string;
       description
         "RestartType";
+    }
+  }
+
+  grouping INSTMGR-CALV-SHOW-INST-COMMIT-ROW {
+    description
+      "calvados show install committed";
+    leaf error-message {
+      type string;
+      description
+        "ErrorMessage";
+    }
+    leaf location {
+      type string;
+      description
+        "Location";
+    }
+    leaf node-type {
+      type string;
+      description
+        "NodeType";
+    }
+    leaf boot-partition-name {
+      type string;
+      description
+        "BootPartitionName";
+    }
+    leaf number-of-committed-packages {
+      type uint32;
+      description
+        "NumberOfCommittedPackages";
+    }
+    leaf committed-packages {
+      type string;
+      description
+        "CommittedPackages";
+    }
+  }
+
+  grouping INSTMGR-CALV-SHOW-INST-COMMIT {
+    description
+      "Calvados show install commit info";
+    leaf label {
+      type string;
+      description
+        "Label";
+    }
+    list committed-package-info {
+      description
+        "committed package info";
+      uses INSTMGR-CALV-SHOW-INST-COMMIT-ROW;
     }
   }
 
@@ -448,6 +716,51 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
     }
   }
 
+  grouping INSTMGR-SHOW-INST-SUP-ROW {
+    description
+      "show install superseded";
+    leaf error-message {
+      type string;
+      description
+        "ErrorMessage";
+    }
+    leaf location {
+      type string;
+      description
+        "Location";
+    }
+    leaf node-type {
+      type string;
+      description
+        "NodeType";
+    }
+    leaf boot-partition-name {
+      type string;
+      description
+        "BootPartitionName";
+    }
+    leaf superseded-packages {
+      type string;
+      description
+        "SupersededPackages";
+    }
+    leaf number-of-packages {
+      type uint32;
+      description
+        "NumberOfPackages";
+    }
+  }
+
+  grouping INSTMGR-SHOW-INST-SUP {
+    description
+      " show install superseded info";
+    list superseded-package-info {
+      description
+        "superseded package info";
+      uses INSTMGR-SHOW-INST-SUP-ROW;
+    }
+  }
+
   grouping INSTMGR-SHOW-VALID-LOGID {
     description
       "show valid lod ids";
@@ -478,9 +791,32 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
     }
   }
 
+  grouping INST-RPM-FINGER-PRINT {
+    description
+      "Install package fingerprint type";
+    leaf rpm-fingerprint-install-time {
+      type Install-opt-string;
+      description
+        "Package fingerprint at install time.";
+    }
+    leaf rpm-fingerprint-run-time {
+      type Install-opt-string;
+      description
+        "Package fingerprint at run time. A runtime
+         fingerprint of '0' indicates that the runtime
+         fingerprint for this package has not yet been
+         calculated.";
+    }
+  }
+
   grouping INST-PKG-TYPE {
     description
       "Install package type";
+    container rpm-fingerprint {
+      description
+        "RPM Fingerprint at install and run time";
+      uses INST-RPM-FINGER-PRINT;
+    }
     leaf name {
       type string;
       description
@@ -581,6 +917,16 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
       description
         "Superseded package info";
       uses INSTMGR-SHOW-INST-SUPERSEDED-ROW;
+    }
+  }
+
+  grouping CURRENT-INSTALL-OPERATION {
+    description
+      "Show install request info";
+    leaf curr-inst-oper {
+      type string;
+      description
+        "CurrInstOper";
     }
   }
 

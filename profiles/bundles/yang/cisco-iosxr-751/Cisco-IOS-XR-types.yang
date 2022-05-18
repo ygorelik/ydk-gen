@@ -28,6 +28,11 @@ module Cisco-IOS-XR-types {
      Copyright (c) 2013-2020 by Cisco Systems, Inc.
      All rights reserved.";
 
+  revision 2020-11-18 {
+    description
+      "Added a new type Hex-integer-8";
+    semver:module-version "2.1.0";
+  }
   revision 2019-12-03 {
     description
       "Modified string match pattern of Interface-name";
@@ -66,7 +71,7 @@ module Cisco-IOS-XR-types {
   revision 2015-05-18 {
     description
       "Updated Node-id string pattern to match also shorter ncs4k
-       node names.";
+        node names.";
   }
   revision 2015-01-19 {
     description
@@ -215,6 +220,18 @@ module Cisco-IOS-XR-types {
        Bundle-Ether9.98 or Serial0/0/0/0/3/1:1";
   }
 
+  typedef Controller-name {
+    type string {
+      pattern "[a-zA-Z0-9.:_/-]+";
+    }
+    description
+      "A controller name specifying a controller type and
+       instance.
+       Controller represents a string defining a controller
+       type and instance, e.g. dwdm0/4/0/0 or
+       GigabitEthCtrlr0/2/0/0 or T10/0/0/0";
+  }
+
   typedef Cisco-ios-xr-string {
     type string {
       pattern "[\\w\\-\\.:,_@#%$\\+=\\|;]+";
@@ -321,6 +338,15 @@ module Cisco-IOS-XR-types {
     }
     description
       "An unsigned 16-bit integer represented in
+       hexadecimal format.";
+  }
+
+  typedef Hex-integer-8 {
+    type string {
+      pattern "[0-9a-fA-F]{1,2}";
+    }
+    description
+      "An unsigned 8-bit integer represented in
        hexadecimal format.";
   }
 
@@ -759,5 +785,13 @@ module Cisco-IOS-XR-types {
     }
     description
       "EVPN 9-octet ESI value";
+  }
+
+  typedef Docker-app-id {
+    type string {
+      pattern "[a-zA-Z0-9][a-zA-Z0-9_.-]+";
+    }
+    description
+      "A Docker container name format.";
   }
 }

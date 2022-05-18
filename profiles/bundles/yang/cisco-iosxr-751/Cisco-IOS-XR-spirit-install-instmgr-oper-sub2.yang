@@ -23,13 +23,30 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub2 {
     "This submodule contains a collection of YANG definitions
      for Cisco IOS-XR spirit-install-instmgr package operational data.
      
-     Copyright (c) 2013-2019 by Cisco Systems, Inc.
+     Copyright (c) 2013-2021 by Cisco Systems, Inc.
      All rights reserved.";
 
+  revision 2021-01-08 {
+    description
+      "Deprecating ISSU show commands in Install code as the information is already provided by the ISSU infra.";
+    semver:module-version "3.1.0";
+  }
+  revision 2020-10-06 {
+    description
+      "Fixing backward compatible addition of new leafs.";
+    semver:module-version "3.0.0";
+  }
+  revision 2020-03-03 {
+    description
+      "Fixing schema-describe support.
+       2019-06-28
+        Common yang action model between lindt and eXR install.";
+    semver:module-version "2.1.0";
+  }
   revision 2019-04-05 {
     description
       "Establish semantic version baseline.";
-    semver:module-version "2.1.0";
+    semver:module-version "2.0.0";
   }
   revision 2018-11-29 {
     description
@@ -403,6 +420,7 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub2 {
     description
       "ISSU Inventory Information all nodes";
     list invinfo {
+      status deprecated;
       description
         "invinfo";
       uses ISD-INV-INFO;
@@ -414,32 +432,38 @@ submodule Cisco-IOS-XR-spirit-install-instmgr-oper-sub2 {
       "ISSU Director stage Information";
     leaf state {
       type Isd-state-et;
+      status deprecated;
       description
         "State";
     }
     leaf issu-node-cnt {
       type int32;
+      status deprecated;
       description
         "ISSU Node Count";
     }
     leaf issu-ready-node-cnt {
       type int32;
+      status deprecated;
       description
         "ISSU Ready Node Count";
     }
     leaf percentage {
       type int32;
       units "percentage";
+      status deprecated;
       description
         "Percentage";
     }
     leaf issu-status {
       type Isd-issu-status-et;
+      status deprecated;
       description
         "Abort Status";
     }
     leaf issu-error {
       type Isd-error-et;
+      status deprecated;
       description
         "ISSU Error";
     }

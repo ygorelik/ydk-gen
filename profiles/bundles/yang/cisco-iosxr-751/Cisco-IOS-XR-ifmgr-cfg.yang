@@ -31,9 +31,14 @@ module Cisco-IOS-XR-ifmgr-cfg {
          for interfaces
        interface-configurations: Configuration for all interfaces
      
-     Copyright (c) 2013-2019 by Cisco Systems, Inc.
+     Copyright (c) 2013-2020 by Cisco Systems, Inc.
      All rights reserved.";
 
+  revision 2020-10-01 {
+    description
+      "Updated path for description configuration";
+    semver:module-version "1.1.0";
+  }
   revision 2019-04-05 {
     description
       "Establish semantic version baseline.";
@@ -297,8 +302,8 @@ module Cisco-IOS-XR-ifmgr-cfg {
            the software subinterface.";
       }
       leaf bandwidth {
-        type uint32 {
-          range "0..4294967295";
+        type uint64 {
+          range "0..18446744073709551615";
         }
         units "kbit/s";
         description

@@ -9,10 +9,10 @@ module Cisco-IOS-XR-spirit-install-instmgr-oper {
     prefix semver;
   }
   include Cisco-IOS-XR-spirit-install-instmgr-oper-sub2 {
-    revision-date 2019-04-05;
+    revision-date 2021-01-08;
   }
   include Cisco-IOS-XR-spirit-install-instmgr-oper-sub1 {
-    revision-date 2019-04-05;
+    revision-date 2021-01-08;
   }
 
   organization
@@ -35,13 +35,30 @@ module Cisco-IOS-XR-spirit-install-instmgr-oper {
      for the following management objects:
        install: Install operations info
      
-     Copyright (c) 2013-2019 by Cisco Systems, Inc.
+     Copyright (c) 2013-2021 by Cisco Systems, Inc.
      All rights reserved.";
 
+  revision 2021-01-08 {
+    description
+      "Deprecating ISSU show commands in Install code as the information is already provided by the ISSU infra.";
+    semver:module-version "3.1.0";
+  }
+  revision 2020-10-06 {
+    description
+      "Fixing backward compatible addition of new leafs.";
+    semver:module-version "3.0.0";
+  }
+  revision 2020-03-03 {
+    description
+      "Fixing schema-describe support.
+       2019-06-28
+        Common yang action model between lindt and eXR install.";
+    semver:module-version "2.1.0";
+  }
   revision 2019-04-05 {
     description
       "Establish semantic version baseline.";
-    semver:module-version "2.1.0";
+    semver:module-version "2.0.0";
   }
   revision 2018-11-29 {
     description
@@ -98,15 +115,30 @@ module Cisco-IOS-XR-spirit-install-instmgr-oper {
     config false;
     description
       "Install operations info";
+    container request-str {
+      description
+        "Show current request";
+      uses CURRENT-INSTALL-OPERATION;
+    }
     container superseded {
       description
         "Show superseded packages";
       uses INSTMGR-SHOW-INST-SUPERSEDED;
     }
+    container inactives-str {
+      description
+        "Show XR inactive packages";
+      uses INSTALL-LOG;
+    }
     container valid-log-id {
       description
         "Show valid log ids for XR";
       uses INSTMGR-SHOW-VALID-LOGID;
+    }
+    container supersede-str {
+      description
+        "Show superseded packages";
+      uses INSTMGR-SHOW-INST-SUP;
     }
     container package-xr {
       description
@@ -139,15 +171,30 @@ module Cisco-IOS-XR-spirit-install-instmgr-oper {
         }
       }
     }
+    container inactives-summary-str {
+      description
+        "Show XR inactive packages";
+      uses INSTALL-LOG;
+    }
     container inactive-summary {
       description
         "Show XR inactive packages";
       uses INSTMGR-SHOW-INST-INACTIVE;
     }
+    container committed-summary-str {
+      description
+        "Show Committed packages installed";
+      uses INSTMGR-CALV-SHOW-INST-COMMIT;
+    }
     container prepare {
       description
         "Show prepared packages ready for activation";
       uses INSTMGR-YANG-SHOW-INSTALL-PREPARE;
+    }
+    container active-summary-str {
+      description
+        "Show active packages installed";
+      uses INSTMGR-CALV-SHOW-INST-ACT;
     }
     container packages {
       description
@@ -185,24 +232,37 @@ module Cisco-IOS-XR-spirit-install-instmgr-oper {
         "Show current request";
       uses INST-REQUEST-BAG;
     }
+    container supersededsummary-str {
+      description
+        "Show superseded packages";
+      uses INSTALL-LOG;
+    }
     container superseded-summary {
       description
         "Show superseded summary packages";
       uses INSTMGR-SHOW-INST-SUP-SUMMARY;
     }
     container issu {
+      status deprecated;
       description
         "ISSU operation";
       container stage {
+        status deprecated;
         description
           "Show XR install issu stage";
         uses ISD-STAGE-INFO;
       }
       container inventory {
+        status deprecated;
         description
           "Show XR install issu inventory";
         uses ISD-INV-INFO-CONTAINER;
       }
+    }
+    container committed-str {
+      description
+        "Show Committed packages installed";
+      uses INSTMGR-CALV-SHOW-INST-COMMIT;
     }
     container last-operation-log {
       description
@@ -247,6 +307,21 @@ module Cisco-IOS-XR-spirit-install-instmgr-oper {
           "Show calvados superseded packages";
         uses INST-ALL-PACKAGES-BAG;
       }
+    }
+    container version-str {
+      description
+        "Show install version";
+      uses INST-VERSION-BAG;
+    }
+    container prepare-str {
+      description
+        "Show prepared packages ready for activation";
+      uses INSTMGR-SHOW-INSTALL-PREPARE;
+    }
+    container active-str {
+      description
+        "Information about active packages";
+      uses INSTMGR-CALV-SHOW-INST-ACT;
     }
     container operation-logs {
       description
