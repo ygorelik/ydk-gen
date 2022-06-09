@@ -184,7 +184,7 @@ YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
 sudo_cmd=
-if [ $USER != "root" ]; then
+if [ $(id -u -n) != "root" ]; then
   sudo_cmd="sudo"
 fi
 

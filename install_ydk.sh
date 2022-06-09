@@ -189,7 +189,7 @@ function install_cpp_core {
     print_msg "Installing C++ core library"
     cd $YDKGEN_HOME
     local cpp_sudo_flag
-    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    if [ $(id -u -n) != "root" ]; then cpp_sudo_flag="s"; fi
     run_cmd python3 generate.py --core --cpp -i$cpp_sudo_flag
 }
 
@@ -197,7 +197,7 @@ function install_cpp_gnmi {
     print_msg "Building C++ core gnmi library"
     cd $YDKGEN_HOME
     local cpp_sudo_flag
-    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    if [ $(id -u -n) != "root" ]; then cpp_sudo_flag="s"; fi
     run_cmd python3 generate.py --service profiles/services/gnmi-0.4.0.json --cpp -i$cpp_sudo_flag
 }
 
@@ -477,12 +477,13 @@ if [[ ${os_type} == "Linux" ]]; then
         print_msg "WARNING! Unsupported Ubuntu distribution found. Will try the best efforts."
     fi
   elif [[ ${os_info} == *"fedora"* ]]; then
-    rhel_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+    rhel_version=$(echo "${os_info}" | grep -w VERSION_ID | awk -F[\"] '{print $2}')
     if [[ $rhel_version != 7 && $rhel_version != 8 ]]; then
         print_msg "WARNING! Unsupported Centos/RHEL version. Will try the best efforts."
     fi
-    if [[ rhel_version == 8 && ${os_info} == *"CentOS"* ]]; then
-      if [ $(echo `lsb_release -i` | awk '{ print $3 }')  != "CentOSStream" ]; then
+    if [[ $rhel_version == 8 && ${os_info} == *"CentOS"* ]]; then
+      os_name=$(echo "${os_info}" | grep -w NAME | awk -F[\"] '{print $2}')
+      if [[ $os_name != *"Stream" ]]; then
         print_msg "Unsupported CentOS version 8 (EOL). Will try the best efforts."
       fi
     fi
