@@ -35,7 +35,7 @@ Netconf Session
 	.. attribute:: Repo
 
 		An instance of :go:struct:`Repository<ydk/types/Repository>`. This attribute represents the repository of YANG models.
-		When not specified, the model repository path is set to `$USER/.ydk`.
+		When not specified, the model repository path is set to `$HOME/.ydk`.
 
 	.. attribute:: Address
 
