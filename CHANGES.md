@@ -18,6 +18,7 @@
   * IndexError on decoding empty string value in JSON payload ([#1061](https://github.com/CiscoDevNet/ydk-gen/issues/1061))
   * gNMI service installation on Centos 8.2 fails due to C++ compiler error
 ([#1062](https://github.com/CiscoDevNet/ydk-gen/issues/1062))
+  * The installation script fails on fresh new CentOS 7 docker container ([#1064](https://github.com/CiscoDevNet/ydk-gen/issues/1064))
 
 #### Bundle improvements
   * Updated cisco-ios-xr bundle (profile cisco-ios-xr_6_7_3.json) to support Cisco IOS XR 6.7.3

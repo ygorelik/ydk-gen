@@ -60,7 +60,10 @@ YANG Development Kit
   - [C++ requirements](#c-requirements)
   - [Directory structure](#directory-structure)
   - [Troubleshooting](#troubleshooting)
-  - [Running Unit Tests](#running-unit-tests)
+- [Running Unit Tests](#running-unit-tests)
+  - [Python](#python)
+  - [C++](#c)
+  - [Go](#go)
 - [Documentation and Support](#documentation-and-support)
 - [Release Notes](#release-notes)
 
@@ -100,8 +103,7 @@ Hence all model bundles located in [Python Package Index](https://pypi.org/searc
 
 The C++ generated model API code got significant changes, which broke backward compatibility with YDK-0.8.5 and earlier releases.
 
-**NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
-
+**NOTE.** Starting from release 0.8.6 the YDK does not support Python2 interpreter as it was deprecated.
 
 # Docker
 
@@ -119,7 +121,8 @@ docker run -it ydksolutions/ydk:0.9.1.1
 
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
- - Linux CentOS/RHEL versions 7 and 8.2
+ - Linux CentOS versions 7 and Centos Stream 8 (Centos 8.x has been EOL as of December 31 of 2021)
+ - Linux RHEL version 7.x and 8.x 
  - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
@@ -135,6 +138,7 @@ All YDK core components are based on C and C++ code. These components compiled u
 Corresponding binaries, libraries, and header files are installed in default locations,
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
+Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 # Core Installation
 
@@ -153,9 +157,9 @@ source .env
 ```
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-In order to isolate YDK Python environment from system installation, it is recommended to use Python virtual environment,
-which is created by the installation script as part of default behavior. However the user can alter the default behavior
-and force the YDK to use system or customer Python installation.
+By default the YDK uses Python system installation.
+In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
+If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 For different location the PYTHON_VENV environment variable should be set to that location.
 
@@ -425,14 +429,16 @@ YDK runtime environment must be activated prior to these procedures.
 
 ### For Python
 
+If applicable, the Python virtual environment must be activated prior to these procedures
+
 ```
-./generate.py --python --bundle profiles/bundles/<name-of-profile>.json -is
+./generate.py --python --bundle profiles/bundles/<name-of-profile>.json -i
 ```
 
 Check Python packages installed:
 
 ```
-$ pip list | grep ydk
+pip list | grep ydk
 ydk (0.9.1.1)
 ydk-models-<name-of-bundle> (0.5.1)
 ...
@@ -441,7 +447,7 @@ ydk-models-<name-of-bundle> (0.5.1)
 ### For Go
 
 ```
-./generate.py --go --bundle profiles/bundles/<name-of-profile>.json -is
+./generate.py --go --bundle profiles/bundles/<name-of-profile>.json -i
 ```
 
 ### For C++
@@ -606,8 +612,9 @@ The script will install core and bundle packages and then perform the unit tests
 
 # Documentation and Support
 
-- Read the online [YDK documentation](http://ydk.cisco.com/py/docs) (release 0.8.3) for details on how to use the YDK and API for specific models
+<!--- - Read the online [YDK documentation](http://ydk.cisco.com/py/docs) (release 0.8.3) for details on how to use the YDK and API for specific models -->
 <!--- - Check [GitHub Pages](https://ygorelik.github.io/ydk-gen/) for the latest YDK release documentation -->
+- Complete YDK documentation is available locally from the ydk-gen repository by opening web page _docs/index.html_ from any available internet browser
 - Find hundreds of sample apps in the [YDK-PY samples repository](https://github.com/CiscoDevNet/ydk-py-samples)
 - Join the [YDK community](https://communities.cisco.com/community/developer/ydk) to connect with YDK users and developers
 

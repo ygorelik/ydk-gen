@@ -146,7 +146,7 @@ function check_install_libssh {
 
 function install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $centos_version -gt 6 ]]; then
+    if [[ $centos_version -gt 7 ]]; then
       print_msg "Installing confd basic 7.3"
       unzip $curr_dir/3d_party/linux/confd-basic-7.3.linux.x86_64.zip
       cd confd-basic-7.3.linux.x86_64
@@ -184,7 +184,7 @@ YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
 sudo_cmd=
-if [ $USER != "root" ]; then
+if [ $(id -u -n) != "root" ]; then
   sudo_cmd="sudo"
 fi
 

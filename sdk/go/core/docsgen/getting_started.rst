@@ -64,8 +64,9 @@ System Requirements
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
 
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
- - Linux CentOS/RHEL versions 7 and 8
- - MacOS up to 10.14.6 (Mojave)
+ - Linux CentOS versions 7 and Centos Stream 8 (Centos 8.x has been EOL as of December 31 of 2021)
+ - Linux RHEL version 7.x and 8.x
+ - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
 check `this <https://www.windowscentral.com/install-windows-subsystem-linux-windows-10>`_ for virtual machine installation procedure.
@@ -80,6 +81,7 @@ All YDK core components are based on C and C++ code. These components compiled u
 Corresponding binaries, libraries, and header files are installed in default locations,
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
+Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 **NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
 
@@ -94,6 +96,7 @@ Installation Script
 For YDK installation it is recommended to use script `install_ydk.sh` from `ydk-gen` git repository.
 The script detects platform OS, installs all the dependencies and builds complete set of YDK components for specified language.
 The user must have sudo access to these locations.
+Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
 By default the YDK uses Python system installation.
@@ -123,7 +126,7 @@ Full set of script capabilities could be viewed like this::
       --cpp                 install YDK for C++ programming language
       --go                  install YDK for Go programming language
       --py|--python         install YDK for Python programming language (default)
-      --all                 install YDK for all available programming languages
+      --all                 install YDK for all supported programming languages
       -v|--venv             create python virtual environment
       -c|--core             install YDK core package
       -s|--service gnmi     install gNMI service package

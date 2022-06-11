@@ -158,6 +158,9 @@ function init_go_env {
         if [[ $GOPATH. == "." ]]; then
             export GOPATH=$HOME/go
         fi
+        if [[ $GOROOT. == "." ]]; then
+            export GOROOT=/usr/local/go
+        fi
         print_msg "GOROOT: $GOROOT"
         print_msg "GOPATH: $GOPATH"
     else
@@ -196,7 +199,7 @@ function install_cpp_core {
     print_msg "Installing C++ core library"
     cd $YDKGEN_HOME
     local cpp_sudo_flag
-    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    if [ $(id -u -n) != "root" ]; then cpp_sudo_flag="s"; fi
     run_cmd $PYTHON_BIN generate.py --core --cpp -i$cpp_sudo_flag
 }
 
@@ -204,7 +207,7 @@ function install_cpp_gnmi {
     print_msg "Building C++ core gnmi library"
     cd $YDKGEN_HOME
     local cpp_sudo_flag
-    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    if [ $(id -u -n) != "root" ]; then cpp_sudo_flag="s"; fi
     run_cmd $PYTHON_BIN generate.py --service profiles/services/gnmi-0.4.0.json --cpp -i$cpp_sudo_flag
 }
 
@@ -300,6 +303,7 @@ function install_ydk_go {
 }
 
 function write_env_file {
+  print_msg "Writing .env file"
   cd ${YDKGEN_HOME}
   rm -f .env
   echo "# ------------------------------------------------------------------
@@ -342,9 +346,11 @@ fi"
 if [ -z \$GOPATH ]; then
     export GOPATH=$HOME/go
 fi
+export CXX=/usr/bin/c++
+export CC=/usr/bin/cc
 " >> .env
   fi
-  if [ $service_pkg == "gnmi" ]; then
+  if [[ $service_pkg == "gnmi" && $LD_LIBRARY_PATH != *"protobuf"* ]]; then
     echo "export LD_LIBRARY_PATH=\$HOME/grpc/libs/opt:\$HOME/protobuf-3.5.0/src/.libs:\$LD_LIBRARY_PATH
 " >> .env
   fi
@@ -497,9 +503,15 @@ if [[ ${os_type} == "Linux" ]]; then
         print_msg "WARNING! Unsupported Ubuntu distribution found. Will try the best efforts."
     fi
   elif [[ ${os_info} == *"fedora"* ]]; then
-    rhel_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+    rhel_version=$(echo "${os_info}" | grep -w VERSION_ID | awk -F[\"] '{print $2}')
     if [[ $rhel_version != 7 && $rhel_version != 8 ]]; then
         print_msg "WARNING! Unsupported Centos/RHEL version. Will try the best efforts."
+    fi
+    if [[ $rhel_version == 8 && ${os_info} == *"CentOS"* ]]; then
+      os_name=$(echo "${os_info}" | grep -w NAME | awk -F[\"] '{print $2}')
+      if [[ $os_name != *"Stream" ]]; then
+        print_msg "Unsupported CentOS version 8 (EOL). Will try the best efforts."
+      fi
     fi
   else
     MSG_COLOR=${RED}
