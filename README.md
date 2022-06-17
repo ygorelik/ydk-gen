@@ -163,14 +163,14 @@ For different location the PYTHON_VENV environment variable should be set to tha
 
 **NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
 
-Here is simple example of core YDK installation for Python programming language:
+Here is simple example of core YDK installation for Python programming language and Python virtual environment:
 
 ```
 git clone https://github.com/ygorelik/ydk-gen.git
 cd ydk-gen
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
-./install_ydk.sh --core
+./install_ydk.sh --core --venv
 ```
 
 The script also allows to install individual components like dependencies, core, and service packages
@@ -195,7 +195,7 @@ Environment variables:
 YDKGEN_HOME         specifies location of ydk-gen git repository;
                     if not set, $HOME/ydk-gen is assumed
 PYTHON_VENV         specifies location of python virtual environment;
-                    if not set, /home/ygorelik/venv is assumed
+                    if not set, $HOME/venv is assumed
 GOROOT              specifies installation directory of go software;
                     if not set, /usr/local/go is assumed
 GOPATH              specifies location of go source directory;

@@ -122,14 +122,14 @@ For different location the PYTHON_VENV environment variable should be set to tha
 
 **NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
 
-Here is simple example of core YDK installation for Go programming language:
+Here is simple example of core YDK installation for Go programming language and Python virtual environment:
 
 ```
 git clone https://github.com/CiscoDevNet/ydk-gen.git
 cd ydk-gen
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
-./install_ydk.sh --go --core
+./install_ydk.sh --go --core --venv
 ```
 
 The script also allows to install individual components like dependencies, core, and service packages

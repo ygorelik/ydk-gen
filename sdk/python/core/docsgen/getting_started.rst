@@ -115,7 +115,7 @@ If built, the user must manually activate virtual environment when generating mo
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for Python programming language with no virtual environment:
+Here is simple example of core YDK installation for Python programming language with virtual environment:
 
 .. code-block:: sh
 
@@ -123,7 +123,7 @@ Here is simple example of core YDK installation for Python programming language 
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
-    ./install_ydk.sh --core
+    ./install_ydk.sh --core --venv
 
 
 The script also allows to install individual components like dependencies, core, and service packages
