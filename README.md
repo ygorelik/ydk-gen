@@ -135,7 +135,6 @@ All YDK core components are based on C and C++ code. These components compiled u
 Corresponding binaries, libraries, and header files are installed in default locations,
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
-Make sure the `sudo` package is installed on your platform.
 Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 # Core Installation
