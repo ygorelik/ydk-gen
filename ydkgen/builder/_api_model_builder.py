@@ -139,7 +139,7 @@ class ApiModelBuilder(object):
             else:
                 # check for identity_ref's
                 identity_ref_type = self.types_extractor.get_identity_ref_type_stmt(element.stmt)
-                if identity_ref_type is not None:
+                if identity_ref_type:
                     identity_stmt = identity_ref_type.i_type_spec.idbases[0]
                     identity_ref_type.i_type_spec.base = identity_stmt
                     if not hasattr(identity_stmt.i_identity, 'i_class'):

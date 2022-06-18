@@ -26,17 +26,17 @@
 # ------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date) *** dependencies_osx.sh | $@ ${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date) *** dependencies_osx.sh | $* ${NOCOLOR}"
 }
 
 function run_cmd {
     local cmd=$@
     print_msg "Running: $cmd"
-    $@
+    $*
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
-        print_msg "Exiting '$@' with status=$status"
+        print_msg "Exiting '$*' with status=$status"
         exit $status
     fi
     return $status
@@ -44,15 +44,13 @@ function run_cmd {
 
 function install_libssh {
     print_msg "Checking installation of libssh"
-    locate libssh_threads.dylib
-    local status=$?
-    if [[ ${status} == 0 ]]; then
+    if [[ -x /usr/local/lib/libssh_threads.dylib ]]; then
         return
     fi
     print_msg "Installing libssh-0.7.6"
     brew reinstall openssl
     export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
-    wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.6.tar.gz
+    run_cmd wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.6.tar.gz
     tar zxf libssh-0.7.6.tar.gz && rm -f libssh-0.7.6.tar.gz
     mkdir libssh-0.7.6/build && cd libssh-0.7.6/build
     cmake ..
@@ -62,7 +60,8 @@ function install_libssh {
 
 function install_confd {
   if [[ ! -s $HOME/confd/bin/confd ]]; then
-    if [[ $os_version < "10.00" ]]
+    if [[ $os_version < "10.14." ]]
+    then
       print_msg "Installing confd-basic-6.2"
       wget https://github.com/CiscoDevNet/ydk-gen/files/562559/confd-basic-6.2.darwin.x86_64.zip &> /dev/null
       unzip confd-basic-6.2.darwin.x86_64.zip
@@ -92,16 +91,17 @@ function install_golang {
     print_msg "The Go is not installed"
     minor=0
   fi
-  if (( $minor < 9 )); then
-    print_msg "Installing Go1.9.2"
-    bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
-    source /Users/travis/.gvm/scripts/gvm
-    print_msg "GO version before installation: $(go version)"
-    gvm install go1.4 -B
-    gvm use go1.4
-    export GOROOT_BOOTSTRAP=$GOROOT
-    gvm install go1.9.2
-    gvm use go1.9.2
+  if [ $minor -lt 9 ]; then
+    print_msg "Installing Go1.13.x"
+    brew install go@1.13
+    export GOROOT="/usr/local/opt/go@1.13"
+    sudo ln -s $GOROOT /usr/local/go
+    sudo ln -s $GOROOT/bin/go /usr/local/bin/go
+    sudo ln -s $GOROOT/libexec/src $GOROOT/src
+    sudo ln -s $GOROOT/libexec/pkg $GOROOT/pkg
+    if [[ $GOPATH. == "." ]]; then
+      export GOPATH=$HOME/go
+    fi
     print_msg "GOROOT: $GOROOT"
     print_msg "GOPATH: $GOPATH"
     print_msg "GO version: $(go version)"
@@ -117,17 +117,17 @@ function check_python_installation {
     print_msg "Python3 is not installed"
     need_installation=1
   else
-    python_version = $(echo `python3 -V` | awk '{ print $2 }')
+    python_version=$(echo `python3 -V` | awk '{ print $2 }')
     print_msg "Installed Python3 version is $python_version"
-    if [ $python_version == "3.9"* ]; then
+    if [[ $python_version == "3.9."* ]]; then
       need_installation=1
     fi
   fi
-  if [ ! -z $need_installation ]; then
+  if [[ -n $need_installation ]]; then
     print_msg "Installing python3.7"
     brew install python@3.7
-    export PATH="/usr/local/opt/python@3.7/bin:$PATH"
-    echo 'export PATH="/usr/local/opt/python@3.7/bin:$PATH"' > ~/.profile.python
+    export PATH="/usr/local/opt/python@3.7/bin":$PATH
+    echo 'export PATH=/usr/local/opt/python@3.7/bin:$PATH' > ~/.profile.python
     echo 'if [ -z $CMAKE_LIBRARY_PATH ]; then' >> ~/.profile.python
     echo '  export CMAKE_LIBRARY_PATH=/usr/local/opt/python@3.7/Frameworks/Python.framework/Versions/3.7/lib' >> ~/.profile.python
     echo 'fi' >> ~/.profile.python
@@ -151,8 +151,8 @@ MSG_COLOR=$YELLOW
 os_version=$(sw_vers | grep ProductVersion | awk '{print$2}')
 curr_dir=$(pwd)
 
-brew install curl doxygen xml2
-brew install pybind11 valgrind
+brew install curl wget xml2 cmake pkgconfig pcre
+brew install pybind11 doxygen
 
 install_libssh
 install_confd

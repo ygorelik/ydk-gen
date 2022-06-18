@@ -98,7 +98,8 @@ func main() {
 		Username: device["username"],
 		Password: device["password"],
 		Port: port,
-		Protocol: device["protocol"]}
+		Protocol: device["protocol"],
+		OnDemand: true}
 	provider.Connect()
 
 	crud := services.CrudService{}

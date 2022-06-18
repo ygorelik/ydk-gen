@@ -471,6 +471,66 @@ class SanityYang(unittest.TestCase):
 </passive>'''
         self.assertEqual(expected, xml)
 
+    def test_bool_lists(self):
+        r = Runner()
+        r.ytypes.built_in_t.bool_leaf_list.append(True)
+        r.ytypes.built_in_t.bool_leaf_list.append(False)
+
+        bool_list_elem = Runner.Ytypes.BuiltInT.BoolList()
+        bool_list_elem.bool_leaf = True
+        r.ytypes.built_in_t.bool_list.append(bool_list_elem)
+
+        xml = self.codec.encode(self.provider, r)
+        expected = '''<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+  <ytypes>
+    <built-in-t>
+      <bool-leaf-list>true</bool-leaf-list>
+      <bool-leaf-list>false</bool-leaf-list>
+      <bool-list>
+        <bool-leaf>true</bool-leaf>
+      </bool-list>
+    </built-in-t>
+  </ytypes>
+</runner>
+'''
+        self.assertEqual(expected, xml)
+
+        entity = self.codec.decode(self.provider, xml)
+        self.assertEqual(entity, r)
+
+    def test_bool_lists_json(self):
+        r = Runner()
+        r.ytypes.built_in_t.bool_leaf_list.append(True)
+        r.ytypes.built_in_t.bool_leaf_list.append(False)
+
+        bool_list_elem = Runner.Ytypes.BuiltInT.BoolList()
+        bool_list_elem.bool_leaf = True
+        r.ytypes.built_in_t.bool_list.append(bool_list_elem)
+
+        json = self.codec.encode(self.json_provider, r)
+        expected = '''{
+  "ydktest-sanity:runner": {
+    "ytypes": {
+      "built-in-t": {
+        "bool-leaf-list": [
+          true,
+          false
+        ],
+        "bool-list": [
+          {
+            "bool-leaf": true
+          }
+        ]
+      }
+    }
+  }
+}
+'''
+        self.assertEqual(expected, json)
+
+        entity = self.codec.decode(self.json_provider, json)
+        self.assertEqual(entity, r)
+
 
 if __name__ == '__main__':
     import sys

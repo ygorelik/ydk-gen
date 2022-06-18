@@ -47,13 +47,6 @@ _ERRORS = {"YError": _YError,
 }
 
 
-def _raise(exc):
-    """Suppress old exception context for Python > 3.3,
-    Use exec to avoid SyntaxError under Python 2 environment.
-    """
-    exec("raise exc from None")
-
-
 @contextlib.contextmanager
 def handle_runtime_error():
     _exc = None
@@ -77,7 +70,7 @@ def handle_runtime_error():
             _exc = _YError(msg)
     finally:
         if _exc:
-            _raise(_exc)
+            raise _exc
 
 
 @contextlib.contextmanager
@@ -90,7 +83,7 @@ def handle_type_error():
         _exc = _YModelError(str(err))
     finally:
         if _exc:
-            _raise(_exc)
+            raise _exc
 
 
 @contextlib.contextmanager

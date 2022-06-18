@@ -206,7 +206,7 @@ function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
   ${PIP_BIN} install -r requirements.txt
-  ${PIP_BIN} install $YDKGEN_HOME/3d_party/python/pyang-2.4.0.m1.tar.gz
+  ${PIP_BIN} install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
   if [[ $run_with_coverage ]] ; then
     ${PIP_BIN} install coverage
   fi
@@ -250,6 +250,9 @@ function init_go_env {
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
+    if [[ $go_version > "1.11." ]]; then
+        go env -w GO111MODULE=off
+    fi
 }
 
 ######################################################################
@@ -538,7 +541,7 @@ function py_sanity_ydktest {
     print_msg "Generating, installing and testing python ydktest bundle"
 
     py_sanity_ydktest_gen
-    if [[ $run_with_coverage && ${PYTHON_VERSION} == "2"* ]]
+    if [[ $run_with_coverage ]]
     then
         py_sanity_ydktest_test
         py_sanity_ydktest_install
@@ -598,7 +601,7 @@ function py_sanity_ydktest_test {
     fi
 
     cd $YDKGEN_HOME/sdk/python/core/
-    rm -rf *.so ydk/models
+    rm -rf *.so ydk/models/*
 
     print_msg "Restoring YDK core installation"
     ${PYTHON_BIN} setup.py sdist
@@ -614,9 +617,9 @@ function run_py_sanity_ydktest_tests {
 
     py_sanity_ydktest_test_netconf_ssh
 
-#    if [[ ${os_info} == *"xenial"* ]]; then
-#      py_sanity_ydktest_test_tcp	# This test fails in docker
-#    fi
+    if [ ! -f /.dockerenv ]; then
+      py_sanity_ydktest_test_tcp	# This test fails in docker
+    fi
 
     stop_tcp_server
 }
@@ -670,7 +673,7 @@ function py_sanity_deviation {
 function py_sanity_deviation_ydktest_test {
     print_msg "Running py_sanity_deviation_ydktest_test"
     cd $YDKGEN_HOME
-    run_test generate.py --bundle profiles/test/ydktest-cpp.json --python -i
+    run_test generate.py --bundle profiles/test/ydktest-cpp.json -i
     run_test sdk/python/core/tests/test_sanity_deviation.py
 }
 
@@ -686,7 +689,6 @@ function py_sanity_deviation_bgp_test {
 #--------------------------
 function py_sanity_augmentation {
     print_msg "Running py_sanity_augmentation_test"
-
     cd $YDKGEN_HOME
     init_confd $YDKGEN_HOME/sdk/cpp/core/tests/confd/augmentation
     run_test generate.py --bundle profiles/test/ydktest-augmentation.json -i

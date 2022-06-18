@@ -246,9 +246,9 @@ def generate_adhoc_bundle(adhoc_bundle_name, adhoc_bundle_files):
         "dependency": [
             {
                 "name": "ietf",
-                "version": "0.1.2",
-                "core_version": "0.5.5",
-                "uri": "file://profiles/bundles/ietf_0_1_2.json"
+                "version": "0.1.5",
+                "core_version": "0.8.5",
+                "uri": "file://profiles/bundles/ietf_0_1_5.json"
             }
         ]
     }

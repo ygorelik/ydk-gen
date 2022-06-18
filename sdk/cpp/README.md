@@ -40,6 +40,7 @@
 **Table of Contents**
 
 - [Overview](#overview)
+- [Backward Compatibility](#backward-compatibility)
 - [Docker](#docker)
 - [System Requirements](#system-requirements)
 - [Core Installation](#core-installation)
@@ -60,6 +61,12 @@ Currently implemented protocols are: Netconf, Restconf, OpenDaylight and gNMI.
 YDK provides CRUD and protocol specific service over above protocols.
 YDK also provides Codec service to translate API models to/from XML and JSON encoded strings.
 
+## Backward Compatibility
+
+The YDK-0.9.0 C++ code got significant changes, which broke backward compatibility with YDK-0.8.5 and earlier releases.
+
+**NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
+
 ## Docker
 
 Currently the [docker image](https://docs.docker.com/engine/reference/run/) for ydk-cpp is not been generated.
@@ -73,15 +80,16 @@ To use the docker image, [install docker](https://docs.docker.com/install/) on y
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
 
 ```
-docker run -it ydksolutions/ydk:0.9.0.1
+docker run -it ydksolutions/ydk:0.9.1.1
 ```
 
 ## System Requirements
 
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
- - Linux CentOS/RHEL versions 7 and 8
- - MacOS up to 10.14.6 (Mojave)
+ - Linux CentOS versions 7 and Centos Stream 8 (Centos 8.x has been EOL as of December 31 of 2021)
+ - Linux RHEL version 7.x and 8.x 
+ - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
 check [this](https://www.windowscentral.com/install-windows-subsystem-linux-windows-10) for virtual machine installation procedure.
@@ -96,6 +104,7 @@ All YDK core components are based on C and C++ code. These components compiled u
 Corresponding binaries, libraries, and header files are installed in default locations,
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
+Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 ## Core Installation
 
@@ -106,19 +115,22 @@ The script detects platform OS, installs all the dependencies and builds complet
 The user must have sudo access to these locations.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-In order to isolate YDK Python environment from system installation, the script builds Python virtual environment.
-The user must manually activate virtual environment when generating model bundles and/or running YDK based application.
+By default the YDK uses Python system installation.
+In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
+If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 For different location the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for Python programming language:
+**NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
+
+Here is simple example of core YDK installation for C++ programming language and Python virtual environment:
 
 ```
 git clone https://github.com/ygorelik/ydk-gen.git
 cd ydk-gen
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
-./install_ydk.sh -l cpp --core
+./install_ydk.sh --cpp --core --venv
 ```
 
 The script also allows to install individual components like dependencies, core, and service packages
@@ -127,13 +139,18 @@ Full set of script capabilities could be viewed like this:
 
 ```
 ./install_ydk.sh --help
-usage: install_ydk [-l [cpp, py, go]] [-s gnmi] [-h] [-n]
+usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v] [-p path]
 Options and arguments:
-  -l [cpp, py, go, all] installation language; if not specified Python is assumed
-                        'all' corresponds to all available languages
-  -c|--core             install YDK core package
+  --cpp                 install YDK for C++ programming language
+  --go                  install YDK for Go programming language
+  --py|--python         install YDK for Python programming language (default)
+  --all                 install YDK for all supported programming languages
+  -v|--venv             create python virtual environment
+  -c|--core             install YDK core packages
   -s|--service gnmi     install gNMI service package
   -n|--no-deps          skip installation of dependencies
+  -p|--python-dir path  set Python3 installation root directory;
+                        if not specified, system installation assumed
   -h|--help             print this help message and exit
  
 Environment variables:
@@ -156,9 +173,9 @@ CMAKE_LIBRARY_PATH  Location of Python shared libraries;
 If user environment is different from the default one (different Python installation or different
 location of libraries) then building from source method should be used.
 
-### Building from source
+## Building from source
 
-#### Environment variables
+### Environment variables
 
 In some OS configurations during YDK package installation the cmake fails to find C/C++ headers for previously installed YDK libraries.
 In this case the header location must be specified explicitly (in below commands the default location is shown):
@@ -170,10 +187,10 @@ When non-standard Python installation is used or there are multiple installation
 the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
 to pick up correct Python binaries and shared libraries.
 
-#### Installing third party dependencies
+### Installing third party dependencies
 
 If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script. 
-The script will also install Python virtual environment in default or specified location.
+The script will also install Python virtual environment in default or specified location, when '--venv' is specified.
 
 ```
 # Clone ydk-gen from GitHub
@@ -188,10 +205,10 @@ export PYTHON_VENV=$HOME/ydk_venv
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
  
-#### Installing core components
+### Installing core components
 
 ```
-# Activate Python virtual environment
+# If created, activate Python virtual environment
 source $PYTHON_VENV/bin/activate
 
 # Generate and install YDK core library
@@ -209,7 +226,7 @@ Here is simple example how gNMI service package for Python could be added:
 
 ```
 cd ydk-gen
-./install_ydk.sh -l cpp --service gnmi
+./install_ydk.sh --cpp --service gnmi
 ```
 
 ### Runtime environment
@@ -230,6 +247,6 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5
 - Join the [YDK community](https://communities.cisco.com/community/developer/ydk) to connect with YDK users and developers
 
 ## Release Notes
-The current YDK release version is 0.9.0.1.
+The current YDK release version is 0.9.1.1.
 
 YDK is licensed under the Apache 2.0 License.

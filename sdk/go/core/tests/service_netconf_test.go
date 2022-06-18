@@ -55,7 +55,8 @@ func (suite *NetconfServiceTestSuite) SetupSuite() {
 		Address:  "127.0.0.1",
 		Username: "admin",
 		Password: "admin",
-		Port:     12022}
+		Port:     12022,
+		OnDemand: true}
 	suite.Provider.Connect()
 }
 

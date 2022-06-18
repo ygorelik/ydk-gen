@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# Copyright 2016-2019 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,9 +17,7 @@
  enum_printer.py
 
  YANG model driven API, python emitter.
-
 """
-
 
 from ydkgen.api_model import Enum
 from ydkgen.common import get_module_name

@@ -16,7 +16,6 @@
 # ------------------------------------------------------------------------------
 #
 # Bash script to install YDK-CPP and run unit tests
-#
 # ------------------------------------------------------------------------------
 
 function print_msg {
@@ -85,7 +84,7 @@ function generate_install_specified_cpp_bundle {
    print_msg "Generating and installing C++ ydktest bundle $bundle_name"
    cd $YDKGEN_HOME
    sudo rm -rf ./gen-api/cpp/$bundle_name
-   run_cmd ./generate.py --bundle $bundle_profile --cpp -v
+   run_cmd python3 generate.py --bundle $bundle_profile --cpp -v
    cd gen-api/cpp/$2/build
    run_cmd make
    run_cmd sudo make install
@@ -143,7 +142,7 @@ function cpp_test_gen {
     print_msg "Running cpp_test_gen"
 
     cd $YDKGEN_HOME
-    run_cmd ./generate.py --bundle profiles/test/ydk-models-test.json --generate-tests --cpp &> /dev/null
+    run_cmd python3 generate.py --bundle profiles/test/ydk-models-test.json --generate-tests --cpp &> /dev/null
     cd gen-api/cpp/models_test-bundle/build/
     run_cmd sudo make install
 
@@ -237,29 +236,24 @@ if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
   print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
+CMAKE_BIN=cmake
 command -v cmake3
 status=$?
 if [[ ${status} == 0 ]] ; then
     CMAKE_BIN=cmake3
-else
-    CMAKE_BIN=cmake
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
+  if [[ $LD_LIBRARY_PATH != *"protobuf-3.5.0"* ]]; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64:/usr/lib64
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
-    centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+  fi
+  centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
 fi
 
 curr_dir=$(pwd)
 
 cd $YDKGEN_HOME
-
-if [[ -z ${PYTHON_VENV} ]]; then
-    export PYTHON_VENV=${HOME}/venv
-    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
-fi
-source $PYTHON_VENV/bin/activate
 
 install_test_cpp_core
 

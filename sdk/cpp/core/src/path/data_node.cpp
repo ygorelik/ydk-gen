@@ -147,8 +147,8 @@ ydk::path::DataNodeImpl::create_datanode(const std::string& path, const std::str
     populate_new_schemas_from_path(path);
 
     // Do not populate new schemas from URL value
-    if ( !(v.length() > strlen("http://") && v.substr(0, strlen("http://")) == "http://") &&
-         !(v.length() > strlen("https://") && v.substr(0, strlen("https://")) == "https://") )
+    auto url_pos = v.find("://");
+    if ( url_pos == std::string::npos || url_pos > 5 )
     {
         populate_new_schemas_from_path(v);
     }

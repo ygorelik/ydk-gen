@@ -124,7 +124,8 @@ Note if there were any errors the above API will raise an exception with the bas
 
 Logging
 ----------------------
-YDK uses the `spdlog` logging library. The logging can be enabled as follows by creating a logger called "ydk". For other options like logging the "ydk" log to a file, see the `spdlog reference <https://github.com/gabime/spdlog#usage-example>`_.
+YDK uses the `spdlog` logging library. The logging can be enabled as follows by creating a logger called "ydk".
+For other options like logging the "ydk" log to a file, see the `spdlog reference <https://github.com/gabime/spdlog#usage-example>`_.
 
 .. code-block:: c++
  :linenos:

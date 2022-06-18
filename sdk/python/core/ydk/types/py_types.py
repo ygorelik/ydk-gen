@@ -53,8 +53,8 @@ from ydk.errors.error_handler import handle_type_error as _handle_type_error
 
 
 class YLeafList(_YLeafList):
-    """ Wrapper class for YLeafList, add __repr__ and get list slice
-    functionalities.
+    """
+     Wrapper class for YLeafList, add __repr__ and get list slice functionalities.
     """
     def __init__(self, ytype, leaf_name):
         super().__init__(ytype, leaf_name)
@@ -277,14 +277,10 @@ class Entity(_Entity):
                 leaf_name_data.append(leaf.get_name_leafdata())
             elif isinstance(value, list) and len(value) > 0:
                 leaf_list = _YLeafList(YType.str, leaf.name)
-                # leaf_list = self._leafs[name]
-                # Above results in YModelError:
-                #     Duplicate leaf-list item detected:
-                #     /ydktest-sanity:runner/ytypes/built-in-t/enum-llist[.='local'] :
-                #     No resolvents found for leafref "../config/id"..
-                #     Path: /ydktest-sanity:runner/one-list/identity-list/id-ref
                 for item in value:
                     _validate_value(self._leafs[name], name, item, self._logger)
+                    if isinstance(item, bool):
+                        item = 'true' if item is True else 'false'
                     leaf_list.append(item)
                 leaf_name_data.extend(leaf_list.get_name_leafdata())
         self._logger.debug('Get name leaf data for "%s". Count: %s' % (self.yang_name, len(leaf_name_data)))

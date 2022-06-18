@@ -16,17 +16,16 @@
 # ------------------------------------------------------------------------
 #
 # Bash script to run basic YDK tests for Python
-#
 # ------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "\n${MSG_COLOR}*** $(date): python_bundle_tests.sh: $*${NOCOLOR}"
+    echo -e "\n${MSG_COLOR}*** $(date): python_bundle_tests.sh: $* ${NOCOLOR}"
 }
 
 function run_test {
     test=$*
     print_msg "Running test $test"
-    python $YDKGEN_HOME/sdk/python/core/tests/$test
+    python3 $YDKGEN_HOME/sdk/python/core/tests/$test
     local status=$?
     if [ $status -ne 0 ]; then
         MSG_COLOR=$RED
@@ -61,25 +60,18 @@ if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
   print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
 fi
 
-if [[ -z ${PYTHON_VENV} ]]; then
-    export PYTHON_VENV=${HOME}/venv
-    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
-fi
-source $PYTHON_VENV/bin/activate
-
 reset_yang_repository
 
 print_msg "Installing test bundles"
 cd $YDKGEN_HOME
-python generate.py --python --bundle profiles/test/ydktest-cpp.json -i
-python generate.py --python --bundle profiles/test/ydktest-yang11.json -i
+python3 generate.py --python --bundle profiles/test/ydktest-cpp.json -i
+python3 generate.py --python --bundle profiles/test/ydktest-yang11.json -i
 cd -
 
 $script_dir/init_test_env.sh
 
 run_test test_ydk_types.py
 run_test test_sanity_codec.py
-run_test test_sanity_yang11.py
 run_test test_netconf_operations.py
 run_test test_opendaylight.py
 run_test test_restconf_provider.py
@@ -99,3 +91,4 @@ run_test test_non_top_operations.py
 run_test test_sanity_yang11.py
 
 $script_dir/clean_test_env.sh
+

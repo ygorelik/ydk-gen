@@ -1,3 +1,33 @@
+
+### 2021-12-30 version 0.9.1.1
+
+#### New features and enhancements
+  * Create go wrapper for NetconfSession and other path APIs ([#779](https://github.com/CiscoDevNet/ydk-gen/issues/779))
+  * Upgraded pyang to modified version 2.5.0.m1
+  * Added SSL support for NetconfServiceProvider in Go
+  * Improved installation script to allow use Python system installation
+  * Allow custom Python installation in YDK installation script
+
+#### Resolved GitHub issues
+  * Go function EntityEqual result depends on parameters order ([#1053](https://github.com/CiscoDevNet/ydk-gen/issues/1053))
+  * Fixed Python 3.5 code compatibility issue for Ubuntu:xenial
+  * install_ydk.sh tries to create a new venv ([#1034](https://github.com/CiscoDevNet/ydk-gen/issues/1034))
+  * Addressed segmentation fault error when required modules are not loaded.
+  * getting YCodecError when leaf value has string 'sftp://' ([#1056](https://github.com/CiscoDevNet/ydk-gen/issues/1056))
+  * vrf route-target leaf stitching(bool) fails as invalid ([#1059](https://github.com/CiscoDevNet/ydk-gen/issues/1059))
+  * IndexError on decoding empty string value in JSON payload ([#1061](https://github.com/CiscoDevNet/ydk-gen/issues/1061))
+  * gNMI service installation on Centos 8.2 fails due to C++ compiler error
+([#1062](https://github.com/CiscoDevNet/ydk-gen/issues/1062))
+  * The installation script fails on fresh new CentOS 7 docker container ([#1064](https://github.com/CiscoDevNet/ydk-gen/issues/1064))
+
+#### Bundle improvements
+  * Updated cisco-ios-xr bundle (profile cisco-ios-xr_6_7_3.json) to support Cisco IOS XR 6.7.3
+  * Updated openconfig bundle (profile openconfig_0_1_9.json) to support YANG models of revision "2020-05-06"
+  * Updated ietf bundle (profile ietf_0_1_6.json) to support YANG models of revision "2018-02-14"
+  * Added bundle profiles to support Cisco IOS XR 7.0.1 and 7.0.2
+  * Refactored older bundle profiles
+
+
 ### 2021-05-30 version 0.9.0.1
 
 #### New features and enhancements
@@ -14,6 +44,7 @@
   * Changed memory output for empty leaf value in JSON format to null ([libyang](https://github.com/ygorelik/libyang/commit/0ddde82b52e159f4da50fad0de416c27f3b655e3))
   * Added parsing of 'null' value in JSON payload ([libyang](https://github.com/ygorelik/libyang/commit/82398238cf05bd47baf08f8ded0c7c9e42399a0c))
   * Fixed few memory leaks in C++ code.
+
 
 ### 2021-05-30 version 0.8.5.2
 

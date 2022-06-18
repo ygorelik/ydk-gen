@@ -40,14 +40,16 @@ fi
 $script_dir/clean_test_env.sh
 
 print_msg "Deleting all './build/*' content"
-rm -rf $YDKGEN_HOME/sdk/cpp/tests/build
-rm -rf $YDKGEN_HOME/sdk/cpp/core/build
-rm -rf $YDKGEN_HOME/sdk/cpp/gnmi/tests/build
-rm -rf $YDKGEN_HOME/sdk/cpp/gnmi/samples/build
-rm -rf $YDKGEN_HOME/sdk/cpp/gnmi/build
-rm -rf $YDKGEN_HOME/gen-api/cpp/ydk/build
-rm -rf $YDKGEN_HOME/gen-api/cpp/ydktest-bundle/build
-rm -rf $YDKGEN_HOME/test/gnmi_server/build
+rm -rf $YDKGEN_HOME/sdk/cpp/tests/build/*
+rm -rf $YDKGEN_HOME/sdk/cpp/core/build/*
+rm -rf $YDKGEN_HOME/sdk/cpp/gnmi/tests/build/*
+rm -rf $YDKGEN_HOME/sdk/cpp/gnmi/samples/build/*
+rm -rf $YDKGEN_HOME/sdk/cpp/gnmi/build/*
+rm -rf $YDKGEN_HOME/gen-api/cpp/ydk/build/*
+rm -rf $YDKGEN_HOME/gen-api/cpp/ydktest-bundle/build/*
+rm -rf $YDKGEN_HOME/scripts/community/cpp/build/*
+rm -rf $YDKGEN_HOME/scripts/community/Debug/cpp/build/*
+rm -rf $YDKGEN_HOME/test/gnmi_server/build/*
 
 rm -f coverage.txt coverage.info
 

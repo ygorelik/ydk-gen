@@ -30,14 +30,16 @@ function print_msg {
 }
 
 function install_protobuf {
-  if [[ ! -d protobuf-3.5.0 ]]; then
+  if [[ ! -d $HOME/protobuf-3.5.0 ]]; then
     print_msg "Downloading protobuf and protoc"
+    cd $HOME
     wget https://github.com/google/protobuf/releases/download/v3.5.0/protobuf-cpp-3.5.0.zip > /dev/null
     unzip protobuf-cpp-3.5.0.zip > /dev/null
     rm -f protobuf-cpp-3.5.0.zip
+    cd $curr_dir
   fi
   if [[ ! -x /usr/local/lib/libprotoc.dylib ]]; then
-    cd protobuf-3.5.0
+    cd $HOME/protobuf-3.5.0
     print_msg "Configuring protobuf and protoc"
     ./configure > /dev/null
     print_msg "Compiling protobuf and protoc"
@@ -49,16 +51,17 @@ function install_protobuf {
 }
 
 function install_grpc {
-  if [[ ! -d grpc ]]; then
+  if [[ ! -d $HOME/grpc ]]; then
     print_msg "Installing grpc"
     #LIBTOOL=glibtool LIBTOOLIZE=glibtoolize make
+    cd $HOME
     git clone -b v1.9.1 https://github.com/grpc/grpc
-    cd grpc
+    cd $HOME/grpc
     git submodule update --init
-    cd -
+    cd $curr_dir
   fi
   if [[ ! -x /usr/local/lib/libgrpc.a ]]; then
-    cd grpc
+    cd $HOME/grpc
     make > /dev/null
     sudo make install
     cd $curr_dir

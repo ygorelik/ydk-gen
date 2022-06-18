@@ -108,7 +108,8 @@ PYBIND11_MODULE(ydk_gnmi_, ydk_gnmi)
     class_<ydk::path::Session>(path, "Session", module_local())
         .def("get_root_schema", &ydk::path::Session::get_root_schema, return_value_policy::reference)
         .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::Session::*)(ydk::path::Rpc& rpc) const) &ydk::path::Session::invoke, return_value_policy::reference)
-        .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::Session::*)(ydk::path::DataNode& rpc) const) &ydk::path::Session::invoke, return_value_policy::reference);
+        .def("invoke", (std::shared_ptr<ydk::path::DataNode> (ydk::path::Session::*)(ydk::path::DataNode& rpc) const) &ydk::path::Session::invoke, return_value_policy::reference)
+        .def("get_capabilities", (std::vector<std::string> (ydk::path::Session::*)() const) &ydk::path::Session::get_capabilities, return_value_policy::reference);
 
     class_<ydk::path::gNMISession, ydk::path::Session>(path, "gNMISession")
         .def(init<ydk::path::Repository&, const std::string&, int, const std::string&, const std::string&, const std::string&, const std::string&>(),

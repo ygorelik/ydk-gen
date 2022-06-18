@@ -16,7 +16,6 @@
 # ------------------------------------------------------------------------------
 #
 # Bash script to install YDK-GO packages and run unit tests
-#
 # ------------------------------------------------------------------------------
 
 function print_msg {
@@ -24,7 +23,7 @@ function print_msg {
 }
 
 function run_cmd {
-    print_msg "Running $*"
+    print_msg "Running: $*"
     $*
     local status=$?
     if [ $status -ne 0 ]; then
@@ -63,6 +62,9 @@ function init_go_env {
     print_msg "CC: ${CC}"
     print_msg "CXX: ${CXX}"
 
+    go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
+    print_msg "Current Go version is $go_version"
+
     if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
       print_msg "Installing 'testify' package"
       run_cmd go get github.com/stretchr/testify
@@ -73,6 +75,9 @@ function init_go_env {
 
     export CGO_ENABLED=1
     export CGO_LDFLAGS_ALLOW="-fprofile-arcs|-ftest-coverage|--coverage"
+    if [[ $go_version > "1.11." ]]; then
+        go env -w GO111MODULE=off
+    fi
 }
 
 function install_go_core {
@@ -86,12 +91,14 @@ function install_go_core {
 function install_go_bundle {
     print_msg "Generating/installing go bundles"
     cd $YDKGEN_HOME
-    run_cmd ./generate.py --bundle profiles/test/ydktest-cpp.json --go -i
-    run_cmd ./generate.py --bundle profiles/test/ydktest-yang11.json --go -i
+    run_cmd python3 generate.py --bundle profiles/test/ydktest-cpp.json --go -i
+    run_cmd python3 generate.py --bundle profiles/test/ydktest-yang11.json --go -i
 }
 
 function run_go_bundle_tests {
     run_cmd $script_dir/init_test_env.sh
+
+    reset_yang_repository
 
     run_go_samples
     run_go_sanity_tests
@@ -142,7 +149,7 @@ function install_go_gnmi {
     print_msg "Installing Go gNMI package"
     cd $YDKGEN_HOME
 
-    run_cmd python ./generate.py --service profiles/services/gnmi-0.4.0.json --go -i
+    run_cmd python3 generate.py --service profiles/services/gnmi-0.4.0.json --go -i
 }
 
 function run_go_gnmi_tests {
@@ -193,9 +200,9 @@ MSG_COLOR=$YELLOW
 
 os_type=$(uname)
 if [[ ${os_type} == "Linux" ]] ; then
-    os_info=$(cat /etc/*-release)
+  os_info=$(cat /etc/*-release)
 else
-    os_info=$(sw_vers)
+  os_info=$(sw_vers)
 fi
 print_msg "Running OS type: $os_type"
 print_msg "OS info: $os_info"
@@ -208,34 +215,27 @@ if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
+  if [[ $LD_LIBRARY_PATH != *"protobuf-3.5.0"* ]]; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64:/usr/lib64
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
-    centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+  fi
+  centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
 fi
 
-which cmake3
+CMAKE_BIN=cmake
+command -v cmake3
 status=$?
 if [[ ${status} == 0 ]] ; then
     CMAKE_BIN=cmake3
-else
-    CMAKE_BIN=cmake
 fi
 
 curr_dir="$(pwd)"
 
 cd $YDKGEN_HOME
 
-if [[ -z ${PYTHON_VENV} ]]; then
-    export PYTHON_VENV=${HOME}/venv
-    print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
-fi
-source $PYTHON_VENV/bin/activate
-
 init_go_env
 install_go_core
 install_go_bundle
-
-reset_yang_repository
 
 run_go_bundle_tests
 

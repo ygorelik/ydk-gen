@@ -7,6 +7,7 @@
   * XmlSubtreeCodec and JsonSubtreeCodec fail decode empty type of data ([#1046](https://github.com/CiscoDevNet/ydk-gen/issues/1046))
   * Failed to get "ietf-netconf" module with Executor Service and get-schema RPC ([#1047](https://github.com/CiscoDevNet/ydk-gen/issues/1047))
   * The Executor Service fails to return module content back to user ([#1048](https://github.com/CiscoDevNet/ydk-gen/issues/1048))
+  * vrf route-target leaf stitching(bool) fails as invalid ([#1059](https://github.com/CiscoDevNet/ydk-gen/issues/1059))
 
 #### Other resolved issues and enhancements
   * YANG-1.1 feature, union can include type leafrer, is not implemented properly ([pyang #724](https://github.com/mbj4668/pyang/issues/724))
