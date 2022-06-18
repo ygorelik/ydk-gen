@@ -117,7 +117,6 @@ Installation Script
 For YDK installation it is recommended to use script `install_ydk.sh` from `ydk-gen` git repository.
 The script detects platform OS, installs all the dependencies and builds complete set of YDK components for specified language.
 The user must have sudo access to these locations.
-Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 If the script installs any YDK component, it also creates an environment activation file '.env' in the 'ydk-gen'
 directory, which can be used to activate YDK runtime environment identical to the installation environment.
@@ -135,7 +134,7 @@ If built, the user must manually activate virtual environment when generating mo
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for Python programming language:
+Here is simple example of core YDK installation for Python programming language and Python virtual environment:
 
 .. code-block:: sh
 
@@ -143,7 +142,7 @@ Here is simple example of core YDK installation for Python programming language:
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
-    ./install_ydk.sh --core
+    ./install_ydk.sh --core --venv
 
 
 The script also allows to install individual components like dependencies, core, and service packages

@@ -21,7 +21,7 @@ Version
 -------
 Version : version-id
 
-This ydk-go is generated using `ydk-gen <https://github.com/CiscoDevNet/ydk-gen>`_.
+This ydk-go is generated using `ydk-gen <https://gitlab.com/yangorelik/ydk-gen>`_.
 
 To check out the version of ydk-gen used to generate this ydk-go, use the below commands:
 
@@ -32,4 +32,4 @@ To check out the version of ydk-gen used to generate this ydk-go, use the below 
 
 Changelog
 ----------
- - `Changelog <https://github.com/CiscoDevNet/ydk-go/blob/master/CHANGES.md>`_
+ - `Changelog <https://gitlab.com/yangorelik/ydk-gen/blob/master/CHANGES.md>`_

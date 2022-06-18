@@ -34,10 +34,9 @@ How do I use the Path API?
 
 .. contents:: Table of Contents
 
-The :ref:`Path API<path-api-guide>` (part of the `YDK core <https://github.com/CiscoDevNet/ydk-py/tree/master/core>`_)
-is a generic API which can be used to create and access YANG data nodes without having to use the model bundle APIs
-(for example, `openconfig <https://github.com/CiscoDevNet/ydk-py/tree/master/openconfig>`_). Applications can be written
-using xpath-like path expressions as illustrated below.
+The :ref:`Path API<path-api-guide>` (part of the `YDK core <https://gitlab.com/yangorelik/ydk-gen/tree/master/sdk/go/core>`_)
+is a generic API which can be used to create and access YANG data nodes without having to use the model bundle APIs.
+Applications can be written using xpath-like expressions as illustrated below.
 
 
 Path Syntax

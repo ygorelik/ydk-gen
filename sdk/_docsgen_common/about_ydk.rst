@@ -60,7 +60,7 @@ Version
 Current YDK version: version-id
 
 ..
-    This ydk-language-version is generated using `ydk-gen <https://github.com/CiscoDevNet/ydk-gen>`_.
+    This ydk-language-version is generated using `ydk-gen <https://gitlab.com/yangorelik/ydk-gen>`_.
 
     To check out the version of ydk-gen used to generate this ydk-language-version, use the below commands:
 
@@ -73,4 +73,4 @@ Current YDK version: version-id
 
     Changelog
     ----------
-     - `Changelog <https://github.com/CiscoDevNet/ydk-language-version/blob/master/CHANGES.md>`_
+     - `Changelog <https://gitlab.com/yangorelik/ydk-language-version/blob/master/CHANGES.md>`_

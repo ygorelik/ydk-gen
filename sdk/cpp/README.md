@@ -113,7 +113,6 @@ Make sure the `sudo` package is installed on your platform prior to the YDK inst
 For YDK installation it is recommended to use script `install_ydk.sh` from `ydk-gen` git repository.
 The script detects platform OS, installs all the dependencies and builds complete set of YDK components for specified language.
 The user must have sudo access to these locations.
-Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
 By default the YDK uses Python system installation.
@@ -124,14 +123,14 @@ For different location the PYTHON_VENV environment variable should be set to tha
 
 **NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
 
-Here is simple example of core YDK installation for C++ programming language:
+Here is simple example of core YDK installation for C++ programming language and Python virtual environment:
 
 ```
 git clone https://github.com/ygorelik/ydk-gen.git
 cd ydk-gen
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
-./install_ydk.sh --cpp --core
+./install_ydk.sh --cpp --core --venv
 ```
 
 The script also allows to install individual components like dependencies, core, and service packages

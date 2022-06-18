@@ -33,7 +33,8 @@ Please join the `YDK community <https://communities.cisco.com/community/develope
 How do I report a bug?
 ----------------------
 
-Please use the `YDK-Gen GitHub issue tracker <https://github.com/CiscoDevNet/ydk-gen/issues>`_ to report any bugs you discovered. Please use the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ for any questions.
+Please use the `YDK-Gen GitHub issue tracker <https://github.com/CiscoDevNet/ydk-gen/issues>`_ to report any bugs you discovered.
+Please use the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ for any questions.
 
 How do I contribute?
 --------------------
@@ -80,8 +81,8 @@ Also, the pypi pages provide some information about this under the “Requires D
 
     .. code-block:: sh
 
-        git clone https://github.com/CiscoDevNet/ydk-gen.git
-        git checkout tags/0.8.5 -b 0.8.5
+        git clone https://gitlab.com/yangorelik/ydk-gen.git -b yang11
+        git checkout tags/0.9.1.1 -b 0.9.1.1
         cd ydk-gen
         pip install -r requirements.txt
         ./generate --core --python
