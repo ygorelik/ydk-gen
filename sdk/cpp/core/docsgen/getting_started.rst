@@ -107,7 +107,7 @@ Here is simple example of core YDK installation for C++ programming language and
 
 .. code-block:: sh
 
-    git clone https://gitlab.com/yangorelik/ydk-gen.git -b yang11
+    git clone https://gitlab.com/yangorelik/ydk-gen.git
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
@@ -175,7 +175,7 @@ Installing third party dependencies
 If user platform is supported one, it is recommended to use `ydk-gen/install_ydk.sh` script.
 
     # Clone ydk-gen from GitHub
-    git clone https://gitlab.com/yangorelik/ydk-gen.git -b yang11
+    git clone https://gitlab.com/yangorelik/ydk-gen.git
     cd ydk-gen
 
     # Define optional environment variables and install dependencies

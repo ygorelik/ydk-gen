@@ -108,7 +108,7 @@ Here is simple example of core YDK installation for Go programming language and 
 
 .. code-block:: sh
 
-    git clone https://gitlab.com/yangorelik/ydk-gen.git -b yang11
+    git clone https://gitlab.com/yangorelik/ydk-gen.git
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
@@ -176,7 +176,7 @@ If user platform is supported one, it is recommended to use `ydk-gen/install_ydk
 The script will also install Python virtual environment in default or specified location, when '--venv' is specified::
 
     # Clone ydk-gen from GitHub
-    git clone https://gitlab.com/yangorelik/ydk-gen.git -b yang11
+    git clone https://gitlab.com/yangorelik/ydk-gen.git
     cd ydk-gen
 
     # Define optional environment variables and install dependencies
