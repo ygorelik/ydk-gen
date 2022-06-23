@@ -14,6 +14,8 @@
 generation issues on Mac Big Sur
   * Fixed installation script for the case, when virtual environment is not used
 
+#### Documentation improvements
+  * Fixed documentation issue [#1066](https://github.com/CiscoDevNet/ydk-gen/issues/1066)
 
 ### 2022-03-31 version 0.8.6.2
 
