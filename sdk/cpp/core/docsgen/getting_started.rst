@@ -178,7 +178,7 @@ If user platform is supported one, it is recommended to use `ydk-gen/install_ydk
     # Define optional environment variables and install dependencies
     export YDKGEN_HOME=`pwd`
     export PYTHON_VENV=$HOME/ydk_venv
-    ./install_ydk.sh
+    ./install_ydk.sh --venv
 
 For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dependencies-*` scripts.
 
