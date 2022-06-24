@@ -8,6 +8,7 @@
   * gNMI service installation on Centos 8.2 fails due to C++ compiler error
 ([#1062](https://github.com/CiscoDevNet/ydk-gen/issues/1062))
   * The installation script fails on fresh new CentOS 7 docker container ([#1064](https://github.com/CiscoDevNet/ydk-gen/issues/1064))
+  * ExecutorService fails on non-ietf RPC with Libyang error ([#1067](https://github.com/CiscoDevNet/ydk-gen/issues/1067))
 
 ### Resolved non-GitHub issues
   * Upgraded third party packages Sphinx (1.5.6) and wheel (0.37.1) due to documentation
