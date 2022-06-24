@@ -42,6 +42,7 @@ void get_entity_from_data_node(path::DataNode * node, std::shared_ptr<Entity> en
 
 YFilter get_data_node_yfilter(path::DataNode * node);
 
+void populate_name_values(path::DataNode & data_node, EntityPath & path);
 void walk_children(Entity & entity, path::DataNode & data_node);
 }
 #endif /* _WALKER_HPP_ */

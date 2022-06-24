@@ -60,8 +60,10 @@ shared_ptr<Entity> ExecutorService::execute_rpc(
 
     // Handle input
     auto input = rpc_entity.get_child_by_name("input", "");
-    if (input != nullptr && (input->has_operation() || input->has_data() || input->is_presence_container))
+    if (input)
     {
+        EntityPath input_path = get_entity_path(*input, input->parent);
+        populate_name_values(rpc_input, input_path);
         walk_children(*input, rpc_input);
     }
 

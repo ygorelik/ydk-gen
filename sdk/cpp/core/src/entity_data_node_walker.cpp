@@ -41,7 +41,6 @@ using namespace std;
 namespace ydk
 {
 static void populate_data_node(Entity & entity, path::DataNode & data_node);
-static void populate_name_values(path::DataNode & parent_data_node, EntityPath & path);
 static bool data_node_is_leaf(path::DataNode & data_node);
 static bool data_node_is_list(path::DataNode & data_node);
 static string get_segment_path(const string & path);
@@ -125,7 +124,7 @@ static void populate_data_node(Entity & entity, path::DataNode & parent_data_nod
     walk_children(entity, *data_node);
 }
 
-static void populate_name_values(path::DataNode & data_node, EntityPath & path)
+void populate_name_values(path::DataNode & data_node, EntityPath & path)
 {
     YLOG_DEBUG("Leaf count: {}", path.value_paths.size());
     for(const pair<string, LeafData> & name_value : path.value_paths)
