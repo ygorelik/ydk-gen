@@ -53,13 +53,13 @@ function usage {
     echo " "
     echo "Environment variables:"
     echo "YDKGEN_HOME         specifies location of ydk-gen git repository;"
-    echo "                    if not set, $HOME/ydk-gen is assumed"
+    echo "                    if not set, \$HOME/ydk-gen is assumed"
     echo "PYTHON_VENV         specifies location of python virtual environment;"
-    echo "                    if not set, $HOME/venv is assumed"
+    echo "                    if not set, \$HOME/venv is assumed"
     echo "GOROOT              specifies installation directory of go software;"
     echo "                    if not set, /usr/local/go is assumed"
     echo "GOPATH              specifies location of golang directory;"
-    echo "                    if not set, $HOME/go is assumed"
+    echo "                    if not set, \$HOME/go is assumed"
     echo "C_INCLUDE_PATH      location of C include files;"
     echo "                    if not set, /usr/local/include is assumed"
     echo "CPLUS_INCLUDE_PATH  location of C++ include files;"
@@ -92,6 +92,7 @@ function check_python_installation {
     print_msg "Could not locate python3 interpretor"
     exit $status
   fi
+
   print_msg "Checking pip3 version and installation"
   pip3 -V
   status=$?
@@ -136,7 +137,7 @@ function check_python_installation {
 function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
-  pip install -r requirements.txt
+  pip3 install -r requirements.txt
 }
 
 function init_go_env {
@@ -188,7 +189,7 @@ function install_cpp_core {
     print_msg "Installing C++ core library"
     cd $YDKGEN_HOME
     local cpp_sudo_flag
-    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    if [ $(id -u -n) != "root" ]; then cpp_sudo_flag="s"; fi
     run_cmd python3 generate.py --core --cpp -i$cpp_sudo_flag
 }
 
@@ -196,7 +197,7 @@ function install_cpp_gnmi {
     print_msg "Building C++ core gnmi library"
     cd $YDKGEN_HOME
     local cpp_sudo_flag
-    if [ $USER != "root" ]; then cpp_sudo_flag="s"; fi
+    if [ $(id -u -n) != "root" ]; then cpp_sudo_flag="s"; fi
     run_cmd python3 generate.py --service profiles/services/gnmi-0.4.0.json --cpp -i$cpp_sudo_flag
 }
 
@@ -289,6 +290,66 @@ function install_ydk_go {
             install_go_gnmi
         fi
     fi
+}
+
+function write_env_file {
+  print_msg "Writing .env file"
+  cd ${YDKGEN_HOME}
+  rm -f .env
+  echo "# ------------------------------------------------------------------
+# This file has been auto-generated during YDK-$ydk_version installation.
+# PLEASE, DO NOT CHANGE THIS FILE MANUALLY!
+# ------------------------------------------------------------------
+# Run this command once when entering YDK-GEN environment in bash:
+#     source .env
+# ------------------------------------------------------------------
+
+YDKGEN_HOME=${YDKGEN_HOME}
+export YDKGEN_HOME
+
+export C_INCLUDE_PATH=$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH
+" > .env
+  if [ $install_venv == "yes" ]; then
+    echo "export PYTHON_VENV=$PYTHON_VENV" >> .env
+    echo "source $PYTHON_VENV/bin/activate" >> .env
+  elif [[ -n $python_location ]]; then
+    echo "PATH=$python_location/bin:$PATH
+export PATH
+alias python=$PYTHON_BIN
+alias pip=$PIP_BIN
+" >> .env
+  fi
+  if [[ -n $sudo_cmd ]]; then
+    echo "export SUDO_CMD=$sudo_cmd" >> .env
+  fi
+  if [[ $ydk_lang == "go" || $ydk_lang == "all" ]]; then
+    if [[ ${os_type} == "Linux" ]]; then
+      echo "if [ -z \$GOROOT ]; then
+    export GOROOT=$GOROOT
+    PATH=$GOROOT/bin:$PATH
+    export PATH
+fi"
+>> .env
+    fi
+    echo "
+if [ -z \$GOPATH ]; then
+    export GOPATH=$HOME/go
+fi
+export CXX=/usr/bin/c++
+export CC=/usr/bin/cc
+" >> .env
+  fi
+  if [[ $service_pkg == "gnmi" && $LD_LIBRARY_PATH != *"protobuf"* ]]; then
+    echo "export LD_LIBRARY_PATH=\$HOME/grpc/libs/opt:\$HOME/protobuf-3.5.0/src/.libs:\$LD_LIBRARY_PATH
+" >> .env
+  fi
+  if [[ -n $CMAKE_LIBRARY_PATH ]]; then
+    echo "export CMAKE_LIBRARY_PATH=$CMAKE_LIBRARY_PATH
+" >> .env
+  fi
+#  cat .env
+  cd - >& /dev/null
 }
 
 ########################## EXECUTION STARTS HERE #############################
@@ -416,9 +477,15 @@ if [[ ${os_type} == "Linux" ]]; then
         print_msg "WARNING! Unsupported Ubuntu distribution found. Will try the best efforts."
     fi
   elif [[ ${os_info} == *"fedora"* ]]; then
-    rhel_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+    rhel_version=$(echo "${os_info}" | grep -w VERSION_ID | awk -F[\"] '{print $2}')
     if [[ $rhel_version != 7 && $rhel_version != 8 ]]; then
         print_msg "WARNING! Unsupported Centos/RHEL version. Will try the best efforts."
+    fi
+    if [[ $rhel_version == 8 && ${os_info} == *"CentOS"* ]]; then
+      os_name=$(echo "${os_info}" | grep -w NAME | awk -F[\"] '{print $2}')
+      if [[ $os_name != *"Stream" ]]; then
+        print_msg "Unsupported CentOS version 8 (EOL). Will try the best efforts."
+      fi
     fi
   else
     MSG_COLOR=${RED}
@@ -462,6 +529,8 @@ fi
 
 init_py_env
 init_go_env
+
+write_env_file
 
 install_ydk_cpp
 

@@ -5,6 +5,9 @@ module Cisco-IOS-XR-ifmgr-cfg {
   import Cisco-IOS-XR-types {
     prefix xr;
   }
+  import cisco-semver {
+    prefix semver;
+  }
 
   organization
     "Cisco Systems, Inc.";
@@ -26,11 +29,16 @@ module Cisco-IOS-XR-ifmgr-cfg {
      for the following management objects:
        global-interface-configuration: Global scoped configuration
          for interfaces
-       interface-configurations: interface configurations
+       interface-configurations: Configuration for all interfaces
      
-     Copyright (c) 2013-2018 by Cisco Systems, Inc.
+     Copyright (c) 2013-2019 by Cisco Systems, Inc.
      All rights reserved.";
 
+  revision 2019-04-05 {
+    description
+      "Establish semantic version baseline.";
+    semver:module-version "1.0.0";
+  }
   revision 2017-09-07 {
     description
       "Fixed type translation error.";
@@ -130,7 +138,7 @@ module Cisco-IOS-XR-ifmgr-cfg {
   }
   container interface-configurations {
     description
-      "interface configurations";
+      "Configuration for all interfaces";
     list interface-configuration {
       key "active interface-name";
       description

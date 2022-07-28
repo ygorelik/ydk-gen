@@ -541,6 +541,17 @@ class SanityYang(unittest.TestCase):
         entity = self.codec.decode(self.json_provider, json)
         self.assertEqual(entity, r)
 
+    def test_json_string_empty_value(self):
+        r = Runner()
+        r.ytypes.built_in_t.name = ""
+
+        json = self.codec.encode(self.json_provider, r, pretty=False)
+        expected = '''{"ydktest-sanity:runner":{"ytypes":{"built-in-t":{"name":""}}}}'''
+        self.assertEqual(expected, json)
+
+        entity = self.codec.decode(self.json_provider, json)
+        self.assertEqual(entity, r)
+
 
 if __name__ == '__main__':
     import sys

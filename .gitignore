@@ -8,6 +8,7 @@
 .temp
 .idea*
 .coverage*
+.env
 htmlcov
 coverage.xml
 *.pyc

@@ -5,6 +5,9 @@ module Cisco-IOS-XR-ip-pfilter-cfg {
   import Cisco-IOS-XR-types {
     prefix xr;
   }
+  import cisco-semver {
+    prefix semver;
+  }
   import Cisco-IOS-XR-ifmgr-cfg {
     prefix a1;
   }
@@ -29,9 +32,14 @@ module Cisco-IOS-XR-ip-pfilter-cfg {
        Cisco-IOS-XR-ifmgr-cfg
      module with configuration data.
      
-     Copyright (c) 2013-2018 by Cisco Systems, Inc.
+     Copyright (c) 2013-2019 by Cisco Systems, Inc.
      All rights reserved.";
 
+  revision 2019-04-05 {
+    description
+      "Establish semantic version baseline.";
+    semver:module-version "1.0.1";
+  }
   revision 2017-09-30 {
     description
       "Ensure propagation of MDA mandatory state to YANG model.";

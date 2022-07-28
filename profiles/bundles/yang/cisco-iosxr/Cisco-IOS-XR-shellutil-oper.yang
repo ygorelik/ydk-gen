@@ -2,8 +2,11 @@ module Cisco-IOS-XR-shellutil-oper {
   namespace "http://cisco.com/ns/yang/Cisco-IOS-XR-shellutil-oper";
   prefix shellutil-oper;
 
+  import cisco-semver {
+    prefix semver;
+  }
   include Cisco-IOS-XR-shellutil-oper-sub1 {
-    revision-date 2015-01-07;
+    revision-date 2019-04-05;
   }
 
   organization
@@ -26,9 +29,14 @@ module Cisco-IOS-XR-shellutil-oper {
      for the following management objects:
        system-time: System time information
      
-     Copyright (c) 2013-2018 by Cisco Systems, Inc.
+     Copyright (c) 2013-2019 by Cisco Systems, Inc.
      All rights reserved.";
 
+  revision 2019-04-05 {
+    description
+      "Establish semantic version baseline.";
+    semver:module-version "1.0.1";
+  }
   revision 2015-01-07 {
     description
       "IOS XR 5.3.1 revision.";
