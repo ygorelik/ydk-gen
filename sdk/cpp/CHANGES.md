@@ -1,3 +1,10 @@
+### 2022-06-30 version 0.9.1.1
+
+#### Resolved GitHub issues
+  * IndexError on decoding empty string value in JSON payload ([#1061](https://github.com/CiscoDevNet/ydk-gen/issues/1061))
+  * ExecutorService fails on non-ietf RPC with Libyang error ([#1067](https://github.com/CiscoDevNet/ydk-gen/issues/1067))
+
+
 ### 2021-05-30 version 0.9.0.1
 
 #### New features and enhancements

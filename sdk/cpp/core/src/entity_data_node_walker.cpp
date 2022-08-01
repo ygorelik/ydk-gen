@@ -41,8 +41,6 @@ using namespace std;
 namespace ydk
 {
 static void populate_data_node(Entity & entity, path::DataNode & data_node);
-static void walk_children(Entity & entity, path::DataNode & data_node);
-static void populate_name_values(path::DataNode & parent_data_node, EntityPath & path);
 static bool data_node_is_leaf(path::DataNode & data_node);
 static bool data_node_is_list(path::DataNode & data_node);
 static string get_segment_path(const string & path);
@@ -69,12 +67,12 @@ path::DataNode& get_data_node_from_entity(Entity & entity, path::RootSchemaNode 
     return root_data_node;
 }
 
-static void walk_children(Entity & entity, path::DataNode & data_node)
+void walk_children(Entity & entity, path::DataNode & data_node)
 {
     map<string, shared_ptr<Entity>> children = entity.get_children();
     vector<string> order = entity.get_order_of_children();
-    YLOG_DEBUG("Children count for: {} : {}",get_entity_path(entity, entity.parent).path, children.size());
-    YLOG_DEBUG("Children order count : {}",order.size());
+    YLOG_DEBUG("Children count for path: '{}': {}", get_entity_path(entity, entity.parent).path, children.size());
+    YLOG_DEBUG("Children order count: {}", order.size());
     if(order.size()>0)
     {
         for(auto child_seg : order)
@@ -126,7 +124,7 @@ static void populate_data_node(Entity & entity, path::DataNode & parent_data_nod
     walk_children(entity, *data_node);
 }
 
-static void populate_name_values(path::DataNode & data_node, EntityPath & path)
+void populate_name_values(path::DataNode & data_node, EntityPath & path)
 {
     YLOG_DEBUG("Leaf count: {}", path.value_paths.size());
     for(const pair<string, LeafData> & name_value : path.value_paths)

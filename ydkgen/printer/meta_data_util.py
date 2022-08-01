@@ -129,12 +129,13 @@ def get_class_docstring(clazz, language, identity_subclasses=None):
 def get_type_doc(meta_info_data, type_depth, ident):
     properties_description = []
 
-    if len(meta_info_data.children) > 0:
+    if meta_info_data.children:
         if type_depth == 1:
             if hasattr(meta_info_data, 'property_type') and isinstance(meta_info_data.property_type, UnionTypeSpec):
                 properties_description.append(ident+'**type**: union of the below types:\n\n')
         for child in meta_info_data.children:
-            properties_description.extend(get_type_doc(child, type_depth+1, ident+'    '))
+            if child:
+                properties_description.extend(get_type_doc(child, type_depth+1, ident+'    '))
 
     else:
         target = meta_info_data.doc_link

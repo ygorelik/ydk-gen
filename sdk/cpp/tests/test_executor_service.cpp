@@ -202,7 +202,7 @@ TEST_CASE("es_edit_config_rpc")
     // runner and filter
     auto runner = make_shared<ydktest_sanity::Runner>();
     runner->one->number = 1;
-    runner->one->name = "runner:one:name";
+    runner->one->name = "runner-one-name";
     std::string runner_xml = codec_service.encode(codec_provider, *runner, true);
 
     auto filter = make_unique<ydktest_sanity::Runner>();
@@ -213,38 +213,36 @@ TEST_CASE("es_edit_config_rpc")
     edit_config_rpc.input->target->candidate = Empty();
     edit_config_rpc.input->config = runner_xml;
 
-    std::shared_ptr<Entity> reply = es.execute_rpc(
-        provider, edit_config_rpc);
-    result = reply == nullptr;
-    REQUIRE(result);
+    std::shared_ptr<Entity> reply = es.execute_rpc(provider, edit_config_rpc);
+    CHECK(reply == nullptr);
 
     // Get Config Rpc
     ietf_netconf::GetConfig get_config_rpc{};
     get_config_rpc.input->source->candidate = Empty();
     get_config_rpc.input->filter = filter_xml;
 
-    reply = es.execute_rpc(provider, get_config_rpc, runner);
+    auto get_runner = make_shared<ydktest_sanity::Runner>();
+    reply = es.execute_rpc(provider, get_config_rpc, get_runner);
     REQUIRE(reply);
+    auto runner_entity = dynamic_cast<ydktest_sanity::Runner*>(reply.get());
+    CHECK(*runner == *runner_entity);
 
     // Commit Rpc
     ietf_netconf::Commit commit_rpc{};
-
     reply = es.execute_rpc(provider, commit_rpc);
-    result = reply == nullptr;
-    REQUIRE(result);
+    CHECK(reply == nullptr);
 
-    // // Get Rpc
+    // Get Rpc
     ietf_netconf::Get get_rpc{};
     get_rpc.input->filter = filter_xml;
 
     reply = es.execute_rpc(provider, get_rpc, runner);
-    REQUIRE(reply);
+    CHECK(reply);
 
     // Discard Changes
     ietf_netconf::DiscardChanges discard_rpc{};
     reply = es.execute_rpc(provider, discard_rpc);
-    result = reply == nullptr;
-    REQUIRE(result);
+    CHECK(reply == nullptr);
 }
 
 // kill_session
@@ -286,32 +284,17 @@ TEST_CASE("es_lock_rpc")
     NetconfServiceProvider provider{repo, "127.0.0.1", "admin", "admin", 12022};
     ExecutorService es{};
 
-    // clean up
-    CrudService crud{};
-    auto r_1 = make_unique<ydktest_sanity::Runner>();
-    bool result = crud.delete_(provider, *r_1);
-    REQUIRE(result);
-
     ietf_netconf::Lock lock_rpc{};
-    lock_rpc.input->target->candidate = Empty();
+    lock_rpc.input->target->running = Empty();
 
-    std::shared_ptr<Entity> reply = es.execute_rpc(
-        provider, lock_rpc);
-    result = reply == nullptr;
-    REQUIRE(result);
+    std::shared_ptr<Entity> reply = es.execute_rpc(provider, lock_rpc);
+    CHECK(reply == nullptr);
 
     ietf_netconf::Unlock unlock_rpc{};
-    unlock_rpc.input->target->candidate = Empty();
+    unlock_rpc.input->target->running = Empty();
 
     reply = es.execute_rpc(provider, unlock_rpc);
-    result = reply == nullptr;
-    REQUIRE(result);
-
-    // Discard Changes
-    ietf_netconf::DiscardChanges discard_rpc{};
-    reply = es.execute_rpc(provider, discard_rpc);
-    result = reply == nullptr;
-    REQUIRE(result);
+    CHECK(reply == nullptr);
 }
 
 TEST_CASE("es_validate_rpc_1")

@@ -137,6 +137,11 @@ _json_runner_payload = """{
 }
 """
 
+_xml_oc_pattern_payload = '''<oc-A xmlns="http://cisco.com/ns/yang/oc-pattern">
+  <a>Hello</a>
+</oc-A>
+'''
+
 _json_oc_pattern_payload = '''{
   "oc-pattern:oc-A": [
     {
@@ -263,20 +268,16 @@ class SanityYang(unittest.TestCase):
         obj_a = OcA()
         obj_a.a = 'Hello'
 
-        xml_oc_pattern_payload = '''<oc-A xmlns="http://cisco.com/ns/yang/oc-pattern">
-          <a>Hello</a>
-        </oc-A>
-        '''
-
-        entity = self.codec.decode(self.provider, xml_oc_pattern_payload)
+        entity = self.codec.decode(self.provider, _xml_oc_pattern_payload)
 
         self.assertEqual(obj_a.a, entity.a)
 
     # JSON
 
     def test_json_encode_1(self):
+        json_provider = CodecServiceProvider(type='json')
         entity = _get_runner_entity()
-        payload = self.codec.encode(self.json_provider, entity)
+        payload = self.codec.encode(json_provider, entity)
         self.assertEqual(_json_runner_payload, payload)
 
     def test_json_encode_2(self):
@@ -312,8 +313,8 @@ class SanityYang(unittest.TestCase):
         obj_a = OcA()
         obj_a.a = 'Hello'
         obj_a.b.b = 'Hello'
-        json_payload = self.codec.encode(self.json_provider, obj_a)
-        self.assertEqual(_json_oc_pattern_payload, json_payload)
+        self.assertEqual(self.codec.encode(self.json_provider, obj_a),
+                         _json_oc_pattern_payload)
 
     @unittest.skip('YCoreError: Unknown element "oc-A".. Path:')
     def test_json_decode_oc_pattern(self):
@@ -526,6 +527,17 @@ class SanityYang(unittest.TestCase):
   }
 }
 '''
+        self.assertEqual(expected, json)
+
+        entity = self.codec.decode(self.json_provider, json)
+        self.assertEqual(entity, r)
+
+    def test_json_string_empty_value(self):
+        r = Runner()
+        r.ytypes.built_in_t.name = ""
+
+        json = self.codec.encode(self.json_provider, r, pretty=False)
+        expected = '''{"ydktest-sanity:runner":{"ytypes":{"built-in-t":{"name":""}}}}'''
         self.assertEqual(expected, json)
 
         entity = self.codec.decode(self.json_provider, json)

@@ -321,3 +321,25 @@ TEST_CASE("test_url_path_value") {
     auto xml_rt = codec.encode(*real_dn, ydk::EncodingFormat::XML, true);
     REQUIRE(xml == xml_rt);
 }
+
+TEST_CASE("test_empty_string_value_json") {
+    std::string searchdir{TEST_HOME};
+    mock::MockSession sp{searchdir, test_openconfig, EncodingFormat::JSON};
+    auto & schema = sp.get_root_schema();
+    ydk::path::Codec codec{};
+
+    auto & runner = schema.create_datanode("ydktest-sanity:runner", "");
+    runner.create_datanode("ytypes/built-in-t/name", "");
+
+    auto payload = codec.encode(runner, ydk::EncodingFormat::JSON, false);
+    auto expected = R"({"ydktest-sanity:runner":{"ytypes":{"built-in-t":{"name":""}}}})";
+    CHECK(payload == expected);
+
+    auto dn = codec.decode(schema, payload, ydk::EncodingFormat::JSON);
+    REQUIRE(dn != nullptr);
+    auto real_dn = dn->get_children()[0];
+    REQUIRE(real_dn != nullptr);
+
+    auto xml_rt = codec.encode(*real_dn, ydk::EncodingFormat::JSON, false);
+    REQUIRE(payload == xml_rt);
+}
