@@ -60,7 +60,6 @@ YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
 script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
-
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
   YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
   print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"

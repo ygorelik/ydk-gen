@@ -29,8 +29,7 @@
 
 ![ydk-logo-128](https://cloud.githubusercontent.com/assets/16885441/24175899/2010f51e-0e56-11e7-8fb7-30a9f70fbb86.png)
 
-YANG Development Kit (C++)
-==========================
+# YANG Development Kit (C++)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -69,7 +68,7 @@ The YDK-0.8.6 generated code is not compatible with YDK-0.7.2 and earlier bundle
 ## Docker
 
 Currently the [docker image](https://docs.docker.com/engine/reference/run/) for ydk-cpp is not been generated.
-Please use [ydk-gen](https://github.com/ygorelik/ydk-gen/tree/0.8.6#docker>) docker image, which has complete environment for ydk-cpp based development.
+Please use [ydk-gen](https://github.com/CiscoDevNet/ydk-gen#docker>) docker image, which has complete environment for ydk-cpp based development.
 
 The docker image is automatically built with the latest ydk-gen commit.
 This docker can be used to run ydk-gen without installing anything natively on your platform.
@@ -78,14 +77,15 @@ To use the docker image, [install docker](https://docs.docker.com/install/) on y
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
 
 ```
-docker run -it ydksolutions/ydk-gen:0.8.6.2
+docker run -it ydksolutions/ydk-gen:0.8.6.3
 ```
 
 ## System Requirements
 
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
- - Linux CentOS/RHEL versions 7 and 8
+ - Linux CentOS versions 7 and Centos Stream 8 (Centos 8.x has been EOL as of December 31 of 2021)
+ - Linux RHEL version 7.x and 8.x 
  - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
@@ -101,6 +101,7 @@ All YDK core components are based on C and C++ code. These components compiled u
 Corresponding binaries, libraries, and header files are installed in default locations,
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
+Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 ## Core Installation
 
@@ -117,14 +118,16 @@ If built, the user must manually activate virtual environment when generating mo
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 For different location the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for C++ programming language:
+**NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
+
+Here is simple example of core YDK installation for C++ programming language and Python virtual environment:
 
 ```
-git clone https://github.com/ygorelik/ydk-gen.git
+git clone https://github.com/CiscoDevNet/ydk-gen.git
 cd ydk-gen
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
-./install_ydk.sh --cpp --core
+./install_ydk.sh --cpp --core --venv
 ```
 
 The script also allows to install individual components like dependencies, core, and service packages
@@ -186,7 +189,7 @@ The script will also install Python virtual environment in default or specified 
 
 ```
 # Clone ydk-gen from GitHub
-git clone https://github.com/ygorelik/ydk-gen.git
+git clone https://github.com/CiscoDevNet/ydk-gen.git
 cd ydk-gen
 
 # Define optional environment variables and install dependencies
@@ -239,6 +242,6 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5
 - Join the [YDK community](https://communities.cisco.com/community/developer/ydk) to connect with YDK users and developers
 
 ## Release Notes
-The current YDK release version is 0.8.6.2.
+The current YDK release version is 0.8.6.3.
 
 YDK is licensed under the Apache 2.0 License.

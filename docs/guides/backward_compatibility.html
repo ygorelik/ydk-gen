@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Backward compatibility notes &mdash; YANG Development Kit 0.8.6.2 documentation</title>
+  <title>Backward compatibility notes &mdash; YANG Development Kit 0.8.6.3 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
 
   
-    <link rel="top" title="YANG Development Kit 0.8.6.2 documentation" href="../index.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="YANG Development Kit 0.8.6.3 documentation" href="../index.html"/>
         <link rel="up" title="Developer Guide" href="../developer_guide.html"/>
         <link rel="next" title="API Guide" href="../api_guide.html"/>
         <link rel="prev" title="Using Restconf with HTTPS" href="restconf_https.html"/> 
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                0.8.6.2
+                0.8.6.3
               </div>
             
           
@@ -101,7 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="path.html">How do I use the Path API?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="opendaylight.html">How do I use OpenDaylight with YDK?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="restconf_https.html">Using Restconf with HTTPS</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Backward compatibility notes</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Backward compatibility notes</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#windows-support">Windows Support</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#api-changes">API Changes</a></li>
@@ -111,9 +112,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_guide.html">API Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Questions and Answers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ydk.models.ydktest.html">ydktest bundle API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ydk.models.openconfig.html">openconfig bundle API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ydk.models.ietf.html">ietf bundle API</a></li>
 </ul>
 
             
@@ -186,16 +184,16 @@
 <li><a class="reference internal" href="../api/providers/netconf_provider.html#ydk.providers.NetconfServiceProvider" title="ydk.providers.NetconfServiceProvider"><code class="xref py py-class docutils literal"><span class="pre">NetconfServiceProvider</span></code></a> no longer has the <code class="docutils literal"><span class="pre">close()</span></code> method. There is no need to explicitly close the provider as it will be automatically cleaned up when the object goes out of scope.</li>
 <li><a class="reference internal" href="../api/filters.html#ydk.filters.YFilter" title="ydk.filters.YFilter"><code class="xref py py-class docutils literal"><span class="pre">YFilter</span></code></a> has replaced the functionality of the <code class="docutils literal"><span class="pre">READ</span></code> and <code class="docutils literal"><span class="pre">DELETE</span></code> objects</li>
 <li>When using YDK&#8217;s <a class="reference internal" href="introduction.html#howto-logging"><span class="std std-ref">Logging</span></a>, the suggested level to be used is <code class="docutils literal"><span class="pre">INFO</span></code></li>
-<li>The type names of <code class="docutils literal"><span class="pre">enumerations</span></code> and <code class="docutils literal"><span class="pre">identities</span></code> no longer have <code class="docutils literal"><span class="pre">Enum</span></code> or <code class="docutils literal"><span class="pre">Identity</span></code> in their names. For example, the  identity <code class="docutils literal"><span class="pre">InterfaceTypeIdentity</span></code> in <code class="docutils literal"><span class="pre">ydk.models.ietf.ietf_interfaces</span></code> is now renamed to just <a class="reference internal" href="../gen_doc_b35a36a659b10a39958c088638a7ad79b4b6fc6c.html#ydk.models.ietf.ietf_interfaces.InterfaceType" title="ydk.models.ietf.ietf_interfaces.InterfaceType"><code class="xref py py-class docutils literal"><span class="pre">InterfaceType</span></code></a>.</li>
+<li>The type names of <code class="docutils literal"><span class="pre">enumerations</span></code> and <code class="docutils literal"><span class="pre">identities</span></code> no longer have <code class="docutils literal"><span class="pre">Enum</span></code> or <code class="docutils literal"><span class="pre">Identity</span></code> in their names. For example, the  identity <code class="docutils literal"><span class="pre">InterfaceTypeIdentity</span></code> in <code class="docutils literal"><span class="pre">ydk.models.ietf.ietf_interfaces</span></code> is now renamed to just <code class="xref py py-class docutils literal"><span class="pre">InterfaceType</span></code>.</li>
 <li>The <code class="docutils literal"><span class="pre">is_config()</span></code> method is no longer available for the YDK model APIs. This may be added back in a future release.</li>
 <li>For <code class="docutils literal"><span class="pre">CRUDService</span></code> and other services, using a child container or list, which is not the top-level node in a yang model is no longer supported. For example:</li>
 </ol>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.cisco_ios_xe</span> <span class="kn">import</span> <span class="n">Cisco_IOS_XE_bgp_oper</span> <span class="k">as</span> <span class="n">bgp_oper</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.cisco_ios_xe</span> <span class="kn">import</span> <span class="n">Cisco_IOS_XE_bgp_oper</span> <span class="k">as</span> <span class="n">bgp_oper</span>
 
 <span class="c1"># connect to provider etc ...</span>
 
@@ -204,12 +202,12 @@
 </pre></div>
 </td></tr></table></div>
 <p>now has to be changed to:</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.cisco_ios_xe</span> <span class="kn">import</span> <span class="n">Cisco_IOS_XE_bgp_oper</span> <span class="k">as</span> <span class="n">bgp_oper</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.cisco_ios_xe</span> <span class="kn">import</span> <span class="n">Cisco_IOS_XE_bgp_oper</span> <span class="k">as</span> <span class="n">bgp_oper</span>
 
 <span class="c1"># connect to provider etc ...</span>
 
@@ -260,7 +258,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.8.6.2',
+            VERSION:'0.8.6.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  false

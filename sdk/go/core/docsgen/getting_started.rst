@@ -55,7 +55,7 @@ This be used to run ydk-gen without installing anything natively on your platfor
 To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
 See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-  docker run -it ydksolutions/ydk-gen:0.8.6.2
+  docker run -it ydksolutions/ydk-gen:0.8.6.3
 
 
 System Requirements
@@ -64,7 +64,8 @@ System Requirements
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
 
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
- - Linux CentOS/RHEL versions 7 and 8
+ - Linux CentOS versions 7 and Centos Stream 8 (Centos 8.x has been EOL as of December 31 of 2021)
+ - Linux RHEL version 7.x and 8.x
  - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
@@ -80,6 +81,7 @@ All YDK core components are based on C and C++ code. These components compiled u
 Corresponding binaries, libraries, and header files are installed in default locations,
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
+Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 **NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
 
@@ -102,15 +104,15 @@ If built, the user must manually activate virtual environment when generating mo
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for Go programming language:
+Here is simple example of core YDK installation for Go programming language and Python virtual environment:
 
 .. code-block:: sh
 
-    git clone https://github.com/ygorelik/ydk-gen.git
+    git clone https://github.com/CiscoDevNet/ydk-gen.git
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
-    ./install_ydk.sh --core --go
+    ./install_ydk.sh --core --go --venv
 
 
 The script also allows to install individual components like dependencies, core, and service packages
@@ -172,7 +174,7 @@ If user platform is supported one, it is recommended to use `ydk-gen/install_ydk
 The script will also install Python virtual environment in default or specified location, when '--venv' is specified::
 
     # Clone ydk-gen from GitHub
-    git clone https://github.com/ygorelik/ydk-gen.git
+    git clone https://github.com/CiscoDevNet/ydk-gen.git
     cd ydk-gen
 
     # Define optional environment variables and install dependencies
@@ -232,6 +234,6 @@ Documentation and Support
 Release Notes
 =============
 
-The current YDK release version is 0.8.6.2.
+The current YDK release version is 0.8.6.3.
 
 YDK is licensed under the Apache 2.0 License.

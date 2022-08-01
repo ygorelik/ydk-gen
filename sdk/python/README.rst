@@ -62,7 +62,7 @@ Docker
 To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
 See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-  docker run -it ydksolutions/ydk-gen:0.8.6.2
+  docker run -it ydksolutions/ydk-gen:0.8.6.3
 
 
 ..
@@ -72,7 +72,7 @@ See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ 
   To use the docker image, `install docker <https://docs.docker.com/install/>`_ on your system and run the below command.
   See the `docker documentation <https://docs.docker.com/engine/reference/run/>`_ for more details::
 
-    docker run -it ydkdev/ydk-py
+    docker run -it ydksolutions/ydk-gen:0.8.6.3
 
 
 System Requirements
@@ -81,7 +81,8 @@ System Requirements
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
 
  - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), and Focal (20.04 LTS)
- - Linux CentOS/RHEL versions 7 and 8
+ - Linux CentOS versions 7 and Centos Stream 8 (Centos 8.x has been EOL as of December 31 of 2021)
+ - Linux RHEL version 7.x and 8.x
  - MacOS up to 11.6.2 (Big Sur)
 
 On Windows 10 the Linux virtual machine can run using Windows Subsystem for Linux (WSL);
@@ -97,8 +98,11 @@ All YDK core components are based on C and C++ code. These components compiled u
 Corresponding binaries, libraries, and header files are installed in default locations,
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
+Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 **NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
+
+**NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
 
 Core Installation
 =================
@@ -110,6 +114,15 @@ For YDK installation it is recommended to use script `install_ydk.sh` from `ydk-
 The script detects platform OS, installs all the dependencies and builds complete set of YDK components for specified language.
 The user must have sudo access to these locations.
 
+If the script installs any YDK component, it also creates an environment activation file '.env' in the 'ydk-gen'
+directory, which can be used to activate YDK runtime environment identical to the installation environment.
+To activate YDK runtime environment simply run this command once in bash shell:
+
+.. code-block:: sh
+
+    cd ydk-gen
+    source .env
+
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
 By default the YDK uses Python system installation.
 In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
@@ -117,15 +130,15 @@ If built, the user must manually activate virtual environment when generating mo
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
-Here is simple example of core YDK installation for Python programming language:
+Here is simple example of core YDK installation for Python programming language and Python virtual environment:
 
 .. code-block:: sh
 
-    git clone https://github.com/ygorelik/ydk-gen.git
+    git clone https://github.com/CiscoDevNet/ydk-gen.git
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
-    ./install_ydk.sh --core
+    ./install_ydk.sh --core --venv
 
 
 The script also allows to install individual components like dependencies, core, and service packages
@@ -187,7 +200,7 @@ If user platform is supported one, it is recommended to use `ydk-gen/install_ydk
 The script will also install Python virtual environment in default or specified location, when '--venv' is specified::
 
     # Clone ydk-gen from GitHub
-    git clone https://github.com/ygorelik/ydk-gen.git
+    git clone https://github.com/CiscoDevNet/ydk-gen.git
     cd ydk-gen
 
     # Define optional environment variables and install dependencies
@@ -202,8 +215,8 @@ Installing core components
 
 Please follow this procedure to install YDK core components for Python apps development::
 
-    # If created, activate Python virtual environment
-    source $PYTHON_VENV/bin/activate
+    # Activate YDK runtime environment
+    source .env
 
     # Generate and install YDK core library
     python3 generate.py -is --core --cpp
@@ -228,6 +241,9 @@ Here is simple example, how gNMI service package for Python could be added::
 
 gNMI runtime environment
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+When YDK is installed using 'install_ydk.sh' script, the runtime environment is set by running 'source .env' in bash shell.
+The below information is applicable only when YDK is installed manually, which is not recommended.
 
 There is an open issue with gRPC on Centos/RHEL, which requires an extra step before running any YDK gNMI application.
 See this issue on `GRPC GitHub <https://github.com/grpc/grpc/issues/10942#issuecomment-312565041>`_ for details.
@@ -282,7 +298,7 @@ you have to install manually the `ydk` core package first, and then the model bu
 It is recommended to use `ydk-gen/install_ydk.sh` script in order to install the core components::
 
   # Clone ydk-gen from GitHub
-  git clone https://github.com/ygorelik/ydk-gen.git
+  git clone https://github.com/CiscoDevNet/ydk-gen.git
   cd ydk-gen
 
   # Define optional environment variables and install dependencies
@@ -295,28 +311,31 @@ Once you have installed the `ydk` core package, you can install one or more mode
 Those dependencies are already captured in the bundle package.  Make sure you install the desired bundles in the order below.
 To install the `ietf` bundle from `ydk-gen` execute::
 
-  # Activate Python virtual environment and navigate to ydk-gen directory
-  source $PYTHON_VENV/bin/activate
+  # Navigate to ydk-gen directory and activate runtime environment
   cd ydk-gen
+  source .env  # if not ran previously
+
   # Generate and install the bundle
-  python3 generate.py -i --bundle profiles/bundles/ietf_0_1_5_post2.json
+  python3 generate.py -i --bundle profiles/bundles/ietf_0_1_6.json
 
 To install the `openconfig` bundle, execute::
 
   # Navigate to ydk-gen directory and activate runtime environment, if applicable
   source $PYTHON_VENV/bin/activate
   cd ydk-gen
-  # Generate and install the bundle
-  python3 generate.py -i --bundle profiles/bundles/openconfig_0_1_8.json
+  source .env  # if not ran previously
 
+  # Generate and install the bundle
+  python3 generate.py --bundle profiles/bundles/openconfig_0_1_9.json -i
 
 To install the `cisco-ios-xr` bundle, execute::
 
-  # Activate Python virtual environment and navigate to ydk-gen directory
-  source $PYTHON_VENV/bin/activate
+  # Navigate to ydk-gen directory and activate runtime environment
   cd ydk-gen
+  source .env  # if not ran previously
+
   # Generate and install the bundle
-  python3 generate.py -i --bundle profiles/bundles/cisco-ios-xr-6_6_3_post1.json
+  python3 generate.py --bundle profiles/bundles/cisco-ios-xr-6_7_4.json -i
 
 
 Documentation and Support
@@ -324,7 +343,9 @@ Documentation and Support
 
 Available resources:
 
-- Read the `API documentation <http://ydk.cisco.com/py/docs>`_ (release 0.8.3) for details on how to use the API and specific models
+..
+  - Read the `API documentation <http://ydk.cisco.com/py/docs>`_ (release 0.8.3) for details on how to use the API and specific models
+
 - Check `GitHub Pages <https://ygorelik.github.io/ydk-gen>`_ for the latest YDK release documentation
 - Find some app samples in the `samples directory <https://github.com/CiscoDevNet/ydk-py/tree/master/core/samples>`_
 - Find hundreds of additional samples in the `YDK-PY samples repository <https://github.com/CiscoDevNet/ydk-py-samples>`_
@@ -333,6 +354,6 @@ Available resources:
 Release Notes
 =============
 
-The current YDK release version is 0.8.6.2.
+The current YDK release version is 0.8.6.3.
 
 YDK is licensed under the Apache 2.0 License.
