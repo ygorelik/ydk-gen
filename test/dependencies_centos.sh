@@ -80,7 +80,13 @@ function check_install_gcc {
 
 function install_dependencies {
     print_msg "Installing dependencies"
-    run_cmd $sudo_cmd yum update --nobest -y > /dev/null
+    centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
+    print_msg "Running Centos/RHEL version $centos_version"
+    if [[ $centos_version == 8 ]]; then
+        run_cmd $sudo_cmd yum update --nobest -y > /dev/null
+    else
+        run_cmd $sudo_cmd yum update -y > /dev/null
+    fi
     run_cmd $sudo_cmd yum install epel-release -y > /dev/null
 #    run_cmd $sudo_cmd yum install https://centos7.iuscommunity.org/ius-release.rpm -y > /dev/null
     run_cmd $sudo_cmd yum install which libxml2-devel libxslt-devel libssh-devel libtool gcc-c++ -y > /dev/null
@@ -91,8 +97,6 @@ function install_dependencies {
     $sudo_cmd yum install valgrind -y > /dev/null
     $sudo_cmd yum install rpm-build redhat-lsb redhat-lsb-core -y > /dev/null
 #    sudo yum install python3-venv -y
-    centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
-    print_msg "Running Centos/RHEL version $centos_version"
     if [[ $centos_version == 8 ]]; then
       $sudo_cmd yum install dnf-plugins-core -y
       $sudo_cmd yum config-manager --set-enabled powertools
