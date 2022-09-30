@@ -6,10 +6,10 @@ set(YDK_DESCRIPTION "YANG Development Kit Library. The library for  YDK API.")
 
 # CPack Dynamic Settings
 set (CPACK_PACKAGE_NAME "libydk")
-set (CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
-set (CPACK_PACKAGE_RELEASE "3")
-set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "YDK Core Library")
-# set (CPACK_PACKAGE_DESCRIPTION_SUMMARY ${YDK_DESCRIPTION})
+set (CPACK_PACKAGE_BUILD "3")
+set (CPACK_PACKAGE_VERSION "${PROJECT_VERSION}.${CPACK_PACKAGE_BUILD}")
+set (CPACK_LIBRARY_NAME "ydk-${CPACK_PACKAGE_VERSION}")
+set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "YDK C++ Core Library")
 
 # CPack Static Settings
 set (CPACK_PACKAGE_DESCRIPTION "An SDK that provides API's that are modeled in YANG.
@@ -64,7 +64,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         # <foo>_<VersionNumber>-<DebianRevisionNumber>_<DebianArchitecture>.deb
         # libydk_0.6.0-0.1.alpha_amd64.deb   // Debian
         set (CPACK_PACKAGE_FILE_NAME
-            "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
+            "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}.${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
 
     # Linux Fedora
     elseif(${LSB_RELEASE_ID_SHORT} MATCHES "CentOS")
@@ -74,7 +74,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
         set (CPACK_RPM_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
         set (CPACK_RPM_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION})
-        set (CPACK_RPM_PACKAGE_RELEASE ${CPACK_PACKAGE_RELEASE})
+        set (CPACK_RPM_PACKAGE_RELEASE ${CPACK_PACKAGE_BUILD})
         set (CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
         set (CPACK_RPM_PACKAGE_SUMMARY ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
         set (CPACK_RPM_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION})
@@ -88,7 +88,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         # <name>-<version>-<release>.<architecture>.(src).rpm
         # libydk-0.6.0-0.1.alpha.x86_64.rpm  // RPM
         set (CPACK_PACKAGE_FILE_NAME
-            "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CPACK_RPM_PACKAGE_ARCHITECTURE}")
+            "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}.${CPACK_RPM_PACKAGE_ARCHITECTURE}")
     endif()
 endif()
 
@@ -450,9 +450,9 @@ include_directories(
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-add_library(ydk STATIC ${libydk_src} ${libnetconf_inc_objs} ${libyang_inc_objs})
+add_library(${CPACK_LIBRARY_NAME} STATIC ${libydk_src} ${libnetconf_inc_objs} ${libyang_inc_objs})
 
-target_link_libraries(ydk
+target_link_libraries(${CPACK_LIBRARY_NAME}
     ${LIBXML2_LIBRARIES}
     ${LIBSSH_LIBRARIES}
     ${curl_location}
@@ -466,15 +466,15 @@ target_link_libraries(ydk
     ${dl_location}
 )
 
-set_property(TARGET ydk PROPERTY CXX_STANDARD 11)
-set_property(TARGET ydk PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET ${CPACK_LIBRARY_NAME} PROPERTY CXX_STANDARD 11)
+set_property(TARGET ${CPACK_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 set(libyang_extension_lib
 	${libyang_build_location}/src/extensions/libyang_ext_test${CMAKE_SHARED_LIBRARY_SUFFIX}
 	${libyang_build_location}/src/extensions/metadata${CMAKE_SHARED_LIBRARY_SUFFIX}
 	${libyang_build_location}/src/extensions/nacm${CMAKE_SHARED_LIBRARY_SUFFIX}
 )
 
-install(TARGETS ydk DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS ${CPACK_LIBRARY_NAME} DESTINATION ${LIB_INSTALL_DIR})
 install(FILES ${libydk_install_headers} DESTINATION ${INCLUDE_INSTALL_DIR})
 install(FILES ${SPDLOG_HEADERS} DESTINATION ${spdlog_include_location})
 install(FILES ${SPDLOG_DETAILS_HEADERS} DESTINATION ${spdlog_details_include_location})
@@ -482,6 +482,16 @@ install(FILES ${SPDLOG_FMT_HEADERS} DESTINATION ${spdlog_fmt_include_location})
 install(FILES ${SPDLOG_FMT_BUNDLED_HEADERS} DESTINATION ${spdlog_fmt_bundled_include_location})
 install(FILES ${SPDLOG_SINKS_HEADERS} DESTINATION ${spdlog_sinks_include_location})
 install(FILES ${libyang_extension_lib} DESTINATION ${LIBYANG_EXT_PLUGINS_DIR})
+
+SET( legacy_link   ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/libydk.a)
+SET( legacy_target ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/lib${CPACK_LIBRARY_NAME}.a)
+ADD_CUSTOM_COMMAND( TARGET ${CPACK_LIBRARY_NAME}
+                    COMMAND echo "Creating symbolic link ${legacy_link}"
+                    COMMAND rm -f ${legacy_link}
+                    COMMAND ln -s ${legacy_target} ${legacy_link}
+                    DEPENDS install ${CPACK_LIBRARY_NAME}
+                  )
+ADD_CUSTOM_TARGET( install_legacy DEPENDS ${legacy_target} )
 
 # generate doxygen documentation for ydk_core API
 find_package(Doxygen)

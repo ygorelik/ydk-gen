@@ -39,3 +39,5 @@ sdk/python/gnmi/dist
 sdk/python/gnmi/ydk_service_gnmi.egg-info
 venv
 temp
+profiles/bundles/yang/cisco-ios-xe/
+profiles/test/cisco-iosxe-demo.json

@@ -98,12 +98,13 @@ The script detects platform OS, installs all the dependencies and builds complet
 The user must have sudo access to these locations.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-By default the YDK uses Python system installation.
 In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
 If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
+When installing YDK for Go programming language, the third party dependencies and C++ packages must be installed first.
+This step requires sudo/root access to the installation platform.
 Here is simple example of core YDK installation for Go programming language and Python virtual environment:
 
 .. code-block:: sh
@@ -112,6 +113,7 @@ Here is simple example of core YDK installation for Go programming language and 
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
+    ./install_ydk.sh --core --cpp --venv
     ./install_ydk.sh --core --go --venv
 
 
@@ -122,24 +124,27 @@ Full set of script capabilities could be viewed like this::
     ./install_ydk.sh --help
     usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v]
     Options and arguments:
-      --cpp                 install YDK for C++ programming language
+      --cpp                 install YDK for C++ programming language;
+                            requires sudo access for dependencies and libraries installation
       --go                  install YDK for Go programming language
-      --py|--python         install YDK for Python programming language (default)
-      --all                 install YDK for all supported programming languages
+      --py|--python         install YDK for Python programming language
+      --all                 install YDK for all available programming languages;
+                            requires sudo access for dependencies and libraries installation
       -v|--venv             create python virtual environment
-      -c|--core             install YDK core package
+      -c|--core             install YDK core packages
       -s|--service gnmi     install gNMI service package
-      -n|--no-deps          skip installation of dependencies
+      -n|--no-deps          skip installation of dependencies;
+                            applicable only with --cpp and --all options
       -h|--help             print this help message and exit
 
     Environment variables:
     YDKGEN_HOME         specifies location of ydk-gen git repository;
                         if not set, $HOME/ydk-gen is assumed
     PYTHON_VENV         specifies location of python virtual environment;
-                        if not set, /home/ygorelik/venv is assumed
+                        if not set, $HOME/venv is assumed
     GOROOT              specifies installation directory of go software;
                         if not set, /usr/local/go is assumed
-    GOPATH              specifies location of go source directory;
+    GOPATH              specifies location of golang directory;
                         if not set, $HOME/go is assumed
     C_INCLUDE_PATH      location of C include files;
                         if not set, /usr/local/include is assumed
@@ -207,10 +212,11 @@ and YDK gNMI service package.
 gNMI Service installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here is simple example, how gNMI service package for Go could be added::
+Here is simple example, how gNMI service package for Go and Python virtual environment could be added::
 
     cd ydk-gen
-    ./install_ydk.sh --go --service gnmi
+    ./install_ydk.sh --cpp --service gnmi --venv  # requires sudo access
+    ./install_ydk.sh --go --service gnmi --venv
 
 
 gNMI runtime environment

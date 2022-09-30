@@ -34,7 +34,7 @@ For gNMI Go package installation, which is optional, perform this steps.
 
 ```
 $ cd /your-path-to-ydk-gen
-$ ./generate.py -i --service profiles/services/gnmi-0.4.0.json --go
+$ python3 generate.py -i --service profiles/services/gnmi-0.4.0.json --go
 ```
 
 #### Runtime environment
