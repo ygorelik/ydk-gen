@@ -156,42 +156,42 @@
            <div itemprop="articleBody">
             
   <div class="section" id="what-are-deviations">
-<h1><a class="toc-backref" href="#id1">What are deviations?</a><a class="headerlink" href="#what-are-deviations" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#toc-entry-1">What are deviations?</a><a class="headerlink" href="#what-are-deviations" title="Permalink to this headline">¶</a></h1>
 <div class="contents topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#what-are-deviations" id="id1">What are deviations?</a><ul>
-<li><a class="reference internal" href="#overview" id="id2">Overview</a></li>
-<li><a class="reference internal" href="#how-to-use-deviation-with-ydk" id="id3">How to use deviation with YDK</a></li>
+<li><a class="reference internal" href="#what-are-deviations" id="toc-entry-1">What are deviations?</a><ul>
+<li><a class="reference internal" href="#overview" id="toc-entry-2">Overview</a></li>
+<li><a class="reference internal" href="#how-to-use-deviation-with-ydk" id="toc-entry-3">How to use deviation with YDK</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="overview">
-<h2><a class="toc-backref" href="#id2">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-2">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>Not all devices faithfully support features defined in standard yang models. For a particular device, it could support only part of features or the feature it supported varies from the standard module. The YANG language defines the <a class="reference external" href="https://tools.ietf.org/html/rfc6020#section-7.18.3">deviation statement</a> to indicate such a thing.
 For example, using a deviation statement in <a class="reference external" href="https://github.com/YangModels/yang/blob/master/vendor/cisco/xr/631/cisco-xr-openconfig-telemetry-deviations.yang#L73">cisco-xr-openconfig-telemetry-deviations.yang</a>, the netconf server can indicate that the <code class="xref py py-class docutils literal"><span class="pre">openconfig_telemetry.TelemetrySystem.Subscriptions.Dynamic.Subscription</span></code> container of the <code class="docutils literal"><span class="pre">openconfig_telemetry</span></code> model is not supported.</p>
-<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">deviation</span> <span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="nl">telemetry</span><span class="p">:</span><span class="n">telemetry</span><span class="o">-</span><span class="n">system</span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="nl">telemetry</span><span class="p">:</span><span class="n">subscriptions</span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="nl">telemetry</span><span class="p">:</span><span class="n">dynamic</span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="nl">telemetry</span><span class="p">:</span><span class="n">subscription</span> <span class="p">{</span>
-  <span class="n">deviate</span> <span class="n">not</span><span class="o">-</span><span class="n">supported</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">deviation</span><span class="w"> </span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="n">telemetry</span><span class="o">:</span><span class="n">telemetry</span><span class="o">-</span><span class="n">system</span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="n">telemetry</span><span class="o">:</span><span class="n">subscriptions</span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="n">telemetry</span><span class="o">:</span><span class="n">dynamic</span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="n">telemetry</span><span class="o">:</span><span class="n">subscription</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">deviate</span><span class="w"> </span><span class="n">not</span><span class="o">-</span><span class="n">supported</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="how-to-use-deviation-with-ydk">
-<h2><a class="toc-backref" href="#id3">How to use deviation with YDK</a><a class="headerlink" href="#how-to-use-deviation-with-ydk" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-3">How to use deviation with YDK</a><a class="headerlink" href="#how-to-use-deviation-with-ydk" title="Permalink to this headline">¶</a></h2>
 <p>When using YDK to program a device which has some unsupported features, YDK will raise error <strong>before</strong> sending payload to device. For instance, if the device advertises via a deviation that it does not support the <code class="docutils literal"><span class="pre">subscription</span></code> node as shown above, an error will be raised.</p>
 <p>We can try to configure a dynamic subscription with the below app.</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.openconfig.openconfig_telemetry</span> <span class="kn">import</span> <span class="n">TelemetrySystem</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ydk.models.openconfig.openconfig_telemetry</span> <span class="kn">import</span> <span class="n">TelemetrySystem</span>
 
 <span class="n">telemetry</span> <span class="o">=</span> <span class="n">TelemetrySystem</span><span class="p">()</span>
 <span class="n">s</span> <span class="o">=</span> <span class="n">telemetry</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">dynamic</span><span class="o">.</span><span class="n">Subscription</span><span class="p">()</span>
@@ -205,34 +205,34 @@ For example, using a deviation statement in <a class="reference external" href="
 </pre></div>
 </td></tr></table></div>
 <p>The above app results in the below errors logged and exception being raised because of the deviation which is active on the <code class="docutils literal"><span class="pre">subscription</span></code> node.</p>
-<div class="highlight-sh"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="m">2017</span>-11-08 <span class="m">21</span>:26:58,543 - ydk - ERROR - Data is invalid according to the yang model. Error details: Schema node not found. Path: <span class="s1">&#39;subscription&#39;</span>
+<div class="highlight-sh"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="m">2017</span>-11-08 <span class="m">21</span>:26:58,543 - ydk - ERROR - Data is invalid according to the yang model. Error details: Schema node not found. Path: <span class="s1">&#39;subscription&#39;</span>
 <span class="m">2017</span>-11-08 <span class="m">21</span>:26:58,543 - ydk - ERROR - Invalid path: subscription<span class="o">[</span>subscription-id<span class="o">=</span><span class="s1">&#39;123&#39;</span><span class="o">]</span>
 
-  File <span class="s2">&quot;/Users/lib/python3.6/site-packages/ydk/errors/error_handler.py&quot;</span>, line <span class="m">112</span>, in helper
+  File <span class="s2">&quot;/Users/lib/python3.6/site-packages/ydk/errors/error_handler.py&quot;</span>, line <span class="m">112</span>, <span class="k">in</span> helper
     <span class="k">return</span> func<span class="o">(</span>self, provider, entity, *args, **kwargs<span class="o">)</span>
-  File <span class="s2">&quot;/Users/lib/python3.6/site-packages/ydk/services/crud_service.py&quot;</span>, line <span class="m">30</span>, in create
+  File <span class="s2">&quot;/Users/lib/python3.6/site-packages/ydk/services/crud_service.py&quot;</span>, line <span class="m">30</span>, <span class="k">in</span> create
     <span class="k">return</span> self._crud.create<span class="o">(</span>provider, entity<span class="o">)</span>
-  File <span class="s2">&quot;/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/contextlib.py&quot;</span>, line <span class="m">99</span>, in __exit__
+  File <span class="s2">&quot;/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/contextlib.py&quot;</span>, line <span class="m">99</span>, <span class="k">in</span> __exit__
     self.gen.throw<span class="o">(</span>type, value, traceback<span class="o">)</span>
-  File <span class="s2">&quot;/Users/lib/python3.6/site-packages/ydk/errors/error_handler.py&quot;</span>, line <span class="m">82</span>, in handle_runtime_error
+  File <span class="s2">&quot;/Users/lib/python3.6/site-packages/ydk/errors/error_handler.py&quot;</span>, line <span class="m">82</span>, <span class="k">in</span> handle_runtime_error
     _raise<span class="o">(</span>_exc<span class="o">)</span>
-  File <span class="s2">&quot;/Users/lib/python3.6/site-packages/ydk/errors/error_handler.py&quot;</span>, line <span class="m">54</span>, in _raise
+  File <span class="s2">&quot;/Users/lib/python3.6/site-packages/ydk/errors/error_handler.py&quot;</span>, line <span class="m">54</span>, <span class="k">in</span> _raise
     exec<span class="o">(</span><span class="s2">&quot;raise exc from None&quot;</span><span class="o">)</span>
-  File <span class="s2">&quot;&lt;string&gt;&quot;</span>, line <span class="m">1</span>, in &lt;module&gt;
+  File <span class="s2">&quot;&lt;string&gt;&quot;</span>, line <span class="m">1</span>, <span class="k">in</span> &lt;module&gt;
 ydk.errors.YModelError:  Invalid path: subscription<span class="o">[</span>subscription-id<span class="o">=</span><span class="s1">&#39;123&#39;</span><span class="o">]</span> : Schema node not found.. Path: subscription
 </pre></div>
 </td></tr></table></div>
