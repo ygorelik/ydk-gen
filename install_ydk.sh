@@ -224,7 +224,7 @@ function install_go_core {
 }
 
 function install_go_gnmi {
-    print_msg "Installing Go gNMI package"
+    print_msg "Installing Go gNMI service package"
     cd $YDKGEN_HOME
     run_cmd python3 generate.py -i --service profiles/services/gnmi-0.4.0.json --go
 }
@@ -278,7 +278,7 @@ function instal_dependencies {
 }
 
 function test_libydk {
-    [ -f "$libydk_path" ] && [ "$(readlink /usr/local/lib/libydk.a)" == "$libydk_path" ] && return 0
+    [ -f "/usr/local/lib/$libydk_path" ] && [[ "$(readlink /usr/local/lib/libydk.a)" == *"$libydk_path" ]] && return 0
 
     MSG_COLOR=$RED
     print_msg "Missing C++ core library '$libydk_path'. Install it first!"
@@ -286,7 +286,7 @@ function test_libydk {
 }
 
 function test_libydk_gnmi {
-    [ -f "$libydk_gnmi_path" ] && [ "$(readlink /usr/local/lib/libydk_gnmi.a)" == "$libydk_gnmi_path" ] && return 0
+    [ -f "/usr/local/lib/$libydk_gnmi_path" ] && [[ "$(readlink /usr/local/lib/libydk_gnmi.a)" == *"$libydk_gnmi_path" ]] && return 0
 
     MSG_COLOR=$RED
     print_msg "Missing C++ gNMI service library '$libydk_gnmi_path'. Install it first!"
@@ -484,8 +484,8 @@ cd ${YDKGEN_HOME}
 
 ydk_version=$(grep core sdk/version.json | awk '{print($2)'} | tr -d '"' | tr -d ',')
 gnmi_version=$(grep gnmi-service sdk/version.json | awk '{print($2)'} | tr -d '"' | tr -d ',')
-libydk_path="/usr/local/lib/libydk-$ydk_version.a"
-libydk_gnmi_path="/usr/local/lib/libydk_gnmi-$gnmi_version.a"
+libydk_path="libydk-$ydk_version.a"
+libydk_gnmi_path="libydk_gnmi-$gnmi_version.a"
 echo "YDK-$ydk_version installation options:"
 if [ ${install_venv} == "no" ]; then
   if [[ -n $python_location ]]; then
