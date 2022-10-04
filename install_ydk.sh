@@ -136,24 +136,8 @@ function init_py_env {
       exit 1
     fi
   fi
-  if check_requirements; then
-    print_msg "Installing Python requirements"
-    pip3 install -r requirements.txt
-  fi
-}
-
-function check_requirements {
-    print_msg "Checking installation of Python requirements"
-    for x in $(cat requirements.txt)
-    do
-      local package=$(echo $x | cut -d "=" -f1)
-      local in_pip=$(pip3 list | grep $package)
-      if [ -z "$in_pip" ]; then return 0; fi
-      local version=$(echo $x | cut -d "=" -f3)
-      local in_pip_version=$(echo $in_pip | awk '{print $2}')
-      if [ "$in_pip_version" \< "$version" ]; then return 0; fi
-    done
-    return 1
+  print_msg "Checking and installing Python requirements"
+  pip3 install -r requirements.txt
 }
 
 function init_go_env {
@@ -161,14 +145,10 @@ function init_go_env {
     print_msg "Initializing Go environment"
 
     if [[ $(uname) == "Darwin" ]]; then
-        if [[ $GOPATH. == "." ]]; then
-            export GOPATH=$HOME/go
-        fi
         if [[ $GOROOT. == "." ]]; then
             export GOROOT=/usr/local/go
         fi
         print_msg "GOROOT: $GOROOT"
-        print_msg "GOPATH: $GOPATH"
     else
         if [[ $GOROOT. == "." ]]; then
             export GOROOT=/usr/local/go
@@ -177,14 +157,13 @@ function init_go_env {
             print_msg "GOROOT: $GOROOT"
         fi
         export PATH=$GOROOT/bin:$PATH
-
-        if [[ $GOPATH. == "." ]]; then
-            export GOPATH=$HOME/go
-            mkdir -p $GOPATH
-            print_msg "Setting GOPATH to $GOPATH"
-        else
-            print_msg "GOPATH: $GOPATH"
-        fi
+    fi
+    if [[ -z $GOPATH ]]; then
+        export GOPATH=$HOME/go
+        mkdir -p $GOPATH
+        print_msg "Setting GOPATH to $GOPATH"
+    else
+        print_msg "GOPATH: $GOPATH"
     fi
     go_version=$(echo `go version` | awk '{ print $3 }' | cut -d 'o' -f 2)
     print_msg "Current Go version is $go_version"
@@ -352,16 +331,19 @@ export YDKGEN_HOME=\"${YDKGEN_HOME}\"
 
 export C_INCLUDE_PATH=\"$C_INCLUDE_PATH\"
 export CPLUS_INCLUDE_PATH=\"$CPLUS_INCLUDE_PATH\"
+export PIP_DISABLE_PIP_VERSION_CHECK=1
 " > .env
+  if [[ -n $LD_LIBRARY_PATH ]]; then
+    echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+" >> .env
+  fi
   if [ $install_venv == "yes" ]; then
     echo "export PYTHON_VENV=$PYTHON_VENV" >> .env
     echo "source $PYTHON_VENV/bin/activate" >> .env
   elif [[ -n $python_location ]]; then
-    echo "PATH=$python_location/bin:$PATH
-export PATH
-alias python=$PYTHON_BIN
-alias pip=$PIP_BIN
-export PIP_DISABLE_PIP_VERSION_CHECK=1
+    echo "export PATH=$python_location/bin:\$PATH
+alias python=python3
+alias pip=pip3
 " >> .env
   fi
   if [[ -n $sudo_cmd ]]; then
@@ -369,23 +351,21 @@ export PIP_DISABLE_PIP_VERSION_CHECK=1
   fi
   if [[ $ydk_lang == "go" || $ydk_lang == "all" ]]; then
     if [[ ${os_type} == "Linux" ]]; then
-      echo "if [ -z \$GOROOT ]; then
+      echo "
+if [ -z \$GOROOT ]; then
     export GOROOT=$GOROOT
-    PATH=$GOROOT/bin:$PATH
-    export PATH
-fi"
->> .env
+    if [[ $PATH != *\"$GOROOT/bin\"* ]]; then
+        export PATH=$GOROOT/bin:\$PATH
     fi
-    echo "
+fi
+" >> .env
+    fi
+echo "
 if [ -z \$GOPATH ]; then
     export GOPATH=$HOME/go
 fi
 export CXX=/usr/bin/c++
 export CC=/usr/bin/cc
-" >> .env
-  fi
-  if [[ $service_pkg == "gnmi" && $LD_LIBRARY_PATH != *"protobuf"* ]]; then
-    echo "export LD_LIBRARY_PATH=\$HOME/grpc/libs/opt:\$HOME/protobuf-3.5.0/src/.libs:\$LD_LIBRARY_PATH
 " >> .env
   fi
   if [[ -n $CMAKE_LIBRARY_PATH ]]; then
@@ -551,11 +531,13 @@ if [[ -z ${CPLUS_INCLUDE_PATH} ]]; then
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64:/usr/lib64
-    if [ ${service_pkg} == "gnmi" ]; then
-        export LD_LIBRARY_PATH=$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:$LD_LIBRARY_PATH
-    fi
-    print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
+  if [[ $LD_LIBRARY_PATH != *"/usr/local/lib"* ]]; then
+    export LD_LIBRARY_PATH="/usr/local/lib$LD_LIBRARY_PATH"
+  fi
+  if [[ $LD_LIBRARY_PATH != *"/lib64"* ]]; then
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64:/usr/lib64
+  fi
+  print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
 fi
 
 if [ ${dependencies} == "yes" ]; then
