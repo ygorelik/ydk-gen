@@ -257,7 +257,7 @@ function instal_dependencies {
 }
 
 function test_libydk {
-    [ -f "/usr/local/lib/$libydk_path" ] && [[ "$(readlink /usr/local/lib/libydk.a)" == *"$libydk_path" ]] && return 0
+    [ -f "/usr/local/lib/$libydk_path" ] && [[ "$(readlink /usr/local/lib/libydk.a)" == "$libydk_path" ]] && return 0
 
     MSG_COLOR=$RED
     print_msg "Missing C++ core library '$libydk_path'. Install it first!"
@@ -265,7 +265,7 @@ function test_libydk {
 }
 
 function test_libydk_gnmi {
-    [ -f "/usr/local/lib/$libydk_gnmi_path" ] && [[ "$(readlink /usr/local/lib/libydk_gnmi.a)" == *"$libydk_gnmi_path" ]] && return 0
+    [ -f "/usr/local/lib/$libydk_gnmi_path" ] && [[ "$(readlink /usr/local/lib/libydk_gnmi.a)" == "$libydk_gnmi_path" ]] && return 0
 
     MSG_COLOR=$RED
     print_msg "Missing C++ gNMI service library '$libydk_gnmi_path'. Install it first!"

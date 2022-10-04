@@ -9,6 +9,7 @@ set (CPACK_PACKAGE_NAME "libydk")
 set (CPACK_PACKAGE_BUILD "3")
 set (CPACK_PACKAGE_VERSION "${PROJECT_VERSION}.${CPACK_PACKAGE_BUILD}")
 set (CPACK_LIBRARY_NAME "ydk-${CPACK_PACKAGE_VERSION}")
+set (CPACK_LIBRARY_TARGET "lib${CPACK_LIBRARY_NAME}.a")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "YDK C++ Core Library")
 
 # CPack Static Settings
@@ -484,11 +485,11 @@ install(FILES ${SPDLOG_SINKS_HEADERS} DESTINATION ${spdlog_sinks_include_locatio
 install(FILES ${libyang_extension_lib} DESTINATION ${LIBYANG_EXT_PLUGINS_DIR})
 
 SET( legacy_link   ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/libydk.a)
-SET( legacy_target ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/lib${CPACK_LIBRARY_NAME}.a)
+SET( legacy_target ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/${CPACK_LIBRARY_TARGET})
 ADD_CUSTOM_COMMAND( TARGET ${CPACK_LIBRARY_NAME}
                     COMMAND echo "Creating symbolic link ${legacy_link}"
                     COMMAND rm -f ${legacy_link}
-                    COMMAND ln -s ${legacy_target} ${legacy_link}
+                    COMMAND ln -s ${CPACK_LIBRARY_TARGET} ${legacy_link}
                     DEPENDS install ${CPACK_LIBRARY_NAME}
                   )
 ADD_CUSTOM_TARGET( install_legacy DEPENDS ${legacy_target} )
