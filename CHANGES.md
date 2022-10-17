@@ -7,6 +7,8 @@
   * Added SSL support for NetconfServiceProvider in Go
   * Improved installation script to allow use Python system installation
   * Allow custom Python installation in YDK installation script
+  * install_ydk.sh: Installation of Python YDK packages should not require root access ([#1069](https://github.com/CiscoDevNet/ydk-gen/issues/1069))
+
 
 #### Resolved GitHub issues
   * Go function EntityEqual result depends on parameters order ([#1053](https://github.com/CiscoDevNet/ydk-gen/issues/1053))
@@ -20,6 +22,14 @@
 ([#1062](https://github.com/CiscoDevNet/ydk-gen/issues/1062))
   * The installation script fails on fresh new CentOS 7 docker container ([#1064](https://github.com/CiscoDevNet/ydk-gen/issues/1064))
   * ExecutorService fails on non-ietf RPC with Libyang error ([#1067](https://github.com/CiscoDevNet/ydk-gen/issues/1067))
+
+### Resolved non-GitHub issues
+  * Upgraded third party packages Sphinx (1.5.6) and wheel (0.37.1) due to documentation
+generation issues on Mac Big Sur
+  * Fixed installation script for the case, when virtual environment is not used
+
+#### Documentation improvements
+  * Fixed documentation issue [#1066](https://github.com/CiscoDevNet/ydk-gen/issues/1066)
 
 #### Bundle improvements
   * Updated cisco-ios-xr bundle (profile cisco-ios-xr_6_7_3.json) to support Cisco IOS XR 6.7.3

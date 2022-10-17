@@ -65,15 +65,15 @@ YDK also provides Codec service to translate API models to/from XML and JSON enc
 
 The YDK-0.9.0 C++ code got significant changes, which broke backward compatibility with YDK-0.8.5 and earlier releases.
 
-**NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
+**NOTE.** Starting from release 0.8.6 the YDK does not support Python2 interpreter as it was deprecated.
 
 ## Docker
 
 Currently the [docker image](https://docs.docker.com/engine/reference/run/) for ydk-cpp is not been generated.
-Please use [ydk-gen](https://github.com/ygorelik/ydk-gen/tree/0.8.5#docker>) docker image, which has complete 
+Please use [ydk-gen](https://gitlab.com/yangorelik/ydk-gen#docker>) docker image, which has complete 
 environment for ydk-cpp based development.
 
-A [docker image](https://docs.docker.com/engine/reference/run/) is automatically built with the latest ydk-gen commit.
+The docker image is automatically built with the latest ydk-gen commit.
 This docker can be used to run ydk-gen without installing anything natively on your platform.
 
 To use the docker image, [install docker](https://docs.docker.com/install/) on your system and run the below command.
@@ -115,7 +115,6 @@ The script detects platform OS, installs all the dependencies and builds complet
 The user must have sudo access to these locations.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-By default the YDK uses Python system installation.
 In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
 If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
@@ -126,7 +125,7 @@ For different location the PYTHON_VENV environment variable should be set to tha
 Here is simple example of core YDK installation for C++ programming language and Python virtual environment:
 
 ```
-git clone https://github.com/ygorelik/ydk-gen.git
+git clone https://gitlab.com/yangorelik/ydk-gen.git
 cd ydk-gen
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
@@ -141,23 +140,26 @@ Full set of script capabilities could be viewed like this:
 ./install_ydk.sh --help
 usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v] [-p path]
 Options and arguments:
-  --cpp                 install YDK for C++ programming language
+  --cpp                 install YDK for C++ programming language;
+                        requires sudo access for dependencies and libraries installation
   --go                  install YDK for Go programming language
-  --py|--python         install YDK for Python programming language (default)
-  --all                 install YDK for all supported programming languages
+  --py|--python         install YDK for Python programming language
+  --all                 install YDK for all available programming languages;
+                        requires sudo access for dependencies and libraries installation
   -v|--venv             create python virtual environment
   -c|--core             install YDK core packages
   -s|--service gnmi     install gNMI service package
-  -n|--no-deps          skip installation of dependencies
+  -n|--no-deps          skip installation of dependencies;
+                        applicable only with --cpp and --all options
   -p|--python-dir path  set Python3 installation root directory;
                         if not specified, system installation assumed
   -h|--help             print this help message and exit
- 
+
 Environment variables:
 YDKGEN_HOME         specifies location of ydk-gen git repository;
                     if not set, $HOME/ydk-gen is assumed
 PYTHON_VENV         specifies location of python virtual environment;
-                    if not set, /home/ygorelik/venv is assumed
+                    if not set, $HOME/venv is assumed
 GOROOT              specifies installation directory of go software;
                     if not set, /usr/local/go is assumed
 GOPATH              specifies location of go source directory;
@@ -194,7 +196,7 @@ The script will also install Python virtual environment in default or specified 
 
 ```
 # Clone ydk-gen from GitHub
-git clone https://github.com/ygorelik/ydk-gen.git -b yang11
+git clone https://gitlab.com/yangorelik/ydk-gen.git
 cd ydk-gen
 
 # Define optional environment variables and install dependencies
@@ -212,7 +214,7 @@ For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dep
 source $PYTHON_VENV/bin/activate
 
 # Generate and install YDK core library
-./generate.py -is --core --cpp
+python3 generate.py -is --core --cpp
 ```
 
 ## Adding gNMI Service
@@ -222,11 +224,11 @@ and YDK gNMI service package.
 
 ### gNMI service installation
 
-Here is simple example how gNMI service package for Python could be added:
+Here is simple example how gNMI service package and Python virtual environment could be added:
 
 ```
 cd ydk-gen
-./install_ydk.sh --cpp --service gnmi
+./install_ydk.sh --cpp --service gnmi -v
 ```
 
 ### Runtime environment

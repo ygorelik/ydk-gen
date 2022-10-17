@@ -30,11 +30,11 @@ In order to enable YDK support for gNMI protocol, which is optional, the followi
 
 ### gNMI package installation
 
-For gNMI Go package installation, which is optional, perform this steps.
+For gNMI Go package installation, which is optional, perform these steps.
 
 ```
 $ cd /your-path-to-ydk-gen
-$ ./generate.py -i --service profiles/services/gnmi-0.4.0.json --go
+$ python3 generate.py -i --service profiles/services/gnmi-0.4.0.json --go
 ```
 
 #### Runtime environment
