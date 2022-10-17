@@ -122,7 +122,7 @@ For different location the PYTHON_VENV environment variable should be set to tha
 **NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
 
 When installing YDK for Go programming language, the third party dependencies and C++ packages must be installed first.
-This step requires sudo/root access to the installation platform.
+These steps require sudo/root access to the installation platform.
 Here is simple example of core YDK installation for Go programming language and Python virtual environment:
 
 ```
@@ -149,7 +149,7 @@ Options and arguments:
   --all                 install YDK for all available programming languages;
                         requires sudo access for dependencies and libraries installation
   -v|--venv             create python virtual environment
-  -c|--core             install YDK core packages
+  -c|--core             install YDK core package
   -s|--service gnmi     install gNMI service package
   -n|--no-deps          skip installation of dependencies;
                         applicable only with --cpp and --all options
@@ -162,7 +162,7 @@ PYTHON_VENV         specifies location of python virtual environment;
                     if not set, $HOME/venv is assumed
 GOROOT              specifies installation directory of go software;
                     if not set, /usr/local/go is assumed
-GOPATH              specifies location of golang directory;
+GOPATH              specifies location of go source directory;
                     if not set, $HOME/go is assumed
 C_INCLUDE_PATH      location of C include files;
                     if not set, /usr/local/include is assumed
@@ -186,6 +186,10 @@ In this case the header location must be specified explicitly (in below commands
   export C_INCLUDE_PATH=/usr/local/include
   export CPLUS_INCLUDE_PATH=/usr/local/include
 ```
+
+When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.
 
 #### Installing third party dependencies
 
@@ -243,8 +247,7 @@ See this issue on [GRPC GitHub](https://github.com/grpc/grpc/issues/10942#issuec
 As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable:
 
 ```
-PROTO=$HOME  # Default location defined during installation
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
 ```
 
 ## Documentation and Support

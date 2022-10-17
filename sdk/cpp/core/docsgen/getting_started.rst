@@ -126,7 +126,7 @@ Full set of script capabilities could be viewed like this::
       --all                 install YDK for all available programming languages;
                             requires sudo access for dependencies and libraries installation
       -v|--venv             create python virtual environment
-      -c|--core             install YDK core packages
+      -c|--core             install YDK core package
       -s|--service gnmi     install gNMI service package
       -n|--no-deps          skip installation of dependencies;
                             applicable only with --cpp and --all options
@@ -139,7 +139,7 @@ Full set of script capabilities could be viewed like this::
                         if not set, $HOME/venv is assumed
     GOROOT              specifies installation directory of go software;
                         if not set, /usr/local/go is assumed
-    GOPATH              specifies location of golang directory;
+    GOPATH              specifies location of go source directory;
                         if not set, $HOME/go is assumed
     C_INCLUDE_PATH      location of C include files;
                         if not set, /usr/local/include is assumed
@@ -204,7 +204,7 @@ and YDK gNMI service package.
 gNMI Service installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here is simple example, how gNMI service package for Python virtual environment could be added::
+Here is simple example, how gNMI service package with Python virtual environment could be added::
 
     cd ydk-gen
     ./install_ydk.sh --cpp --service gnmi --venv
@@ -217,7 +217,7 @@ There is an open issue with gRPC on Centos/RHEL, which requires an extra step be
 See this issue on `GRPC GitHub <https://github.com/grpc/grpc/issues/10942#issuecomment-312565041>`_ for details.
 As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable::
 
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/grpc/libs/opt:~/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
 
 
 Installing model bundles

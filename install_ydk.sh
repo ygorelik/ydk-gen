@@ -48,7 +48,7 @@ Options and arguments:
   --all                 install YDK for all available programming languages;
                         requires sudo access for dependencies and libraries installation
   -v|--venv             create python virtual environment
-  -c|--core             install YDK core packages
+  -c|--core             install YDK core package
   -s|--service gnmi     install gNMI service package
   -n|--no-deps          skip installation of dependencies;
                         applicable only with --cpp and --all options
@@ -61,7 +61,7 @@ PYTHON_VENV         specifies location of python virtual environment;
                     if not set, \$HOME/venv is assumed
 GOROOT              specifies installation directory of go software;
                     if not set, /usr/local/go is assumed
-GOPATH              specifies location of golang directory;
+GOPATH              specifies location of go source directory;
                     if not set, \$HOME/go is assumed
 C_INCLUDE_PATH      location of C include files;
                     if not set, /usr/local/include is assumed
@@ -360,7 +360,7 @@ if [ -z \$GOROOT ]; then
 fi
 " >> .env
     fi
-echo "
+    echo "
 if [ -z \$GOPATH ]; then
     export GOPATH=$HOME/go
 fi
@@ -532,7 +532,7 @@ fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
   if [[ $LD_LIBRARY_PATH != *"/usr/local/lib"* ]]; then
-    export LD_LIBRARY_PATH="/usr/local/lib$LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
   fi
   if [[ $LD_LIBRARY_PATH != *"/lib64"* ]]; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64:/usr/lib64

@@ -189,7 +189,7 @@ Options and arguments:
   --all                 install YDK for all available programming languages;
                         requires sudo access for dependencies and libraries installation
   -v|--venv             create python virtual environment
-  -c|--core             install YDK core packages
+  -c|--core             install YDK core package
   -s|--service gnmi     install gNMI service package
   -n|--no-deps          skip installation of dependencies;
                         applicable only with --cpp and --all options
@@ -202,7 +202,7 @@ PYTHON_VENV         specifies location of python virtual environment;
                     if not set, $HOME/venv is assumed
 GOROOT              specifies installation directory of go software;
                     if not set, /usr/local/go is assumed
-GOPATH              specifies location of golang directory;
+GOPATH              specifies location of go source directory;
                     if not set, $HOME/go is assumed
 C_INCLUDE_PATH      location of C include files;
                     if not set, /usr/local/include is assumed
@@ -290,8 +290,7 @@ See this issue on [GRPC GitHub](https://github.com/grpc/grpc/issues/10942#issuec
 As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable:
 
 ```
-PROTO=$HOME  # Default location defined during installation
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
 ```
 
 # Generate YDK components

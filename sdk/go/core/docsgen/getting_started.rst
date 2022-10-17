@@ -104,7 +104,7 @@ By default the Python virtual environment is installed under `$HOME/venv` direct
 If user has different location, the PYTHON_VENV environment variable should be set to that location.
 
 When installing YDK for Go programming language, the third party dependencies and C++ packages must be installed first.
-This step requires sudo/root access to the installation platform.
+These steps require sudo/root access to the installation platform.
 Here is simple example of core YDK installation for Go programming language and Python virtual environment:
 
 .. code-block:: sh
@@ -113,7 +113,7 @@ Here is simple example of core YDK installation for Go programming language and 
     cd ydk-gen
     export YDKGEN_HOME=`pwd`  # optional
     export PYTHON_VENV=$HOME/ydk_vne  # optional
-    ./install_ydk.sh --core --cpp --venv
+    ./install_ydk.sh --core --cpp --venv  # requires sudo access
     ./install_ydk.sh --core --go --venv
 
 
@@ -131,7 +131,7 @@ Full set of script capabilities could be viewed like this::
       --all                 install YDK for all available programming languages;
                             requires sudo access for dependencies and libraries installation
       -v|--venv             create python virtual environment
-      -c|--core             install YDK core packages
+      -c|--core             install YDK core package
       -s|--service gnmi     install gNMI service package
       -n|--no-deps          skip installation of dependencies;
                             applicable only with --cpp and --all options
@@ -144,7 +144,7 @@ Full set of script capabilities could be viewed like this::
                         if not set, $HOME/venv is assumed
     GOROOT              specifies installation directory of go software;
                         if not set, /usr/local/go is assumed
-    GOPATH              specifies location of golang directory;
+    GOPATH              specifies location of go source directory;
                         if not set, $HOME/go is assumed
     C_INCLUDE_PATH      location of C include files;
                         if not set, /usr/local/include is assumed
@@ -226,7 +226,7 @@ There is an open issue with gRPC on Centos/RHEL, which requires an extra step be
 See this issue on `GRPC GitHub <https://github.com/grpc/grpc/issues/10942#issuecomment-312565041>`_ for details.
 As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable::
 
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/grpc/libs/opt:~/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
 
 
 Documentation and Support
