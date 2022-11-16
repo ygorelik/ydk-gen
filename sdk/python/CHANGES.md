@@ -1,3 +1,9 @@
+### 2022-12-30 version 0.8.6.4
+
+#### Resolved GitHub issues
+  * CodecService fails to decode XML in python when referencing namespace prefix ([#1071](https://github.com/CiscoDevNet/ydk-gen/issues/1071))
+
+
 ### 2022-03-31 version 0.8.6.2
 
 #### New features and enhancements

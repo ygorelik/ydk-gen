@@ -1,7 +1,10 @@
-### 2022-09-30 version 0.8.6.4
+### 2022-12-30 version 0.8.6.4
 
 #### New features and enhancements
   * install_ydk.sh: Installation of Python YDK packages should not require root access ([#1069](https://github.com/CiscoDevNet/ydk-gen/issues/1069))
+
+#### Resolved GitHub issues
+  * CodecService fails to decode XML in python when referencing namespace prefix ([#1071](https://github.com/CiscoDevNet/ydk-gen/issues/1071))
 
 
 ### 2022-07-31 version 0.8.6.3
