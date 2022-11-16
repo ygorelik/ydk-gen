@@ -1,6 +1,6 @@
 #  ----------------------------------------------------------------
 # YDK - YANG Development Kit
-# Copyright 2016-2019 Cisco Systems
+# Copyright 2016-2022 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -736,14 +736,14 @@ class YList(EntityCollection):
                         break
                     if isinstance(attr, Empty) or not str(attr):
                         continue  # Skip empty key
+                    if not isinstance(attr, str):
+                        attr = format(attr)
                     key_list.append(attr)
         if len(key_list) == 0:
             self.counter += 1
             key = format(self.counter)
         elif len(key_list) == 1:
             key = key_list[0]
-            if not isinstance(key, str):
-                key = format(key)
         else:
             key = tuple(key_list)
         return key
@@ -751,7 +751,9 @@ class YList(EntityCollection):
     def _flush_cache(self):
         for _ in range(len(self._cache_dict)):
             _, entity = self._cache_dict.popitem(False)
-            self._entity_map[self._key(entity)] = entity
+            key = self._key(entity)
+            self._entity_map[key] = entity
+            entity.ylist_key = key
 
     def append(self, entities):
         entities.parent = self.parent
