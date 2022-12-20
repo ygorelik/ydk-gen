@@ -1,4 +1,4 @@
-pyang>=2.5
+pyang>=2.5.3
 MarkupSafe>=1.1.1
 Jinja2>=2.11.3
 pybind11==2.6.2
