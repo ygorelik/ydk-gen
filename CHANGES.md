@@ -1,3 +1,12 @@
+### 2022-12-30 version 0.8.6.4
+
+#### New features and enhancements
+  * install_ydk.sh: Installation of Python YDK packages should not require root access ([#1069](https://github.com/CiscoDevNet/ydk-gen/issues/1069))
+
+#### Resolved GitHub issues
+  * CodecService fails to decode XML in python when referencing namespace prefix ([#1071](https://github.com/CiscoDevNet/ydk-gen/issues/1071))
+
+
 ### 2022-07-31 version 0.8.6.3
 
 #### New features and enhancements
@@ -8,12 +17,15 @@
   * gNMI service installation on Centos 8.2 fails due to C++ compiler error
 ([#1062](https://github.com/CiscoDevNet/ydk-gen/issues/1062))
   * The installation script fails on fresh new CentOS 7 docker container ([#1064](https://github.com/CiscoDevNet/ydk-gen/issues/1064))
+  * ExecutorService fails on non-ietf RPC with Libyang error ([#1067](https://github.com/CiscoDevNet/ydk-gen/issues/1067))
 
 ### Resolved non-GitHub issues
   * Upgraded third party packages Sphinx (1.5.6) and wheel (0.37.1) due to documentation
 generation issues on Mac Big Sur
   * Fixed installation script for the case, when virtual environment is not used
 
+#### Documentation improvements
+  * Fixed documentation issue [#1066](https://github.com/CiscoDevNet/ydk-gen/issues/1066)
 
 ### 2022-03-31 version 0.8.6.2
 

@@ -79,7 +79,7 @@ To use the docker image, [install docker](https://docs.docker.com/install/) on y
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
 
 ```
-docker run -it ydksolutions/ydk-gen:0.8.6.3
+docker run -it ydksolutions/ydk-gen:0.8.6.4
 ```
 
 ## System Requirements
@@ -114,7 +114,6 @@ The script detects platform OS, installs all the dependencies and builds complet
 The user must have sudo access to these locations.
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-By default the YDK uses Python system installation.
 In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
 If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
@@ -122,14 +121,17 @@ For different location the PYTHON_VENV environment variable should be set to tha
 
 **NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
 
-Here is simple example of core YDK installation for Go programming language:
+When installing YDK for Go programming language, the third party dependencies and C++ packages must be installed first.
+These steps require sudo/root access to the installation platform.
+Here is simple example of core YDK installation for Go programming language and Python virtual environment:
 
 ```
 git clone https://github.com/CiscoDevNet/ydk-gen.git
 cd ydk-gen
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
-./install_ydk.sh --go --core
+./install_ydk.sh --cpp --core --venv
+./install_ydk.sh --go --core --venv
 ```
 
 The script also allows to install individual components like dependencies, core, and service packages
@@ -140,16 +142,19 @@ Full set of script capabilities could be viewed like this:
 ./install_ydk.sh --help
 usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v]
 Options and arguments:
-  --cpp                 install YDK for C++ programming language
+  --cpp                 install YDK for C++ programming language;
+                        requires sudo access for dependencies and libraries installation
   --go                  install YDK for Go programming language
-  --py|--python         install YDK for Python programming language (default)
-  --all                 install YDK for all supported programming languages
+  --py|--python         install YDK for Python programming language
+  --all                 install YDK for all available programming languages;
+                        requires sudo access for dependencies and libraries installation
   -v|--venv             create python virtual environment
-  -c|--core             install YDK core packages
+  -c|--core             install YDK core package
   -s|--service gnmi     install gNMI service package
-  -n|--no-deps          skip installation of dependencies
+  -n|--no-deps          skip installation of dependencies;
+                        applicable only with --cpp and --all options
   -h|--help             print this help message and exit
- 
+
 Environment variables:
 YDKGEN_HOME         specifies location of ydk-gen git repository;
                     if not set, $HOME/ydk-gen is assumed
@@ -181,6 +186,10 @@ In this case the header location must be specified explicitly (in below commands
   export C_INCLUDE_PATH=/usr/local/include
   export CPLUS_INCLUDE_PATH=/usr/local/include
 ```
+
+When non-standard Python installation is used or there are multiple installations of Python on the platform,
+the PATH and CMAKE_LIBRARY_PATH environment variables must be set accordingly in order for the installation scripts
+to pick up correct Python binaries and shared libraries.
 
 #### Installing third party dependencies
 
@@ -223,11 +232,12 @@ and YDK gNMI service package.
 
 ### gNMI service installation
 
-Here is simple example how gNMI service package for Go programming language could be added:
+Here is simple example how gNMI service package for Go programming language and Python virtual environment could be added:
 
 ```
 cd ydk-gen
-./install_ydk.sh --go --service gnmi
+./install_ydk.sh --cpp --service gnmi --venv  # requires sudo access
+./install_ydk.sh --go --service gnmi --venv
 ```
 
 ### Runtime environment
@@ -237,8 +247,7 @@ See this issue on [GRPC GitHub](https://github.com/grpc/grpc/issues/10942#issuec
 As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable:
 
 ```
-PROTO=$HOME  # Default location defined during installation
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
 ```
 
 ## Documentation and Support
@@ -249,6 +258,6 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5
 
 ## Release Notes
 
-The current YDK release version is 0.8.6.3.
+The current YDK release version is 0.8.6.4.
 
 YDK is licensed under the Apache 2.0 License.

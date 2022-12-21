@@ -111,7 +111,7 @@ To use the docker image, [install docker](https://docs.docker.com/install/) on y
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
 
 ```
-docker run -it ydksolutions/ydk-gen:0.8.6.3
+docker run -it ydksolutions/ydk-gen:0.8.6.4
 ```
 
 # System Requirements
@@ -135,7 +135,6 @@ All YDK core components are based on C and C++ code. These components compiled u
 Corresponding binaries, libraries, and header files are installed in default locations,
 which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
-Make sure the `sudo` package is installed on your platform.
 Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
 # Core Installation
@@ -155,7 +154,6 @@ source .env
 ```
 
 The YDK extensively uses Python scripts for building its components and model API packages (bundles).
-By default the YDK uses Python system installation.
 In order to isolate YDK Python environment from system installation, the script can build Python3 virtual environment.
 If built, the user must manually activate virtual environment when generating model bundles and/or running YDK based application.
 By default the Python virtual environment is installed under `$HOME/venv` directory.
@@ -163,17 +161,20 @@ For different location the PYTHON_VENV environment variable should be set to tha
 
 **NOTE.** It is strongly recommended to use Python virtual environment on Centos/RHEL and Mac platforms.
 
-Here is simple example of core YDK installation for Python programming language:
+When installing YDK for Python or Go programming languages, the third party dependencies and C++ packages must be installed first.
+This step requires sudo/root access to the installation platform.
+Here is simple example of core YDK installation for Python programming language and Python virtual environment:
 
 ```
 git clone https://github.com/ygorelik/ydk-gen.git
 cd ydk-gen
 export YDKGEN_HOME=`pwd`  # optional
 export PYTHON_VENV=$HOME/ydk_vne  # optional
-./install_ydk.sh --core
+./install_ydk.sh --cpp --core --venv   # This step requires sudo access!
+./install_ydk.sh --py --core --venv
 ```
 
-The script also allows to install individual components like dependencies, core, and service packages
+The script also allows installing individual components like dependencies, core, and service packages
 for specified programming language or for all supported languages.
 Full set of script capabilities could be viewed like this:
 
@@ -181,21 +182,24 @@ Full set of script capabilities could be viewed like this:
 ./install_ydk.sh --help
 usage: install_ydk [ {--cpp|--py|--go|--all} ] [-c] [-s gnmi] [-h] [-n] [-v]
 Options and arguments:
-  --cpp                 install YDK for C++ programming language
+  --cpp                 install YDK for C++ programming language;
+                        requires sudo access for dependencies and libraries installation
   --go                  install YDK for Go programming language
-  --py|--python         install YDK for Python programming language (default)
-  --all                 install YDK for all supported programming languages
+  --py|--python         install YDK for Python programming language
+  --all                 install YDK for all available programming languages;
+                        requires sudo access for dependencies and libraries installation
   -v|--venv             create python virtual environment
-  -c|--core             install YDK core packages
+  -c|--core             install YDK core package
   -s|--service gnmi     install gNMI service package
-  -n|--no-deps          skip installation of dependencies
+  -n|--no-deps          skip installation of dependencies;
+                        applicable only with --cpp and --all options
   -h|--help             print this help message and exit
- 
+
 Environment variables:
 YDKGEN_HOME         specifies location of ydk-gen git repository;
                     if not set, $HOME/ydk-gen is assumed
 PYTHON_VENV         specifies location of python virtual environment;
-                    if not set, /home/ygorelik/venv is assumed
+                    if not set, $HOME/venv is assumed
 GOROOT              specifies installation directory of go software;
                     if not set, /usr/local/go is assumed
 GOPATH              specifies location of go source directory;
@@ -252,13 +256,13 @@ For unsupported platforms it is recommended to follow logic of `ydk-gen/test/dep
 source .env
 
 # Generate and install YDK core library
-./generate.py -is --core --cpp
+python3 generate.py -is --core --cpp
 
 # For Python programming language add
-./generate.py -i --core --py
+python3 generate.py -i --core --py
 
 # For Go programming language add
-./generate.py -i --core --go
+python3 generate.py -i --core --go
 ```
 
 ## Adding gNMI service
@@ -268,10 +272,11 @@ and YDK gNMI service package.
 
 ### gNMI service installation
 
-Here is simple example how gNMI service package for Python could be added:
+Here is simple example how gNMI service package for Python virtual environment could be added:
 
 ```
 cd ydk-gen
+./install_ydk.sh --cpp --service gnmi -v  # requires sudo access
 ./install_ydk.sh --py --service gnmi -v
 ```
 
@@ -285,8 +290,7 @@ See this issue on [GRPC GitHub](https://github.com/grpc/grpc/issues/10942#issuec
 As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable:
 
 ```
-PROTO=$HOME  # Default location defined during installation
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
 ```
 
 # Generate YDK components
@@ -296,7 +300,7 @@ All the YDK components/packages can be generated by using Python script `generat
 ```
 cd ydk-gen
 source .env
-./generate.py --help
+python3 generate.py --help
 usage: generate.py [-h] [-l] [--core] [--service SERVICE] [--bundle BUNDLE]
                    [--adhoc-bundle-name ADHOC_BUNDLE_NAME]
                    [--adhoc-bundle ADHOC_BUNDLE [ADHOC_BUNDLE ...]]
@@ -427,14 +431,14 @@ YDK runtime environment must be activated prior to these procedures.
 If applicable, the Python virtual environment must be activated prior to these procedures
 
 ```
-./generate.py --python --bundle profiles/bundles/<name-of-profile>.json -i
+python3 generate.py --python --bundle profiles/bundles/<name-of-profile>.json -i
 ```
 
 Check Python packages installed:
 
 ```
 pip list | grep ydk
-ydk (0.8.6.3)
+ydk (0.8.6.4)
 ydk-models-<name-of-bundle> (0.5.1)
 ...
 ```
@@ -442,13 +446,13 @@ ydk-models-<name-of-bundle> (0.5.1)
 ### For Go
 
 ```
-./generate.py --go --bundle profiles/bundles/<name-of-profile>.json -i
+python3 generate.py --go --bundle profiles/bundles/<name-of-profile>.json -i
 ```
 
 ### For C++
 
 ```
-./generate.py --cpp --bundle profiles/bundles/<name-of-profile>.json -is
+python3 generate.py --cpp --bundle profiles/bundles/<name-of-profile>.json -is
 ```
 
 ## Writing your first app
@@ -471,10 +475,10 @@ For example, the below sequence of commands will generate the documentation for 
 (for C++, use `--cpp`; for Go, use `--go`).
 
 ```
-./generate.py --python --bundle profiles/bundles/ietf_0_1_1.json
-./generate.py --python --bundle profiles/bundles/openconfig_0_1_1.json
-./generate.py --python --bundle profiles/bundles/cisco_ios_xr_6_1_1.json
-./generate.py --python --core --generate-doc
+python3 generate.py --python --bundle profiles/bundles/ietf_0_1_1.json
+python3 generate.py --python --bundle profiles/bundles/openconfig_0_1_1.json
+python3 generate.py --python --bundle profiles/bundles/cisco_ios_xr_6_1_1.json
+python3 generate.py --python --core --generate-doc
 ```
 
 **Note.** The documentation generation for bundles can take few hours due to their size. If you have previously 
@@ -485,8 +489,8 @@ the add-on documentation generation time can be reduced. Adding cisco-ios-xr doc
 mkdir gen-api/cache
 mv gen-api/python gen-api/cache
 
-./generate.py --python --bundle profiles/bundles/cisco_ios_xr_6_6_3.json
-./generate.py --python --core --generate-doc --output-directory gen-api --cached-output-dir
+python3 generate.py --python --bundle profiles/bundles/cisco_ios_xr_6_6_3.json
+python3 generate.py --python --core --generate-doc --output-directory gen-api --cached-output-dir
 ```
 
 ## Generating an "Adhoc" YDK-Py Bundle
@@ -496,7 +500,7 @@ just few models. It is called an "adhoc" bundle. Such a bundle generated without
 Here is simple example:
 
 ```
-./generate.py -i --adhoc-bundle-name test --adhoc-bundle \
+python3 generate.py -i --adhoc-bundle-name test --adhoc-bundle \
     /opt/git-repos/clean-yang/vendor/cisco/xr/621/Cisco-IOS-XR-ipv4-bgp-oper*.yang \
     /opt/git-repos/clean-yang/vendor/cisco/xr/621/Cisco-IOS-XR-types.yang
     /opt/git-repos/clean-yang/vendor/cisco/xr/621/Cisco-IOS-XR-ipv4-bgp-datatypes.yang
@@ -564,7 +568,7 @@ Other times, when the problem is not so evident, it is recommended to try runnin
 `[--verbose|-v]` flag, which may reveal syntax problems with the YANG models being used. For example:
 
 ```
-./generate.py --python --bundle profiles/bundles/ietf_0_1_1.json --verbose
+python3 generate.py --python --bundle profiles/bundles/ietf_0_1_1.json --verbose
 ```
 
 Also, it may be a good idea to obtain a local copy of the YANG models and compile them using `pyang` to ensure
@@ -614,6 +618,6 @@ The script will install core and bundle packages and then perform the unit tests
 
 # Release Notes
 
-The current YDK release version is 0.8.6.3.
+The current YDK release version is 0.8.6.4.
 
 YDK-Gen is licensed under the Apache 2.0 License.

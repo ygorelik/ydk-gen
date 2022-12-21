@@ -846,7 +846,7 @@ if [[ ${status} == 0 ]] ; then
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]] ; then
-   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64:/usr/local/lib64:/usr/local/lib
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64:/usr/lib64
    print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
    centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
 fi

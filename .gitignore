@@ -8,7 +8,7 @@
 .temp
 .idea*
 .coverage*
-.env
+.env*
 htmlcov
 coverage.xml
 *.pyc
@@ -39,4 +39,3 @@ sdk/python/gnmi/dist
 sdk/python/gnmi/ydk_service_gnmi.egg-info
 venv
 temp
-/.env3.10
