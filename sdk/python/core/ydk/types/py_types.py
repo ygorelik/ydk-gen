@@ -1,5 +1,6 @@
 #  ----------------------------------------------------------------
-# Copyright 2016 Cisco Systems
+# YDK - YANG Development Kit
+# Copyright 2016-2022 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
