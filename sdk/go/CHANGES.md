@@ -1,3 +1,9 @@
+### 2023-01-30 version 0.8.6.4
+
+#### New features and enhancements
+  * install_ydk.sh: Installation of Python and Go YDK packages should not require root access ([#1069](https://github.com/CiscoDevNet/ydk-gen/issues/1069))
+
+
 ### 2021-09-30 version 0.8.6
 
 #### New features and enhancements
