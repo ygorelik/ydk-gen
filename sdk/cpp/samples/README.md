@@ -1,6 +1,6 @@
 # YDK C++ Samples
 
-## Building Sample Applications
+## Building Sample Apps
 
 ### 1. Build YDK C++ Core
 
@@ -65,17 +65,20 @@ make
 That will build the following apps:
 ```
 (venv3.7) YGORELIK-M-C3GG:build ygorelik$ ls -l bgp_*
--rwxr-xr-x  1 ygorelik  staff  16552816 Jan  4 09:42 bgp_create
--rwxr-xr-x  1 ygorelik  staff  16403152 Jan  4 09:43 bgp_delete
--rwxr-xr-x  1 ygorelik  staff  16425752 Jan  4 09:43 bgp_read
--rwxr-xr-x  1 ygorelik  staff  16404152 Jan  4 09:42 bgp_update
--rwxr-xr-x  1 ygorelik  staff  19776920 Jan  4 09:43 bgp_xr_create
--rwxr-xr-x  1 ygorelik  staff  19544792 Jan  4 09:43 bgp_xr_delete
--rwxr-xr-x  1 ygorelik  staff  19549288 Jan  4 09:43 bgp_xr_read
-
+-rwxr-xr-x  1 ygorelik  staff  16552816 Jan  5 16:23 bgp_create
+-rwxr-xr-x  1 ygorelik  staff  16403152 Jan  5 16:23 bgp_delete
+-rwxr-xr-x  1 ygorelik  staff  16425752 Jan  5 16:23 bgp_read
+-rwxr-xr-x  1 ygorelik  staff  17038472 Jan  5 16:24 bgp_routing_policy_create
+-rwxr-xr-x  1 ygorelik  staff  16404152 Jan  5 16:23 bgp_update
+-rwxr-xr-x  1 ygorelik  staff  19793312 Jan  5 16:24 bgp_xr_create
+-rwxr-xr-x  1 ygorelik  staff  19544792 Jan  5 16:24 bgp_xr_delete
+-rwxr-xr-x  1 ygorelik  staff  19549288 Jan  5 16:24 bgp_xr_read
+-rwxr-xr-x  1 ygorelik  staff  17403440 Jan  5 16:49 isis_xr_create
+-rwxr-xr-x  1 ygorelik  staff  17152904 Jan  5 16:27 isis_xr_delete
+-rwxr-xr-x  1 ygorelik  staff  17172552 Jan  5 16:27 isis_xr_read
 ```
 
-## Running Sample Applications
+## Running Sample Apps
 
 To run sample apps you need to have live or simulated router with enabled Netconf server. For test purposes it is
 recommended to use _confd_ app, which was installed during core installation. The _confd_ can be initialized,
