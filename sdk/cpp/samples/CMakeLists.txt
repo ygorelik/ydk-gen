@@ -14,9 +14,9 @@ set(samples     bgp_create
                 bgp_xr_delete
                 bgp_xr_read
                 bgp_routing_policy_create
-#                 isis_xr_create
-#                 isis_xr_delete
-#                 isis_xr_read
+                isis_xr_create
+                isis_xr_delete
+                isis_xr_read
 #                 bgp_xr_opendaylight
 #                 bgp_restconf
 #                 xe_native_read # uncomment this line if you want to build this XE native sample which takes a while

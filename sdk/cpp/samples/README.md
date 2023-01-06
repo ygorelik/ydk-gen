@@ -16,7 +16,7 @@ after initializing Python virtual environment:
 
 **Openconfig bundle**
 ```
-export REPO="~/yang-models/yang/vendor/cisco/xr/751"
+export REPO="/Users/ygorelik/yang-models/yang/vendor/cisco/xr/751"
 cd ~/ydk-gen
 python generate.py -is --cpp --adhoc-bundle-name openconfig --adhoc-bundle \
 $REPO/openconfig-bgp.yang \
@@ -38,7 +38,7 @@ $REPO/openconfig-policy-types.yang
 
 **Cisco_ios_xr bundle**
 ```
-export REPO="~/yang-models/yang/vendor/cisco/xr/751"
+export REPO="/Users/ygorelik/yang-models/yang/vendor/cisco/xr/751"
 cd ~/ydk-gen
 python generate.py -is --cpp --adhoc-bundle-name cisco_ios_xr --adhoc-bundle \
 $REPO/Cisco-IOS-XR-ipv4-bgp-cfg.yang \
@@ -47,7 +47,9 @@ $REPO/Cisco-IOS-XR-ipv4-bgp-datatypes.yang \
 $REPO/cisco-semver.yang \
 $REPO/Cisco-IOS-XR-infra-rsi-cfg.yang \
 $REPO/Cisco-IOS-XR-snmp-agent-cfg.yang \
-$REPO/Cisco-IOS-XR-ifmgr-cfg.yang 
+$REPO/Cisco-IOS-XR-ifmgr-cfg.yang \
+$REPO/Cisco-IOS-XR-clns-isis-datatypes.yang \
+$REPO/Cisco-IOS-XR-clns-isis-cfg.yang
 ```
 
 ### 3. Build the Sample Apps

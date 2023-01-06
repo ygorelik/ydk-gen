@@ -47,18 +47,19 @@ void config_isis(Isis* isis)
     af->af_name = IsisAddressFamily::ipv4;
     af->saf_name = IsisSubAddressFamily::unicast;
     af->af_data = make_shared<Isis::Instances::Instance::Afs::Af::AfData>(); // instantiate the presence node
+    af->af_data->parent = af.get(); // set the parent
     auto metric_style = make_shared<Isis::Instances::Instance::Afs::Af::AfData::MetricStyles::MetricStyle>();
     metric_style->style = IsisMetricStyle::new_metric_style;
     metric_style->level = IsisInternalLevel::not_set;
-//    metric_style->transition_state = IsisMetricStyleTransition::disabled;
     af->af_data->metric_styles->metric_style.append(metric_style);
     instance->afs->af.append(af);
 
-    // loopback interface
+    // Loopback0 interface
     auto interface = make_shared<Isis::Instances::Instance::Interfaces::Interface>();
     interface->interface_name = "Loopback0";
     interface->running = Empty();
     interface->state = IsisInterfaceState::passive;
+
     // interface address family
     auto interface_af = make_shared<Isis::Instances::Instance::Interfaces::Interface::InterfaceAfs::InterfaceAf>();
     interface_af->af_name = IsisAddressFamily::ipv4;
@@ -72,7 +73,8 @@ void config_isis(Isis* isis)
     interface->interface_name = "GigabitEthernet0/0/0/0";
     interface->running = Empty();
     interface->point_to_point = Empty();
-    // interface address familiy
+
+    // interface address family
     interface_af = make_shared<Isis::Instances::Instance::Interfaces::Interface::InterfaceAfs::InterfaceAf>();
     interface_af->af_name = IsisAddressFamily::ipv4;
     interface_af->saf_name = IsisSubAddressFamily::unicast;
