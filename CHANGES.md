@@ -8,6 +8,7 @@
   * CodecService fails to decode XML in python when referencing namespace prefix ([#1071](https://github.com/CiscoDevNet/ydk-gen/issues/1071))
   * CiscoDevNet YDK C++ README needs Documentation & Support links updated ([#1077](https://github.com/CiscoDevNet/ydk-gen/issues/1077))
   * Error in ydk-gen-master/test/dependencies_centos.sh version check ([#1078](https://github.com/CiscoDevNet/ydk-gen/issues/1078))
+  * not_eq is a c++ keyword ([#1080](https://github.com/CiscoDevNet/ydk-gen/issues/1080))
 
 ### Resolved non-GitHub issues
   * Fixed and tested C++ sample apps
