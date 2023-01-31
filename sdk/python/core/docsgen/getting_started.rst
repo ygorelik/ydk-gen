@@ -479,16 +479,14 @@ the add-on documentation generation time can be reduced. Adding cisco-ios-xr doc
     python3 generate.py --bundle profiles/bundles/cisco_ios_xr_6_6_3.json
     python3 generate.py --core --generate-doc --output-directory gen-api --cached-output-dir
 
-Pre-generated documentation for YDK-0.8.3 core and model API for most popular devices is available
-`online <https://ydk.cisco.com>`_. Please note, that some API can be different comparing with current release.
 
 Documentation and Support
 =========================
 
-- Pre-generated documentation for YDK-0.8.6 core and model API for IETF and OpenConfig can be found `here <https://ygorelik.github.io/ydk-gen/>`_
+- Pre-generated documentation for YDK-0.8.6 core and model API for IETF and OpenConfig can be found `here <https://ciscodevnet.github.io/ydk-gen/>`_
 - Application samples can be found under the `samples <https://github.com/CiscoDevNet/ydk-gen/tree/master/sdk/python/core/samples>`_ directory
 - Hundreds of Python application samples can be found in the `samples <https://github.com/CiscoDevNet/ydk-py-samples>`_ repository
-- Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with YDK users and developers
+- Join the `YDK community <https://community.cisco.com/t5/yang-tools/bd-p/5475j-disc-dev-net-ydk>`_ to connect with YDK users and developers
 
 Release Notes
 =============

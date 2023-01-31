@@ -297,13 +297,10 @@ Documentation and Support
 
 Available resources:
 
-..
-  - Read the `API documentation <http://ydk.cisco.com/py/docs>`_ (release 0.8.3) for details on how to use the API and specific models
-
-- Check `GitHub Pages <https://ygorelik.github.io/ydk-gen>`_ for the latest YDK release documentation
-- Find some app samples in the `samples directory <https://github.com/CiscoDevNet/ydk-py/tree/master/core/samples>`_
-- Find hundreds of additional samples in the `YDK-PY samples repository <https://github.com/CiscoDevNet/ydk-py-samples>`_
-- Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with YDK users and developers
+- Check `GitHub Pages <https://ciscodevnet.github.io/ydk-gen/>`_ for the latest YDK release documentation
+- Find some Python app samples in the `samples directory <https://github.com/CiscoDevNet/ydk-py/tree/master/core/samples>`_
+- Find hundreds of additional samples in the `YDK Python samples repository <https://github.com/CiscoDevNet/ydk-py-samples/tree/master/samples/basic>`_
+- Join the `YDK community <https://community.cisco.com/t5/yang-tools/bd-p/5475j-disc-dev-net-ydk>`_ to connect with YDK users and developers
 
 Release Notes
 =============

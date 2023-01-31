@@ -28,14 +28,14 @@
 Questions and Answers
 =====================
 
-Please join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to get answers to any
+Please join the `YDK community <https://community.cisco.com/t5/yang-tools/bd-p/5475j-disc-dev-net-ydk>`_ to get answers to any
 YDK-related questions you may have.
 
 How do I report a bug I found?
 ------------------------------
 
 Please use the `YDK-Gen GitHub issue tracker <https://github.com/CiscoDevNet/ydk-gen/issues>`_ to report any bugs that you discovered.
-Please use the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ for any other questions.
+Please use the `YDK community <https://community.cisco.com/t5/yang-tools/bd-p/5475j-disc-dev-net-ydk>`_ for any other questions.
 
 I am interested in contributing. How do I do this?
 --------------------------------------------------
@@ -58,7 +58,7 @@ Currently, we do not have a central location where the compatibility information
 the bundle APIs is maintained.
 In general, we try to maintain backward compatibility between the releases of the core and bundles.
 
-Check the `Backward Compatibility <https://ygorelik.github.io/ydk-gen/getting_started.html#backward-compatibility>`_ notes
+Check the `Backward Compatibility <https://github.com/CiscoDevNet/ydk-gen#backward-compatibility>`_ notes
 for more information.
 
 Also, we use the `ydk-gen/generate.py <https://github.com/CiscoDevNet/ydk-gen>`_ script to generate and install the bundles.
