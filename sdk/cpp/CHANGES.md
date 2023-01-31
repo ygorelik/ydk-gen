@@ -7,6 +7,7 @@
 #### Resolved GitHub issues
   * CodecService fails to decode XML in python when referencing namespace prefix ([#1071](https://github.com/CiscoDevNet/ydk-gen/issues/1071))
   * not_eq is a c++ keyword ([#1080](https://github.com/CiscoDevNet/ydk-gen/issues/1080))
+  * libyang issue with arguments that are swapped ([#1081](https://github.com/CiscoDevNet/ydk-gen/issues/1081))
 
 ### Resolved non-GitHub issues
   * Fixed and tested C++ sample apps
