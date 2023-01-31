@@ -31,6 +31,8 @@ test/gnmi_client
 yang/nxos*
 yang-git
 profiles/test/ydk-nxos*
+profiles/bundles/yang/xe-1764/
+profiles/test/cisco-iosxe-1764.json
 confd*
 grpc
 protobuf-3.5.0
