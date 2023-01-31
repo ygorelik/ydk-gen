@@ -6,6 +6,7 @@
 
 #### Resolved GitHub issues
   * CodecService fails to decode XML in python when referencing namespace prefix ([#1071](https://github.com/CiscoDevNet/ydk-gen/issues/1071))
+  * Error in ydk-gen-master/test/dependencies_centos.sh version check ([#1078](https://github.com/CiscoDevNet/ydk-gen/issues/1078))
 
 ### Resolved non-GitHub issues
   * Fixed and tested C++ sample apps
