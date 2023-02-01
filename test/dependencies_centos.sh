@@ -54,7 +54,8 @@ function check_install_gcc {
     print_msg "The gcc/g++ not installed"
     gcc_version="4.0.0"
   fi
-  if [[ $gcc_version < "4.8.1" ]]
+  major=$(echo $gcc_version | cut -d '.' -f 1)
+  if [[ $major -le 4 && $gcc_version < "4.8.1" ]]
   then
     print_msg "Upgrading gcc/g++ to version 7"
     $sudo_cmd yum install centos-release-scl -y > /dev/null

@@ -30,11 +30,11 @@ In order to enable YDK support for gNMI protocol, which is optional, the followi
 
 ### gNMI package installation
 
-For gNMI Go package installation, which is optional, perform this steps.
+For gNMI Go package installation, which is optional, perform these steps.
 
 ```
 $ cd /your-path-to-ydk-gen
-$ ./generate.py -i --service profiles/services/gnmi-0.4.0.json --go
+$ python3 generate.py -i --service profiles/services/gnmi-0.4.0.json --go
 ```
 
 #### Runtime environment
@@ -44,6 +44,5 @@ See this issue on [GRPC GitHub](https://github.com/grpc/grpc/issues/10942#issuec
 As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable:
 
 ```
-    PROTO="/Your-Protobuf-and-Grpc-installation-directory"
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5.0/src/.libs:/usr/local/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
 ```
