@@ -524,8 +524,6 @@ library. As example:
 
 It is recommended to follow [Core Installation](#core-installation) procedure to ensure presence of shared Python libraries.
 
-**NOTE.** Due to GitHub issue [#1050](https://github.com/CiscoDevNet/ydk-gen/issues/1050) YDK is not supported with Python 3.9.x.
-
 ## C++ requirements
 
 In some OS configurations during YDK package installation the `cmake` fails to find C/C++ headers for installed YDK libraries.

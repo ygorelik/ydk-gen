@@ -1,3 +1,9 @@
+### 2023-03-31 version 0.8.6.5
+
+#### Resolved GitHub issues
+  * Segmentation Fault on Python application exit with Python 3.9.5 ([#1050](https://github.com/CiscoDevNet/ydk-gen/issues/1050))
+
+
 ### 2023-01-31 version 0.8.6.4
 
 #### New features and enhancements
