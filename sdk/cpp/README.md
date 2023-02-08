@@ -243,7 +243,6 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5
 ```
 
 ## Documentation and Support
-- Read the [API documentation](http://ydk.cisco.com/cpp/docs) (release 0.8.3) for details on how to use the API and specific models
 - Samples can be found under the [samples directory](https://github.com/CiscoDevNet/ydk-cpp/tree/master/core/samples)
 - Additional samples can be found in the [YDK-Cpp samples repository](https://github.com/CiscoDevNet/ydk-cpp-samples) (coming soon)
 - Join the [YDK community](https://communities.cisco.com/community/developer/ydk) to connect with YDK users and developers

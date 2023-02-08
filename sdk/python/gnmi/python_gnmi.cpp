@@ -12,7 +12,13 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+ -------------------------------------------------------------------
+ This file has been modified by Yan Gorelik, YDK Solutions.
+ All modifications in original under CiscoDevNet domain
+ introduced since October 2019 are copyrighted.
+ All rights reserved under Apache License, Version 2.0.
  ------------------------------------------------------------------*/
+
 #include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
@@ -83,10 +89,15 @@ static void setup_gnmi_logging()
 
         add_null_handler(logger);
         log_debug = logger.attr("debug");
+        log_debug.inc_ref();
         log_info = logger.attr("info");
+        log_info.inc_ref();
         log_warning = logger.attr("warning");
+        log_warning.inc_ref();
         log_error = logger.attr("error");
+        log_error.inc_ref();
         log_critical = logger.attr("critical");
+        log_critical.inc_ref();
 
         ydk::set_logging_callback("debug", gnmi_debug);
         ydk::set_logging_callback("info", gnmi_info);

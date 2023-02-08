@@ -135,7 +135,7 @@ def ispythonkeyword(word):
 
 
 def iscppkeyword(word):
-    return word in ('parent', 'operator', 'inline', 'default', 'virtual',
+    return word in ['parent', 'operator', 'inline', 'default', 'virtual',
                     'children', 'value', 'auto', 'entity', 'int', 'signed',
                     'final', 'template', 'index', 'protected', 'true', 'false',
                     'default', 'auto', 'static', 'or', 'do', 'new', 'delete',
@@ -143,13 +143,16 @@ def iscppkeyword(word):
                     'break', 'case', 'catch', 'float', 'long', 'return',
                     'explicit', 'class', 'if', 'try', 'while', 'and', 'or',
                     'const', 'continue', 'double', 'else', 'value', 'namespace',
-                    'operation', 'volatile', 'register', 'short', 'extern', 'union',
+                    'operation', 'volatile', 'register', 'short', 'extern',
                     'mutable', 'unsigned', 'struct', 'switch', 'void', 'typedef', 'typename',
-                    'typeid', 'using', 'char', 'goto', 'not', 'clock', 'major', 'minor', 'INFINITY')
+                    'typeid', 'using', 'char', 'goto', 'not', 'clock', 'major', 'minor', 'INFINITY',
+                    'alignas', 'alignof', 'asm', 'and_eq', 'not_eq', 'or_eq', 'xor', 'xor_eq',
+                    'bitand', 'bitor', 'compl', 'constexpr', 'decltype',
+                    ]
 
 
 def isgokeyword(word):
-    return word in (
+    return word in [
         # keywords
         'break', 'default', 'func', 'interface', 'select',
         'case', 'defer', 'go', 'map', 'struct', 'chan',
@@ -166,7 +169,8 @@ def isgokeyword(word):
         'nil',
         # functions
         'append', 'cap', 'close', 'complex', 'copy', 'delete', 'imag', 'len',
-        'make', 'new', 'panic', 'print', 'println', 'real', 'recover',)
+        'make', 'new', 'panic', 'print', 'println', 'real', 'recover',
+    ]
 
 def get_sphinx_ref_label(named_element):
     return named_element.fqn().replace('.', '_')

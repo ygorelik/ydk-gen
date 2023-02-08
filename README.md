@@ -530,8 +530,6 @@ library. As example:
 
 It is recommended to follow [Core Installation](#core-installation) procedure to ensure presence of shared Python libraries.
 
-**NOTE.** Due to GitHub issue [#1050](https://github.com/CiscoDevNet/ydk-gen/issues/1050) YDK is not supported with Python 3.9.x.
-
 ## C++ requirements
 
 In some OS configurations during YDK package installation the `cmake` fails to find C/C++ headers for installed YDK libraries.
@@ -617,7 +615,6 @@ The script will install core and bundle packages and then perform the unit tests
 
 # Documentation and Support
 
-<!--- - Read the online [YDK documentation](http://ydk.cisco.com/py/docs) (release 0.8.3) for details on how to use the YDK and API for specific models -->
 <!--- - Check [GitHub Pages](https://ygorelik.github.io/ydk-gen/) for the latest YDK release documentation -->
 - Complete YDK documentation is available locally from the ydk-gen repository by opening web page _docs/index.html_ from any available internet browser
 - Find hundreds of sample apps in the [YDK-PY samples repository](https://github.com/CiscoDevNet/ydk-py-samples)

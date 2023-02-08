@@ -85,8 +85,6 @@ which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
 Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
-**NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
-
 .. _howto-install:
 
 Core Installation
@@ -447,9 +445,6 @@ the add-on documentation generation time can be reduced. Adding cisco-ios-xr doc
 
     python3 generate.py --bundle profiles/bundles/cisco_ios_xr_6_6_3.json
     python3 generate.py --core --generate-doc --output-directory gen-api --cached-output-dir
-
-Pre-generated documentation for YDK-0.8.3 core and model API for most popular devices is available
-`online <https://ydk.cisco.com>`_. Please note, that some API can be different comparing with current release.
 
 Documentation and Support
 =========================

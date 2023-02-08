@@ -15,6 +15,7 @@
   * Fixed Python 3.5 code compatibility issue for Ubuntu:xenial
   * install_ydk.sh tries to create a new venv ([#1034](https://github.com/CiscoDevNet/ydk-gen/issues/1034))
   * Addressed segmentation fault error when required modules are not loaded.
+  * Segmentation Fault on Python application exit with Python 3.9.5 ([#1050](https://github.com/CiscoDevNet/ydk-gen/issues/1050))
   * getting YCodecError when leaf value has string 'sftp://' ([#1056](https://github.com/CiscoDevNet/ydk-gen/issues/1056))
   * vrf route-target leaf stitching(bool) fails as invalid ([#1059](https://github.com/CiscoDevNet/ydk-gen/issues/1059))
   * IndexError on decoding empty string value in JSON payload ([#1061](https://github.com/CiscoDevNet/ydk-gen/issues/1061))
@@ -23,11 +24,14 @@
   * The installation script fails on fresh new CentOS 7 docker container ([#1064](https://github.com/CiscoDevNet/ydk-gen/issues/1064))
   * ExecutorService fails on non-ietf RPC with Libyang error ([#1067](https://github.com/CiscoDevNet/ydk-gen/issues/1067))
   * CodecService fails to decode XML in python when referencing namespace prefix ([#1071](https://github.com/CiscoDevNet/ydk-gen/issues/1071))
+  * Error in ydk-gen-master/test/dependencies_centos.sh version check ([#1078](https://github.com/CiscoDevNet/ydk-gen/issues/1078))
+  * not_eq is a c++ keyword ([#1080](https://github.com/CiscoDevNet/ydk-gen/issues/1080))
 
 ### Resolved non-GitHub issues
   * Upgraded third party packages Sphinx (1.5.6) and wheel (0.37.1) due to documentation
 generation issues on Mac Big Sur
   * Fixed installation script for the case, when virtual environment is not used
+  * Fixed and tested C++ sample apps
 
 #### Documentation improvements
   * Fixed documentation issue [#1066](https://github.com/CiscoDevNet/ydk-gen/issues/1066)

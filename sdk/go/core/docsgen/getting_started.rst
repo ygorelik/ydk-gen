@@ -83,8 +83,6 @@ which are `/usr/local/bin`, `/usr/local/lib`, and `/usr/local/include`.
 The user must have sudo access in order to install YDK core components to these locations.
 Make sure the `sudo` package is installed on your platform prior to the YDK installation procedure.
 
-**NOTE.** Due to GitHub issue `#1050 <https://github.com/CiscoDevNet/ydk-gen/issues/1050>`_ YDK is not supported with Python 3.9.x.
-
 .. _howto-install:
 
 Core Installation
@@ -232,7 +230,6 @@ As a workaround, the YDK based application runtime environment must include sett
 Documentation and Support
 =========================
 
-- Read the `API documentation <http://ydk.cisco.com/go/docs>`_ for details on how to use the API and specific models (YDK-0.8.3)
 - Samples can be found under the `samples <https://github.com/CiscoDevNet/ydk-go/tree/master/samples>`_ directory
 - Join the `YDK community <https://communities.cisco.com/community/developer/ydk>`_ to connect with other users and with the makers of YDK
 

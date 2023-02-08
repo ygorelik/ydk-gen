@@ -99,10 +99,15 @@ void setup_logging()
 
         add_null_handler(logger);
         log_debug = logger.attr("debug");
+        log_debug.inc_ref();
         log_info = logger.attr("info");
+        log_info.inc_ref();
         log_warning = logger.attr("warning");
+        log_warning.inc_ref();
         log_error = logger.attr("error");
+        log_error.inc_ref();
         log_critical = logger.attr("critical");
+        log_critical.inc_ref();
 
         ydk::set_logging_callback("debug", debug);
         ydk::set_logging_callback("info", info);
