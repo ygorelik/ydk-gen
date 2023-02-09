@@ -592,15 +592,15 @@ func (suite *CodecTestSuite) TestNative() {
 
 func (suite *CodecTestSuite) TestBoolLists() {
 	r := ysanity.Runner{}
-	r.Ytypes.BuiltInT.BoolLeafList.append(true)
-        r.Ytypes.BuiltInT.BoolLeafList.append(False)
+	r.Ytypes.BuiltInT.BoolLeafList = append(r.Ytypes.BuiltInT.BoolLeafList, true)
+	r.Ytypes.BuiltInT.BoolLeafList = append(r.Ytypes.BuiltInT.BoolLeafList, false)
 
-        boolListElem = ysanity.Runner.Ytypes.BuiltInT.BoolList()
-        boolListElem.BoolLeaf = true
-        r.Ytypes.BuiltInT.BoolList.append(&boolListElem)
+	boolListElem := ysanity.Runner_Ytypes_BuiltInT_BoolList{}
+	boolListElem.BoolLeaf = true
+	r.Ytypes.BuiltInT.BoolList = append(r.Ytypes.BuiltInT.BoolList, &boolListElem)
 
-        xml := suite.Codec.Encode(&suite.Provider, &r)
-        expected := '<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
+	xml := suite.Codec.Encode(&suite.Provider, &r)
+	expected := `<runner xmlns="http://cisco.com/ns/yang/ydktest-sanity">
   <ytypes>
     <built-in-t>
       <bool-leaf-list>true</bool-leaf-list>
@@ -611,11 +611,11 @@ func (suite *CodecTestSuite) TestBoolLists() {
     </built-in-t>
   </ytypes>
 </runner>
-'
-        suite.Equal(expected, xml)
+`
+	suite.Equal(expected, xml)
 
-        entity := suite.Codec.Decode(suite.Provider, xml)
-        suite.True(types.EntityEqual(entity, &r)
+	entity := suite.Codec.Decode(&suite.Provider, xml)
+	suite.True(types.EntityEqual(entity, &r))
 }
 
 func TestCodecTestSuite(t *testing.T) {

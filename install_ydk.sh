@@ -139,7 +139,7 @@ function init_py_env {
     fi
   fi
   print_msg "Checking and installing Python requirements"
-  $PIP_BIN install wheel>=0.37.1
+  $PIP_BIN install wheel==0.37.1
   status=$?
   if [ $status -ne 0 ]; then
     print_msg "Enabling sudo for Python components installation"
@@ -376,6 +376,11 @@ if [ -z \$GOPATH ]; then
 fi
 export CXX=/usr/bin/c++
 export CC=/usr/bin/cc
+export CGO_ENABLED=1
+export CGO_LDFLAGS_ALLOW=\"-fprofile-arcs|-ftest-coverage|--coverage\"
+if [[ \$go_version > \"1.11.\" ]]; then
+    go env -w GO111MODULE=off
+fi
 " >> .env
   fi
   if [[ -n $CMAKE_LIBRARY_PATH ]]; then
@@ -528,7 +533,7 @@ print_msg "Running OS type: $os_type"
 print_msg "OS info: $os_info"
 if [[ ${os_type} == "Linux" ]]; then
   if [[ ${os_info} == *"Ubuntu"* ]]; then
-    if [[ ${os_info} != *"xenial"* && ${os_info} != *"bionic"* && ${os_info} != *"focal"* ]]; then
+    if [[ ${os_info} != *"xenial"* && ${os_info} != *"bionic"* && ${os_info} != *"focal"* && ${os_info} != *"jammy"* ]]; then
         print_msg "WARNING! Unsupported Ubuntu distribution found. Will try the best efforts."
     fi
   elif [[ ${os_info} == *"fedora"* ]]; then
