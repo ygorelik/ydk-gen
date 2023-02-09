@@ -8,7 +8,7 @@
   * Improved installation script to allow use Python system installation
   * Allow custom Python installation in YDK installation script
   * install_ydk.sh: Installation of Python YDK packages should not require root access ([#1069](https://github.com/CiscoDevNet/ydk-gen/issues/1069))
-
+  * Added support for Ubuntu:jammy (22.04)
 
 #### Resolved GitHub issues
   * Go function EntityEqual result depends on parameters order ([#1053](https://github.com/CiscoDevNet/ydk-gen/issues/1053))
