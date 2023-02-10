@@ -112,11 +112,18 @@ function check_install_gcc {
     gcc_version=$(echo $(gcc --version) | awk '{ print $3 }' | cut -d '-' -f 1)
     print_msg "Current gcc/g++ version is $gcc_version"
     local major=$(echo $gcc_version | cut -d '.' -f 1)
+    if [[ $codename == "focal" && $major -gt 7 ]]; then
+      print_msg "Installing gcc/g++ version 7"
+#       $sudo_cmd add-apt-repository ppa:ubuntu-toolchain-r/test -y
+#       $sudo_cmd apt-get update -y > /dev/null
+      $sudo_cmd apt-get install gcc-7 g++-7 -y > /dev/null
+      gcc_version=$(echo $(gcc --version) | awk '{ print $3 }' | cut -d '-' -f 1)
+      print_msg "Installed gcc/g++ version is $gcc_version"
+      major=$(echo $gcc_version | cut -d '.' -f 1)
+    fi
     print_msg "Checking and installing symbolic links for the gcc/g++ compilers"
     run_cmd check_install_gcc_link gcc-$major cc
-    # run_cmd check_install_gcc_link gcc-$major gcc
     run_cmd check_install_gcc_link g++-$major c++
-    # run_cmd check_install_gcc_link g++-$major g++
   else
     print_msg "The gcc/g++ not installed"
     exit 1
