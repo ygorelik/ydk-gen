@@ -77,5 +77,11 @@ pip uninstall -y ydk-models-deviation
 pip uninstall -y ydk-service-gnmi
 
 print_msg "Deleting C++ packages..."
-sudo rm -rf /usr/local/lib/libydk* /usr/local/lib/libyang*
-sudo rm -rf /usr/local/include/ydk /usr/local/include/libyang /usr/local/include/libnetconf
+
+sudo_cmd=
+if [ $(id -u -n) != "root" ]; then
+  sudo_cmd="sudo"
+fi
+
+$sudo_cmd rm -rf /usr/local/lib/libydk* /usr/local/lib/libyang*
+$sudo_cmd rm -rf /usr/local/include/ydk /usr/local/include/libyang /usr/local/include/libnetconf
