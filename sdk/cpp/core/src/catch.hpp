@@ -6229,6 +6229,9 @@ namespace Catch {
 
 #include <signal.h>
 
+// YG: OVERWRITING TO AVOID GCC-11 SYNTAX ERROR
+#define SIGSTKSZ 16384
+
 namespace Catch {
 
     struct SignalDefs {
