@@ -218,7 +218,7 @@ There is an open issue with gRPC on Centos/RHEL, which requires an extra step be
 See this issue on `GRPC GitHub <https://github.com/grpc/grpc/issues/10942#issuecomment-312565041>`_ for details.
 As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable::
 
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/grpc/libs/opt:~/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+     export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:/usr/lib64:$LD_LIBRARY_PATH
 
 
 Installing model bundles

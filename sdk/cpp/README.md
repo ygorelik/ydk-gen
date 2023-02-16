@@ -238,8 +238,7 @@ See this issue on [GRPC GitHub](https://github.com/grpc/grpc/issues/10942#issuec
 As a workaround, the YDK based application runtime environment must include setting of `LD_LIBRARY_PATH` variable:
 
 ```
-PROTO=$HOME  # Default location defined during installation
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PROTO/grpc/libs/opt:$PROTO/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64
+export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:/usr/lib64:$LD_LIBRARY_PATH
 ```
 
 ## Documentation and Support

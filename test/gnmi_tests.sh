@@ -494,8 +494,10 @@ if [[ ${status} == 0 ]] ; then
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]] ; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64:/usr/lib64
+  if [[ $LD_LIBRARY_PATH != *"/usr/local/lib:/usr/local/lib64:/usr/lib64"* ]]; then
+    export /usr/local/lib:/usr/local/lib64:/usr/lib64:$LD_LIBRARY_PATH
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
+  fi
 fi
 
 init_py_env

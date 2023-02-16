@@ -19,7 +19,7 @@
 # ------------------------------------------------------------------------------
 
 function print_msg {
-    echo -e "${MSG_COLOR}*** $(date): run_cpp_test.sh: $*${NOCOLOR}"
+    echo -e "${MSG_COLOR}*** $(date): run_cpp_test.sh: $* ${NOCOLOR}"
 }
 
 function run_cmd {
@@ -117,6 +117,9 @@ function cpp_sanity_ydktest_test {
     run_cmd $script_dir/init_test_env.sh
 
     print_msg "Running cpp bundle tests"
+    # Need to touch the restcom server for the first time;
+    # expected to fail, but main test should pass
+    ./ydk_bundle_test c_api_provider_withpath
     run_cmd ./ydk_bundle_test -d yes
 }
 
@@ -244,8 +247,8 @@ if [[ ${status} == 0 ]] ; then
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
-  if [[ $LD_LIBRARY_PATH != *"protobuf-3.5.0"* ]]; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/grpc/libs/opt:$HOME/protobuf-3.5.0/src/.libs:/usr/local/lib:/usr/local/lib64:/usr/lib64
+  if [[ $LD_LIBRARY_PATH != *"/usr/local/lib:/usr/local/lib64:/usr/lib64"* ]]; then
+    export /usr/local/lib:/usr/local/lib64:/usr/lib64:$LD_LIBRARY_PATH
     print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
   fi
   centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
