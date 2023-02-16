@@ -28,7 +28,7 @@ START_FLAGS ?=
 all:  openconfig-platform.deviation\
  	ydktest-filterread.fxs ydktest-sanity-augm.fxs ydktest-sanity-types.fxs ydktest-sanity.fxs\
 	ydktest-types.fxs openconfig-bgp-types.fxs openconfig-bgp-policy.fxs openconfig-extensions.fxs openconfig-policy-types.fxs\
-	openconfig-types.fxs openconfig-routing-policy.fxs openconfig-platform.fxs openconfig-interfaces.fxs openconfig-bgp.fxs\
+	ietf-interfaces.fxs openconfig-types.fxs openconfig-routing-policy.fxs openconfig-platform.fxs openconfig-interfaces.fxs openconfig-bgp.fxs\
 	openconfig-platform-types.fxs openconfig-platform-transceiver.fxs oc-pattern.fxs main.fxs main-aug1.fxs iana-if-type.fxs\
 	openconfig-transport-types.fxs ietf-aug-base-1.fxs ietf-aug-base-2.fxs openconfig-terminal-device.fxs  openconfig-if-ethernet.fxs\
 	ydktest-aug-ietf-1.fxs ydktest-aug-ietf-2.fxs ydktest-aug-ietf-4.fxs ydktest-aug-ietf-5.fxs openconfig-bgp-operational.fxs \
@@ -45,6 +45,9 @@ openconfig-platform.deviation : cisco-xr-openconfig-platform-deviations.yang \
 
 iana-if-type.yang:
 	cp ../../../../../../yang/ietf/iana-if-type.yang iana-if-type.yang
+
+ietf-interfaces.yang:
+	cp ../../models/ietf-interfaces\@2018-02-20.yang ietf-interfaces.yang
 
 openconfig-bgp-common-multiprotocol.yang:
 	cp ../../models/openconfig-bgp-common-multiprotocol.yang openconfig-bgp-common-multiprotocol.yang
@@ -84,7 +87,7 @@ openconfig-bgp.yang: openconfig-bgp-common.yang openconfig-bgp-common-multiproto
 openconfig-extensions.yang:
 	cp ../../models/openconfig-extensions.yang openconfig-extensions.yang
 
-openconfig-interfaces.yang:
+openconfig-interfaces.yang: ietf-interfaces.yang
 	cp ../../models/openconfig-interfaces.yang openconfig-interfaces.yang
 
 openconfig-routing-policy.yang: openconfig-interfaces.yang
