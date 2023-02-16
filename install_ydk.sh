@@ -555,6 +555,12 @@ if [[ -z ${C_INCLUDE_PATH} ]]; then
 fi
 if [[ -z ${CPLUS_INCLUDE_PATH} ]]; then
     export CPLUS_INCLUDE_PATH=/usr/local/include
+    if [ $(uname) == "Linux" ]; then
+      gcc_version=$(echo $(gcc --version) | awk '{ print $3 }')
+      major=$(echo $gcc_version | cut -d '.' -f 1)
+      export CPLUS_INCLUDE_PATH=/usr/include/c++/$major:$CPLUS_INCLUDE_PATH
+    fi
+    print_msg "CPLUS_INCLUDE_PATH is set to: $CPLUS_INCLUDE_PATH"
 fi
 
 if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
