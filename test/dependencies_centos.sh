@@ -81,6 +81,7 @@ function check_install_gcc {
 
 function install_dependencies {
     print_msg "Installing dependencies"
+    $sudo_cmd dnf install redhat-lsb-core -y
     centos_version=$(echo `lsb_release -r` | awk '{ print $2 }' | cut -d '.' -f 1)
     print_msg "Running Centos/RHEL version $centos_version"
     if [[ $centos_version == 8 ]]; then
@@ -91,7 +92,7 @@ function install_dependencies {
     run_cmd $sudo_cmd yum install epel-release -y > /dev/null
 #    run_cmd $sudo_cmd yum install https://centos7.iuscommunity.org/ius-release.rpm -y > /dev/null
     run_cmd $sudo_cmd yum install which libxml2-devel libxslt-devel libssh-devel libtool gcc-c++ -y > /dev/null
-    run_cmd $sudo_cmd yum install pcre-devel -y > /dev/null
+    run_cmd $sudo_cmd yum install pcre-devel pcre-static -y > /dev/null
 #    run_cmd $sudo_cmd yum install pcre-static.x86_64 glibc-static libstdc++-static -y > /dev/null
     run_cmd $sudo_cmd yum install cmake3 wget curl-devel unzip make java mlocate flex bison -y > /dev/null
     run_cmd $sudo_cmd yum install python3-devel -y > /dev/null
@@ -101,6 +102,7 @@ function install_dependencies {
     if [[ $centos_version == 8 ]]; then
       $sudo_cmd yum install dnf-plugins-core -y
       $sudo_cmd yum config-manager --set-enabled powertools
+      $sudo_cmd yum glibc-static -y
     fi
     $sudo_cmd yum install doxygen -y
     $sudo_cmd yum install lcov -y
@@ -138,14 +140,14 @@ function check_install_libssh {
     mkdir libssh-0.7.6/build && cd libssh-0.7.6/build
     run_cmd cmake3 ..
     run_cmd $sudo_cmd make install
-    cd -
+    cd - > /dev/null
   else
     cd /usr/lib64
     if [[ ! -L libssh_threads.so && -L libssh_threads.so.4 ]]; then
       print_msg "Adding symbolic link /usr/lib64/libssh_threads.so"
       $sudo_cmd ln -s libssh_threads.so.4 libssh_threads.so
     fi
-    cd -
+    cd - > /dev/null
   fi
 }
 
@@ -156,7 +158,7 @@ function install_confd {
       unzip $curr_dir/3d_party/linux/confd-basic-7.3.linux.x86_64.zip
       cd confd-basic-7.3.linux.x86_64
       run_cmd ./confd-basic-7.3.linux.x86_64.installer.bin $HOME/confd
-      cd -
+      cd - > /dev/null
     else
       print_msg "Installing confd basic 6.2"
       run_cmd wget https://github.com/CiscoDevNet/ydk-gen/files/562538/confd-basic-6.2.linux.x86_64.zip &> /dev/null
@@ -174,10 +176,10 @@ function install_openssl {
     tar -xvzf openssl-1.0.1u.tar.gz > /dev/null
     rm -rf openssl-1.0.1u.tar.gz
     cd openssl-1.0.1u
-    run_cmd ./config shared  > /dev/null
+    run_cmd ./config shared > /dev/null
     run_cmd make all > /dev/null
     cp libcrypto.so.1.0.0 $HOME/confd/lib
-    cd -
+    cd - > /dev/null
     rm -rf openssl-1.0.1u
   fi
 }
