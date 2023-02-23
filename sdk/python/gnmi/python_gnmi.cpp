@@ -1,5 +1,5 @@
 /*  ----------------------------------------------------------------
- Copyright 2016 Cisco Systems
+ Copyright 2018-2019 Cisco Systems
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -134,7 +134,8 @@ PYBIND11_MODULE(ydk_gnmi_, ydk_gnmi)
              &ydk::path::gNMISession::invoke_subscribe,
                                   arg("rpc"),
                                   arg("output_callback_function")=nullptr,
-                                  arg("poll_callback_function")=nullptr);
+                                  arg("poll_callback_function")=nullptr)
+        .def("get_capabilities", &ydk::path::gNMISession::get_capabilities, return_value_policy::reference);
 
     class_<ydk::ServiceProvider>(providers, "ServiceProvider", module_local())
         .def("get_encoding", &ydk::ServiceProvider::get_encoding, return_value_policy::reference)
