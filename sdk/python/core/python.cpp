@@ -67,14 +67,7 @@ static bool enabled_logging = false;
 
 void add_null_handler(object logger)
 {
-    if (added_nullhandler) { return; }
-    object version = module::import("sys").attr("version_info");
-    object ge = version.attr("__ge__");
-    // NullHandler is introduced after Python 2.7
-    // Add Nullhandler to avoid `handler not found for logger` error for Python > 2.7
-    object version_27 = pybind11::make_tuple(2,7);
-    bool result = ge(version_27).cast<bool>();
-    if (result)
+    if (!added_nullhandler)
     {
         object null_handler = module::import("logging").attr("NullHandler");
         null_handler = null_handler();
@@ -611,8 +604,7 @@ PYBIND11_MODULE(ydk_, ydk)
         .def_readwrite("is_top_level_class", &ydk::Entity::is_top_level_class)
         .def_readwrite("has_list_ancestor", &ydk::Entity::has_list_ancestor)
         .def_readwrite("ignore_validation", &ydk::Entity::ignore_validation)
-        .def_property("parent", &ydk::Entity::get_parent, &ydk::Entity::set_parent);
-
+        .def_property("parent", cpp_function(&ydk::Entity::get_parent, return_value_policy::reference), &ydk::Entity::set_parent);
 
     class_<ydk::EntityPath>(types, "EntityPath")
         .def(init<const string &, vector<pair<std::string, ydk::LeafData> > &>())

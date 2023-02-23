@@ -57,14 +57,7 @@ static bool enabled_logging = false;
 
 static void add_null_handler(object logger)
 {
-    if (added_nullhandler) { return; }
-    object version = module::import("sys").attr("version_info");
-    object ge = version.attr("__ge__");
-    // NullHandler is introduced after Python 2.7
-    // Add Nullhandler to avoid `handler not found for logger` error for Python > 2.7
-    object version_27 = pybind11::make_tuple(2,7);
-    bool result = ge(version_27).cast<bool>();
-    if (result)
+    if (!added_nullhandler)
     {
         object null_handler = module::import("logging").attr("NullHandler");
         null_handler = null_handler();
