@@ -92,7 +92,7 @@ function init_py_env {
   status=$?
   if [ $status -ne 0 ]; then
     MSG_COLOR=$RED
-    print_msg "Could not locate python3 interpretor"
+    print_msg "Could not locate python3 interpreter"
     exit $status
   fi
 
@@ -328,6 +328,8 @@ export YDKGEN_HOME=\"${YDKGEN_HOME}\"
 export C_INCLUDE_PATH=\"$C_INCLUDE_PATH\"
 export CPLUS_INCLUDE_PATH=\"$CPLUS_INCLUDE_PATH\"
 export PIP_DISABLE_PIP_VERSION_CHECK=1
+alias python=python3
+alias pip=pip3
 " > .env
   if [[ -n $LD_LIBRARY_PATH ]]; then
     echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
@@ -338,8 +340,6 @@ export PIP_DISABLE_PIP_VERSION_CHECK=1
     echo "source $PYTHON_VENV/bin/activate" >> .env
   elif [[ -n $python_location ]]; then
     echo "export PATH=$python_location/bin:\$PATH
-alias python=python3
-alias pip=pip3
 " >> .env
   fi
   if [[ -n $sudo_cmd ]]; then
