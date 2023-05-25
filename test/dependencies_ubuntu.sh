@@ -166,6 +166,13 @@ function check_install_libssh {
     sudo ln -s libcrypto.so.1.1 libcrypto.so.1
     cd - > /dev/null
   fi
+  if [[ $codename == "jammy" && ! -h /usr/local/lib/libssl.so.1.1 ]]
+  then
+    sudo cp $curr_dir/3d_party/linux/ubuntu/lib/libssl.so.1.1 /usr/local/lib/
+    cd /usr/local/lib/
+    sudo ln -s libssl.so.1.1 libssl.so
+    cd - > /dev/null
+  fi
 }
 
 function check_install_go {
