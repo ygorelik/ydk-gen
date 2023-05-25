@@ -159,19 +159,21 @@ function check_install_libssh {
     sudo ln -s libssh_threads.so.4 libssh_threads.so
     cd - > /dev/null
   fi
-  if [[ $codename == "jammy" && ! -h /usr/local/lib/libcrypto.so.1.1 ]]
+  if [[ $codename == "jammy" && ! -h /usr/local/lib/libcrypto.so.1 ]]
   then
     sudo cp $curr_dir/3d_party/linux/ubuntu/lib/libcrypto.so.1.1 /usr/local/lib/
     cd /usr/local/lib/
     sudo ln -s libcrypto.so.1.1 libcrypto.so.1
     cd - > /dev/null
   fi
-  if [[ $codename == "jammy" && ! -h /usr/local/lib/libssl.so.1.1 ]]
+  if [[ $codename == "jammy" && ! -h /usr/local/lib/libssl.so ]]
   then
-    sudo cp $curr_dir/3d_party/linux/ubuntu/lib/libssl.so.1.1 /usr/local/lib/
-    cd /usr/local/lib/
-    sudo ln -s libssl.so.1.1 libssl.so
+    wget https://www.openssl.org/source/old/1.1.0/openssl-1.1.0l.tar.gz
+    tar xfz openssl-1.1.0l.tar.gz
+    cd openssl-1.1.0l
+    ./config && make && make install
     cd - > /dev/null
+    rm -rf openssl-1.1.0l*
   fi
 }
 

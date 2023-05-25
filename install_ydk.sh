@@ -531,11 +531,11 @@ if [[ -z ${CPLUS_INCLUDE_PATH} ]]; then
     export CPLUS_INCLUDE_PATH=/usr/local/include
 fi
 
-if [[ $(uname) == "Linux" && ${os_info} == *"fedora"* ]]; then
+if [[ ${os_info} == *"fedora"* || ${os_info} == *"jammy"* ]]; then
   if [[ $LD_LIBRARY_PATH != *"/usr/local/lib"* ]]; then
     export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
   fi
-  if [[ $LD_LIBRARY_PATH != *"/lib64"* ]]; then
+  if [[ $LD_LIBRARY_PATH != *"/lib64"* && -d /usr/lib64 ]]; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64:/usr/lib64
   fi
   print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
