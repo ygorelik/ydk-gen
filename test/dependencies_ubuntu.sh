@@ -254,4 +254,4 @@ else
   # native ubuntu
   $sudo_cmd updatedb
 fi
-# check_install_libssh
+check_install_libssh
