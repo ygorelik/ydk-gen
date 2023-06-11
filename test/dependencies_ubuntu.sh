@@ -46,29 +46,28 @@ function run_cmd {
 function install_dependencies {
     print_msg "Installing dependencies"
 
-    sudo apt update -y
-    sudo apt install sudo -y
-    $sudo_cmd apt-get install -y lsb-release
+    sudo apt-get update -y -qq
+    sudo apt-get install sudo -y -qq
+    $sudo_cmd apt-get install -y -qq lsb-release
     codename=$(lsb_release -c | awk '{ print $2 }')
     ubuntu_release=$(lsb_release -r | awk '{ print $2 }' | cut -d '.' -f 1)
     if [[ $codename == "focal" || $codename == "jammy" ]] && [[ ! -h /etc/localtime ]]; then
       # Fixing timezone setting issue in focal
       export DEBIAN_FRONTEND=noninteractive
-      $sudo_cmd apt-get install -y tzdata
+      $sudo_cmd apt-get install -y -qq tzdata
       ln -fs /usr/share/zoneinfo/US/Pacific /etc/localtime
       dpkg-reconfigure --frontend noninteractive tzdata
       unset DEBIAN_FRONTEND
     fi
-    run_cmd $sudo_cmd apt-get install -y --no-install-recommends apt-utils
-    run_cmd $sudo_cmd apt-get update -y
-    run_cmd $sudo_cmd apt-get install -y build-essential
-    run_cmd $sudo_cmd apt-get install libtool-bin -y
+    run_cmd $sudo_cmd apt-get install -y -qq --no-install-recommends apt-utils
+    run_cmd $sudo_cmd apt-get install -y -qq build-essential
+    run_cmd $sudo_cmd apt-get install -y -qq libtool-bin
     local status=$?
     if [[ ${status} != 0 ]]; then
-        run_cmd $sudo_cmd apt-get install libtool -y
+        run_cmd $sudo_cmd apt-get install -y -qq libtool
     fi
     if [[ $codename == "focal" || $codename == "jammy" ]]; then
-        $sudo_cmd apt-get install -y mlocate git
+        $sudo_cmd apt-get install -y -qq mlocate git
         if [[ ! -h /usr/local/lib/libnettle.so.6 ]]; then
           cd /usr/local/lib/
           $sudo_cmd ln -s $curr_dir/3d_party/linux/ubuntu/lib/libnettle.so.6.4
@@ -76,17 +75,17 @@ function install_dependencies {
           cd - > /dev/null
         fi
     else
-        run_cmd $sudo_cmd apt-get install -y locate git
-        run_cmd $sudo_cmd apt-get install -y curl libcurl4-openssl-dev
+        run_cmd $sudo_cmd apt-get install -y -qq locate git
+        run_cmd $sudo_cmd apt-get install -y -qq curl libcurl4-openssl-dev
     fi
-    run_cmd $sudo_cmd apt-get install -y bison doxygen flex unzip wget cmake gdebi-core lcov
-    run_cmd $sudo_cmd apt-get install -y libcmocka0 libpcre3-dev libpcre++-dev
-    run_cmd $sudo_cmd apt-get install -y libssh-dev libxml2-dev libxslt1-dev
-    run_cmd $sudo_cmd apt-get install -y python3-dev python3-lxml python3-pip python3-venv
-    run_cmd $sudo_cmd apt-get install -y pkg-config software-properties-common zlib1g-dev openjdk-8-jre
-    run_cmd $sudo_cmd apt-get install -y valgrind
+    run_cmd $sudo_cmd apt-get install -y -qq bison doxygen flex unzip wget cmake gdebi-core lcov
+    run_cmd $sudo_cmd apt-get install -y -qq libcmocka0 libpcre3-dev libpcre++-dev
+    run_cmd $sudo_cmd apt-get install -y -qq libssh-dev libxml2-dev libxslt1-dev
+    run_cmd $sudo_cmd apt-get install -y -qq python3-dev python3-lxml python3-pip python3-venv
+    run_cmd $sudo_cmd apt-get install -y -qq pkg-config software-properties-common zlib1g-dev openjdk-8-jre
+    run_cmd $sudo_cmd apt-get install -y -qq valgrind
     if [[ $codename == "focal" || $codename == "jammy" ]]; then
-        run_cmd $sudo_cmd apt-get install -y python3-pybind11
+        run_cmd $sudo_cmd apt-get install -y -qq python3-pybind11
     fi
 }
 
@@ -103,9 +102,9 @@ function check_install_gcc_link {
 }
 
 function check_install_gcc {
-  which gcc
+  which gcc > /dev/null
   local status_gcc=$?
-  which g++
+  which g++ > /dev/null
   local status_gxx=$?
   if [[ $status_gcc == 0  && $status_gxx == 0 ]]
   then
@@ -162,7 +161,7 @@ function check_install_libssh {
     cd - > /dev/null
   fi
   if [[ $codename == "jammy" ]]; then
-    run_cmd $sudo_cmd apt-get install libcurl4-openssl-dev
+    run_cmd $sudo_cmd apt-get install -y -qq libcurl4-openssl-dev
     if [[ ! -e "/usr/lib/x86_64-linux-gnu/libssh_threads.so.4" ]]; then
       run_cmd $sudo_cmd ln -s /usr/lib/x86_64-linux-gnu/libssh.so.4 /usr/lib/x86_64-linux-gnu/libssh_threads.so.4
     fi
@@ -177,7 +176,7 @@ function check_install_go {
     if which go > /dev/null; then
       print_msg "Current Go version is: $(go version | grep --only-matching --perl-regexp '(?<= go)[\d\.]+')"
     else
-      run_cmd $sudo_cmd apt-get install -y golang-go
+      run_cmd $sudo_cmd apt-get install -y -qq golang-go
     fi
   else
     go_exec=$(which go)
