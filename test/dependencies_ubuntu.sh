@@ -163,9 +163,12 @@ function check_install_libssh {
   fi
   if [[ $codename == "jammy" ]]; then
     run_cmd $sudo_cmd apt-get install libcurl4-openssl-dev
-    run_cmd $sudo_cmd ln -s /usr/lib/x86_64-linux-gnu/libssh.so.4 /usr/lib/x86_64-linux-gnu/libssh_threads.so.4
-    run_cmd $sudo_cmd ln -s /usr/lib/x86_64-linux-gnu/libssh.so.4 /usr/lib/x86_64-linux-gnu/libssh_threads.so
-
+    if [[ ! -e "/usr/lib/x86_64-linux-gnu/libssh_threads.so.4" ]]; then
+      run_cmd $sudo_cmd ln -s /usr/lib/x86_64-linux-gnu/libssh.so.4 /usr/lib/x86_64-linux-gnu/libssh_threads.so.4
+    fi
+    if [[ ! -e "/usr/lib/x86_64-linux-gnu/libssh_threads.so" ]]; then
+      run_cmd $sudo_cmd ln -s /usr/lib/x86_64-linux-gnu/libssh.so.4 /usr/lib/x86_64-linux-gnu/libssh_threads.so
+    fi
   fi
 }
 
@@ -174,7 +177,7 @@ function check_install_go {
     if which go > /dev/null; then
       print_msg "Current Go version is: $(go version | grep --only-matching --perl-regexp '(?<= go)[\d\.]+')"
     else
-      run_cmd $sudo_cmd apt-get install golang-go
+      run_cmd $sudo_cmd apt-get install -y golang-go
     fi
   else
     go_exec=$(which go)
