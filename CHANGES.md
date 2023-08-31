@@ -1,11 +1,11 @@
-### 2023-03-31 version 0.8.6.5
+### 2023-08-31 version 0.8.6.5
 
 #### New features and enhancements
   * Added support for Ubuntu:jammy (22.04)
 
 #### Resolved GitHub issues
   * Segmentation Fault on Python application exit with Python 3.9.5 ([#1050](https://github.com/CiscoDevNet/ydk-gen/issues/1050))
-
+  * ydk.io and ciscodevnet.github.io/ydk-py/ not working correctly ([#1088](https://github.com/CiscoDevNet/ydk-gen/issues/1088))
 
 ### 2023-01-31 version 0.8.6.4
 
