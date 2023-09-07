@@ -661,11 +661,30 @@ TEST_CASE("test_codec_decode_augment_json")
     CodecServiceProvider codec_provider{EncodingFormat::JSON};
     CodecService codec_service{};
 
-    auto payload = R"({"ydktest-sanity:passive":{"interfac":[{"test":"abc"}],"name":"xyz","ydktest-sanity-augm:testc":{"xyz":{"xyz":25}}}})";
+    auto payload = R"({
+  "ydktest-sanity:runner": {
+    "passive": [
+      {
+        "name": "xyz",
+        "interfac": [
+          {
+            "test": "abc"
+          }
+        ],
+        "ydktest-sanity-augm:testc": {
+          "xyz": {
+            "xyz": 25
+          }
+        }
+      }
+    ]
+  }
+}
+)";
 
-    auto entity = codec_service.decode(codec_provider, payload, make_shared<ydktest_sanity::Runner::Passive>());
+    auto entity = codec_service.decode(codec_provider, payload, make_shared<ydktest_sanity::Runner>());
 
-    auto json = codec_service.encode(codec_provider, *entity, false);
+    auto json = codec_service.encode(codec_provider, *entity, true);
     CHECK(payload == json);
 }
 
