@@ -1,6 +1,6 @@
 /*  ----------------------------------------------------------------
  YDK - YANG Development Kit
- Copyright 2016 Cisco Systems. All rights reserved.
+ Copyright 2016-2023 Cisco Systems. All rights reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -661,6 +661,38 @@ TEST_CASE("test_codec_augment_subtree_json")
           == json);
     auto entity = codec_service.decode(codec_provider, json, make_shared<ydktest_sanity::Runner::Passive>(), true);
     CHECK(*passive == *entity);
+}
+
+TEST_CASE("test_codec_decode_augment_json")
+{
+    CodecServiceProvider codec_provider{EncodingFormat::JSON};
+    CodecService codec_service{};
+
+    auto payload = R"({
+  "ydktest-sanity:runner": {
+    "passive": [
+      {
+        "name": "xyz",
+        "interfac": [
+          {
+            "test": "abc"
+          }
+        ],
+        "ydktest-sanity-augm:testc": {
+          "xyz": {
+            "xyz": 25
+          }
+        }
+      }
+    ]
+  }
+}
+)";
+
+    auto entity = codec_service.decode(codec_provider, payload, make_shared<ydktest_sanity::Runner>());
+
+    auto json = codec_service.encode(codec_provider, *entity, true);
+    CHECK(payload == json);
 }
 
 TEST_CASE("test_codec_bool_list")
