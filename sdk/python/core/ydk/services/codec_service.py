@@ -109,8 +109,10 @@ class CodecService(object):
             Instance of YServiceError if encoding fails.
         """
         bundle_name = _get_bundle_name(entity)
-        provider.initialize(bundle_name, _get_yang_path(entity))
         root_schema = provider.get_root_schema(bundle_name)
+        if root_schema is None:
+            provider.initialize(bundle_name, _get_yang_path(entity))
+            root_schema = provider.get_root_schema(bundle_name)
 
         if subtree:
             if provider.encoding == EncodingFormat.XML:
@@ -174,26 +176,29 @@ class CodecService(object):
             YServiceProviderError with _PAYLOAD_ERROR_MSG, if payload
             contains more than one top level containers.
         """
-        entity = _payload_to_top_entity(payload, provider.encoding)
+        entity = _payload_to_top_entity(payload, provider.encoding,
+                                        bundle_name=provider.bundle_name)
 
         if subtree:
             if provider.encoding == EncodingFormat.XML:
                 codec = XmlSubtreeCodec()
-                self.logger.debug("Performing decode operation with XmlSubtreeCodec on payload:\n{}".format(payload))
+                self.logger.debug("Performing decode operation with "
+                                  "XmlSubtreeCodec on payload:\n{}".format(payload))
             else:
                 codec = JsonSubtreeCodec()
-                self.logger.debug("Performing decode operation with JsonSubtreeCodec on payload:\n{}".format(payload))
+                self.logger.debug("Performing decode operation with "
+                                  "JsonSubtreeCodec on payload:\n{}".format(payload))
             return codec.decode(payload, entity)
 
         bundle_name = _get_bundle_name(entity)
-        provider.initialize(bundle_name, _get_yang_path(entity))
-
         root_schema = provider.get_root_schema(bundle_name)
+        if root_schema is None:
+            provider.initialize(bundle_name, _get_yang_path(entity))
+            root_schema = provider.get_root_schema(bundle_name)
 
-        self.logger.debug("Performing decode operation on payload:\n{}".format(payload))
         codec_service = _Codec()
         root_data_node = codec_service.decode(root_schema, payload, provider.encoding)
-        data_nodes = root_data_node.get_children();
+        data_nodes = root_data_node.get_children()
         if data_nodes is None or len(data_nodes) == 0:
             self.logger.debug(_PAYLOAD_ERROR_MSG)
             raise YServiceProviderError(_PAYLOAD_ERROR_MSG)

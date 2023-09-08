@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------
-# Copyright 2016-2019 Cisco Systems
+# Copyright 2016-2023 Cisco Systems
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ class CodecServiceProvider(object):
     def __init__(self, **kwargs):
         self.logger = logging.getLogger(__name__)
         self._root_schema_table = {}
+        self.bundle_name = None
 
         repo = kwargs.get('repo', None)
         if repo is None:
@@ -88,6 +89,7 @@ class CodecServiceProvider(object):
         self.logger.log(_TRACE_LEVEL_NUM, "Creating repo in path {}".format(models_path))
         repo = _Repository(models_path)
         self._initialize_root_schema(bundle_name, repo)
+        self.bundle_name = bundle_name
 
     def get_root_schema(self, bundle_name):
         """Return root_schema for bundle_name.
@@ -103,7 +105,7 @@ class CodecServiceProvider(object):
                 raise YServiceProviderError(error_msg="Root schema not created")
 
         if bundle_name not in self._root_schema_table:
-            self.logger.error("Root schema not created")
+            self.logger.error("Root schema yet to be initialized")
             raise YServiceProviderError(error_msg="Root schema not created")
 
         return self._root_schema_table[bundle_name]
