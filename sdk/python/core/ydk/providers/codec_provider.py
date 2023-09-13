@@ -78,6 +78,7 @@ class CodecServiceProvider(object):
             models_path (str): location for local YANG models.
         """
         name = bundle_name if not self._user_provided_repo else _USER_PROVIDED_REPO
+        self.bundle_name = bundle_name
         if name in self._root_schema_table:
             return  # root schema is already initialized
 
@@ -89,7 +90,6 @@ class CodecServiceProvider(object):
         self.logger.log(_TRACE_LEVEL_NUM, "Creating repo in path {}".format(models_path))
         repo = _Repository(models_path)
         self._initialize_root_schema(bundle_name, repo)
-        self.bundle_name = bundle_name
 
     def get_root_schema(self, bundle_name):
         """Return root_schema for bundle_name.
@@ -104,11 +104,11 @@ class CodecServiceProvider(object):
                 self.logger.error("Root schema on user provided repository has not been created")
                 raise YServiceProviderError(error_msg="Root schema not created")
 
-        if bundle_name not in self._root_schema_table:
-            self.logger.error("Root schema yet to be initialized")
-            raise YServiceProviderError(error_msg="Root schema not created")
+        if bundle_name in self._root_schema_table:
+            return self._root_schema_table[bundle_name]
 
-        return self._root_schema_table[bundle_name]
+        self.logger.debug("Root schema yet to be initialized")
+        return None
 
     def _initialize_root_schema(self, bundle_name, repo, user_provided_repo=False):
         """
@@ -188,7 +188,6 @@ def _get_bundle_capabilities(bundle_name):
     Returns:
         capabilities (list): List of ydk.path.Capability available for this bundle.
     """
-
     capabilities = []
     mod_yang_ns = _get_bundle_yang_ns(bundle_name)
     if mod_yang_ns is not None:
