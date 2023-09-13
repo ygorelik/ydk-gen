@@ -41,6 +41,12 @@ function reset_yang_repository {
       mkdir -p $HOME/.ydk/127.0.0.1
     fi
     rm -f $HOME/.ydk/127.0.0.1/*
+
+    # Correct issue with confd 7.3
+    confd_version=$($HOME/confd/bin/confd --version)
+    if [[ $confd_version. > 7.2. ]]; then
+      cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
+    fi
 }
 
 ########################## EXECUTION STARTS HERE #############################
@@ -54,7 +60,6 @@ YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
 script_dir=$(cd $(dirname ${BASH_SOURCE}) > /dev/null && pwd)
-
 if [ -z ${YDKGEN_HOME} ] || [ ! -d ${YDKGEN_HOME} ]; then
   YDKGEN_HOME=$(cd "$script_dir/../" > /dev/null && pwd)
   print_msg "YDKGEN_HOME is set to ${YDKGEN_HOME}"
@@ -91,4 +96,3 @@ run_test test_non_top_operations.py
 run_test test_sanity_yang11.py
 
 $script_dir/clean_test_env.sh
-

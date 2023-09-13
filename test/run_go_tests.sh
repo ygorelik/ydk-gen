@@ -34,6 +34,19 @@ function run_cmd {
     return $status
 }
 
+function reset_yang_repository {
+    if [[ ! -d $HOME/.ydk/127.0.0.1 ]]; then
+      mkdir -p $HOME/.ydk
+      mkdir -p $HOME/.ydk/127.0.0.1
+    fi
+    rm -f $HOME/.ydk/127.0.0.1/*
+
+    # Correct issue with confd 7.3
+    if [[ $confd_version. > "7.2." ]]; then
+      cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
+    fi
+}
+
 # ------------------------------------------------------------------
 # Golang specific functions
 #------------------------------------------------------------------
@@ -97,6 +110,7 @@ function install_go_bundle {
 
 function run_go_bundle_tests {
     run_cmd $script_dir/init_test_env.sh
+    confd_version=$($HOME/confd/bin/confd --version)
 
     reset_yang_repository
 
@@ -176,17 +190,6 @@ function run_go_gnmi_samples {
     cd $YDKGEN_HOME/sdk/go/gnmi/samples
     run_cmd go run service_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
     run_cmd go run session_subscribe_poll.go < $YDKGEN_HOME/test/gnmi_subscribe_poll_input.txt
-}
-
-function reset_yang_repository {
-    if [[ ! -d $HOME/.ydk/127.0.0.1 ]]; then
-      mkdir -p $HOME/.ydk
-      mkdir -p $HOME/.ydk/127.0.0.1
-    fi
-    rm -f $HOME/.ydk/127.0.0.1/*
-
-    # Correct issue with confd 7.3
-    cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
 }
 
 ########################## EXECUTION STARTS HERE #############################

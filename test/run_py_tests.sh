@@ -34,6 +34,19 @@ function run_cmd {
     return $status
 }
 
+function reset_yang_repository {
+    if [[ ! -d $HOME/.ydk/127.0.0.1 ]]; then
+      mkdir -p $HOME/.ydk
+      mkdir -p $HOME/.ydk/127.0.0.1
+    fi
+    rm -f $HOME/.ydk/127.0.0.1/*
+
+    # Correct issue with confd 7.3
+    if [[ $confd_version. > "7.2." ]]; then
+      cp ${YDKGEN_HOME}/sdk/cpp/core/tests/models/ietf-interfaces.yang $HOME/.ydk/127.0.0.1/
+    fi
+}
+
 function init_confd_rc {
     print_msg "Initializing confd"
 
@@ -45,6 +58,7 @@ function init_confd_rc {
     fi
     print_msg "Found confd resource file: $confd_rc"
     run_cmd source $confd_rc
+    confd_version=$(confd --version)
 }
 
 function init_confd {
@@ -57,8 +71,7 @@ function init_confd {
     run_cmd make start
     cd - > /dev/null
 
-    print_msg "Clearing cache YANG repository"
-    rm -rf ~/.ydk/127.0.0.1/*
+    reset_yang_repository
 }
 
 function init_confd_ydktest {
