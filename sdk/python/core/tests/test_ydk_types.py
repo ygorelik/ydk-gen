@@ -26,7 +26,9 @@ from ydk.models.ydktest import ydktest_sanity as ysanity
 
 from test_utils import assert_with_error
 
-test_add_unsupported_pattern = '''Argument <(type|class) 'str'> is not supported by EntityCollection class; data ignored'''
+test_add_unsupported_pattern = \
+    '''Argument <(type|class) 'str'> is not supported by EntityCollection class; data ignored'''
+
 
 class SanityTest(unittest.TestCase):
 
@@ -211,6 +213,7 @@ class SanityTest(unittest.TestCase):
 
         runner_decode = codec.decode(provider, payload)
         self.assertEqual(runner_decode, runner)
+
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
