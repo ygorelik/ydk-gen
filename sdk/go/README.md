@@ -79,7 +79,7 @@ To use the docker image, [install docker](https://docs.docker.com/install/) on y
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
 
 ```
-docker run -it ydksolutions/ydk-gen:0.8.6.5
+docker run -it ydksolutions/ydk-gen:0.8.6.6
 ```
 
 ## System Requirements
@@ -258,6 +258,6 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
 
 ## Release Notes
 
-The current YDK release version is 0.8.6.5.
+The current YDK release version is 0.8.6.6.
 
 YDK is licensed under the Apache 2.0 License.

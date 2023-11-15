@@ -35,7 +35,7 @@ from setuptools import setup, Extension, find_packages
 
 NAME = 'ydk'
 
-VERSION = '0.8.6.5'
+VERSION = '0.8.6.6'
 
 INSTALL_REQUIREMENTS = ['pybind11==2.6.2']
 
