@@ -164,30 +164,33 @@ namespace ydk {
                 auto repo = reinterpret_cast<const RepositoryPtr*>(user_data);
 
                 // first check the directory for a file name <module-module_name>@<module_rev-date>.yang
-                YLOG_DEBUG("Looking for file in folder: {}", repo->path);
+                // YLOG_DEBUG("Looking for file in folder: {}", repo->path);
                 std::string yang_file_path{repo->path};
                 yang_file_path += '/';
                 yang_file_path += (submod_name ? submod_name : module_name);
                 std::string yang_file_path_no_revision = yang_file_path + ".yang";
+                bool with_revision = false;
 
                 if (submod_name) {
                     if (sub_rev) {
                         yang_file_path += "@";
                         yang_file_path += sub_rev;
+                        with_revision = true;
                     }
                 }
                 else if (module_name && module_rev) {
                     yang_file_path += "@";
                     yang_file_path += module_rev;
+                    with_revision = true;
                 }
                 yang_file_path += ".yang";
-                YLOG_DEBUG("Opening file '{}'", yang_file_path);
+                // YLOG_DEBUG("Opening file '{}'", yang_file_path);
 
                 if (file_exists(yang_file_path) || file_exists(yang_file_path_no_revision)) {
-                    if (file_exists(yang_file_path))
-                        YLOG_DEBUG("Path found with revision: {}", yang_file_path);
+                    if (with_revision && file_exists(yang_file_path))
+                        YLOG_DEBUG("File found with revision: {}", yang_file_path);
                     else {
-                        YLOG_DEBUG("Path found without revision: {}", yang_file_path_no_revision);
+                        YLOG_DEBUG("File found with no revision: {}", yang_file_path_no_revision);
                         yang_file_path = yang_file_path_no_revision;
                     }
 
