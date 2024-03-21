@@ -46,29 +46,28 @@ function run_cmd {
 function install_dependencies {
     print_msg "Installing dependencies"
 
-    apt update -y
-    apt install sudo -y
-    $sudo_cmd apt-get install -y lsb-release
+    sudo apt-get update -y -qq
+    sudo apt-get install sudo -y -qq
+    $sudo_cmd apt-get install -y -qq lsb-release
     codename=$(lsb_release -c | awk '{ print $2 }')
     ubuntu_release=$(lsb_release -r | awk '{ print $2 }' | cut -d '.' -f 1)
     if [[ $codename == "focal" || $codename == "jammy" ]] && [[ ! -h /etc/localtime ]]; then
       # Fixing timezone setting issue in focal
       export DEBIAN_FRONTEND=noninteractive
-      $sudo_cmd apt-get install -y tzdata
+      $sudo_cmd apt-get install -y -qq tzdata
       ln -fs /usr/share/zoneinfo/US/Pacific /etc/localtime
       dpkg-reconfigure --frontend noninteractive tzdata
       unset DEBIAN_FRONTEND
     fi
-    run_cmd $sudo_cmd apt-get install -y --no-install-recommends apt-utils
-    run_cmd $sudo_cmd apt-get update -y
-    run_cmd $sudo_cmd apt-get install -y build-essential
-    run_cmd $sudo_cmd apt-get install libtool-bin -y > /dev/null
+    run_cmd $sudo_cmd apt-get install -y -qq --no-install-recommends apt-utils
+    run_cmd $sudo_cmd apt-get install -y -qq build-essential
+    run_cmd $sudo_cmd apt-get install -y -qq libtool-bin
     local status=$?
     if [[ ${status} != 0 ]]; then
-        run_cmd $sudo_cmd apt-get install libtool -y > /dev/null
+        run_cmd $sudo_cmd apt-get install -y -qq libtool
     fi
     if [[ $codename == "focal" || $codename == "jammy" ]]; then
-        $sudo_cmd apt-get install -y mlocate git > /dev/null
+        $sudo_cmd apt-get install -y -qq mlocate git
         if [[ ! -h /usr/local/lib/libnettle.so.6 ]]; then
           cd /usr/local/lib/
           $sudo_cmd ln -s $curr_dir/3d_party/linux/ubuntu/lib/libnettle.so.6.4
@@ -76,17 +75,17 @@ function install_dependencies {
           cd - > /dev/null
         fi
     else
-        run_cmd $sudo_cmd apt-get install -y locate git > /dev/null
-        run_cmd $sudo_cmd apt-get install -y curl libcurl4-openssl-dev > /dev/null
+        run_cmd $sudo_cmd apt-get install -y -qq locate git
+        run_cmd $sudo_cmd apt-get install -y -qq curl libcurl4-openssl-dev
     fi
-    run_cmd $sudo_cmd apt-get install -y bison doxygen flex unzip wget cmake gdebi-core lcov > /dev/null
-    run_cmd $sudo_cmd apt-get install -y libcmocka0 libpcre3-dev libpcre++-dev > /dev/null
-    run_cmd $sudo_cmd apt-get install -y libssh-dev libxml2-dev libxslt1-dev > /dev/null
-    run_cmd $sudo_cmd apt-get install -y python3-dev python3-lxml python3-pip python3-venv > /dev/null
-    run_cmd $sudo_cmd apt-get install -y pkg-config software-properties-common zlib1g-dev openjdk-8-jre > /dev/null
-    run_cmd $sudo_cmd apt-get install -y valgrind > /dev/null
+    run_cmd $sudo_cmd apt-get install -y -qq bison doxygen flex unzip wget cmake gdebi-core lcov
+    run_cmd $sudo_cmd apt-get install -y -qq libcmocka0 libpcre3-dev libpcre++-dev
+    run_cmd $sudo_cmd apt-get install -y -qq libssh-dev libxml2-dev libxslt1-dev
+    run_cmd $sudo_cmd apt-get install -y -qq python3-dev python3-lxml python3-pip python3-venv
+    run_cmd $sudo_cmd apt-get install -y -qq pkg-config software-properties-common zlib1g-dev openjdk-8-jre
+    run_cmd $sudo_cmd apt-get install -y -qq valgrind
     if [[ $codename == "focal" || $codename == "jammy" ]]; then
-        run_cmd $sudo_cmd apt-get install -y python3-pybind11 > /dev/null
+        run_cmd $sudo_cmd apt-get install -y -qq python3-pybind11
     fi
 }
 
@@ -103,9 +102,9 @@ function check_install_gcc_link {
 }
 
 function check_install_gcc {
-  which gcc
+  which gcc > /dev/null
   local status_gcc=$?
-  which g++
+  which g++ > /dev/null
   local status_gxx=$?
   if [[ $status_gcc == 0  && $status_gxx == 0 ]]
   then
@@ -131,7 +130,9 @@ function check_install_gcc {
 }
 
 function check_install_curl {
-  if [[ ! -x /usr/local/bin/curl ]]; then
+  if which curl > /dev/null; then
+    print_msg "Installed curl version: $(curl --version | sed 1q | awk '{print$2}')"
+  else
     print_msg "Installing curl from source"
     git clone https://github.com/curl/curl.git -b curl-7_61_1
     cd curl
@@ -148,7 +149,7 @@ function check_install_curl {
 }
 
 function check_install_libssh {
-  if [[ $codename == "focal" || $codename == "jammy" ]] && [[ ! -h /usr/local/lib/libssh_threads.so ]]; then
+  if [[ $codename == "focal" ]] && [[ ! -h /usr/local/lib/libssh_threads.so ]]; then
     print_msg "Copying libssh and libssh_threads to /usr/local/lib"
     sudo cp $curr_dir/3d_party/linux/ubuntu/lib/libssh.so.4.5.0 /usr/local/lib/
     sudo cp $curr_dir/3d_party/linux/ubuntu/lib/libssh_threads.so.4.5.0 /usr/local/lib/
@@ -159,46 +160,47 @@ function check_install_libssh {
     sudo ln -s libssh_threads.so.4 libssh_threads.so
     cd - > /dev/null
   fi
-  if [[ $codename == "jammy" && ! -h /usr/local/lib/libcrypto.so.1 ]]
-  then
-    sudo cp $curr_dir/3d_party/linux/ubuntu/lib/libcrypto.so.1.1 /usr/local/lib/
-    cd /usr/local/lib/
-    sudo ln -s libcrypto.so.1.1 libcrypto.so.1
-    cd - > /dev/null
-  fi
-  if [[ $codename == "jammy" && ! -h /usr/local/lib/libssl.so ]]
-  then
-    wget https://www.openssl.org/source/old/1.1.0/openssl-1.1.0l.tar.gz
-    tar xfz openssl-1.1.0l.tar.gz
-    cd openssl-1.1.0l
-    ./config && make && make install
-    cd - > /dev/null
-    rm -rf openssl-1.1.0l*
+  if [[ $codename == "jammy" ]]; then
+    run_cmd $sudo_cmd apt-get install -y -qq libcurl4-openssl-dev
+    if [[ ! -e "/usr/lib/x86_64-linux-gnu/libssh_threads.so.4" ]]; then
+      run_cmd $sudo_cmd ln -s /usr/lib/x86_64-linux-gnu/libssh.so.4 /usr/lib/x86_64-linux-gnu/libssh_threads.so.4
+    fi
+    if [[ ! -e "/usr/lib/x86_64-linux-gnu/libssh_threads.so" ]]; then
+      run_cmd $sudo_cmd ln -s /usr/lib/x86_64-linux-gnu/libssh.so.4 /usr/lib/x86_64-linux-gnu/libssh_threads.so
+    fi
   fi
 }
 
 function check_install_go {
-  go_exec=$(which go)
-  if [[ -z ${go_exec} && -d /usr/local/go ]]; then
-    go_exec=/usr/local/go/bin/go
-  fi
-  if [[ -x ${go_exec} ]]
-  then
-    go_version=$(echo `${go_exec} version` | awk '{ print $3 }' | cut -d 'o' -f 2)
-    print_msg "Current Go version is $go_version"
-    minor=$(echo $go_version | cut -d '.' -f 2)
+  if [[ $codename == "jammy" ]]; then
+    if which go > /dev/null; then
+      print_msg "Current Go version is: $(go version | grep --only-matching --perl-regexp '(?<= go)[\d\.]+')"
+    else
+      run_cmd $sudo_cmd apt-get install -y -qq golang-go
+    fi
   else
-    print_msg "The Go is not installed"
-    minor=0
-  fi
-  if [ $minor -lt 9 ]; then
-    print_msg "Installing Golang version 1.13.1 in /usr/local/go"
-    run_cmd wget https://storage.googleapis.com/golang/go1.13.1.linux-amd64.tar.gz
-    $sudo_cmd tar -zxf  go1.13.1.linux-amd64.tar.gz -C /usr/local/
-    rm -f go1.13.1.linux-amd64.tar.gz
-    cd /usr/local/bin
-    $sudo_cmd ln -sf /usr/local/go/bin/go
-    cd - > /dev/null
+    go_exec=$(which go)
+    if [[ -z ${go_exec} && -d /usr/local/go ]]; then
+      go_exec=/usr/local/go/bin/go
+    fi
+    if [[ -x ${go_exec} ]]
+    then
+      go_version=$(echo `${go_exec} version` | awk '{ print $3 }' | cut -d 'o' -f 2)
+      print_msg "Current Go version is $go_version"
+      minor=$(echo $go_version | cut -d '.' -f 2)
+    else
+      print_msg "The Go is not installed"
+      minor=0
+    fi
+    if [ $minor -lt 9 ]; then
+      print_msg "Installing Golang version 1.13.1 in /usr/local/go"
+      run_cmd wget https://storage.googleapis.com/golang/go1.13.1.linux-amd64.tar.gz
+      $sudo_cmd tar -zxf  go1.13.1.linux-amd64.tar.gz -C /usr/local/
+      rm -f go1.13.1.linux-amd64.tar.gz
+      cd /usr/local/bin
+      $sudo_cmd ln -sf /usr/local/go/bin/go
+      cd - > /dev/null
+    fi
   fi
 }
 
@@ -247,5 +249,11 @@ if [[ $ubuntu_release -gt 19 ]]; then
 fi
 check_install_confd
 
-$sudo_cmd updatedb
+if grep -qi microsoft /proc/version; then
+  # ubuntu in wsl do not include "windows" mounted drives
+  $sudo_cmd updatedb --prunepaths='/mnt/c /mnt/wsl /mnt/wslg'
+else 
+  # native ubuntu
+  $sudo_cmd updatedb
+fi
 check_install_libssh
