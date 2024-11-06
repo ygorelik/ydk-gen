@@ -82,7 +82,7 @@ Also, the pypi pages provide some information about this under the “Requires D
     .. code-block:: sh
 
         git clone https://gitlab.com/yangorelik/ydk-gen.git
-        git checkout tags/0.9.1.1 -b 0.9.1.1
+        git checkout tags/0.9.1.2 -b 0.9.1.2
         cd ydk-gen
         pip install -r requirements.txt
         ./generate --core --python

@@ -80,7 +80,7 @@ To use the docker image, [install docker](https://docs.docker.com/install/) on y
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
 
 ```
-docker run -it ydksolutions/ydk:0.9.1.1
+docker run -it ydksolutions/ydk:0.9.1.2
 ```
 
 ## System Requirements
@@ -247,6 +247,6 @@ export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:/usr/lib64:$LD_LIBRARY_PA
 - Join the [YDK community](https://communities.cisco.com/community/developer/ydk) to connect with YDK users and developers
 
 ## Release Notes
-The current YDK release version is 0.9.1.1.
+The current YDK release version is 0.9.1.2.
 
 YDK is licensed under the Apache 2.0 License.

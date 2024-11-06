@@ -146,7 +146,7 @@ function init_py_env {
   check_python_installation
   print_msg "Initializing Python requirements"
   ${PIP_BIN} install -r requirements.txt
-  ${PIP_BIN} install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
+  ${PIP_BIN} install $YDKGEN_HOME/3d_party/python/pyang-2.6.1.1.tar.gz
   if [[ $run_with_coverage ]] ; then
     ${PIP_BIN} install coverage
   fi
@@ -183,6 +183,9 @@ function init_go_env {
 
     if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
         go get github.com/stretchr/testify
+        go get github.com/davecgh/go-spew/spew
+        go get github.com/pmezard/go-difflib/difflib
+        go get gopkg.in/yaml.v3
         cd $GOPATH/src/github.com/stretchr/testify
         git checkout tags/v1.6.1
         cd -
