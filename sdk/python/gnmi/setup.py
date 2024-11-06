@@ -37,7 +37,7 @@ NAME = 'ydk-service-gnmi'
 
 VERSION = '0.4.0.5'
 
-INSTALL_REQUIREMENTS = ['ydk>=0.8.6', 'pybind11==2.6.2']
+INSTALL_REQUIREMENTS = ['ydk>=0.9.0', 'pybind11==2.13.6']
 
 LONG_DESCRIPTION = '''
                     This package provides extension for YDK core - gNMI services.
@@ -71,7 +71,7 @@ class YdkBuildExtension(build_ext):
             import pybind11
         except ImportError:
             import pip
-            pip.main(['install', 'pybind11==2.6.2'])
+            pip.main(['install', 'pybind11==2.13.6'])
             import pybind11
 
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
@@ -100,9 +100,9 @@ class YdkBuildExtension(build_ext):
 
 
 def get_python_version():
-    python_version = sysconfig.get_config_var('LDVERSION')
+    python_version = sysconfig.get_config_vars().get('LDVERSION')
     if python_version is None or len(python_version) == 0:
-        python_version = sysconfig.get_config_var('VERSION')
+        python_version = sysconfig.get_config_vars().get('VERSION')
     return python_version
 
 
