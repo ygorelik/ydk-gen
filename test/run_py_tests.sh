@@ -19,6 +19,17 @@
 #
 # ------------------------------------------------------------------------
 
+function usage {
+    MSG_COLOR=$NOCOLOR
+    echo "usage: run_py_tests.sh [-c|--core] [-b|--bundle] [-g|--gnmi] [-h|--help]
+Options and arguments:
+  -c|--core         build core package and run core tests;
+  -b|--bundle       build test bundles and run bundle tests
+  -g|--gnmi         build gnmi package and run gNMI tests
+  -h|--help         show script usage
+If no arguments are specified, build all the packages and run all the tests"
+}
+
 function print_msg {
     echo -e "\n${MSG_COLOR}*** $(date): run_py_test.sh: $* ${NOCOLOR}"
 }
@@ -432,12 +443,6 @@ function run_py_metadata_test {
 #-------------------------------------
 
 function init_script_env {
-    RED='\033[0;31m'
-    GREEN='\033[1;32m'
-    NOCOLOR='\033[0m'
-    YELLOW='\033[1;33m'
-    MSG_COLOR=$YELLOW
-
     curr_dir="$(pwd)"
     os_type=$(uname)
     if [[ ${os_type} == "Linux" ]]; then
@@ -478,18 +483,62 @@ function init_script_env {
 
 ########################## EXECUTION STARTS HERE #############################
 #
+RED='\033[0;31m'
+GREEN='\033[1;32m'
+NOCOLOR='\033[0m'
+YELLOW='\033[1;33m'
+MSG_COLOR=$YELLOW
+
+if [[ $# -eq 0 ]]; then
+  print_msg "No arguments specified; will build all the packages and run all the tests!"
+  build_run_core=1
+  build_run_bundle=1
+  build_run_gnmi=1
+fi
+
+# As long as there is at least one more argument, keep looping
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+        # This is a flag type option. Will catch either -f or --foo
+        -c|--core)
+            build_run_core=1
+            ;;
+        -b|--bundle)
+            build_run_bundle=1
+            ;;
+        -g|--gnmi)
+            build_run_gnmi=1
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "Unknown option '$key'"
+            usage
+            exit 1
+            ;;
+    esac
+    # Shift after checking all the cases to get the next option
+    shift
+done
+
 init_script_env
 init_python_env
 
-install_py_core
+if [ $build_run_core ]; then
+  install_py_core
+fi
 
-run_python_bundle_tests
+if [ $build_run_bundle ]; then
+  run_python_bundle_tests
+  run_py_metadata_test
+fi
 
-#run_python_oc_nis_tests
-
-run_py_metadata_test
-
-build_and_run_python_gnmi_tests
+if [ $build_run_gnmi ]; then
+  build_and_run_python_gnmi_tests
+fi
 
 $script_dir/clean_test_env.sh
 
