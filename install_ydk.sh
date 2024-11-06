@@ -59,6 +59,10 @@ Options and arguments:
 Environment variables:
 YDKGEN_HOME         specifies location of ydk-gen git repository;
                     if not set, \$HOME/ydk-gen is assumed
+PYTHON_BIN          specifies alternative location of Python executable;
+                    if not set, python3 is assumed
+PIP_BIN             specifies alternative location of Pip executable;
+                    if not set, pip3 is assumed
 PYTHON_VENV         specifies location of python virtual environment;
                     if not set, \$HOME/venv is assumed
 GOROOT              specifies installation directory of go software;
@@ -74,7 +78,7 @@ CMAKE_LIBRARY_PATH  Location of Python shared libraries;
 }
 
 function activate_python_venv() {
-  if [[ -z ${PYTHON_VENV} ]]; then
+  if [ -z ${PYTHON_VENV} ]; then
     PYTHON_VENV=${HOME}/venv
     print_msg "Python virtual environment location is set to ${PYTHON_VENV}"
   fi
@@ -86,6 +90,25 @@ function activate_python_venv() {
 }
 
 function init_py_env {
+  python_version=$($PYTHON_BIN -V | awk '{ print $2 }' | cut -d '.' -f 2)
+  if [[ $python_version -gt 11 ]]
+  then
+    print_msg "YDK does not support Python 3.$python_version"
+    python3x_location=$(find /usr/local/bin/ -name 'python3.11' | tail -n 1)
+    if [ -z $python3x_location ]
+    then
+      print_msg "Python3.11 local installation is not found; exiting"
+      exit 1
+    else
+      export PYTHON_BIN=python3.11
+      export PIP_BIN=pip3.11
+      if [ $install_venv == "no" ]; then
+        print_msg "Installation of virtual environment for non-system Python installation is enforced"
+        install_venv=yes
+      fi
+    fi
+  fi
+
   if [ $install_venv == "yes" ]; then
     activate_python_venv
   fi
@@ -122,10 +145,10 @@ function init_py_env {
     elif [[ ${os_type} == "Darwin" ]]; then
       ext="$ver.dylib"
     fi
-    lines=($(locate libpython$ext))
-    if [[ ${#lines[@]} -gt 0 ]] && [[ -x ${lines[0]} || -L ${lines[0]} ]]; then
-      if [[ -z $CMAKE_LIBRARY_PATH ]]; then
-        export CMAKE_LIBRARY_PATH=$(dirname ${lines[0]})
+    libpython_path=$(locate libpython$ext | head -n 1)
+    if [[ -n ${libpython_path} ]] && [[ -x ${libpython_path} || -L ${libpython_path} ]]; then
+      if [ -z $CMAKE_LIBRARY_PATH ]; then
+        export CMAKE_LIBRARY_PATH=$(dirname ${libpython_path})
         print_msg "Setting CMAKE_LIBRARY_PATH to $CMAKE_LIBRARY_PATH"
       fi
     else
@@ -135,7 +158,7 @@ function init_py_env {
     fi
   fi
   print_msg "Checking and installing Python requirements"
-  $PIP_BIN install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
+  $PIP_BIN install $YDKGEN_HOME/3d_party/python/pyang-2.6.1.1.tar.gz
   status=$?
   if [ $status -ne 0 ]; then
     print_msg "Enabling sudo for Python components installation"
@@ -143,7 +166,7 @@ function init_py_env {
     sudo_flag="s"
   fi
   $sudo_cmd $PIP_BIN install -r requirements.txt
-  $sudo_cmd $PIP_BIN install $YDKGEN_HOME/3d_party/python/pyang-2.5.0.m1.tar.gz
+  $sudo_cmd $PIP_BIN install $YDKGEN_HOME/3d_party/python/pyang-2.6.1.1.tar.gz
 }
 
 function init_go_env {
@@ -164,7 +187,7 @@ function init_go_env {
         fi
         export PATH=$GOROOT/bin:$PATH
     fi
-    if [[ -z $GOPATH ]]; then
+    if [ -z $GOPATH ]; then
         export GOPATH=$HOME/go
         mkdir -p $GOPATH
         print_msg "Setting GOPATH to $GOPATH"
@@ -176,6 +199,9 @@ function init_go_env {
 
     if [ ! -d $GOPATH/src/github.com/stretchr/testify ]; then
         go get github.com/stretchr/testify
+        go get github.com/davecgh/go-spew/spew
+        go get github.com/pmezard/go-difflib/difflib
+        go get gopkg.in/yaml.v3
         cd $GOPATH/src/github.com/stretchr/testify
         git checkout tags/v1.6.1
         cd -
@@ -341,18 +367,18 @@ export PIP_DISABLE_PIP_VERSION_CHECK=1
 alias python=$PYTHON_BIN
 alias pip=$PIP_BIN
 " > .env
-  if [[ -n $LD_LIBRARY_PATH ]]; then
+  if [ -n $LD_LIBRARY_PATH ]; then
     echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 " >> .env
   fi
   if [ $install_venv == "yes" ]; then
     echo "export PYTHON_VENV=$PYTHON_VENV" >> .env
     echo "source $PYTHON_VENV/bin/activate" >> .env
-  elif [[ -n $python_location ]]; then
+  elif [ -n $python_location ]; then
     echo "export PATH=$python_location/bin:\$PATH
 " >> .env
   fi
-  if [[ -n $sudo_cmd ]]; then
+  if [ -n $sudo_cmd ]; then
     echo "export SUDO_CMD=$sudo_cmd" >> .env
   fi
   if [[ $ydk_lang == "go" || $ydk_lang == "all" ]]; then
@@ -379,7 +405,7 @@ if [[ \$go_version > \"1.11.\" ]]; then
 fi
 " >> .env
   fi
-  if [[ -n $CMAKE_LIBRARY_PATH ]]; then
+  if [ -n $CMAKE_LIBRARY_PATH ]; then
     echo "export CMAKE_LIBRARY_PATH=$CMAKE_LIBRARY_PATH
 " >> .env
   fi
@@ -405,8 +431,8 @@ dependencies="yes"
 install_venv="no"
 sudo_flag=
 sudo_cmd=
-PYTHON_BIN=python3
-PIP_BIN=pip3
+[ -z "${PYTHON_BIN}" ] && PYTHON_BIN=python3
+[ -z "${PIP_BIN}" ] && PIP_BIN=pip3
 
 # As long as there is at least one more argument, keep looping
 while [[ $# -gt 0 ]]; do
@@ -495,7 +521,7 @@ libydk_path="libydk-$ydk_version.a"
 libydk_gnmi_path="libydk_gnmi-$gnmi_version.a"
 echo "YDK-$ydk_version installation options:"
 if [ ${install_venv} == "no" ]; then
-  if [[ -n $python_location ]]; then
+  if [ -n $python_location ]; then
     echo " - use custom Python installation in ${python_location}"
   else
     echo " - use system Python installation"
@@ -529,7 +555,7 @@ print_msg "Running OS type: $os_type"
 print_msg "OS info: $os_info"
 if [[ ${os_type} == "Linux" ]]; then
   if [[ ${os_info} == *"Ubuntu"* ]]; then
-    if [[ ${os_info} != *"xenial"* && ${os_info} != *"bionic"* && ${os_info} != *"focal"* && ${os_info} != *"jammy"* ]]; then
+    if [[ ${os_info} != *"xenial"* && ${os_info} != *"bionic"* && ${os_info} != *"focal"* && ${os_info} != *"jammy"* && ${os_info} != *"noble"* ]]; then
         print_msg "WARNING! Unsupported Ubuntu distribution found. Will try the best efforts."
     fi
   elif [[ ${os_info} == *"fedora"* ]]; then
@@ -550,10 +576,10 @@ if [[ ${os_type} == "Linux" ]]; then
   fi
 fi
 
-if [[ -z ${C_INCLUDE_PATH} ]]; then
+if [ -z ${C_INCLUDE_PATH} ]; then
     export C_INCLUDE_PATH=/usr/local/include
 fi
-if [[ -z ${CPLUS_INCLUDE_PATH} ]]; then
+if [ -z ${CPLUS_INCLUDE_PATH} ]; then
     export CPLUS_INCLUDE_PATH=/usr/local/include
     if [ $(uname) == "Linux" ]; then
       gcc_version=$(echo $(gcc --version) | awk '{ print $3 }')
@@ -563,19 +589,23 @@ if [[ -z ${CPLUS_INCLUDE_PATH} ]]; then
     print_msg "CPLUS_INCLUDE_PATH is set to: $CPLUS_INCLUDE_PATH"
 fi
 
-if [[ ${os_info} == *"fedora"* || ${os_info} == *"jammy"* ]]; then
+if [ ${dependencies} == "yes" ]; then
+    instal_dependencies
+fi
+
+if [[ ${os_info} == *"fedora"* || ${os_info} == *"jammy"* || ${os_info} == *"noble"* ]]; then
   if [[ $LD_LIBRARY_PATH != *"/usr/local/lib"* ]]; then
     export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
   fi
   if [[ $LD_LIBRARY_PATH != *"/lib64"* && -d /usr/lib64 ]]; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64:/usr/lib64
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib64:/usr/lib64"
+  fi
+  if [[ $LD_LIBRARY_PATH != *"/usr/local/ssl/lib"* && -d /usr/local/ssl/lib ]]; then
+    export LD_LIBRARY_PATH="/usr/local/ssl/lib:$LD_LIBRARY_PATH"
   fi
   print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
 fi
 
-if [ ${dependencies} == "yes" ]; then
-    instal_dependencies
-fi
 if [ -f ~/.profile.python ]; then
   print_msg "Reading python profile ~/.profile.python"
   source ~/.profile.python

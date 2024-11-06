@@ -94,6 +94,7 @@ NOCOLOR="\033[0m"
 YELLOW='\033[1;33m'
 MSG_COLOR=$YELLOW
 
+print_msg "STARTED .."
 sudo_cmd=
 if [ $(id -u -n) != "root" ]; then
   sudo_cmd="sudo"
@@ -116,3 +117,4 @@ export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:/usr/local/lib
 
 install_protobuf
 install_grpc
+print_msg "FINISHED!"

@@ -1,3 +1,15 @@
+### 2024-11-30 version 0.9.1.2
+
+#### New features and enhancements
+  * Added support for Ubuntu:noble (24.04)
+  * Upgraded pyang version to 2.6.1.1 (adopted for YDK)
+  * Upgraded pybind11 version to 2.13.6
+  * upgraded openssl version to 1.1.1
+
+#### Resolved GitHub issues
+  * Add support for finding the Root Resource as specified by RFC 8040 ([#1096](https://github.com/CiscoDevNet/ydk-gen/issues/1096))
+
+
 ### 2023-09-30 version 0.9.1.1
 
 #### New features and enhancements
