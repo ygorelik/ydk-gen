@@ -1,21 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>What are deviations? &mdash; YANG Development Kit 0.9.1.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/width.css" type="text/css" />
-    <link rel="shortcut icon" href="../_static/icon.ico"/>
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>What are deviations? &mdash; YANG Development Kit 0.9.1.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/width.css?v=6892ff54" />
+
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="shortcut icon" href="../_static/icon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7dd6f3d2"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="How do I use the Path API?" href="path.html" />
@@ -34,9 +35,6 @@
             YANG Development Kit
               <img src="../_static/logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.1.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -95,7 +93,7 @@
            <div itemprop="articleBody">
              
   <section id="what-are-deviations">
-<h1><a class="toc-backref" href="#id1" role="doc-backlink">What are deviations?</a><a class="headerlink" href="#what-are-deviations" title="Permalink to this heading"></a></h1>
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">What are deviations?</a><a class="headerlink" href="#what-are-deviations" title="Link to this heading"></a></h1>
 <nav class="contents" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
@@ -108,7 +106,7 @@
 </ul>
 </nav>
 <section id="overview">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>Not all devices faithfully support features defined in standard yang models. For a particular device, it could support only part of features or the feature it supported varies from the standard module. The YANG language defines the <a class="reference external" href="https://tools.ietf.org/html/rfc6020#section-7.18.3">deviation statement</a> to indicate such a thing.
 For example, using a deviation statement in <a class="reference external" href="https://github.com/YangModels/yang/blob/master/vendor/cisco/xr/631/cisco-xr-openconfig-telemetry-deviations.yang#L73">cisco-xr-openconfig-telemetry-deviations.yang</a>, the netconf server can indicate that the <code class="xref py py-class docutils literal notranslate"><span class="pre">openconfig_telemetry.TelemetrySystem.Subscriptions.Dynamic.Subscription</span></code> container of the <code class="docutils literal notranslate"><span class="pre">openconfig_telemetry</span></code> model is not supported.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">deviation</span><span class="w"> </span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="n">telemetry</span><span class="o">:</span><span class="n">telemetry</span><span class="o">-</span><span class="n">system</span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="n">telemetry</span><span class="o">:</span><span class="n">subscriptions</span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="n">telemetry</span><span class="o">:</span><span class="n">dynamic</span><span class="o">/</span><span class="n">oc</span><span class="o">-</span><span class="n">telemetry</span><span class="o">:</span><span class="n">subscription</span><span class="w"> </span><span class="p">{</span>
@@ -118,7 +116,7 @@ For example, using a deviation statement in <a class="reference external" href="
 </div>
 </section>
 <section id="how-to-use-deviation-with-ydk">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">How to use deviation with YDK</a><a class="headerlink" href="#how-to-use-deviation-with-ydk" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">How to use deviation with YDK</a><a class="headerlink" href="#how-to-use-deviation-with-ydk" title="Link to this heading"></a></h2>
 <p>When using YDK to program a device which has some unsupported features, YDK will raise error <strong>before</strong> sending payload to device. For instance, if the device advertises via a deviation that it does not support the <code class="docutils literal notranslate"><span class="pre">subscription</span></code> node as shown above, an error will be raised.</p>
 <p>We can try to configure a dynamic subscription with the below app.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ydk.models.openconfig.openconfig_telemetry</span> <span class="kn">import</span> <span class="n">TelemetrySystem</span>

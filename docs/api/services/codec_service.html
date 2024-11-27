@@ -1,21 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Codec Services &mdash; YANG Development Kit 0.9.1.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/width.css" type="text/css" />
-    <link rel="shortcut icon" href="../../_static/icon.ico"/>
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Codec Services &mdash; YANG Development Kit 0.9.1.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/width.css?v=6892ff54" />
+
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+    <link rel="shortcut icon" href="../../_static/icon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=7dd6f3d2"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="CRUD Service" href="crud_service.html" />
@@ -34,9 +35,6 @@
             YANG Development Kit
               <img src="../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.1.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -99,17 +97,17 @@
            <div itemprop="articleBody">
              
   <section id="codec-services">
-<h1>Codec Services<a class="headerlink" href="#codec-services" title="Permalink to this heading"></a></h1>
+<h1>Codec Services<a class="headerlink" href="#codec-services" title="Link to this heading"></a></h1>
 <section id="codec-service">
-<h2>Codec Service<a class="headerlink" href="#codec-service" title="Permalink to this heading"></a></h2>
+<h2>Codec Service<a class="headerlink" href="#codec-service" title="Link to this heading"></a></h2>
 <p>YDK CodecService class provides API for encoding and decoding of payload strings in XML or JSON format to/from instances of <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entity</span></code></a>,
 which represent containers in the device supported YANG models.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ydk.services.CodecService">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.services.</span></span><span class="sig-name descname"><span class="pre">CodecService</span></span><a class="headerlink" href="#ydk.services.CodecService" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.services.</span></span><span class="sig-name descname"><span class="pre">CodecService</span></span><a class="headerlink" href="#ydk.services.CodecService" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="ydk.services.CodecService.encode">
-<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.services.CodecService.encode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.services.CodecService.encode" title="Link to this definition"></a></dt>
 <dd><p>Encodes <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entity</span></code></a> into payload string in XML or JSON format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -134,7 +132,7 @@ or <a class="reference internal" href="#ydk.entity_utils.JsonSubtreeCodec" title
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.services.CodecService.decode">
-<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.services.CodecService.decode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.services.CodecService.decode" title="Link to this definition"></a></dt>
 <dd><p>Decodes <strong>payload</strong> string in XML or JSON format to instances of <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entity</span></code></a> class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -160,22 +158,22 @@ or a collection of <a class="reference internal" href="../types.html#ydk.types.E
 
 </section>
 <section id="xmlsubtreecodec">
-<h2>XmlSubtreeCodec<a class="headerlink" href="#xmlsubtreecodec" title="Permalink to this heading"></a></h2>
+<h2>XmlSubtreeCodec<a class="headerlink" href="#xmlsubtreecodec" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="ydk.entity_utils.XmlSubtreeCodec">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.entity_utils.</span></span><span class="sig-name descname"><span class="pre">XmlSubtreeCodec</span></span><a class="headerlink" href="#ydk.entity_utils.XmlSubtreeCodec" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.entity_utils.</span></span><span class="sig-name descname"><span class="pre">XmlSubtreeCodec</span></span><a class="headerlink" href="#ydk.entity_utils.XmlSubtreeCodec" title="Link to this definition"></a></dt>
 <dd><p>XmlSubtreeCodec class designed to provide encoding and decoding Python model API objects of type <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entity</span></code></a> to/from XML encoded string.
 Compared to <a class="reference internal" href="#ydk.services.CodecService" title="ydk.services.CodecService"><code class="xref py py-class docutils literal notranslate"><span class="pre">CodecService</span></code></a> the class does not validate encoded data for their types and values.
 It is also can be used to encode/decode non-top level entities.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.entity_utils.XmlSubtreeCodec.XmlSubtreeCodec">
-<span class="sig-name descname"><span class="pre">XmlSubtreeCodec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.XmlSubtreeCodec.XmlSubtreeCodec" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">XmlSubtreeCodec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.XmlSubtreeCodec.XmlSubtreeCodec" title="Link to this definition"></a></dt>
 <dd><p>Constructs an instance of <cite>XmlSubtreeCodec</cite> class.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.entity_utils.XmlSubtreeCodec.encode">
-<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_schema</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.XmlSubtreeCodec.encode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_schema</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.XmlSubtreeCodec.encode" title="Link to this definition"></a></dt>
 <dd><p>Performs encoding of Python model API objects of type <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entity</span></code></a> to well formatted XML encoded string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -195,7 +193,7 @@ It is also can be used to encode/decode non-top level entities.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.entity_utils.XmlSubtreeCodec.decode">
-<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.XmlSubtreeCodec.decode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.XmlSubtreeCodec.decode" title="Link to this definition"></a></dt>
 <dd><p>Decodes the XML encoded string to produce corresponding instance of <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entity</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -217,22 +215,22 @@ It is also can be used to encode/decode non-top level entities.</p>
 
 </section>
 <section id="jsonsubtreecodec">
-<h2>JsonSubtreeCodec<a class="headerlink" href="#jsonsubtreecodec" title="Permalink to this heading"></a></h2>
+<h2>JsonSubtreeCodec<a class="headerlink" href="#jsonsubtreecodec" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="ydk.entity_utils.JsonSubtreeCodec">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.entity_utils.</span></span><span class="sig-name descname"><span class="pre">JsonSubtreeCodec</span></span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.entity_utils.</span></span><span class="sig-name descname"><span class="pre">JsonSubtreeCodec</span></span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec" title="Link to this definition"></a></dt>
 <dd><p>JsonSubtreeCodec class designed to provide encoding and decoding Python model API objects of type <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entity</span></code></a> to/from JSON encoded string.
 Compared to <a class="reference internal" href="#ydk.services.CodecService" title="ydk.services.CodecService"><code class="xref py py-class docutils literal notranslate"><span class="pre">CodecService</span></code></a> the class does not validate encoded data for their types and values.
 It is also can be used to encode/decode non-top level entities.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.entity_utils.JsonSubtreeCodec.JsonSubtreeCodec">
-<span class="sig-name descname"><span class="pre">JsonSubtreeCodec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec.JsonSubtreeCodec" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">JsonSubtreeCodec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec.JsonSubtreeCodec" title="Link to this definition"></a></dt>
 <dd><p>Constructs an instance of <cite>JsonSubtreeCodec</cite> class.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.entity_utils.JsonSubtreeCodec.encode">
-<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec.encode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec.encode" title="Link to this definition"></a></dt>
 <dd><p>Performs encoding of Python model API objects of type <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entity</span></code></a> to JSON encoded string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -253,7 +251,7 @@ It is also can be used to encode/decode non-top level entities.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.entity_utils.JsonSubtreeCodec.decode">
-<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec.decode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec.decode" title="Link to this definition"></a></dt>
 <dd><p>Decodes the JSON encoded string to produce corresponding instance of <a class="reference internal" href="../types.html#ydk.types.Entity" title="ydk.types.Entity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entity</span></code></a>.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -274,7 +272,7 @@ It is also can be used to encode/decode non-top level entities.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.entity_utils.JsonSubtreeCodec.convert_string">
-<span class="sig-name descname"><span class="pre">convert_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec.convert_string" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">convert_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.entity_utils.JsonSubtreeCodec.convert_string" title="Link to this definition"></a></dt>
 <dd><p>Utility function to convert JSON formatted string to a well formatted multiline indented string or to a single line string with no spaces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -295,7 +293,7 @@ It is also can be used to encode/decode non-top level entities.</p>
 </dd></dl>
 
 <section id="example-of-jsonsubtreecodec-usage">
-<h3>Example of JsonSubtreeCodec usage<a class="headerlink" href="#example-of-jsonsubtreecodec-usage" title="Permalink to this heading"></a></h3>
+<h3>Example of JsonSubtreeCodec usage<a class="headerlink" href="#example-of-jsonsubtreecodec-usage" title="Link to this heading"></a></h3>
 <p>In this example we use <a class="reference internal" href="../providers/gnmi_provider.html#ydk.gnmi.providers.gNMIServiceProvider" title="ydk.gnmi.providers.gNMIServiceProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">gNMIServiceProvider</span></code></a> and
 <a class="reference internal" href="crud_service.html#ydk.services.CRUDService" title="ydk.services.CRUDService"><code class="xref py py-class docutils literal notranslate"><span class="pre">CRUDService</span></code></a> to get interface configuration from IOS XR device and
 then print it using <a class="reference internal" href="#ydk.entity_utils.JsonSubtreeCodec" title="ydk.entity_utils.JsonSubtreeCodec"><code class="xref py py-class docutils literal notranslate"><span class="pre">JsonSubtreeCodec</span></code></a>:</p>

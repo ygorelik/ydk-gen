@@ -63,7 +63,7 @@ YDK also provides Codec service to translate API models to/from XML and JSON enc
 
 ## Backward Compatibility
 
-The YDK-0.9.0 C++ code got significant changes, which broke backward compatibility with YDK-0.8.5 and earlier releases.
+The YDK-0.9.1 C++ code got significant changes, which broke backward compatibility with YDK-0.8.6 and earlier releases.
 
 **NOTE.** Starting from release 0.8.6 the YDK does not support Python2 interpreter as it was deprecated.
 

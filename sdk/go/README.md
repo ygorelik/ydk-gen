@@ -62,7 +62,7 @@ YDK also provides Codec service to translate API models to/from XML and JSON enc
 
 ## Backward Compatibility
 
-The Go generated API starting from YDK-0.7.3 is fully compatible with YDK-0.9.0.
+The Go generated API starting from YDK-0.7.3 is fully compatible with YDK-0.9.1.
 
 **NOTE.** Starting from release 0.8.5 the YDK does not support Python2 interpreter as it was deprecated.
 
@@ -79,7 +79,7 @@ To use the docker image, [install docker](https://docs.docker.com/install/) on y
 See the [docker documentation](https://docs.docker.com/engine/reference/run/) for more details.
 
 ```
-  docker run -it ydksolutions/ydk:0.9.1.2
+docker run -it ydksolutions/ydk:0.9.1.2
 ```
 
 ## System Requirements

@@ -1,21 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SchemaNode &mdash; YANG Development Kit 0.9.1.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/width.css" type="text/css" />
-    <link rel="shortcut icon" href="../../_static/icon.ico"/>
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>SchemaNode &mdash; YANG Development Kit 0.9.1.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/width.css?v=6892ff54" />
+
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+    <link rel="shortcut icon" href="../../_static/icon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=7dd6f3d2"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Statement" href="statement.html" />
@@ -34,9 +35,6 @@
             YANG Development Kit
               <img src="../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.1.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -100,10 +98,10 @@
            <div itemprop="articleBody">
              
   <section id="module-ydk.path">
-<span id="schemanode"></span><h1>SchemaNode<a class="headerlink" href="#module-ydk.path" title="Permalink to this heading"></a></h1>
+<span id="schemanode"></span><h1>SchemaNode<a class="headerlink" href="#module-ydk.path" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ydk.path.SchemaNode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.path.</span></span><span class="sig-name descname"><span class="pre">SchemaNode</span></span><a class="headerlink" href="#ydk.path.SchemaNode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.path.</span></span><span class="sig-name descname"><span class="pre">SchemaNode</span></span><a class="headerlink" href="#ydk.path.SchemaNode" title="Link to this definition"></a></dt>
 <dd><blockquote>
 <div><p>Class represents a Node in the SchemaTree.</p>
 <div class="admonition note">
@@ -119,7 +117,7 @@
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.path.SchemaNode.find">
-<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.find" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.find" title="Link to this definition"></a></dt>
 <dd><p>Finds descendant nodes that match the given xpath expression. This API finds descendant nodes in the schema node tree that satisfy the given path expression. See <a class="reference internal" href="../../guides/path.html#howto-path"><span class="std std-ref">How do I use the Path API?</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -143,7 +141,7 @@
 </div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.path.SchemaNode.get_keys">
-<span class="sig-name descname"><span class="pre">get_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.get_keys" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.get_keys" title="Link to this definition"></a></dt>
 <dd><p>Returns vector of YANG <a class="reference internal" href="statement.html#ydk.path.Statement" title="ydk.path.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a>, which represents keys for the list node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -154,7 +152,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.path.SchemaNode.get_parent">
-<span class="sig-name descname"><span class="pre">get_parent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.get_parent" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_parent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.get_parent" title="Link to this definition"></a></dt>
 <dd><blockquote>
 <div><p>Get the parent node of this schema node in the tree.</p>
 <dl class="field-list simple">
@@ -168,7 +166,7 @@
 </div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.path.SchemaNode.get_path">
-<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.get_path" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.get_path" title="Link to this definition"></a></dt>
 <dd><p>Get the path expression representing this schema node in in the schema node tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -182,7 +180,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.path.SchemaNode.get_root">
-<span class="sig-name descname"><span class="pre">get_root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.get_root" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.get_root" title="Link to this definition"></a></dt>
 <dd><p>Get the root schema node of current schema node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -196,7 +194,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.path.SchemaNode.get_statement">
-<span class="sig-name descname"><span class="pre">get_statement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.get_statement" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_statement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.SchemaNode.get_statement" title="Link to this definition"></a></dt>
 <dd><p>Get current schema node’s YANG statement.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>

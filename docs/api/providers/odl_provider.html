@@ -1,21 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Opendaylight Service Provider &mdash; YANG Development Kit 0.9.1.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/width.css" type="text/css" />
-    <link rel="shortcut icon" href="../../_static/icon.ico"/>
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Opendaylight Service Provider &mdash; YANG Development Kit 0.9.1.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/width.css?v=6892ff54" />
+
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+    <link rel="shortcut icon" href="../../_static/icon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=7dd6f3d2"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="RESTCONF Service Provider" href="restconf_provider.html" />
@@ -34,9 +35,6 @@
             YANG Development Kit
               <img src="../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.1.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -99,10 +97,10 @@
            <div itemprop="articleBody">
              
   <section id="opendaylight-service-provider">
-<h1>Opendaylight Service Provider<a class="headerlink" href="#opendaylight-service-provider" title="Permalink to this heading"></a></h1>
+<h1>Opendaylight Service Provider<a class="headerlink" href="#opendaylight-service-provider" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ydk.providers.OpendaylightServiceProvider">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.providers.</span></span><span class="sig-name descname"><span class="pre">OpendaylightServiceProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.providers.OpendaylightServiceProvider" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.providers.</span></span><span class="sig-name descname"><span class="pre">OpendaylightServiceProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.providers.OpendaylightServiceProvider" title="Link to this definition"></a></dt>
 <dd><p>A service provider to be used to communicate with an OpenDaylight instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -118,7 +116,7 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.providers.OpendaylightServiceProvider.get_node_provider">
-<span class="sig-name descname"><span class="pre">get_node_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.providers.OpendaylightServiceProvider.get_node_provider" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_node_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.providers.OpendaylightServiceProvider.get_node_provider" title="Link to this definition"></a></dt>
 <dd><p>Returns the ServiceProvider instance corresponding to the device being controlled by the OpenDaylight instance, indicated by <code class="docutils literal notranslate"><span class="pre">node_id</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -135,7 +133,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.providers.OpendaylightServiceProvider.get_node_ids">
-<span class="sig-name descname"><span class="pre">get_node_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.providers.OpendaylightServiceProvider.get_node_ids" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_node_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.providers.OpendaylightServiceProvider.get_node_ids" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of node ID’s of the devices being controlled by this OpenDaylight instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>

@@ -1,21 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gNMI Service Provider &mdash; YANG Development Kit 0.9.1.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/width.css" type="text/css" />
-    <link rel="shortcut icon" href="../../_static/icon.ico"/>
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>gNMI Service Provider &mdash; YANG Development Kit 0.9.1.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/width.css?v=6892ff54" />
+
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+    <link rel="shortcut icon" href="../../_static/icon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=7dd6f3d2"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Opendaylight Service Provider" href="odl_provider.html" />
@@ -34,9 +35,6 @@
             YANG Development Kit
               <img src="../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.1.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -99,10 +97,10 @@
            <div itemprop="articleBody">
              
   <section id="gnmi-service-provider">
-<h1>gNMI Service Provider<a class="headerlink" href="#gnmi-service-provider" title="Permalink to this heading"></a></h1>
+<h1>gNMI Service Provider<a class="headerlink" href="#gnmi-service-provider" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ydk.gnmi.providers.gNMIServiceProvider">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.gnmi.providers.</span></span><span class="sig-name descname"><span class="pre">gNMIServiceProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port=57400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server_certificate=&quot;&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">private_key=&quot;&quot;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.gnmi.providers.gNMIServiceProvider" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.gnmi.providers.</span></span><span class="sig-name descname"><span class="pre">gNMIServiceProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port=57400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server_certificate=&quot;&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">private_key=&quot;&quot;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.gnmi.providers.gNMIServiceProvider" title="Link to this definition"></a></dt>
 <dd><p>A service provider, which allows YDK connect to a <a class="reference external" href="https://github.com/openconfig/gnmi">gNMI</a> server. By default, the provider works in non-secure mode (tls is off). In order to enable secure mode connection the user must provide the gNMI server certificate of authorization (public key) and optionally the client (YDK application host) private key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -120,7 +118,7 @@
 </dd></dl>
 
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <p>To enable YDK logging include the following code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="linenos">2</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ydk&quot;</span><span class="p">)</span>

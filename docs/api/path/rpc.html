@@ -1,21 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rpc &mdash; YANG Development Kit 0.9.1.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/width.css" type="text/css" />
-    <link rel="shortcut icon" href="../../_static/icon.ico"/>
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Rpc &mdash; YANG Development Kit 0.9.1.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/width.css?v=6892ff54" />
+
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+    <link rel="shortcut icon" href="../../_static/icon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=7dd6f3d2"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="SchemaNode" href="schema_node.html" />
@@ -34,9 +35,6 @@
             YANG Development Kit
               <img src="../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.1.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -100,14 +98,14 @@
            <div itemprop="articleBody">
              
   <section id="module-ydk.path">
-<span id="rpc"></span><h1>Rpc<a class="headerlink" href="#module-ydk.path" title="Permalink to this heading"></a></h1>
+<span id="rpc"></span><h1>Rpc<a class="headerlink" href="#module-ydk.path" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ydk.path.Rpc">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.path.</span></span><span class="sig-name descname"><span class="pre">Rpc</span></span><a class="headerlink" href="#ydk.path.Rpc" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ydk.path.</span></span><span class="sig-name descname"><span class="pre">Rpc</span></span><a class="headerlink" href="#ydk.path.Rpc" title="Link to this definition"></a></dt>
 <dd><p>Instances of this class represent a YANG rpc and are modelled as Callables. The input data node tree is used to populate the input parameters to the rpc if any. The Callable takes as a parameter the <code class="xref py py-class docutils literal notranslate"><span class="pre">ServiceProvider</span></code> that can execute this rpc as its parameter returning a <a class="reference internal" href="data_node.html#ydk.path.DataNode" title="ydk.path.DataNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataNode</span></code></a> instance if output is available.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.path.Rpc.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_provider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.Rpc.__call__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_provider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.Rpc.__call__" title="Link to this definition"></a></dt>
 <dd><p>Execute/Invoke the rpc through the given service provider.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -124,7 +122,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.path.Rpc.get_input_node">
-<span class="sig-name descname"><span class="pre">get_input_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.Rpc.get_input_node" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_input_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.Rpc.get_input_node" title="Link to this definition"></a></dt>
 <dd><p>Get the input data tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -138,7 +136,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ydk.path.Rpc.get_schema_node">
-<span class="sig-name descname"><span class="pre">get_schema_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.Rpc.get_schema_node" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_schema_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ydk.path.Rpc.get_schema_node" title="Link to this definition"></a></dt>
 <dd><p>Get schema node for this rpc.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
