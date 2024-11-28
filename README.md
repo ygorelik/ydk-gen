@@ -117,7 +117,7 @@ docker run -it ydksolutions/ydk-gen:0.8.6.6
 # System Requirements
 
 The YDK is currently supported on the following platforms including native installations, virtual machines, and docker images:
- - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), Focal (20.04 LTS), and Jammy (22.04 LTS)
+ - Linux Ubuntu Xenial (16.04 LTS), Bionic (18.04 LTS), Focal (20.04 LTS), Jammy (22.04 LTS) and Noble (24.04 LTS)
  - Linux CentOS versions 7 and Centos Stream 8 (Centos 8.x has been EOL as of December 31 of 2021)
  - Linux RHEL version 7.x and 8.x 
  - MacOS up to 11.6.2 (Big Sur)
