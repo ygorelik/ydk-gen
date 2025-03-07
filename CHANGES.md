@@ -4,6 +4,7 @@
   * Added support for Ubuntu 24.04 LTS (noble)
   * Upgraded pyang to version 2.6.1
   * Upgraded pybind11 to version 2.13.6
+  * Upgraded openssl version to 1.1.1
 
 #### Resolved GitHub issues
   * Incorrect loading of submodules into YANG repository ([#1094](https://github.com/CiscoDevNet/ydk-gen/issues/1094))

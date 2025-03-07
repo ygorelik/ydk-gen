@@ -144,7 +144,7 @@ function init_py_env {
       ext="$ver.dylib"
     fi
     libpython_path=$(locate libpython$ext | head -n 1)
-    if [[ -n ${libpython_path} ]] && [[ -x ${libpython_path} || -L ${libpython_path} ]]; then
+    if [[ -n "${libpython_path}" ]] && [[ -x ${libpython_path} || -L ${libpython_path} ]]; then
       if [ -z $CMAKE_LIBRARY_PATH ]; then
         export CMAKE_LIBRARY_PATH=$(dirname ${libpython_path})
         print_msg "Setting CMAKE_LIBRARY_PATH to $CMAKE_LIBRARY_PATH"
@@ -364,18 +364,22 @@ export PIP_DISABLE_PIP_VERSION_CHECK=1
 alias python=$PYTHON_BIN
 alias pip=$PIP_BIN
 " > .env
-  if [ -n $LD_LIBRARY_PATH ]; then
+  if [ ! -z $LD_LIBRARY_PATH ]; then
     echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+" >> .env
+  fi
+  if [ ! -z $DYLD_LIBRARY_PATH ]; then
+    echo "export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
 " >> .env
   fi
   if [ $install_venv == "yes" ]; then
     echo "export PYTHON_VENV=$PYTHON_VENV" >> .env
     echo "source $PYTHON_VENV/bin/activate" >> .env
-  elif [ -n $python_location ]; then
+  elif [ ! -z $python_location ]; then
     echo "export PATH=$python_location/bin:\$PATH
 " >> .env
   fi
-  if [ -n $sudo_cmd ]; then
+  if [ ! -z $sudo_cmd ]; then
     echo "export SUDO_CMD=$sudo_cmd" >> .env
   fi
   if [[ $ydk_lang == "go" || $ydk_lang == "all" ]]; then
@@ -402,7 +406,7 @@ if [[ \$go_version > \"1.11.\" ]]; then
 fi
 " >> .env
   fi
-  if [ -n $CMAKE_LIBRARY_PATH ]; then
+  if [ ! -z $CMAKE_LIBRARY_PATH ]; then
     echo "export CMAKE_LIBRARY_PATH=$CMAKE_LIBRARY_PATH
 " >> .env
   fi
@@ -504,7 +508,7 @@ libydk_path="libydk-$ydk_version.a"
 libydk_gnmi_path="libydk_gnmi-$gnmi_version.a"
 echo "YDK-$ydk_version installation options:"
 if [ ${install_venv} == "no" ]; then
-  if [ -n $python_location ]; then
+  if [ ! -z $python_location ]; then
     echo " - use custom Python installation in ${python_location}"
   else
     echo " - use system Python installation"
@@ -583,6 +587,11 @@ if [[ ${os_info} == *"fedora"* || ${os_info} == *"jammy"* || ${os_info} == *"nob
     export LD_LIBRARY_PATH="/usr/local/ssl/lib:$LD_LIBRARY_PATH"
   fi
   print_msg "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
+elif [[ ${os_type} == "Darwin" ]]; then
+  if [[ $DYLD_LIBRARY_PATH != *"/usr/local/lib"* ]]; then
+    export DYLD_LIBRARY_PATH="/usr/local/lib:$DYLD_LIBRARY_PATH"
+  fi
+  print_msg "DYLD_LIBRARY_PATH is set to: $DYLD_LIBRARY_PATH"
 fi
 
 if [ ${dependencies} == "yes" ]; then

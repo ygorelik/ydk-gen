@@ -48,27 +48,27 @@ function install_dependencies {
 
     apt update -y
     apt install sudo -y
-    $sudo_cmd apt-get install -y lsb-release
+    $sudo_cmd apt-get install -qq lsb-release
     codename=$(lsb_release -c | awk '{ print $2 }')
     ubuntu_release=$(lsb_release -r | awk '{ print $2 }' | cut -d '.' -f 1)
     if [[ $codename == "focal" || $codename == "jammy" || $codename == "noble" ]] && [[ ! -h /etc/localtime ]]; then
-      # Fixing timezone setting issue in focal
+      # Fixing timezone setting issue to avoid dialog
       export DEBIAN_FRONTEND=noninteractive
-      $sudo_cmd apt-get install -y tzdata
+      $sudo_cmd apt-get install -qq tzdata
       ln -fs /usr/share/zoneinfo/US/Pacific /etc/localtime
       dpkg-reconfigure --frontend noninteractive tzdata
       unset DEBIAN_FRONTEND
     fi
-    run_cmd $sudo_cmd apt-get install -y --no-install-recommends apt-utils
-    run_cmd $sudo_cmd apt-get update -y
-    run_cmd $sudo_cmd apt-get install -y build-essential
-    run_cmd $sudo_cmd apt-get install libtool-bin -y > /dev/null
+    run_cmd $sudo_cmd apt-get install -qq --no-install-recommends apt-utils
+    run_cmd $sudo_cmd apt-get update -qq
+    run_cmd $sudo_cmd apt-get install -qq build-essential
+    run_cmd $sudo_cmd apt-get install -qq libtool-bin
     local status=$?
     if [[ ${status} != 0 ]]; then
-        run_cmd $sudo_cmd apt-get install libtool -y > /dev/null
+        run_cmd $sudo_cmd apt-get install -qq libtool
     fi
     if [[ $codename == "focal" || $codename == "jammy" ]]; then
-        $sudo_cmd apt-get install -y mlocate git > /dev/null
+        $sudo_cmd apt-get install -qq mlocate git
         if [[ ! -h /usr/local/lib/libnettle.so.6 ]]; then
           cd /usr/local/lib/
           $sudo_cmd ln -s $curr_dir/3d_party/linux/ubuntu/lib/libnettle.so.6.4
@@ -76,17 +76,17 @@ function install_dependencies {
           cd - > /dev/null
         fi
     else
-        run_cmd $sudo_cmd apt-get install -y locate git > /dev/null
-        run_cmd $sudo_cmd apt-get install -y curl libcurl4-openssl-dev > /dev/null
+        run_cmd $sudo_cmd apt-get install -qq locate git
+        run_cmd $sudo_cmd apt-get install -qq curl libcurl4-openssl-dev
     fi
-    run_cmd $sudo_cmd apt-get install -y bison doxygen flex unzip wget cmake gdebi-core lcov vim > /dev/null
-    run_cmd $sudo_cmd apt-get install -y libcmocka0 libpcre3-dev libpcre++ > /dev/null
-    run_cmd $sudo_cmd apt-get install -y libssh-dev libxml2-dev libxslt1-dev > /dev/null
-    run_cmd $sudo_cmd apt-get install -y python3-dev python3-lxml python3-pip python3-venv > /dev/null
-    run_cmd $sudo_cmd apt-get install -y pkg-config software-properties-common zlib1g-dev openjdk-8-jre > /dev/null
-    run_cmd $sudo_cmd apt-get install -y valgrind > /dev/null
+    run_cmd $sudo_cmd apt-get install -qq bison doxygen flex unzip wget cmake gdebi-core lcov vim
+    run_cmd $sudo_cmd apt-get install -qq libcmocka0 libpcre3-dev libpcre++
+    run_cmd $sudo_cmd apt-get install -qq libssh-dev libxml2-dev libxslt1-dev
+    run_cmd $sudo_cmd apt-get install -qq python3-dev python3-lxml python3-pip python3-venv
+    run_cmd $sudo_cmd apt-get install -qq pkg-config software-properties-common zlib1g-dev openjdk-8-jre
+    run_cmd $sudo_cmd apt-get install -qq valgrind
     if [[ $codename == "focal" || $codename == "jammy" || $codename == "noble" ]]; then
-        run_cmd $sudo_cmd apt-get install -y python3-pybind11 --fix-missing > /dev/null
+        run_cmd $sudo_cmd apt-get install -qq python3-pybind11 --fix-missing
     fi
 }
 
@@ -101,12 +101,12 @@ function check_install_python {
         print_msg "Installing Python-3.11.10 from source to alternative location"
         wget https://www.python.org/ftp/python/3.11.10/Python-3.11.10.tgz
         tar zxf Python-3.11.10.tgz
-        cd Python-3.11.10 > /dev/null
+        cd Python-3.11.10
         ./configure --enable-shared --with-openssl=/usr/local/ssl --with-openssl-rpath=auto --enable-optimizations --with-ssl-default-suites=openssl CFLAGS="-I/usr/local/ssl/include" LDFLAGS="-L/usr/local/ssl"
         make
         make altinstall
         cd - > /dev/null
-        print_msg "NOTE! The python3.11 must be used explicitly; buiding venv is required!"
+        print_msg "NOTE! The python3.11 must be used explicitly; building venv is required!"
       else
         print_msg "Found local Python3 installation $python3x_location"
       fi
@@ -139,7 +139,7 @@ function check_install_gcc {
       print_msg "Installing gcc/g++ version 7"
 #       $sudo_cmd add-apt-repository ppa:ubuntu-toolchain-r/test -y
 #       $sudo_cmd apt-get update -y > /dev/null
-      $sudo_cmd apt-get install gcc-7 g++-7 -y > /dev/null
+      $sudo_cmd apt-get install -qq gcc-7 g++-7 > /dev/null
       gcc_version=$(gcc --version | head -n 1 | awk '{ print $3 }' | cut -d '-' -f 1)
       print_msg "Installed gcc/g++ version is $gcc_version"
       major=$(echo $gcc_version | cut -d '.' -f 1)
@@ -174,12 +174,9 @@ function check_install_curl {
 
 function check_install_libssh {
   if [[ $codename == "focal" || $codename == "jammy" || $codename == "noble" ]] && [[ ! -h /usr/local/lib/libssh_threads.so ]]; then
-    print_msg "Copying libssh and libssh_threads to /usr/local/lib"
-#    sudo cp $curr_dir/3d_party/linux/ubuntu/lib/libssh.so.4.5.0 /usr/local/lib/
+    print_msg "Copying libssh_threads.so to /usr/local/lib"
     sudo cp $curr_dir/3d_party/linux/ubuntu/lib/libssh_threads.so.4.5.0 /usr/local/lib/
     cd /usr/local/lib/
-#    sudo ln -s libssh.so.4.5.0 libssh.so.4
-#    sudo ln -s libssh.so.4 libssh.so
     sudo ln -s libssh_threads.so.4.5.0 libssh_threads.so.4
     sudo ln -s libssh_threads.so.4 libssh_threads.so
     cd - > /dev/null
@@ -274,6 +271,12 @@ if [[ $ubuntu_release -gt 19 ]]; then
 fi
 check_install_confd
 
-$sudo_cmd updatedb
+if grep -qi microsoft /proc/version; then
+  # ubuntu in WSL; do not include "windows" mounted drives
+  $sudo_cmd updatedb --prunepaths='/mnt/c /mnt/wsl /mnt/wslg'
+else
+  # native ubuntu
+  $sudo_cmd updatedb
+fi
 check_install_libssh
 print_msg "FINISHED!"
