@@ -286,7 +286,7 @@ function install_cpp_core {
       run_exec_test ${CMAKE_BIN} ..
     fi
     print_msg "Compiling C++ core library"
-    run_cmd make # &> /dev/null
+    run_cmd make &> /dev/null
     sudo make install
 }
 
@@ -576,7 +576,7 @@ function py_sanity_ydktest_install {
 function py_sanity_ydktest_test {
     print_msg "Running py_sanity_ydktest_test with coverage"
     cd $YDKGEN_HOME
-    cp -r gen-api/python/ydktest-bundle/ydk/models sdk/python/core/ydk/
+    cp -r gen-api/python/ydktest-bundle/ydk/models/* sdk/python/core/ydk/models
 
     print_msg "Uninstall ydk py core from pip for testing with coverage"
     ${PIP_BIN} uninstall ydk -y
