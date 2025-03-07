@@ -1,4 +1,4 @@
-### 2024-11-30 version 0.9.1.2
+### 2025-03-30 version 0.9.1.2
 
 #### New features and enhancements
   * Added support for Ubuntu:noble (24.04)
@@ -9,6 +9,7 @@
 #### Resolved GitHub issues
   * Add support for finding the Root Resource as specified by RFC 8040 ([#1094](https://github.com/CiscoDevNet/ydk-gen/issues/1094))
   * Added support for finding the Root Resource as specified by RFC 8040 ([#1096](https://github.com/CiscoDevNet/ydk-gen/issues/1096))
+  * install_ydk script fails for python language on macOS ([#1104](https://github.com/CiscoDevNet/ydk-gen/issues/1104))
 
 
 ### 2023-09-30 version 0.9.1.1
