@@ -1,4 +1,9 @@
-### 2024-11-30 version 
+### 2025-03-30 version 0.8.6.7
+
+#### Resolved GitHub issues
+  * install_ydk script fails for python language on macOS ([#1104](https://github.com/CiscoDevNet/ydk-gen/issues/1104))
+
+### 2024-11-30 version 0.8.6.6 
 
 #### New features and enhancements
   * Added support for Ubuntu 24.04 LTS (noble)
